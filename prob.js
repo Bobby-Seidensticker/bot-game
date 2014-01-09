@@ -1,6 +1,7 @@
 namespace.module('prob', function (exports, require) {
     exports.extend({
         'rand': rand,
+        'pyRand': pyRand,
         'binProb': binProb,
         'pProb': pProb,
         'test': test
@@ -8,12 +9,14 @@ namespace.module('prob', function (exports, require) {
 
     var fact;
 
-
-    // returns a random integer >= min and < max
-    function rand(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
+    // returns a random integer >= min and <= max
+    function rand(min, max) {  // INCLUSIVE ON BOTH SIDES
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
+    function pyRand(min, max) {  // inclusive of min, exclusive of max
+        return Math.floor(Math.random() * (max - min) + min);
+    }
 
     // Binary probability, returns true or false based off a p
     // p >= 1 always returns 1

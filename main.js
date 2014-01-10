@@ -67,6 +67,7 @@ namespace.module('botOfExile.main', function (exports, require) {
             // hero always attacks immediately after getting in the room, monsters start at cooldown
             this.hero.na = now;
         }
+        this.dumbRender(monsters);
 
         // if hero is due to attack, do it
         if (this.hero.na < now) {
@@ -106,6 +107,16 @@ namespace.module('botOfExile.main', function (exports, require) {
         target.hp -= dmg;
         attacker.na += attacker.mspa;
         console.log(attacker.name + ' hit ' + target.name + ' for ' + dmg + ' damage!');
+    }
+
+    Instance.prototype.dumbRender = function(monsters) {
+        $('#room').html("Room #: " + this.roomIndex);
+        $('#hero').html(this.hero.name + "'s HP: " + this.hero.hp);
+        var tempstr = "<br><br>";
+        for(var i in monsters) {
+            tempstr += monsters[i].name + "'s HP:" + monsters[i].hp + "<br>";
+        }
+        $('#mobs').html(tempstr);
     }
 
     function Actor(type, name, hpMax, mspa, dmgMin, dmgMax) {

@@ -17,7 +17,7 @@ namespace.module('botOfExile.main', function (exports, require) {
     function onReady() {
         you = new Hero('Bobbeh');
         var levelLevel = 1;
-        var levelRooms = 5;
+        var levelRooms = 50;
         var l = new Level('forest', levelLevel, levelRooms);
         var i = new Instance(you, l);
 
@@ -75,6 +75,7 @@ namespace.module('botOfExile.main', function (exports, require) {
             if (!monsters[0].isAlive()) {
                 console.log(this.hero.name + " killed " + monsters[0].name + "!");
                 monsters.splice(0, 1);
+                this.hero.gainXp(50);
             }
         }
         // if any monsters are due to attack, do it
@@ -111,7 +112,7 @@ namespace.module('botOfExile.main', function (exports, require) {
 
     Instance.prototype.dumbRender = function(monsters) {
         $('#room').html("Room #: " + this.roomIndex);
-        $('#hero').html(this.hero.name + "'s HP: " + this.hero.hp);
+        $('#hero').html(this.hero.name + "<br>Lvl: " + this.hero.level + "<br>XP: " + this.hero.xp + "<br>HP: " + this.hero.hp);
         var tempstr = "<br><br>";
         for(var i in monsters) {
             tempstr += monsters[i].name + "'s HP:" + monsters[i].hp + "<br>";
@@ -142,6 +143,9 @@ namespace.module('botOfExile.main', function (exports, require) {
     function Hero(name, weapon, armor) {
         this.str = 20;
         this.vit = 20;
+        this.xp = 0;
+        this.level = 1;
+
 
         this.weapon = weapon ? weapon : new Weapon(1);
         this.armor = armor ? armor : new Armor(1);
@@ -158,6 +162,25 @@ namespace.module('botOfExile.main', function (exports, require) {
 
     Hero.subclass(Actor);
 
+    Hero.prototype.gainXp = function(xp) {
+        this.xp += xp;
+        var lvlUpXP = parseInt(100/1.2 * Math.pow(1.2, this.level));
+        console.log(this.xp + "/" +lvlUpXP);
+        if(this.xp >= lvlUpXP) {
+            this.xp -= lvlUpXP;
+            this.levelUp();
+        }
+    }
+
+    Hero.prototype.levelUp = function() {
+        this.level++;
+        this.str += 2;
+        this.vit += 2;
+        this.dmgMod = this.str / 3;
+        this.hpMax = this.vit * 5;
+        this.hp = this.hpMax;
+    }
+
     function Monster(name, level) {
         this.str = 10 + level * 2;
         this.vit = 10 * level * 2;
@@ -170,7 +193,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.dmgMod = this.str / 3;
 
         var hpMax = this.vit * 3;
-        var mspa = 1000;
+        var mspa = 1100;
         var dmgMin = this.weapon.dmgMin * this.dmgMod;
         var dmgMax = this.weapon.dmgMax * this.dmgMod;
 

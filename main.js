@@ -14,12 +14,16 @@ namespace.module('botOfExile.main', function (exports, require) {
     var ARMOR_BASE = 10;
     var ARMOR_MULT = 1.2;
 
+    var SPEED_TESTING = false;
+
+    var currentInstance;
+    var you;
+
     function onReady() {
         you = new Hero('Bobbeh');
-        var levelLevel = 1;
-        var levelRooms = 50;
-        var l = new Level('forest', levelLevel, levelRooms);
-        var i = new Instance(you, l);
+
+        tick();
+        tickInterval = setInterval(tick, 2000);
 
         console.log("end onready");
         // request animation frame takes a function and calls it up to 60 times per second if there are cpu resources available
@@ -27,17 +31,27 @@ namespace.module('botOfExile.main', function (exports, require) {
         //requestAnimationFrame(main);
     }
 
-    // main loop, requestAnimationFrame automatically gives the first argument
-    function main(msSinceLastCall) {
-        requestAnimationFrame(main);
+    function tick() {
+        if (currentInstance === undefined || currentInstance.complete) {
+            you.initStats();
+            var mapLevel = you.level - 5 >= 1 ? you.level - 5 : 1;
+            var mapRooms = 5;
+            currentInstance = new Instance(you, new Map('forest', mapLevel, mapRooms));
+        }
     }
 
-    // run through a level, takes a hero and a level
-    function Instance(hero, level) {
+    /*    // main loop, requestAnimationFrame automatically gives the first argument
+    function main(msSinceLastCall) {
+        requestAnimationFrame(main);
+    }*/
+
+    // run through a map, takes a hero and a map
+    function Instance(hero, map) {
         console.log("instance constructor start");
         this.hero = hero;
-        this.level = level;
+        this.map = map;
         this.roomIndex = 0;
+        this.complete = false;
 
         this.init()
         
@@ -55,7 +69,7 @@ namespace.module('botOfExile.main', function (exports, require) {
 
     Instance.prototype.run = function() {
         var now = new Date().getTime();
-        var room = this.level.rooms[this.roomIndex];
+        var room = this.map.rooms[this.roomIndex];
         var monsters = room.monsters;
         var mon;
 
@@ -70,12 +84,26 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.dumbRender(monsters);
 
         // if hero is due to attack, do it
-        if (this.hero.na < now) {
+        if (monsters.length > 0 && (this.hero.na < now || SPEED_TESTING)) {
             this.doAttack(this.hero, monsters[0]);
             if (!monsters[0].isAlive()) {
                 console.log(this.hero.name + " killed " + monsters[0].name + "!");
-                monsters.splice(0, 1);
                 this.hero.gainXp(50);
+                var droppedItems = monsters[0].getDrop();
+                var item;
+                for (var i = 0; i < droppedItems; i++) {
+                    item = droppedItems[i];
+                    if (item.type == 'weapon' && item.level > this.hero.weapon.level) {
+                        console.log("Upgraded Hero's level " + this.hero.weapon.level + " weapon to level " + item.level);
+                        this.hero.weapon = item;
+                    } else if (item.type == 'armor' && item.level > this.hero.armor.level) {
+                        console.log("Upgraded Hero's level " + this.hero.armor.level + " armor to level " + item.level);
+                        this.hero.armor = item;
+                    } else {
+                        throw "WTF item not weapon or armor";
+                    }
+                }
+                monsters.splice(0, 1);
             }
         }
         // if any monsters are due to attack, do it
@@ -98,16 +126,25 @@ namespace.module('botOfExile.main', function (exports, require) {
         }
 
         // queue up next tick
-        if (this.roomIndex < this.level.rooms.length && this.hero.isAlive()) {
+        if (this.roomIndex < this.map.rooms.length && this.hero.isAlive()) {
             requestAnimationFrame(this.run.bind(this));
+        } else {
+            this.complete = true;
         }
     }
 
     Instance.prototype.doAttack = function(attacker, target) {
-        var dmg = attacker.rollDamage();
+        //var roll = attacker.rollDamage();
+        //var cr = target.armor.getConstReduction();
+        //var dmg = roll - cr;
+        //dmg = dmg > 0 ? dmg : 0;
+        //console.log("Do Attack, initial damage: " + roll + ", const reduction: " + cr + ", actual: " + dmg);
+
+        var dmg = attacker.rollDamage() - target.armor.getConstReduction();
+        dmg = dmg > 0 ? dmg : 0;
         target.hp -= dmg;
         attacker.na += attacker.mspa;
-        console.log(attacker.name + ' hit ' + target.name + ' for ' + dmg + ' damage!');
+        //console.log(attacker.name + ' hit ' + target.name + ' for ' + dmg + ' damage!');
     }
 
     Instance.prototype.dumbRender = function(monsters) {
@@ -120,7 +157,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         $('#mobs').html(tempstr);
     }
 
-    function Actor(type, name, hpMax, mspa, dmgMin, dmgMax) {
+    function Actor(type, name, hpMax, mspa, dmgMin, dmgMax, level) {
         this.type = type;
         this.name = name;
         this.hpMax = hpMax;
@@ -130,6 +167,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.mspa = mspa;               // sec per attack
         this.dmgMin = dmgMin;
         this.dmgMax = dmgMax;
+        this.level = level;
     }
 
     Actor.prototype.isAlive = function() {
@@ -144,8 +182,6 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.str = 20;
         this.vit = 20;
         this.xp = 0;
-        this.level = 1;
-
 
         this.weapon = weapon ? weapon : new Weapon(1);
         this.armor = armor ? armor : new Armor(1);
@@ -156,29 +192,46 @@ namespace.module('botOfExile.main', function (exports, require) {
         var mspa = 800;
         var dmgMin = this.weapon.dmgMin * this.dmgMod;
         var dmgMax = this.weapon.dmgMax * this.dmgMod;
+        var level = 1;
 
-        Actor.call(this, 'hero', name, hpMax, mspa, dmgMin, dmgMax);
+        Actor.call(this, 'hero', name, hpMax, mspa, dmgMin, dmgMax, level);
     }
 
     Hero.subclass(Actor);
 
     Hero.prototype.gainXp = function(xp) {
         this.xp += xp;
-        var lvlUpXP = parseInt(100/1.2 * Math.pow(1.2, this.level));
-        console.log(this.xp + "/" +lvlUpXP);
-        if(this.xp >= lvlUpXP) {
-            this.xp -= lvlUpXP;
+        //var lvlUpXP = parseInt(100/1.2 * Math.pow(1.2, this.level));
+
+        //while (this.handleLeveling());
+        while (this.isNextLevel()) {
+            this.xp -= this.lvlUpXP;
             this.levelUp();
         }
     }
 
-    Hero.prototype.levelUp = function() {
-        this.level++;
-        this.str += 2;
-        this.vit += 2;
+    // factor out side effect of modifying this.levelUpXP
+    Hero.prototype.isNextLevel = function() {
+        this.lvlUpXP = parseInt(100 * Math.pow(1.2, this.level - 1));
+        console.log(this.xp + "/" + this.lvlUpXP);
+
+        if (this.xp >= this.lvlUpXP) {
+            return true;
+        }
+        return false;
+    }
+
+    Hero.prototype.initStats = function(level) {
+        this.str = 20 + this.level * 2;
+        this.vit = 20 + this.level * 2;
         this.dmgMod = this.str / 3;
         this.hpMax = this.vit * 5;
         this.hp = this.hpMax;
+    }
+
+    Hero.prototype.levelUp = function() {
+        this.level++;
+        this.initStats();
     }
 
     function Monster(name, level) {
@@ -192,6 +245,9 @@ namespace.module('botOfExile.main', function (exports, require) {
 
         this.dmgMod = this.str / 3;
 
+        //this.dropChance = 1 / 10;
+        this.dropChance = 1;
+
         var hpMax = this.vit * 3;
         var mspa = 1100;
         var dmgMin = this.weapon.dmgMin * this.dmgMod;
@@ -199,10 +255,28 @@ namespace.module('botOfExile.main', function (exports, require) {
 
         name = name ? name : 'fwah!';
 
-        Actor.call(this, 'monster', name, hpMax, mspa, dmgMin, dmgMax);
+        Actor.call(this, 'monster', name, hpMax, mspa, dmgMin, dmgMax, level);
     }
 
     Monster.subclass(Actor);
+
+    Monster.prototype.getDrop = function() {
+        var items = [];
+        // roll for if monster dropped
+        if (prob.binProb(this.dropChance)) {
+            var itemLevel = this.level - 1 + prob.pProb(2);
+            itemLevel = itemLevel > 0 ? itemLevel : 1;
+            // roll for armor or weapon
+            if (prob.binProb(0.5)) {
+                console.log("dropping level " + itemLevel +  " weapon");
+                items.push(new Weapon(itemLevel));
+            } else {
+                console.log("dropping level " + itemLevel +  " armor");
+                items.push(new Armor(itemLevel));
+            }
+        }
+        return items;
+    }
 
     function Item(type, level) {
         this.level = level;
@@ -211,7 +285,7 @@ namespace.module('botOfExile.main', function (exports, require) {
 
     function Weapon(level) {
         Item.call(this, 'weapon', level);
-        this.dmgMin = WEAPON_BASE * Math.pow(WEAPON_MULT, level);
+        this.dmgMin = WEAPON_BASE * Math.pow(WEAPON_MULT, level - 1);
         this.dmgMax = this.dmgMin * 2;
     }
 
@@ -219,12 +293,21 @@ namespace.module('botOfExile.main', function (exports, require) {
 
     function Armor(level) {
         Item.call(this, 'armor', level);
-        this.armor = ARMOR_BASE * Math.pow(ARMOR_MULT, level);
+        this.armor = ARMOR_BASE * Math.pow(ARMOR_MULT, level - 1);
     }
 
     Armor.subclass(Item);
 
-    function Level(type, level, len) {
+    Armor.prototype.getConstReduction = function () {
+        return this.armor;
+    }
+
+    // currently unused, make a nice little function for this
+    Armor.prototype.getPercentReduction = function() {
+        return 1;
+    }
+
+    function Map(type, level, len) {
         var types = {'forest': 1, 'desert': 0.6};
         var monsterCount;
         var mons;
@@ -250,7 +333,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         }
     }
 
-    Level.prototype.getMonsterName = function(names) {
+    Map.prototype.getMonsterName = function(names) {
         if (names.length == 0) {
             return;
         }

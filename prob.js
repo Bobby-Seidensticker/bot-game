@@ -23,9 +23,9 @@ namespace.module('prob', function (exports, require) {
     // p = 0.01 returns 1 on average once per 100 tries, 0 other times
     function binProb(p) {
         if (Math.random() < p) {
-            return 1;
+            return true;
         } else {
-            return 0;
+            return false;
         }
     }
 

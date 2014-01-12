@@ -85,11 +85,12 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.dumbRender(monsters);
 
         // if hero is due to attack, do it
-        if (monsters.length > 0 && (this.hero.na < now || SPEED_TESTING)) {
+        if (monsters.length > 0 && this.hero.na < now) {
             this.doAttack(this.hero, monsters[0]);
             if (!monsters[0].isAlive()) {
                 console.log(this.hero.name + " killed " + monsters[0].name + "!");
-                this.hero.gainXp(50);
+                //this.hero.gainXp(50);
+                this.hero.gainXp(monsters[0].xpOnKill());
                 this.hero.equip(monsters[0].getDrop());
 
                 monsters.splice(0, 1);
@@ -147,7 +148,10 @@ namespace.module('botOfExile.main', function (exports, require) {
         $('#mobs').html(tempstr);
     }
 
-    function Actor(type, name, hpMax, mspa, dmgMin, dmgMax, level) {
+    function Actor(type, name, hpMax, mspa, dmgMod, weapon, armor, level) {
+        if (SPEED_TESTING) {
+            mspa /= 10;
+        }
         this.type = type;
         this.name = name;
         this.hpMax = hpMax;
@@ -155,8 +159,9 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.la = new Date().getTime();
         this.na = this.la + this.mspa;  // next attack
         this.mspa = mspa;               // sec per attack
-        this.dmgMin = dmgMin;
-        this.dmgMax = dmgMax;
+        this.dmgMod = dmgMod;
+        this.weapon = weapon;
+        this.armor = armor;
         this.level = level;
     }
 
@@ -165,7 +170,11 @@ namespace.module('botOfExile.main', function (exports, require) {
     }
 
     Actor.prototype.rollDamage = function() {
-        return prob.rand(this.dmgMin, this.dmgMax);
+        var dmgMin, dmgMax;
+        dmgMin = this.weapon.dmgMin * this.dmgMod;
+        dmgMax = this.weapon.dmgMax * this.dmgMod;
+
+        return prob.rand(dmgMin, dmgMax);
     }
 
     Actor.prototype.equip = function(itemsDropped) {
@@ -175,38 +184,21 @@ namespace.module('botOfExile.main', function (exports, require) {
             if (ITEM_TYPES.indexOf(item.type) == -1) {
                 throw "WTF item not weapon or armor";
             }
-            if (item.type == 'weapon' && item.level > this.weapon.level) {
+            if (item.type == 'weapon' && this.weapon !== undefined && item.level > this.weapon.level) {
                 console.log("Upgraded Hero's level " + this.weapon.level + " weapon to level " + item.level);
                 this.weapon = item;
-            } else if (item.type == 'armor' && item.level > this.armor.level) {
+            } else if (item.type == 'armor' && this.armor !== undefined && item.level > this.armor.level) {
                 console.log("Upgraded Hero's level " + this.armor.level + " armor to level " + item.level);
                 this.armor = item;
             }
         }
     }
 
-    function Hero(name, weapon, armor) {
-        this.str = 20;
-        this.vit = 20;
-        this.xp = 0;
-
-        this.weapon = weapon ? weapon : new Weapon(1);
-        this.armor = armor ? armor : new Armor(1);
-
-        this.dmgMod = this.str / 3;
-
-        var hpMax = this.vit * 5;
-        var mspa = 800;
-        var dmgMin = this.weapon.dmgMin * this.dmgMod;
-        var dmgMax = this.weapon.dmgMax * this.dmgMod;
-        var level = 1;
-
-        Actor.call(this, 'hero', name, hpMax, mspa, dmgMin, dmgMax, level);
+    Actor.prototype.xpOnKill = function() {
+        return Math.floor(50 * Math.pow(1.1, this.level - 1));
     }
 
-    Hero.subclass(Actor);
-
-    Hero.prototype.gainXp = function(xp) {
+    Actor.prototype.gainXp = function(xp) {
         this.xp += xp;
         //var lvlUpXP = parseInt(100/1.2 * Math.pow(1.2, this.level));
 
@@ -218,8 +210,8 @@ namespace.module('botOfExile.main', function (exports, require) {
     }
 
     // factor out side effect of modifying this.levelUpXP
-    Hero.prototype.isNextLevel = function() {
-        this.lvlUpXP = parseInt(100 * Math.pow(1.2, this.level - 1));
+    Actor.prototype.isNextLevel = function() {
+        this.lvlUpXP = Math.floor(100 * Math.pow(1.2, this.level - 1));
         console.log(this.xp + "/" + this.lvlUpXP);
 
         if (this.xp >= this.lvlUpXP) {
@@ -228,41 +220,56 @@ namespace.module('botOfExile.main', function (exports, require) {
         return false;
     }
 
-    Hero.prototype.initStats = function(level) {
-        this.str = 20 + this.level * 2;
-        this.vit = 20 + this.level * 2;
-        this.dmgMod = this.str / 3;
+    Actor.prototype.initStats = function(level) {
+        this.str = 18 + this.level * 2;
+        this.vit = 18 + this.level * 2;
+        this.dmgMod = this.calcDmgMod();
         this.hpMax = this.vit * 5;
         this.hp = this.hpMax;
     }
 
-    Hero.prototype.levelUp = function() {
+    Actor.prototype.levelUp = function() {
         this.level++;
         this.initStats();
     }
 
-    function Monster(name, level) {
+    Actor.prototype.calcDmgMod = function() {
+        return this.str / 3;
+    }
+
+    function Hero(name, weapon, armor) {
+        this.str = 20;  // TODO make these derive from formula instead of hardcoded
+        this.vit = 20;
+        this.xp = 0;
+
+        var weapon = weapon ? weapon : new Weapon(1);
+        var armor = armor ? armor : new Armor(1);
+        var dmgMod = this.str / 3;
+        var hpMax = this.vit * 5;
+        var mspa = 800;
+        var level = 1;
+
+        Actor.call(this, 'hero', name, hpMax, mspa, dmgMod, weapon, armor, level);
+    }
+
+    Hero.subclass(Actor);
+
+    function Monster(name, level, weapon, armor, dmgMod) {
         this.str = 10 + level * 2;
         this.vit = 10 * level * 2;
 
-        //this.weapon = weapon ? weapon : new Weapon(level);
-        //this.armor = armor ? armor : new Armor(level);
-        this.weapon = new Weapon(level);
-        this.armor = new Armor(level);
+        var weapon = weapon ? weapon : new Weapon(level);
+        var armor = armor ? armor : new Armor(level);
+        var dmgMod = dmgMod ? dmgMod : this.str / 3;
 
-        this.dmgMod = this.str / 3;
-
-        //this.dropChance = 1 / 10;
-        this.dropChance = 1;
+        this.dropChance = 1 / 10;
 
         var hpMax = this.vit * 3;
         var mspa = 1100;
-        var dmgMin = this.weapon.dmgMin * this.dmgMod;
-        var dmgMax = this.weapon.dmgMax * this.dmgMod;
 
         name = name ? name : 'fwah!';
 
-        Actor.call(this, 'monster', name, hpMax, mspa, dmgMin, dmgMax, level);
+        Actor.call(this, 'monster', name, hpMax, mspa, dmgMod, weapon, armor, level);
     }
 
     Monster.subclass(Actor);

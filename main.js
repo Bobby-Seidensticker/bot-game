@@ -15,16 +15,25 @@ namespace.module('botOfExile.main', function (exports, require) {
     var ARMOR_MULT = 1.2;
     var ITEM_TYPES = ['weapon', 'armor'];
 
-    var SPEED_TESTING = true;
+    var TC = 20;  // time coefficient
 
     var currentInstance;
     var you;
 
+    var $autoRun = $('#auto-run');
+    var $singleRun = $('#single-run');
+
     function onReady() {
         you = new Hero('Bobbeh');
 
-        tick();
-        tickInterval = setInterval(tick, 200);
+        // When they click the button, try to start an instance
+        $singleRun.click(tryStartInstance);
+
+        // if state of the checkbox changes, try to start an instance if auto run is checked
+        $autoRun.change(onTick);
+
+        // once per second, try to start an instance if auto run is checked
+        tickInterval = setInterval(onTick, 1000);
 
         console.log("end onready");
         // request animation frame takes a function and calls it up to 60 times per second if there are cpu resources available
@@ -32,13 +41,23 @@ namespace.module('botOfExile.main', function (exports, require) {
         //requestAnimationFrame(main);
     }
 
-    function tick() {
-        if (currentInstance === undefined || currentInstance.complete) {
-            you.initStats();
-            var mapLevel = you.level - 5 >= 1 ? you.level - 5 : 1;
-            var mapRooms = 50;
-            currentInstance = new Instance(you, new Map('forest', mapLevel, mapRooms));
+    function onTick() {
+        if ($autoRun[0].checked) {
+            tryStartInstance();
         }
+    }
+
+    function tryStartInstance() {
+        if (currentInstance === undefined || currentInstance.complete) {
+            startInstance();
+        }
+    }
+
+    function startInstance() {
+        you.initStats();
+        var mapLevel = you.level - 5 >= 1 ? you.level - 5 : 1;
+        var mapRooms = 50;
+        currentInstance = new Instance(you, new Map('forest', mapLevel, mapRooms));        
     }
 
     /*    // main loop, requestAnimationFrame automatically gives the first argument
@@ -62,68 +81,91 @@ namespace.module('botOfExile.main', function (exports, require) {
     }
 
     Instance.prototype.init = function() {
-        var now = new Date().getTime();
-        this.hero.la = now - this.mspa;
-        this.na = now;
         this.roomIndex = 0;
+        this.startTime = new Date().getTime();
+        this.curTime = 0;
+        this.stopTime = 0;
     }
 
     Instance.prototype.run = function() {
         var now = new Date().getTime();
-        var room = this.map.rooms[this.roomIndex];
-        var monsters = room.monsters;
-        var mon;
+        this.stopTime = (now - this.startTime) * TC;
+        console.log("Run, advancing " + (this.stopTime - this.curTime) + " ms");
 
-        // initialize room if necessary
-        if (!room.initialized) {
-            console.log("Hero entered room " + this.roomIndex);
-            console.log(monsters.length + " monsters in the room!");
-            room.init(now);
-            // hero always attacks immediately after getting in the room, monsters start at cooldown
-            this.hero.na = now;
-            if (monsters.length === 0) {
-                this.hero.initStats();
+        //var now = new Date().getTime();
+        var room, monsters, mon, nextAttacker;
+
+        while (this.curTime < this.stopTime) {
+
+            if (this.roomIndex >= this.map.rooms.length || !this.hero.isAlive()) {
+                this.complete = true;
+                return;  // bad coding
             }
-        }
-        this.dumbRender(monsters);
 
-        // if hero is due to attack, do it
-        if (monsters.length > 0 && this.hero.na < now) {
-            this.doAttack(this.hero, monsters[0]);
-            if (!monsters[0].isAlive()) {
-                console.log(this.hero.name + " killed " + monsters[0].name + "!");
-                //this.hero.gainXp(50);
-                this.hero.gainXp(monsters[0].xpOnKill());
-                this.hero.equip(monsters[0].getDrop());
+            room = this.map.rooms[this.roomIndex];
+            monsters = room.monsters;
 
-                monsters.splice(0, 1);
+            // advance if necessary
+            if (monsters.length == 0) {
+                console.log("Cleared room " + this.roomIndex);
+                this.roomIndex++;
+                if (this.roomIndex < this.map.rooms.length) {
+                    room = this.map.rooms[this.roomIndex];
+                    monsters = room.monsters;
+                } else {
+                    break;   // bad coding
+                }
             }
-        }
-        // if any monsters are due to attack, do it
-        for (var i = 0; i < monsters.length; i++) {
-            mon = monsters[i];
-            if (mon.na < now) {
+
+            // initialize room if necessary
+            if (!room.initialized) {
+                console.log("Hero entered room " + this.roomIndex);
+                console.log(monsters.length + " monsters in the room!");
+                room.init(this.curTime);
+                // hero always attacks immediately after getting in the room, monsters start at cooldown
+                this.hero.na = this.curTime;
+                if (monsters.length === 0) {
+                    this.hero.initStats();
+                    continue;   // find a way to do this without continues
+                }
+            }
+            this.dumbRender(monsters);
+
+            //nextAttacker = this.getNextAttacker(this.hero, monsters);
+
+            var nextAttack = this.hero.na;
+            var nextAttacker = this.hero;
+            for (var i = 0; i < monsters.length; i++) {
+                if (monsters[i].na < nextAttack) {
+                    nextAttack = monsters[i].na;
+                    nextAttacker = monsters[i];
+                }
+            }
+            this.curTime = nextAttack;
+
+            if (nextAttacker.type == 'hero') {
+                this.doAttack(this.hero, monsters[0]);
+                if (!monsters[0].isAlive()) {
+                    console.log(this.hero.name + " killed " + monsters[0].name + "!");
+                    this.hero.gainXp(monsters[0].xpOnKill());
+                    this.hero.equip(monsters[0].getDrop());
+
+                    monsters.splice(0, 1);
+                }
+            } else if (nextAttacker.type == 'monster') {
+                mon = nextAttacker;
                 this.doAttack(mon, this.hero);
                 if (!this.hero.isAlive()) {
                     console.log(mon.name + " killed hero " + this.hero.name + "!");
-                    console.log("IT'S OVER!");
-                    break;
                 }
             }
-        }
 
-        // advance if necessary
-        if (monsters.length == 0) {
-            console.log("Cleared room " + this.roomIndex);
-            this.roomIndex++;
         }
 
         // queue up next tick
-        if (this.roomIndex < this.map.rooms.length && this.hero.isAlive()) {
-            requestAnimationFrame(this.run.bind(this));
-        } else {
-            this.complete = true;
-        }
+        //if (this.roomIndex < this.map.rooms.length && this.hero.isAlive()) {
+        requestAnimationFrame(this.run.bind(this));
+        //}
     }
 
     Instance.prototype.doAttack = function(attacker, target) {
@@ -152,16 +194,12 @@ namespace.module('botOfExile.main', function (exports, require) {
     }
 
     function Actor(type, name, hpMax, mspa, dmgMod, weapon, armor, level) {
-        if (SPEED_TESTING) {
-            mspa /= 10;
-        }
         this.type = type;
         this.name = name;
         this.hpMax = hpMax;
         this.hp = this.hpMax;
-        this.la = new Date().getTime();
-        this.na = this.la + this.mspa;  // next attack
-        this.mspa = mspa;               // sec per attack
+        this.na = new Date().getTime() + mspa;  // next attack
+        this.mspa = mspa;                       // sec per attack
         this.dmgMod = dmgMod;
         this.weapon = weapon;
         this.armor = armor;
@@ -367,11 +405,10 @@ namespace.module('botOfExile.main', function (exports, require) {
     }
 
     Room.prototype.init = function (now) {
-        if (!now) {
+        if (typeof(now) !== 'number') {
             throw "Room init requires time arg";
         }
         for (var i = 0; i < this.monsters.length; i++) {
-            this.monsters[i].la = now;
             this.monsters[i].na = now + this.monsters[i].mspa;
         }
         this.initialized = true;

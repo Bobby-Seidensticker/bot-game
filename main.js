@@ -13,6 +13,7 @@ namespace.module('botOfExile.main', function (exports, require) {
     var WEAPON_MULT = 1.2;
     var ARMOR_BASE = 10;
     var ARMOR_MULT = 1.2;
+    var ITEM_TYPES = ['weapon', 'armor'];
 
     var SPEED_TESTING = false;
 
@@ -35,7 +36,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         if (currentInstance === undefined || currentInstance.complete) {
             you.initStats();
             var mapLevel = you.level - 5 >= 1 ? you.level - 5 : 1;
-            var mapRooms = 5;
+            var mapRooms = 50;
             currentInstance = new Instance(you, new Map('forest', mapLevel, mapRooms));
         }
     }
@@ -89,20 +90,8 @@ namespace.module('botOfExile.main', function (exports, require) {
             if (!monsters[0].isAlive()) {
                 console.log(this.hero.name + " killed " + monsters[0].name + "!");
                 this.hero.gainXp(50);
-                var droppedItems = monsters[0].getDrop();
-                var item;
-                for (var i = 0; i < droppedItems; i++) {
-                    item = droppedItems[i];
-                    if (item.type == 'weapon' && item.level > this.hero.weapon.level) {
-                        console.log("Upgraded Hero's level " + this.hero.weapon.level + " weapon to level " + item.level);
-                        this.hero.weapon = item;
-                    } else if (item.type == 'armor' && item.level > this.hero.armor.level) {
-                        console.log("Upgraded Hero's level " + this.hero.armor.level + " armor to level " + item.level);
-                        this.hero.armor = item;
-                    } else {
-                        throw "WTF item not weapon or armor";
-                    }
-                }
+                this.hero.equip(monsters[0].getDrop());
+
                 monsters.splice(0, 1);
             }
         }
@@ -148,8 +137,9 @@ namespace.module('botOfExile.main', function (exports, require) {
     }
 
     Instance.prototype.dumbRender = function(monsters) {
-        $('#room').html("Room #: " + this.roomIndex);
-        $('#hero').html(this.hero.name + "<br>Lvl: " + this.hero.level + "<br>XP: " + this.hero.xp + "<br>HP: " + this.hero.hp);
+        //$('#room').html("Room #: " + this.roomIndex);
+        $('#room').html(sprintf("Room #: %d", this.roomIndex));
+        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d", this.hero.name, this.hero.level, this.hero.xp, this.hero.hp, this.hero.hpMax, this.hero.weapon.level, this.hero.armor.level));
         var tempstr = "<br><br>";
         for(var i in monsters) {
             tempstr += monsters[i].name + "'s HP:" + monsters[i].hp + "<br>";
@@ -176,6 +166,23 @@ namespace.module('botOfExile.main', function (exports, require) {
 
     Actor.prototype.rollDamage = function() {
         return prob.rand(this.dmgMin, this.dmgMax);
+    }
+
+    Actor.prototype.equip = function(itemsDropped) {
+        var item;
+        for (var i = 0; i < itemsDropped.length; i++) {
+            item = itemsDropped[i];
+            if (ITEM_TYPES.indexOf(item.type) == -1) {
+                throw "WTF item not weapon or armor";
+            }
+            if (item.type == 'weapon' && item.level > this.weapon.level) {
+                console.log("Upgraded Hero's level " + this.weapon.level + " weapon to level " + item.level);
+                this.weapon = item;
+            } else if (item.type == 'armor' && item.level > this.armor.level) {
+                console.log("Upgraded Hero's level " + this.armor.level + " armor to level " + item.level);
+                this.armor = item;
+            }
+        }
     }
 
     function Hero(name, weapon, armor) {

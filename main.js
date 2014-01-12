@@ -15,7 +15,7 @@ namespace.module('botOfExile.main', function (exports, require) {
     var ARMOR_MULT = 1.2;
     var ITEM_TYPES = ['weapon', 'armor'];
 
-    var SPEED_TESTING = false;
+    var SPEED_TESTING = true;
 
     var currentInstance;
     var you;
@@ -24,7 +24,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         you = new Hero('Bobbeh');
 
         tick();
-        tickInterval = setInterval(tick, 2000);
+        tickInterval = setInterval(tick, 200);
 
         console.log("end onready");
         // request animation frame takes a function and calls it up to 60 times per second if there are cpu resources available
@@ -81,6 +81,9 @@ namespace.module('botOfExile.main', function (exports, require) {
             room.init(now);
             // hero always attacks immediately after getting in the room, monsters start at cooldown
             this.hero.na = now;
+            if (monsters.length === 0) {
+                this.hero.initStats();
+            }
         }
         this.dumbRender(monsters);
 
@@ -262,7 +265,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         var armor = armor ? armor : new Armor(level);
         var dmgMod = dmgMod ? dmgMod : this.str / 3;
 
-        this.dropChance = 1 / 10;
+        this.dropChance = 1 / 2;
 
         var hpMax = this.vit * 3;
         var mspa = 1100;

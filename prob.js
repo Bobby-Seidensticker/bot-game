@@ -11,10 +11,16 @@ namespace.module('prob', function (exports, require) {
 
     // returns a random integer >= min and <= max
     function rand(min, max) {  // INCLUSIVE ON BOTH SIDES
+        if (typeof(min) !== 'number' || typeof(max) !== 'number') {
+            throw "rand() must be called with 2 numbers"
+        }
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     function pyRand(min, max) {  // inclusive of min, exclusive of max
+        if (typeof(min) !== 'number' || typeof(max) !== 'number') {
+            throw "pyRand() must be called with 2 numbers"
+        }
         return Math.floor(Math.random() * (max - min) + min);
     }
 

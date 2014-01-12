@@ -15,7 +15,7 @@ namespace.module('botOfExile.main', function (exports, require) {
     var ARMOR_MULT = 1.2;
     var ITEM_TYPES = ['weapon', 'armor'];
 
-    var TC = 20;  // time coefficient
+    var TC = 200;  // time coefficient
 
     var currentInstance;
     var you;
@@ -99,6 +99,7 @@ namespace.module('botOfExile.main', function (exports, require) {
 
             if (this.roomIndex >= this.map.rooms.length || !this.hero.isAlive()) {
                 this.complete = true;
+                onTick();
                 return;  // bad coding
             }
 
@@ -296,8 +297,8 @@ namespace.module('botOfExile.main', function (exports, require) {
     Hero.subclass(Actor);
 
     function Monster(name, level, weapon, armor, dmgMod) {
-        this.str = 10 + level * 2;
-        this.vit = 10 * level * 2;
+        this.str = Math.floor(20 + level * 1.6);
+        this.vit = Math.floor(20 + level * 1.6);
 
         var weapon = weapon ? weapon : new Weapon(level);
         var armor = armor ? armor : new Armor(level);

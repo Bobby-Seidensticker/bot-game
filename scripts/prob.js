@@ -1,4 +1,4 @@
-namespace.module('prob', function (exports, require) {
+namespace.module('bot.prob', function (exports, require) {
     exports.extend({
         'rand': rand,
         'pyRand': pyRand,

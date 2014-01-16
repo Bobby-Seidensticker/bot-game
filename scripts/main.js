@@ -1,8 +1,8 @@
-namespace.module('botOfExile.main', function (exports, require) {
+namespace.module('bot.main', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
-    prob = namespace.prob;
+    prob = namespace.bot.prob;
 
     exports.extend({
         'onReady': onReady

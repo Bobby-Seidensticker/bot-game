@@ -85,21 +85,35 @@ namespace.module('bot.main', function (exports, require) {
         this.startTime = new Date().getTime();
         this.curTime = 0;
         this.stopTime = 0;
+        this.damageIndicators = [];
     }
 
     Instance.prototype.run = function() {
         var now = new Date().getTime();
         this.stopTime = (now - this.startTime) * TC;
         //console.log("Run, advancing " + (this.stopTime - this.curTime) + " ms");
+        this.dumbRender(this.map.rooms[this.roomIndex].monsters);
 
+
+        //  Set targets for each alive actor - TODO smart targeting
+        this.hero.target = this.map.rooms[this.roomIndex].monsters[0];
+        for( var i in this.map.rooms[this.roomIndex].monsters) {
+            this.map.rooms[this.roomIndex].monsters[i].target = this.hero;
+        }
+
+        //move actors towards their targets
+        this.hero.moveTowards(this.hero.target);
+        for( var i in this.map.rooms[this.roomIndex].monsters) {
+            this.map.rooms[this.roomIndex].monsters[i].moveTowards(this.hero);
+        }
+
+        //attacks if possible
         while (this.curTime < this.stopTime) {
             this.ensureOccupiedRoom();
 
             if (this.isComplete()) {
                 break;
             }
-
-            this.dumbRender(this.map.rooms[this.roomIndex].monsters);
 
             this.doNextAttack();
         }
@@ -136,7 +150,6 @@ namespace.module('bot.main', function (exports, require) {
                 console.log(this.hero.name + " killed " + monsters[0].name + "!");
                 this.hero.gainXp(monsters[0].xpOnKill());
                 this.hero.equip(monsters[0].getDrop());
-
                 monsters.splice(0, 1);
             }
         } else if (nextAttacker.type == 'monster') {
@@ -180,6 +193,7 @@ namespace.module('bot.main', function (exports, require) {
     Instance.prototype.doAttack = function(attacker, target) {
         var dmg = attacker.rollDamage() - target.armor.getConstReduction();
         dmg = dmg > 0 ? dmg : 0;
+        this.damageIndicators.push(new DamageIndicator(target, dmg));
         target.hp -= dmg;
         attacker.na += attacker.mspa;
         console.log(sprintf("%s hit %s for %d dmg!", attacker.name, target.name, dmg));
@@ -187,6 +201,12 @@ namespace.module('bot.main', function (exports, require) {
 
     Instance.prototype.dumbRender = function(monsters) {
         //$('#room').html("Room #: " + this.roomIndex);
+        cvs = document.getElementById("myCanvas");
+        var ctx=cvs.getContext("2d");
+        ctx.clearRect(0,0,900,600);
+        ctx.fillStyle="#0000FF"; //Hero color is blue
+        ctx.fillRect(this.hero.x- this.hero.size/2, this.hero.y- this.hero.size/2,this.hero.size,this.hero.size);
+
         $('#room').html(sprintf("Room #: %d", this.roomIndex));
         $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d",
                                 this.hero.name, this.hero.level, this.hero.xp,
@@ -195,8 +215,18 @@ namespace.module('bot.main', function (exports, require) {
         var tempstr = "<br><br>";
         for (var i in monsters) {
             tempstr += sprintf("%s's HP: %d/%d<br>", monsters[i].name, monsters[i].hp, monsters[i].hpMax);
+            ctx.fillStyle="#444444"; //Enemy color is dark grey
+            ctx.fillRect(monsters[i].x-monsters[i].size/2,monsters[i].y - monsters[i].size/2,monsters[i].size,monsters[i].size);      
         }
         $('#mobs').html(tempstr);
+
+        for (var i in this.damageIndicators) {
+            if(this.damageIndicators[i].render()){ // render passes back true when indicator needs to be killed
+                this.damageIndicators.splice(i, 1);
+            }
+        }
+
+
     }
 
     function Actor(type, name, hpMax, mspa, dmgMod, weapon, armor, level) {
@@ -211,6 +241,9 @@ namespace.module('bot.main', function (exports, require) {
         this.weapon = weapon;
         this.armor = armor;
         this.level = level;
+        this.target;
+        this.size = 50; //px size of actor
+
     }
 
     Actor.prototype.isAlive = function() {
@@ -285,16 +318,31 @@ namespace.module('bot.main', function (exports, require) {
         return this.str / 3;
     }
 
+    Actor.prototype.moveTowards = function(target){
+        if(target != undefined) {
+            if(Math.abs(this.x - target.x) > (this.size + target.size)/2) {
+                var dx = (target.x - this.x)/Math.abs(target.x - this.x);
+                this.x += dx;
+            }
+            if(Math.abs(this.y - target.y) > (this.size + target.size)/2) {
+                var dy = (target.y - this.y)/Math.abs(target.y - this.y);
+                this.y += dy;
+            }
+        }
+    }
+
     function Hero(name, weapon, armor) {
         this.str = 20;  // TODO make these derive from formula instead of hardcoded
         this.vit = 20;
         this.xp = 0;
+        this.x = 100;
+        this.y = 275;
 
         var weapon = weapon ? weapon : new Weapon(1);
         var armor = armor ? armor : new Armor(1);
         var dmgMod = this.str / 3;
         var hpMax = this.vit * 5;
-        var mspa = 800;
+        var mspa = 700;
         var level = 1;
 
         Actor.call(this, 'hero', name, hpMax, mspa, dmgMod, weapon, armor, level);
@@ -304,6 +352,8 @@ namespace.module('bot.main', function (exports, require) {
 
     Hero.prototype.onEmptyRoom = function(curTime) {
         this.na = curTime;
+        this.x = 100;
+        this.y = 275;
         this.initStats();
     }
 
@@ -318,7 +368,10 @@ namespace.module('bot.main', function (exports, require) {
         this.dropChance = 1 / 2;
 
         var hpMax = this.vit * 3;
-        var mspa = 1100;
+        var mspa = 1000;
+
+        this.x = 500 + Math.random()*300;
+        this.y = 100 + Math.random()*450;
 
         name = name ? name : 'fwah!';
 
@@ -423,6 +476,28 @@ namespace.module('bot.main', function (exports, require) {
             this.monsters[i].na = now + this.monsters[i].mspa;
         }
         this.initialized = true;
+    }
+
+    function DamageIndicator(target, dmg) {
+        this.x = target.x;
+        this.y = target.y;
+        this.dmg = dmg;
+        this.age = 0;
+    }
+
+    DamageIndicator.prototype.render = function() {
+        if (this.age < 30) {
+            cvs = document.getElementById("myCanvas");
+            var ctx=cvs.getContext("2d");
+            
+            ctx.fillStyle="rgba(255,0,0," + parseFloat((25-this.age)/25) + ")"; //Damage is red
+            ctx.fillText(parseInt(this.dmg), this.x, this.y-this.age*2);
+            this.age++;
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
 });

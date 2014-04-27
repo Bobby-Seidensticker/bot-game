@@ -1,0 +1,11 @@
+CanvasUI
+  CanvasUI($dungeonDiv, $heroDiv, $invDiv)
+  addInstance(instance)
+  render()  // placeholder, will be overwritten with each functions necessary stuff
+  
+
+DungeonView(CanvasUI)
+
+HeroView(CanvasUI)
+
+InventoryView(CanvasUI)

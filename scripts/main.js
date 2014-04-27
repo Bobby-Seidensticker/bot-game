@@ -2,7 +2,8 @@ namespace.module('bot.main', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
-    prob = namespace.bot.prob;
+    window.prob = namespace.bot.prob;
+    var views = namespace.bot.views;
 
     exports.extend({
         'onReady': onReady
@@ -18,12 +19,25 @@ namespace.module('bot.main', function (exports, require) {
     var TC = 1;  // time coefficient
 
     var currentInstance;
+    var canvasUI;
     var you;
 
     var $autoRun = $('#auto-run');
     var $singleRun = $('#single-run');
 
     function onReady() {
+
+        // TODO: this is a real shitty way of initializing the visualization
+        //function CanvasUI($container, $dungeon, $hero, $inv) {
+        canvasUI = new views.CanvasUI($('#vis'), $('#dungeon'), $('#hero'), $('#inv'));
+
+        //        $('#vis').append('<canvas width=600 height=600 id="level"></canvas><canvas width=200 height=600 id="inv"></canvas>');
+
+        // TODO: should this onready function know this much? Should DOM modification be shifted over to views? YES YES YES
+        //        levelView = new views.LevelView($('#level'));
+        //        invView = new views.InvView($('#inv'));
+
+        // TODO: if heroObjInLocalStorage() then loadHeroFromLocalStorage() else createNewHero()
         you = new Hero('Bobbeh');
 
         // When they click the button, try to start an instance
@@ -57,7 +71,8 @@ namespace.module('bot.main', function (exports, require) {
         you.initStats();
         var mapLevel = you.level - 5 >= 1 ? you.level - 5 : 1;
         var mapRooms = 50;
-        currentInstance = new Instance(you, new Map('forest', mapLevel, mapRooms));        
+        currentInstance = new Instance(you, new Map('forest', mapLevel, mapRooms));
+        canvasUI.addInstance(currentInstance);
     }
 
     /*    // main loop, requestAnimationFrame automatically gives the first argument
@@ -109,6 +124,7 @@ namespace.module('bot.main', function (exports, require) {
         } else {
             requestAnimationFrame(this.run.bind(this));
         }
+        canvasUI.updateAll();
     }
 
     Instance.prototype.doNextAttack = function() {
@@ -186,6 +202,7 @@ namespace.module('bot.main', function (exports, require) {
     }
 
     Instance.prototype.dumbRender = function(monsters) {
+        return;
         //$('#room').html("Room #: " + this.roomIndex);
         $('#room').html(sprintf("Room #: %d", this.roomIndex));
         $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d",

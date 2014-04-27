@@ -1,10 +1,18 @@
-canvas {
-    width: 800px;
-    height: 600px;
+#vis {
+    position: relative;
+    width: 600px;
+    height: 400px;
     float: left;
 
     /*margin: 5px;*/
     margin: 4px;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+.subVis {
+    position: absolute;
+    margin: -1px;
     border: 1px solid black;
 }
 

@@ -23,6 +23,37 @@ namespace.module('bot.main', function (exports, require) {
     var $autoRun = $('#auto-run');
     var $singleRun = $('#single-run');
 
+    var actions = { 
+                    "basicAttack":{ 
+                                    "type":"melee",
+                                    "range":100,
+                                    "damageMult":1,
+                                    "manaCost":0,
+                                    "chargeTime":0,
+                                    "attackTime":600,
+                                    "targetRequired":true
+                                    },
+                    "heavyStrike":{ 
+                                    "type":"melee",
+                                    "range":100,
+                                    "damageMult":3,
+                                    "manaCost":20,
+                                    "chargeTime":200,
+                                    "attackTime":600,
+                                    "targetRequired":true
+                                    },
+                    "approachTarget":{  "type":"movement",
+                                        "targetRequired":true,
+                                        "chargeTime":0
+                                    },
+                    "getRandTarget":{   "type":"target",
+                                        "targetRequired":false,
+                                        "chargeTime":0
+                                    }
+                    }; 
+
+
+
     function onReady() {
         you = new Hero('Bobbeh');
 
@@ -67,15 +98,17 @@ namespace.module('bot.main', function (exports, require) {
 
     // run through a map, takes a hero and a map
     function Instance(hero, map) {
+        this.entities = [[],[]];  // 0  is hero and allied entities, 1 is enemies
+        this.init()
+        
+        requestAnimationFrame(this.run.bind(this));
+
         console.log("instance constructor start");
         this.hero = hero;
         this.map = map;
         this.roomIndex = 0;
         this.complete = false;
 
-        this.init()
-        
-        requestAnimationFrame(this.run.bind(this));
 
         console.log("instance constructor end");
     }
@@ -83,22 +116,65 @@ namespace.module('bot.main', function (exports, require) {
     Instance.prototype.init = function() {
         this.roomIndex = 0;
         this.startTime = new Date().getTime();
+        this.previousTime = this.startTime;
         this.curTime = 0;
         this.stopTime = 0;
         this.damageIndicators = [];
+        this.entities[0] = [this.hero];
+    }
+
+    Instance.prototype.initRoom = function() {
+        var room = this.map.rooms[this.roomIndex]
+        this.entities[1] = room.monsters;
+        this.hero.onEnterRoom(this.curTime);
+
+        room.init(this.curTime);
+    }
+
+
+    Instance.prototype.tryFinishRoom = function() {
+        var room = this.map.rooms[this.roomIndex];
+        var monsters = room.monsters;
+
+        while (monsters.length === 0 && !(this.roomIndex >= this.map.rooms.length)) {
+            this.roomIndex++;
+            console.log("entering room " + this.roomIndex);
+            if (this.roomIndex < this.map.rooms.length) {
+                this.initRoom();
+            }
+        }
+    }
+
+    Instance.prototype.isComplete = function() {
+        if (!this.hero.isAlive()) {
+            return true;
+        }
+        if (this.roomIndex >= this.map.rooms.length) {
+            return true;
+        }
+        return false;
+    }
+
+
+    Instance.prototype.finishRoom = function() {
+
     }
 
     Instance.prototype.run = function() {
         var now = new Date().getTime();
         this.stopTime = (now - this.startTime) * TC;
-        //console.log("Run, advancing " + (this.stopTime - this.curTime) + " ms");
-        this.dumbRender(this.map.rooms[this.roomIndex].monsters);
+        console.log("Run, advancing " + (this.stopTime - this.curTime) + " ms");
+
+
+        var dt = now - this.previousTime;
+        console.log(dt);
+        this.previousTime = now;
 
 
         //  Set targets for each alive actor - TODO smart targeting
         this.hero.target = this.map.rooms[this.roomIndex].monsters[0];
-        for( var i in this.map.rooms[this.roomIndex].monsters) {
-            this.map.rooms[this.roomIndex].monsters[i].target = this.hero;
+        for( var i in this.entities[1]) {
+            this.entities[1].target = this.hero;
         }
 
         //move actors towards their targets
@@ -109,7 +185,7 @@ namespace.module('bot.main', function (exports, require) {
 
         //attacks if possible
         while (this.curTime < this.stopTime) {
-            this.ensureOccupiedRoom();
+            this.tryFinishRoom();
 
             if (this.isComplete()) {
                 break;
@@ -117,7 +193,9 @@ namespace.module('bot.main', function (exports, require) {
 
             this.doNextAttack();
         }
-
+        //console.log(this.map.rooms[this.roomIndex].monsters);
+        //console.log(this.entities[1]);
+        this.dumbRender(this.map.rooms[this.roomIndex].monsters);
         if (this.isComplete()) {
             onTick();
         } else {
@@ -161,34 +239,7 @@ namespace.module('bot.main', function (exports, require) {
         }
     }
 
-    Instance.prototype.isComplete = function() {
-        if (!this.hero.isAlive()) {
-            return true;
-        }
-        if (this.roomIndex >= this.map.rooms.length) {
-            return true;
-        }
-        return false;
-    }
 
-    Instance.prototype.ensureOccupiedRoom = function() {
-        var room = this.map.rooms[this.roomIndex];
-        var monsters = room.monsters;
-
-        while (monsters.length === 0 && !(this.roomIndex >= this.map.rooms.length)) {
-            this.roomIndex++;
-            if (this.roomIndex < this.map.rooms.length) {
-                room = this.map.rooms[this.roomIndex]
-                monsters = room.monsters;
-
-                if (monsters.length === 0) {
-                    this.hero.onEmptyRoom(this.curTime);
-                }
-
-                room.init(this.curTime);
-            }
-        }
-    }
 
     Instance.prototype.doAttack = function(attacker, target) {
         var dmg = attacker.rollDamage() - target.armor.getConstReduction();
@@ -227,6 +278,10 @@ namespace.module('bot.main', function (exports, require) {
         }
 
 
+    }
+
+    Instance.prototype.getDistance = function(a1, a2) {
+        return Math.sqrt(Math.pow(a1.x - a2.x, 2), Math.pow(a1.y - a2.y, 2));  
     }
 
     function Actor(type, name, hpMax, mspa, dmgMod, weapon, armor, level) {
@@ -338,6 +393,8 @@ namespace.module('bot.main', function (exports, require) {
         this.x = 100;
         this.y = 275;
 
+        this.actionChain = ["heavyStrike", "basicAttack", "approachTarget", "getRandTarget"];
+
         var weapon = weapon ? weapon : new Weapon(1);
         var armor = armor ? armor : new Armor(1);
         var dmgMod = this.str / 3;
@@ -350,8 +407,8 @@ namespace.module('bot.main', function (exports, require) {
 
     Hero.subclass(Actor);
 
-    Hero.prototype.onEmptyRoom = function(curTime) {
-        this.na = curTime;
+    Hero.prototype.onEnterRoom = function(curTime) {
+        this.na = curTime + this.mspa;
         this.x = 100;
         this.y = 275;
         this.initStats();
@@ -360,6 +417,8 @@ namespace.module('bot.main', function (exports, require) {
     function Monster(name, level, weapon, armor, dmgMod) {
         this.str = Math.floor(20 + level * 1.6);
         this.vit = Math.floor(20 + level * 1.6);
+
+        this.actionChain = ["basicAttack", "approachTarget", "getRandTarget"];
 
         var weapon = weapon ? weapon : new Weapon(level);
         var armor = armor ? armor : new Armor(level);

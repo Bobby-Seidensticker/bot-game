@@ -23,32 +23,28 @@ namespace.module('botOfExile.main', function (exports, require) {
     var $autoRun = $('#auto-run');
     var $singleRun = $('#single-run');
 
-    var actions = { 
+    var actionDictionary = { 
                     "basicAttack":{ 
-                                    "type":"melee",
+                                    "type":"attack",
                                     "range":100,
                                     "damageMult":1,
                                     "manaCost":0,
-                                    "chargeTime":0,
                                     "attackTime":600,
                                     "targetRequired":true
                                     },
                     "heavyStrike":{ 
-                                    "type":"melee",
+                                    "type":"attack",
                                     "range":100,
                                     "damageMult":3,
                                     "manaCost":20,
-                                    "chargeTime":200,
                                     "attackTime":600,
                                     "targetRequired":true
                                     },
                     "approachTarget":{  "type":"movement",
-                                        "targetRequired":true,
-                                        "chargeTime":0
+                                        "targetRequired":true
                                     },
                     "getRandTarget":{   "type":"target",
-                                        "targetRequired":false,
-                                        "chargeTime":0
+                                        "targetRequired":false
                                     }
                     }; 
 
@@ -166,9 +162,15 @@ namespace.module('botOfExile.main', function (exports, require) {
         console.log("Run, advancing " + (this.stopTime - this.curTime) + " ms");
 
 
-        var dt = now - this.previousTime;
+        var dt = now - this.previousTime;  //each run, calcs the time delta, and uses that as argument in individual actor update functions
         console.log(dt);
         this.previousTime = now;
+
+        for( var i in this.entities ) {
+            for ( var j in this.entities[i] ) {
+                this.entities[i][j].update(dt);
+            }
+        }
 
 
         //  Set targets for each alive actor - TODO smart targeting
@@ -289,6 +291,10 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.name = name;
         this.hpMax = hpMax;
         this.hp = this.hpMax;
+
+        this.mpMax = 20;
+        this.mp = mpMax;
+
         this.na = 0;
         //this.na = new Date().getTime() + mspa;  // next attack
         this.mspa = mspa;                       // sec per attack
@@ -296,10 +302,62 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.weapon = weapon;
         this.armor = armor;
         this.level = level;
-        this.target;
+        this.target = undefined;
         this.size = 50; //px size of actor
 
+        this.cooldownTime = 0; //ms until actor can make a new action.  When moving or attacks finish, cooldown will be zero.  When attack is done, cooldown in incremented by that attacks cooldown time.  
+        this.currentAction = ""; // current action is the string name of the action the Actor is performing. an empty string implies the actor has no current action and is available to select a new one. 
+
+        this.actionChain = ["basicAttack", "approachTarget", "getRandTarget"]; // The actionchain is a string array of the names of actions which the actor can perform.  Actions are attempted in order until a valid action is found or all fail. 
+
     }
+
+
+    //Update decrements cooldownTime until it reaches zero, then performs another action.
+    Actor.prototype.update = function(dt) {
+        this.cooldownTime = Math.max(0, this.cooldownTime - dt);
+        if( this.cooldownTime === 0) {
+            this.currentAction = "";
+            this.selectNextAction();
+        }
+    }
+
+    //goes through each action in the action chain, seeing if it has the requirements to perform it.  If all attempted but none valid, nothing happens.
+    Actor.prototype.selectNextAction = function() {
+        var hasTarget = (this.target != undefined);
+        if (hasTarget) {
+            var targetRange = this.distanceTo(this.target);
+        }
+        for (var actionName in this.actionChain) {
+            var action = actionDictionary[actionName];
+
+            //make sure has target if target is required
+            if(!action["targetRequired"] || this.target != undefined ) {
+
+                //if attack, make sure the action's range and mana cost requirements are met.
+                if(action.type == "attack") {
+                    if(action.range < targetRange || action.manaCost > this.mp) {
+                        continue;
+                    }
+                }
+                this.performAction(actionName);
+                break;        
+            }
+        }
+    }
+
+    Actor.prototype.performAction = function(actionName) {
+        var action = actionDictionary[actionName];
+
+        switch(action.type) {
+        case "attack":
+            console.log("attack");
+            break;
+        default:
+            console.log("performAction: action type not recognized");
+        }
+
+    }   
 
     Actor.prototype.isAlive = function() {
         return this.hp > 0;
@@ -386,6 +444,10 @@ namespace.module('botOfExile.main', function (exports, require) {
         }
     }
 
+    Actor.prototype.distanceTo = function(target) {
+        return Math.sqrt(Math.pow(this.x - target.x, 2), Math.pow(this.y - target.y, 2));  
+    }
+
     function Hero(name, weapon, armor) {
         this.str = 20;  // TODO make these derive from formula instead of hardcoded
         this.vit = 20;
@@ -418,7 +480,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.str = Math.floor(20 + level * 1.6);
         this.vit = Math.floor(20 + level * 1.6);
 
-        this.actionChain = ["basicAttack", "approachTarget", "getRandTarget"];
+
 
         var weapon = weapon ? weapon : new Weapon(level);
         var armor = armor ? armor : new Armor(level);

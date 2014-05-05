@@ -1,8 +1,8 @@
-namespace.module('bot.main', function (exports, require) {
+namespace.module('botOfExile.main', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
-    prob = namespace.bot.prob;
+    prob = namespace.prob;
 
     exports.extend({
         'onReady': onReady
@@ -23,32 +23,30 @@ namespace.module('bot.main', function (exports, require) {
     var $autoRun = $('#auto-run');
     var $singleRun = $('#single-run');
 
-    var actions = { 
+    var actionDictionary = { 
                     "basicAttack":{ 
-                                    "type":"melee",
+                                    "type":"attack",
                                     "range":100,
                                     "damageMult":1,
                                     "manaCost":0,
-                                    "chargeTime":0,
-                                    "attackTime":600,
+                                    "skillDuration":600,
                                     "targetRequired":true
                                     },
                     "heavyStrike":{ 
-                                    "type":"melee",
+                                    "type":"attack",
                                     "range":100,
                                     "damageMult":3,
                                     "manaCost":20,
-                                    "chargeTime":200,
-                                    "attackTime":600,
+                                    "skillDuration":600,
                                     "targetRequired":true
                                     },
                     "approachTarget":{  "type":"movement",
                                         "targetRequired":true,
-                                        "chargeTime":0
+                                        "skillDuration":1
                                     },
-                    "getRandTarget":{   "type":"target",
+                    "getNearestTarget":{   "type":"target",
                                         "targetRequired":false,
-                                        "chargeTime":0
+                                        "skillDuration":1
                                     }
                     }; 
 
@@ -99,7 +97,7 @@ namespace.module('bot.main', function (exports, require) {
     // run through a map, takes a hero and a map
     function Instance(hero, map) {
         this.entities = [[],[]];  // 0  is hero and allied entities, 1 is enemies
-        this.init()
+        this.init();
         
         requestAnimationFrame(this.run.bind(this));
 
@@ -121,29 +119,29 @@ namespace.module('bot.main', function (exports, require) {
         this.stopTime = 0;
         this.damageIndicators = [];
         this.entities[0] = [this.hero];
-    }
+    };
 
     Instance.prototype.initRoom = function() {
-        var room = this.map.rooms[this.roomIndex]
+        var room = this.map.rooms[this.roomIndex];
         this.entities[1] = room.monsters;
         this.hero.onEnterRoom(this.curTime);
 
         room.init(this.curTime);
-    }
+    };
 
 
     Instance.prototype.tryFinishRoom = function() {
         var room = this.map.rooms[this.roomIndex];
         var monsters = room.monsters;
 
-        while (monsters.length === 0 && !(this.roomIndex >= this.map.rooms.length)) {
+        while (monsters.length === 0 && this.roomIndex < this.map.rooms.length) {
             this.roomIndex++;
             console.log("entering room " + this.roomIndex);
             if (this.roomIndex < this.map.rooms.length) {
                 this.initRoom();
             }
         }
-    }
+    };
 
     Instance.prototype.isComplete = function() {
         if (!this.hero.isAlive()) {
@@ -153,55 +151,38 @@ namespace.module('bot.main', function (exports, require) {
             return true;
         }
         return false;
-    }
+    };
 
 
     Instance.prototype.finishRoom = function() {
 
-    }
+    };
 
     Instance.prototype.run = function() {
         var now = new Date().getTime();
         this.stopTime = (now - this.startTime) * TC;
-        console.log("Run, advancing " + (this.stopTime - this.curTime) + " ms");
+        //console.log("Run, advancing " + (this.stopTime - this.curTime) + " ms");
 
 
-        var dt = now - this.previousTime;
-        console.log(dt);
+        var dt = now - this.previousTime;  //each run, calcs the time delta, and uses that as argument in individual actor update functions
+        //console.log(dt);
         this.previousTime = now;
 
-
-        //  Set targets for each alive actor - TODO smart targeting
-        this.hero.target = this.map.rooms[this.roomIndex].monsters[0];
-        for( var i in this.entities[1]) {
-            this.entities[1].target = this.hero;
-        }
-
-        //move actors towards their targets
-        this.hero.moveTowards(this.hero.target);
-        for( var i in this.map.rooms[this.roomIndex].monsters) {
-            this.map.rooms[this.roomIndex].monsters[i].moveTowards(this.hero);
-        }
-
-        //attacks if possible
-        while (this.curTime < this.stopTime) {
-            this.tryFinishRoom();
-
-            if (this.isComplete()) {
-                break;
+        for( var i in this.entities ) {
+            for ( var j in this.entities[i] ) {
+                this.entities[i][j].update(dt);
             }
-
-            this.doNextAttack();
         }
+
         //console.log(this.map.rooms[this.roomIndex].monsters);
         //console.log(this.entities[1]);
-        this.dumbRender(this.map.rooms[this.roomIndex].monsters);
+        this.dumbRender(this.entities[1]);
         if (this.isComplete()) {
             onTick();
         } else {
             requestAnimationFrame(this.run.bind(this));
         }
-    }
+    };
 
     Instance.prototype.doNextAttack = function() {
         // Find the next attacker
@@ -237,7 +218,7 @@ namespace.module('bot.main', function (exports, require) {
                 console.log(mon.name + " killed hero " + this.hero.name + "!");
             }
         }
-    }
+    };
 
 
 
@@ -248,7 +229,7 @@ namespace.module('bot.main', function (exports, require) {
         target.hp -= dmg;
         attacker.na += attacker.mspa;
         console.log(sprintf("%s hit %s for %d dmg!", attacker.name, target.name, dmg));
-    }
+    };
 
     Instance.prototype.dumbRender = function(monsters) {
         //$('#room').html("Room #: " + this.roomIndex);
@@ -271,24 +252,28 @@ namespace.module('bot.main', function (exports, require) {
         }
         $('#mobs').html(tempstr);
 
-        for (var i in this.damageIndicators) {
+        for ( i in this.damageIndicators) {
             if(this.damageIndicators[i].render()){ // render passes back true when indicator needs to be killed
                 this.damageIndicators.splice(i, 1);
             }
         }
 
 
-    }
+    };
 
     Instance.prototype.getDistance = function(a1, a2) {
         return Math.sqrt(Math.pow(a1.x - a2.x, 2), Math.pow(a1.y - a2.y, 2));  
-    }
+    };
 
     function Actor(type, name, hpMax, mspa, dmgMod, weapon, armor, level) {
         this.type = type;
         this.name = name;
         this.hpMax = hpMax;
         this.hp = this.hpMax;
+
+        this.mpMax = 20;
+        this.mp = this.mpMax;
+
         this.na = 0;
         //this.na = new Date().getTime() + mspa;  // next attack
         this.mspa = mspa;                       // sec per attack
@@ -296,14 +281,97 @@ namespace.module('bot.main', function (exports, require) {
         this.weapon = weapon;
         this.armor = armor;
         this.level = level;
-        this.target;
+        this.target = undefined;
+
         this.size = 50; //px size of actor
+        this.movementSpeed = 0.03;//in px per ms (1 is fast!)
+
+        this.cooldownTime = 0; //ms until actor can make a new action.  When moving or attacks finish, cooldown will be zero.  When attack is done, cooldown in incremented by that attacks cooldown time.  
+        this.currentAction = ""; // current action is the string name of the action the Actor is performing. an empty string implies the actor has no current action and is available to select a new one. 
+
+        this.actionChain = ["basicAttack", "approachTarget", "getNearestTarget"]; // The actionchain is a string array of the names of actions which the actor can perform.  Actions are attempted in order until a valid action is found or all fail. 
 
     }
+
+
+    //Update decrements cooldownTime until it reaches zero, then performs another action.
+    Actor.prototype.update = function(dt) {
+
+        this.cooldownTime = Math.max(0, this.cooldownTime - dt); //TODO: keep remainder of dt to smooth < 30ms potential jitteryness
+        while( this.cooldownTime === 0 && dt > 0) {
+            this.currentAction = "";
+            dt = this.selectNextAction(dt); //returns a reduced dt value
+        }
+    };
+
+    //goes through each action in the action chain, seeing if it has the requirements to perform it.  If all attempted but none valid, nothing happens.
+    Actor.prototype.selectNextAction = function(dt) {
+
+        var hasTarget = (this.target !== undefined);
+        var targetRange;
+        if (hasTarget) {
+            targetRange = this.distanceTo(this.target);
+        }
+        for (var actionName in this.actionChain) {
+            var action = actionDictionary[actionName];
+
+            //make sure has target if target is required
+            if(!action.targetRequired || this.target !== undefined ) {
+
+                //if attack, make sure the action's range and mana cost requirements are met.
+                if(action.type == "attack") {
+                    if(action.range < targetRange || action.manaCost > this.mp) {
+                        continue;
+                    }
+                }
+                dt = this.performAction(dt, actionName); // returns a dt value, reduced by the amount of time the action took to perform. 
+                break;        
+            }
+        }
+        return dt; 
+    };
+
+    Actor.prototype.performAction = function(dt, actionName) {
+        var action = actionDictionary[actionName];
+        this.currentAction = actionName;
+        if(action.skillDuration > dt) {
+            this.cooldownTime = action.skillDuration - dt;
+        }
+        else {
+            dt = dt - action.skillDuration;
+        }
+
+        this.mp -= action.manaCost;
+
+        switch(action.type) {
+        case "attack":
+            this.doAttack(actionName);
+            break;
+        case "movement":
+            this.moveSkill(actionName);
+            break;
+        case "target":
+            this.target = this.getNearestEnemy();
+            break;    
+        default:
+            console.log("performAction: action type not recognized");
+            break;
+        }
+        return dt;
+
+    }; 
 
     Actor.prototype.isAlive = function() {
         return this.hp > 0;
-    }
+    };
+
+    Actor.prototype.doAttack = function(actionName) {
+        var dmg = this.rollDamage() - this.target.armor.getConstReduction();
+        dmg = dmg > 0 ? dmg : 0;
+        this.damageIndicators.push(new DamageIndicator(this.target, dmg));
+        this.target.hp -= dmg;
+        console.log(sprintf("%s hit %s for %d dmg using %s!", this.name, this.target.name, dmg, actionName));
+    };
 
     Actor.prototype.rollDamage = function() {
         var dmgMin, dmgMax;
@@ -311,7 +379,7 @@ namespace.module('bot.main', function (exports, require) {
         dmgMax = this.weapon.dmgMax * this.dmgMod;
 
         return prob.rand(dmgMin, dmgMax);
-    }
+    };
 
     Actor.prototype.equip = function(itemsDropped) {
         var item;
@@ -328,11 +396,11 @@ namespace.module('bot.main', function (exports, require) {
                 this.armor = item;
             }
         }
-    }
+    };
 
     Actor.prototype.xpOnKill = function() {
         return Math.floor(50 * Math.pow(1.1, this.level - 1));
-    }
+    };
 
     Actor.prototype.gainXp = function(xp) {
         this.xp += xp;
@@ -343,7 +411,7 @@ namespace.module('bot.main', function (exports, require) {
             this.xp -= this.lvlUpXP;
             this.levelUp();
         }
-    }
+    };
 
     // factor out side effect of modifying this.levelUpXP
     Actor.prototype.isNextLevel = function() {
@@ -354,7 +422,7 @@ namespace.module('bot.main', function (exports, require) {
             return true;
         }
         return false;
-    }
+    };
 
     Actor.prototype.initStats = function(level) {
         this.str = 18 + this.level * 2;
@@ -362,19 +430,19 @@ namespace.module('bot.main', function (exports, require) {
         this.dmgMod = this.calcDmgMod();
         this.hpMax = this.vit * 5;
         this.hp = this.hpMax;
-    }
+    };
 
     Actor.prototype.levelUp = function() {
         this.level++;
         this.initStats();
-    }
+    };
 
     Actor.prototype.calcDmgMod = function() {
         return this.str / 3;
-    }
+    };
 
     Actor.prototype.moveTowards = function(target){
-        if(target != undefined) {
+        if(target !== undefined) {
             if(Math.abs(this.x - target.x) > (this.size + target.size)/2) {
                 var dx = (target.x - this.x)/Math.abs(target.x - this.x);
                 this.x += dx;
@@ -384,7 +452,45 @@ namespace.module('bot.main', function (exports, require) {
                 this.y += dy;
             }
         }
-    }
+    };
+
+    Actor.prototype.distanceTo = function(target) {
+        return Math.sqrt(Math.pow(this.x - target.x, 2), Math.pow(this.y - target.y, 2));  
+    };
+
+    Actor.prototype.getNearestEnemy = function() {
+        var enemyAffinity = Math.abs(this.affinity - 1); // 0 > 1 , 1 > 0 , shouldn't be greater than 1
+        var enemies = currentInstance.entities[enemyAffinity];
+        var closestEnemyDist = undefined;
+        var closestEnemy;
+        for (var i in enemies) {
+            if (closestEnemyDist === undefined || this.distanceTo(enemies[i]) < closestEnemyDist) {
+                closestEnemy = enemies[i];
+                closestEnemyDist = this.distanceTo(enemies[i]);
+            }
+        }
+        return closestEnemy;
+    };
+
+    Actor.prototype.moveSkill = function(actionName) {
+        // TODO - filter by action name to accomodate multiple different kinds of movement styles
+
+        var targDist = this.distanceTo(this.target);
+        var axes = ["x", "y"];
+
+        //TODO  - fix movement overlap bug - allow collisions between all enemies, not just target
+        for( var i in axes) {
+            var axis = axes[i];
+            var sizeBuffer = (this.size + this.target.size)/2; //widths of the nearest halves of each actor
+            var dist = this.target[axis] - this[axis]; // dist on axis between enemies directionally
+            if (Math.abs(dist) >= sizeBuffer + this.movementSpeed) {
+                var direction = dist / Math.abs(dist);
+                this[axis] += this.movementSpeed * direction;
+            }
+
+        }
+    
+    };
 
     function Hero(name, weapon, armor) {
         this.str = 20;  // TODO make these derive from formula instead of hardcoded
@@ -392,8 +498,9 @@ namespace.module('bot.main', function (exports, require) {
         this.xp = 0;
         this.x = 100;
         this.y = 275;
+        this.affinity = 0; // hero and allies are affinity 0, enemies are affinity 1, entity array position
 
-        this.actionChain = ["heavyStrike", "basicAttack", "approachTarget", "getRandTarget"];
+        this.actionChain = ["heavyStrike", "basicAttack", "approachTarget", "getNearestTarget"];
 
         var weapon = weapon ? weapon : new Weapon(1);
         var armor = armor ? armor : new Armor(1);
@@ -412,13 +519,14 @@ namespace.module('bot.main', function (exports, require) {
         this.x = 100;
         this.y = 275;
         this.initStats();
-    }
+    };
 
     function Monster(name, level, weapon, armor, dmgMod) {
         this.str = Math.floor(20 + level * 1.6);
         this.vit = Math.floor(20 + level * 1.6);
 
-        this.actionChain = ["basicAttack", "approachTarget", "getRandTarget"];
+
+        this.affinity = 1; // hero and allies are affinity 0, enemies are affinity 1, entity array position
 
         var weapon = weapon ? weapon : new Weapon(level);
         var armor = armor ? armor : new Armor(level);
@@ -455,7 +563,7 @@ namespace.module('bot.main', function (exports, require) {
             }
         }
         return items;
-    }
+    };
 
     function Item(type, level) {
         this.level = level;
@@ -479,12 +587,12 @@ namespace.module('bot.main', function (exports, require) {
 
     Armor.prototype.getConstReduction = function () {
         return this.armor;
-    }
+    };
 
     // currently unused, make a nice little function for this
     Armor.prototype.getPercentReduction = function() {
         return 1;
-    }
+    };
 
     function Map(type, level, len) {
         var types = {'forest': 1, 'desert': 0.6};
@@ -502,7 +610,9 @@ namespace.module('bot.main', function (exports, require) {
         //var monster = { 'hp': 5, 'dmgLow': 2, 'dmgHigh': 4, 'spa': 1 };
 
         for (var i = 0; i < this.len; i++) {
-            monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic']
+            monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic'];
+            console.log(this);
+            console.log(prob);
             monsterCount = prob.pProb(this.monster_count);
             mons = [];
             for (var j = 0; j < monsterCount; j++) {
@@ -513,14 +623,14 @@ namespace.module('bot.main', function (exports, require) {
     }
 
     Map.prototype.getMonsterName = function(names) {
-        if (names.length == 0) {
+        if (names.length === 0) {
             return;
         }
-        var rand = prob.pyRand(0, names.length)
+        var rand = prob.pyRand(0, names.length);
         var name = names[rand];
         names.splice(rand, 1);
         return name;
-    }
+    };
 
     function Room(monsters) {
         this.monsters = monsters;
@@ -535,7 +645,7 @@ namespace.module('bot.main', function (exports, require) {
             this.monsters[i].na = now + this.monsters[i].mspa;
         }
         this.initialized = true;
-    }
+    };
 
     function DamageIndicator(target, dmg) {
         this.x = target.x;
@@ -557,6 +667,6 @@ namespace.module('bot.main', function (exports, require) {
             return true;
         }
 
-    }
+    };
 
 });

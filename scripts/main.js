@@ -1,8 +1,8 @@
-namespace.module('botOfExile.main', function (exports, require) {
+namespace.module('bot.main', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
-    prob = namespace.prob;
+    prob = namespace.bot.prob;
 
     exports.extend({
         'onReady': onReady
@@ -17,8 +17,11 @@ namespace.module('botOfExile.main', function (exports, require) {
 
     var TC = 1;  // time coefficient
 
+
     var currentInstance;
     var you;
+
+
 
     var $autoRun = $('#auto-run');
     var $singleRun = $('#single-run');
@@ -26,7 +29,7 @@ namespace.module('botOfExile.main', function (exports, require) {
     var actionDictionary = { 
                     "basicAttack":{ 
                                     "type":"attack",
-                                    "range":100,
+                                    "range":60,
                                     "damageMult":1,
                                     "manaCost":0,
                                     "skillDuration":600,
@@ -34,8 +37,8 @@ namespace.module('botOfExile.main', function (exports, require) {
                                     },
                     "heavyStrike":{ 
                                     "type":"attack",
-                                    "range":100,
-                                    "damageMult":3,
+                                    "range":150,
+                                    "damageMult":1.5,
                                     "manaCost":20,
                                     "skillDuration":600,
                                     "targetRequired":true
@@ -97,7 +100,7 @@ namespace.module('botOfExile.main', function (exports, require) {
     // run through a map, takes a hero and a map
     function Instance(hero, map) {
         this.entities = [[],[]];  // 0  is hero and allied entities, 1 is enemies
-        this.init();
+
         
         requestAnimationFrame(this.run.bind(this));
 
@@ -107,11 +110,12 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.roomIndex = 0;
         this.complete = false;
 
-
+        this.init();
         console.log("instance constructor end");
     }
 
     Instance.prototype.init = function() {
+        console.log("new instance");
         this.roomIndex = 0;
         this.startTime = new Date().getTime();
         this.previousTime = this.startTime;
@@ -119,22 +123,22 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.stopTime = 0;
         this.damageIndicators = [];
         this.entities[0] = [this.hero];
+        this.hero.dead = false;
+        this.initRoom();
     };
 
     Instance.prototype.initRoom = function() {
+        console.log("new room");
         var room = this.map.rooms[this.roomIndex];
         this.entities[1] = room.monsters;
+        console.log(this.entities[1]);
         this.hero.onEnterRoom(this.curTime);
-
         room.init(this.curTime);
     };
 
 
     Instance.prototype.tryFinishRoom = function() {
-        var room = this.map.rooms[this.roomIndex];
-        var monsters = room.monsters;
-
-        while (monsters.length === 0 && this.roomIndex < this.map.rooms.length) {
+        while (this.entities[1].length === 0 && this.roomIndex < this.map.rooms.length) {
             this.roomIndex++;
             console.log("entering room " + this.roomIndex);
             if (this.roomIndex < this.map.rooms.length) {
@@ -145,6 +149,7 @@ namespace.module('botOfExile.main', function (exports, require) {
 
     Instance.prototype.isComplete = function() {
         if (!this.hero.isAlive()) {
+            console.log("hero dead");
             return true;
         }
         if (this.roomIndex >= this.map.rooms.length) {
@@ -170,10 +175,18 @@ namespace.module('botOfExile.main', function (exports, require) {
 
         for( var i in this.entities ) {
             for ( var j in this.entities[i] ) {
-                this.entities[i][j].update(dt);
+                //console.log(this.entities);    
+                if(this.entities[i][j] !== undefined){
+                    if(i == 1 && this.entities[i][j].dead) {
+                        //console.log("dead cleanup");
+                        this.entities[i].splice(j, 1);
+                    } else {
+                        this.entities[i][j].update(dt);
+                    }
+                }
             }
         }
-
+        this.tryFinishRoom();
         //console.log(this.map.rooms[this.roomIndex].monsters);
         //console.log(this.entities[1]);
         this.dumbRender(this.entities[1]);
@@ -182,6 +195,7 @@ namespace.module('botOfExile.main', function (exports, require) {
         } else {
             requestAnimationFrame(this.run.bind(this));
         }
+
     };
 
     Instance.prototype.doNextAttack = function() {
@@ -240,9 +254,9 @@ namespace.module('botOfExile.main', function (exports, require) {
         ctx.fillRect(this.hero.x- this.hero.size/2, this.hero.y- this.hero.size/2,this.hero.size,this.hero.size);
 
         $('#room').html(sprintf("Room #: %d", this.roomIndex));
-        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d",
+        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>MP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d",
                                 this.hero.name, this.hero.level, this.hero.xp,
-                                Math.ceil(this.hero.hp), this.hero.hpMax, this.hero.weapon.level,
+                                Math.ceil(this.hero.hp), this.hero.hpMax, Math.ceil(this.hero.mp), this.hero.mpMax, this.hero.weapon.level,
                                 this.hero.armor.level));
         var tempstr = "<br><br>";
         for (var i in monsters) {
@@ -270,8 +284,9 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.name = name;
         this.hpMax = hpMax;
         this.hp = this.hpMax;
+        this.dead = false;
 
-        this.mpMax = 20;
+        this.mpMax = 50;
         this.mp = this.mpMax;
 
         this.na = 0;
@@ -284,18 +299,22 @@ namespace.module('botOfExile.main', function (exports, require) {
         this.target = undefined;
 
         this.size = 50; //px size of actor
-        this.movementSpeed = 0.03;//in px per ms (1 is fast!)
+        this.movementSpeed = 0.1//0.03;//in px per ms (1 is fast!)
 
         this.cooldownTime = 0; //ms until actor can make a new action.  When moving or attacks finish, cooldown will be zero.  When attack is done, cooldown in incremented by that attacks cooldown time.  
         this.currentAction = ""; // current action is the string name of the action the Actor is performing. an empty string implies the actor has no current action and is available to select a new one. 
 
-        this.actionChain = ["basicAttack", "approachTarget", "getNearestTarget"]; // The actionchain is a string array of the names of actions which the actor can perform.  Actions are attempted in order until a valid action is found or all fail. 
+
 
     }
 
 
     //Update decrements cooldownTime until it reaches zero, then performs another action.
     Actor.prototype.update = function(dt) {
+        if(this.dead){
+            return;
+        }
+
 
         this.cooldownTime = Math.max(0, this.cooldownTime - dt); //TODO: keep remainder of dt to smooth < 30ms potential jitteryness
         while( this.cooldownTime === 0 && dt > 0) {
@@ -312,10 +331,15 @@ namespace.module('botOfExile.main', function (exports, require) {
         if (hasTarget) {
             targetRange = this.distanceTo(this.target);
         }
-        for (var actionName in this.actionChain) {
-            var action = actionDictionary[actionName];
+        for (var i in this.actionChain) {
+            var action = actionDictionary[this.actionChain[i]]
 
-            //make sure has target if target is required
+
+            //if(this.actionChain[i] == "heavyStrike") {
+            //    console.log([this, action]);    
+            //}
+
+;            //make sure has target if target is required
             if(!action.targetRequired || this.target !== undefined ) {
 
                 //if attack, make sure the action's range and mana cost requirements are met.
@@ -324,7 +348,7 @@ namespace.module('botOfExile.main', function (exports, require) {
                         continue;
                     }
                 }
-                dt = this.performAction(dt, actionName); // returns a dt value, reduced by the amount of time the action took to perform. 
+                dt = this.performAction(dt, this.actionChain[i]); // returns a dt value, reduced by the amount of time the action took to perform. 
                 break;        
             }
         }
@@ -332,6 +356,7 @@ namespace.module('botOfExile.main', function (exports, require) {
     };
 
     Actor.prototype.performAction = function(dt, actionName) {
+        //console.log(sprintf("performing %s", actionName));
         var action = actionDictionary[actionName];
         this.currentAction = actionName;
         if(action.skillDuration > dt) {
@@ -340,12 +365,10 @@ namespace.module('botOfExile.main', function (exports, require) {
         else {
             dt = dt - action.skillDuration;
         }
-
-        this.mp -= action.manaCost;
-
         switch(action.type) {
         case "attack":
             this.doAttack(actionName);
+            //console.log("attacking with " + this.mp + "mp");
             break;
         case "movement":
             this.moveSkill(actionName);
@@ -362,16 +385,37 @@ namespace.module('botOfExile.main', function (exports, require) {
     }; 
 
     Actor.prototype.isAlive = function() {
-        return this.hp > 0;
+        return !this.dead;
     };
 
     Actor.prototype.doAttack = function(actionName) {
-        var dmg = this.rollDamage() - this.target.armor.getConstReduction();
+        var action = actionDictionary[actionName];
+        var dmg = action.damageMult * this.rollDamage() - this.target.armor.getConstReduction();
+        this.mp -= action.manaCost;
         dmg = dmg > 0 ? dmg : 0;
-        this.damageIndicators.push(new DamageIndicator(this.target, dmg));
-        this.target.hp -= dmg;
-        console.log(sprintf("%s hit %s for %d dmg using %s!", this.name, this.target.name, dmg, actionName));
+        currentInstance.damageIndicators.push(new DamageIndicator(this.target, dmg));
+        //this.target.hp -= dmg;
+        var manacost = action.manaCost ? action.manaCost : 0;
+        console.log(sprintf("%s hit %s for %d dmg using %s! (costs %d)", this.name, this.target.name, dmg, actionName, manacost));
+        this.target.takeDamage(this, dmg);
+        
     };
+
+    Actor.prototype.takeDamage = function(attacker, dmg) {
+        this.hp = Math.max(0, this.hp-dmg);
+        if(this.hp === 0) {
+            if(attacker.type == "hero"){
+                attacker.gainXp(attacker.xpOnKill(this));
+            }
+            attacker.target = undefined;
+            this.die();
+        }
+    };
+
+    Actor.prototype.die = function() {
+        this.dead = true;
+        //Todo - cleanup dead critter
+    }
 
     Actor.prototype.rollDamage = function() {
         var dmgMin, dmgMax;
@@ -398,8 +442,8 @@ namespace.module('botOfExile.main', function (exports, require) {
         }
     };
 
-    Actor.prototype.xpOnKill = function() {
-        return Math.floor(50 * Math.pow(1.1, this.level - 1));
+    Actor.prototype.xpOnKill = function(deceased) {
+        return Math.floor(50 * Math.pow(1.1, deceased.level - 1));
     };
 
     Actor.prototype.gainXp = function(xp) {
@@ -416,6 +460,7 @@ namespace.module('botOfExile.main', function (exports, require) {
     // factor out side effect of modifying this.levelUpXP
     Actor.prototype.isNextLevel = function() {
         this.lvlUpXP = Math.floor(100 * Math.pow(1.2, this.level - 1));
+        //console.log(this);
         console.log(this.xp + "/" + this.lvlUpXP);
 
         if (this.xp >= this.lvlUpXP) {
@@ -489,7 +534,7 @@ namespace.module('botOfExile.main', function (exports, require) {
             }
 
         }
-    
+
     };
 
     function Hero(name, weapon, armor) {
@@ -510,14 +555,20 @@ namespace.module('botOfExile.main', function (exports, require) {
         var level = 1;
 
         Actor.call(this, 'hero', name, hpMax, mspa, dmgMod, weapon, armor, level);
+
+        this.movementSpeed = 0.2;
+
     }
 
     Hero.subclass(Actor);
 
     Hero.prototype.onEnterRoom = function(curTime) {
         this.na = curTime + this.mspa;
+        this.target = undefined;
         this.x = 100;
         this.y = 275;
+        this.cooldownTime = 0;
+        this.mp = this.mpMax;
         this.initStats();
     };
 
@@ -539,7 +590,7 @@ namespace.module('botOfExile.main', function (exports, require) {
 
         this.x = 500 + Math.random()*300;
         this.y = 100 + Math.random()*450;
-
+        this.actionChain = ["basicAttack", "approachTarget", "getNearestTarget"]; // The actionchain is a string array of the names of actions which the actor can perform.  Actions are attempted in order until a valid action is found or all fail. 
         name = name ? name : 'fwah!';
 
         Actor.call(this, 'monster', name, hpMax, mspa, dmgMod, weapon, armor, level);
@@ -611,9 +662,7 @@ namespace.module('botOfExile.main', function (exports, require) {
 
         for (var i = 0; i < this.len; i++) {
             monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic'];
-            console.log(this);
-            console.log(prob);
-            monsterCount = prob.pProb(this.monster_count);
+            monsterCount = prob.pProb(this.monster_count) + 1;// increasing monster count by one so monster always present TODO - tune this value better.
             mons = [];
             for (var j = 0; j < monsterCount; j++) {
                 mons[j] = new Monster(this.getMonsterName(monsterNames), level);
@@ -668,5 +717,22 @@ namespace.module('botOfExile.main', function (exports, require) {
         }
 
     };
+
+    function Projectile(owner, vector, size) {
+        this.owner = owner;
+        this.dx = vector[0];
+        this.dy = vector[1];
+        this.size = size;
+        this.affinity = owner.affinity;
+        this.x = owner.x;
+        this.y = owner.y;
+
+    }
+
+    Projectile.prototype.update = function(dt){
+        this.x += this.dx;
+        this.y += this.dy;
+        //Detect collision
+    }
 
 });

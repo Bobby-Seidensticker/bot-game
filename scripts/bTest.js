@@ -94,7 +94,7 @@ bTest.prototype.setBodies = function(bodyEntities, enableBullet) {
         bodyDef.position.y = entity.y;
         bodyDef.userData = entity.id;
         bodyDef.angle = entity.angle;
-        bodyDef.linearDamping = 10;
+        bodyDef.linearDamping = 1;
         bodyDef.angularDamping = 99999;
 
         if (enableBullet && entity.radius) bodyDef.bullet = true;
@@ -137,4 +137,24 @@ bTest.prototype.applyImpulse = function(bodyId, degrees, power) {
     body.ApplyImpulse(new b2Vec2(Math.cos(degrees * (Math.PI / 180)) * power,
                                  Math.sin(degrees * (Math.PI / 180)) * power),
                                  body.GetWorldCenter());
+}
+
+bTest.prototype.activateListener = function() {
+    var listener = new Box2D.Dynamics.b2ContactListener;
+    listener.BeginContact = function(contact) {
+        console.log('bump');
+        //console.log(contact.GetFixtureA().GetBody().GetUserData());
+        //console.log(contact.GetFixtureB().GetBody().GetUserData());        
+    }
+    listener.EndContact = function(contact) {
+        //console.log(['END', contact]);
+    }
+    listener.PostSolve = function(contact, impulse) {
+      //console.log(["post", contact, impulse]);
+        
+    }
+    listener.PreSolve = function(contact, oldManifold) {
+
+    }
+    this.world.SetContactListener(listener);
 }

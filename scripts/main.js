@@ -15,13 +15,24 @@ namespace.module('bot.main', function (exports, require) {
     var ARMOR_MULT = 1.2;
     var ITEM_TYPES = ['weapon', 'armor'];
 
-    var TC = 1;  // time coefficient
+    var LOG_ATTACKS = false;
 
+    var TC = 1;  // time coefficient
+    var FRAMERATE = 1000 / 60;
 
     var currentInstance;
     var you;
 
 
+
+    //Box2d and bTest stuff
+    var physCtx = document.getElementById("physCanvas").getContext("2d");
+    physCtx.strokeStyle = 'black';
+      physCtx.beginPath();
+      physCtx.arc(50, 50, 10, 0, Math.PI * 2, true);
+      physCtx.closePath();
+      physCtx.fill();
+      physCtx.stroke();
 
     var $autoRun = $('#auto-run');
     var $singleRun = $('#single-run');
@@ -111,6 +122,9 @@ namespace.module('bot.main', function (exports, require) {
         this.complete = false;
 
         this.init();
+
+        this.timeAccumulator = 0;
+
         console.log("instance constructor end");
     }
 
@@ -120,7 +134,7 @@ namespace.module('bot.main', function (exports, require) {
         this.startTime = new Date().getTime();
         this.previousTime = this.startTime;
         this.curTime = 0;
-        this.stopTime = 0;
+
         this.damageIndicators = [];
         this.entities[0] = [this.hero];
         this.hero.dead = false;
@@ -128,12 +142,12 @@ namespace.module('bot.main', function (exports, require) {
     };
 
     Instance.prototype.initRoom = function() {
-        console.log("new room");
+        console.log(["New Room contains", this.entities[1]]);
         var room = this.map.rooms[this.roomIndex];
         this.entities[1] = room.monsters;
-        console.log(this.entities[1]);
         this.hero.onEnterRoom(this.curTime);
         room.init(this.curTime);
+        box2DInit(this);
     };
 
 
@@ -165,8 +179,6 @@ namespace.module('bot.main', function (exports, require) {
 
     Instance.prototype.run = function() {
         var now = new Date().getTime();
-        this.stopTime = (now - this.startTime) * TC;
-        //console.log("Run, advancing " + (this.stopTime - this.curTime) + " ms");
 
 
         var dt = now - this.previousTime;  //each run, calcs the time delta, and uses that as argument in individual actor update functions
@@ -189,11 +201,24 @@ namespace.module('bot.main', function (exports, require) {
         this.tryFinishRoom();
         //console.log(this.map.rooms[this.roomIndex].monsters);
         //console.log(this.entities[1]);
-        this.dumbRender(this.entities[1]);
+
+        this.timeAccumulator += dt;
+        if(this.timeAccumulator >= FRAMERATE){
+            //this.timeAccumulator -= FRAMERATE;
+            this.timeAccumulator = 0;
+            //box.applyImpulse("Bobbeh", parseInt(0), parseInt(9999));
+            box2DUpdate();
+            draw();
+
+            this.dumbRender(this.entities[1]);    
+        }
+
+
+
         if (this.isComplete()) {
             onTick();
         } else {
-            requestAnimationFrame(this.run.bind(this));
+            requestAnimFrame(this.run.bind(this));
         }
 
     };
@@ -248,10 +273,10 @@ namespace.module('bot.main', function (exports, require) {
     Instance.prototype.dumbRender = function(monsters) {
         //$('#room').html("Room #: " + this.roomIndex);
         cvs = document.getElementById("myCanvas");
-        var ctx=cvs.getContext("2d");
-        ctx.clearRect(0,0,900,600);
-        ctx.fillStyle="#0000FF"; //Hero color is blue
-        ctx.fillRect(this.hero.x- this.hero.size/2, this.hero.y- this.hero.size/2,this.hero.size,this.hero.size);
+        var oldctx=cvs.getContext("2d");
+        oldctx.clearRect(0,0,900,600);
+        oldctx.fillStyle="#0000FF"; //Hero color is blue
+        oldctx.fillRect(this.hero.x- this.hero.size/2, this.hero.y- this.hero.size/2,this.hero.size,this.hero.size);
 
         $('#room').html(sprintf("Room #: %d", this.roomIndex));
         $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>MP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d",
@@ -261,8 +286,8 @@ namespace.module('bot.main', function (exports, require) {
         var tempstr = "<br><br>";
         for (var i in monsters) {
             tempstr += sprintf("%s's HP: %d/%d<br>", monsters[i].name, monsters[i].hp, monsters[i].hpMax);
-            ctx.fillStyle="#444444"; //Enemy color is dark grey
-            ctx.fillRect(monsters[i].x-monsters[i].size/2,monsters[i].y - monsters[i].size/2,monsters[i].size,monsters[i].size);      
+            oldctx.fillStyle="#444444"; //Enemy color is dark grey
+            oldctx.fillRect(monsters[i].x-monsters[i].size/2,monsters[i].y - monsters[i].size/2,monsters[i].size,monsters[i].size);      
         }
         $('#mobs').html(tempstr);
 
@@ -396,7 +421,7 @@ namespace.module('bot.main', function (exports, require) {
         currentInstance.damageIndicators.push(new DamageIndicator(this.target, dmg));
         //this.target.hp -= dmg;
         var manacost = action.manaCost ? action.manaCost : 0;
-        console.log(sprintf("%s hit %s for %d dmg using %s! (costs %d)", this.name, this.target.name, dmg, actionName, manacost));
+        if(LOG_ATTACKS) console.log(sprintf("%s hit %s for %d dmg using %s! (costs %d)", this.name, this.target.name, dmg, actionName, manacost));
         this.target.takeDamage(this, dmg);
         
     };
@@ -461,7 +486,7 @@ namespace.module('bot.main', function (exports, require) {
     Actor.prototype.isNextLevel = function() {
         this.lvlUpXP = Math.floor(100 * Math.pow(1.2, this.level - 1));
         //console.log(this);
-        console.log(this.xp + "/" + this.lvlUpXP);
+        //console.log(this.xp + "/" + this.lvlUpXP);
 
         if (this.xp >= this.lvlUpXP) {
             return true;
@@ -531,11 +556,21 @@ namespace.module('bot.main', function (exports, require) {
             if (Math.abs(dist) >= sizeBuffer + this.movementSpeed) {
                 var direction = dist / Math.abs(dist);
                 this[axis] += this.movementSpeed * direction;
+                var angle = this.angleToTarget(this.target);
+                box.applyImpulse(this.name, parseInt(angle), parseInt(9999));
+
             }
 
         }
 
     };
+
+    Actor.prototype.angleToTarget = function(target) {
+        var dx = target.x - this.x;
+        var dy = (target.y - this.y);
+        var theta = Math.atan2(dy, dx);
+        return theta * 180 / Math.PI;
+    }
 
     function Hero(name, weapon, armor) {
         this.str = 20;  // TODO make these derive from formula instead of hardcoded
@@ -661,7 +696,7 @@ namespace.module('bot.main', function (exports, require) {
         //var monster = { 'hp': 5, 'dmgLow': 2, 'dmgHigh': 4, 'spa': 1 };
 
         for (var i = 0; i < this.len; i++) {
-            monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic'];
+            monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic', 'j', 'boo', 'bob', 'smelly', 'harold', 'carter'];
             monsterCount = prob.pProb(this.monster_count) + 1;// increasing monster count by one so monster always present TODO - tune this value better.
             mons = [];
             for (var j = 0; j < monsterCount; j++) {
@@ -734,5 +769,228 @@ namespace.module('bot.main', function (exports, require) {
         this.y += this.dy;
         //Detect collision
     }
+
+
+
+    //Stuff from Box2d example
+    ///////////////////////////////
+    //////////////////////////////
+    //////////////////////
+
+    var SCALE = 1;
+    var NULL_CENTER = {x:null, y:null};
+    
+    function Entity(id, x, y, angle, center, color) {
+      this.id = id;
+      this.x = x;
+      this.y = y;
+      this.angle = angle || 0;
+      this.center = center;
+      this.color = color || "red";
+    }
+    
+    Entity.prototype.update = function(state) {
+      this.x = state.x;
+      this.y = state.y;
+      this.center = state.c;
+      this.angle = state.a;
+    }
+    
+    Entity.prototype.draw = function(ctx) {
+      /*ctx.fillStyle = 'black';
+      ctx.beginPath();
+      ctx.arc(this.x * SCALE, this.y * SCALE, 4, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = 'yellow';
+      ctx.beginPath();
+      ctx.arc(this.center.x * SCALE, this.center.y * SCALE, 2, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fill();*/
+    }
+    
+    Entity.build = function(def) {
+      if (def.radius) {
+        return new CircleEntity(def.id, def.x, def.y, def.angle, NULL_CENTER, def.color, def.radius);
+      } else if (def.polys) {
+        return new PolygonEntity(def.id, def.x, def.y, def.angle, NULL_CENTER, def.color, def.polys);
+      } else {
+        return new RectangleEntity(def.id, def.x, def.y, def.angle, NULL_CENTER, def.color, def.halfWidth, def.halfHeight);
+      }
+    }
+    
+    function CircleEntity(id, x, y, angle, center, color, radius) {
+      color = color ? color : 'aqua';
+      Entity.call(this, id, x, y, angle, center, color);
+      this.radius = radius;
+    }
+    CircleEntity.prototype = new Entity();
+    CircleEntity.prototype.constructor = CircleEntity;
+    
+    CircleEntity.prototype.draw = function(ctx) {
+      ctx.save();
+      ctx.translate(this.x * SCALE, this.y * SCALE);
+      ctx.rotate(this.angle);
+      ctx.translate(-(this.x) * SCALE, -(this.y) * SCALE);
+      
+      ctx.fillStyle = this.color;
+      //ctx.strokeStyle = 'black';
+      ctx.beginPath();
+      ctx.arc(this.x * SCALE, this.y * SCALE, this.radius * SCALE, 0, Math.PI * 2, true);
+      //ctx.moveTo(this.x * SCALE, this.y * SCALE);
+      //ctx.lineTo((this.x) * SCALE, (this.y + this.radius) * SCALE);
+      ctx.closePath();
+      ctx.fill();
+      //ctx.stroke();
+      
+      ctx.restore();
+      
+      Entity.prototype.draw.call(this, ctx);
+    }
+    
+    function RectangleEntity(id, x, y, angle, center, color, halfWidth, halfHeight) {
+      Entity.call(this, id, x, y, angle, center, color);
+      this.halfWidth = halfWidth;
+      this.halfHeight = halfHeight;
+    }
+    RectangleEntity.prototype = new Entity();
+    RectangleEntity.prototype.constructor = RectangleEntity;
+    
+    RectangleEntity.prototype.draw = function(ctx) {
+      ctx.save();
+      ctx.translate(this.x * SCALE, this.y * SCALE);
+      ctx.rotate(this.angle);
+      ctx.translate(-(this.x) * SCALE, -(this.y) * SCALE);
+      ctx.fillStyle = this.color;
+      ctx.fillRect((this.x-this.halfWidth) * SCALE,
+                   (this.y-this.halfHeight) * SCALE,
+                   (this.halfWidth*2) * SCALE,
+                   (this.halfHeight*2) * SCALE);
+      ctx.restore();
+      
+      Entity.prototype.draw.call(this, ctx);
+    }
+
+    var world = {};
+    var bodiesState = null;
+    var box = null;
+    
+    function box2DUpdate(animStart) {
+      box.update();
+      bodiesState = box.getState();
+      
+      for (var id in bodiesState) {
+        var entity = world[id];
+        if (entity) entity.update(bodiesState[id]);
+      }
+    }
+    
+    var ctx = document.getElementById("physCanvas").getContext("2d");
+    var canvasWidth = ctx.canvas.width;
+    var canvasHeight = ctx.canvas.height;
+    
+    function draw() {
+      //console.log("d");
+      
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      for (var id in world) {
+        var entity = world[id];
+        entity.draw(ctx);
+      }
+    }
+    /*
+    var initialState = [
+      {id: "ground", x: ctx.canvas.width / 2 / SCALE, y: ctx.canvas.height / SCALE, halfHeight: 0.5, halfWidth: ctx.canvas.width / SCALE, color: 'yellow'},
+      {id: "ball", x: 2, y: ctx.canvas.height / SCALE - 2, radius: 1},
+      {id: "b1", x:17, y: ctx.canvas.height / SCALE - 1, halfHeight: 2, halfWidth: 0.10},
+      {id: "b2", x:17, y: ctx.canvas.height / SCALE - 5, halfHeight: 0.25, halfWidth: 2},
+      {id: "box1", x:17, y: ctx.canvas.height / SCALE - 20, halfHeight:1, halfWidth: 1}
+    ];*/
+    
+    var running = true;
+    var impulseTimeout = null;
+    var initTimeout = null;
+    
+    function box2DInit(inst) {
+        for (var i = 0; i < inst.entities.length; i++) {
+            for (var j = 0; j < inst.entities[i].length; j++) {
+                var entX = inst.entities[i][j]["x"];
+                var entY = inst.entities[i][j]["y"];
+                var entName = inst.entities[i][j]["name"];
+                var entColor = (i == 0) ? 'blue' : 'red';
+                world[entName] = Entity.build({id: entName, x: entX, y: entY, radius: 30, color: entColor});
+                //console.log(["initBox2d", entX, entY, world]);
+            }
+        }
+      var bulletElem = {"checked":true}; //PLACEHOLDER ASSIGNMENT~~~
+      box = new bTest(60, false, canvasWidth, canvasHeight, SCALE);
+      box.setBodies(world, bulletElem.checked);
+      box.activateListener();
+      //console.log(box);
+    //initListen();
+
+
+      /*impulseTimeout = setTimeout(function() {
+        box.applyImpulse("ball", parseInt(20), parseInt(9001));
+      }, 1000);
+      
+      impulseTimeout = setTimeout(function() {
+        init();
+      }, 10000);*/
+
+      draw(); ///PLACEHOLDER - remove
+    }
+
+    window.requestAnimFrame = (function(){
+          return  window.requestAnimationFrame       || 
+                  window.webkitRequestAnimationFrame || 
+                  window.mozRequestAnimationFrame    || 
+                  window.oRequestAnimationFrame      || 
+                  window.msRequestAnimationFrame     || 
+                  function(/* function */ callback, /* DOMElement */ element){
+                    window.setTimeout(callback, 1000 / 60);
+                  };
+    })();
+
+    var restart = false;
+    
+    /*
+    document.addEventListener("DOMContentLoaded", function() {
+      init();
+      
+      (function loop(animStart) {
+        if (restart) {
+          clearTimeout(impulseTimeout);
+          clearTimeout(initTimeout);
+          init();
+          restart = false;
+        }
+        update(animStart);
+        draw();
+        requestAnimFrame(loop);
+      })();
+    }, false);
+    */
+
+    document.onkeypress = function (e) {
+      e = e || window.event;
+      var charCode = e.charCode || e.keyCode,
+      character = String.fromCharCode(charCode);
+      
+      if(character == "w") {
+        box.applyImpulse("Bobbeh", 270, parseInt(1000000));
+      }
+      if(character == "s") {
+        box.applyImpulse("Bobbeh", 90, parseInt(1000000));
+      }
+      if(character == "d") {
+        box.applyImpulse("Bobbeh", 0, parseInt(1000000));
+      }
+      if(character == "a") {
+        box.applyImpulse("Bobbeh", 180, parseInt(1000000));
+      }
+    }
+
 
 });

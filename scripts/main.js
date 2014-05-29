@@ -16,6 +16,7 @@ namespace.module('bot.main', function (exports, require) {
     var ITEM_TYPES = ['weapon', 'armor'];
 
     var LOG_ATTACKS = false;
+    var SHOWNAMES = true;
 
     var TC = 1;  // time coefficient
     var FRAMERATE = 1000 / 60;
@@ -285,9 +286,10 @@ namespace.module('bot.main', function (exports, require) {
         //oldctx.fillRect(this.hero.x- this.hero.size/2, this.hero.y- this.hero.size/2,this.hero.size,this.hero.size);
         var temptarg = this.hero.target ? this.hero.target.name : "undefined";
         var tempaction = this.hero.currentAction ? this.hero.currentAction : "undefined";
+        if(!this.hero.lvlUpXP) this.hero.isNextLevel();
         $('#room').html(sprintf("Room #: %d", this.roomIndex));
-        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>MP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d<br>Target: %s<br>Action: %s<br>Cooldown: %d",
-                                this.hero.name, this.hero.level, this.hero.xp,
+        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d/%d <br>HP: %d/%d<br>MP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d<br>Target: %s<br>Action: %s<br>Cooldown: %d",
+                                this.hero.name, this.hero.level, this.hero.xp, this.hero.lvlUpXP,
                                 Math.ceil(this.hero.hp), this.hero.hpMax, Math.ceil(this.hero.mp), this.hero.mpMax, this.hero.weapon.level,
                                 this.hero.armor.level, temptarg, tempaction, this.hero.cooldownTime));
         var tempstr = "<br><br>";
@@ -723,7 +725,7 @@ namespace.module('bot.main', function (exports, require) {
         for (var i = 0; i < this.len; i++) {
             monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic', 'jay', 'boo', 'bob', 'smelly', 'harold', 'frank', 'gunther', 'saul', 'jesse', 'walt', 'chris', 'gus', 'mike', 'gale', 'jr', 'dustin', 'alan', 'alex'];
 
-            monsterCount = 17;
+            monsterCount = 10;
             //monsterCount = prob.pProb(this.monster_count) + 2;// increasing monster count by one so monster always present TODO - tune this value better.
             mons = [];
             level = 1; // force weak monsters TODO remove
@@ -868,7 +870,7 @@ namespace.module('bot.main', function (exports, require) {
     CircleEntity.prototype.draw = function(ctx) {
       ctx.save();
       ctx.translate(this.x * SCALE, this.y * SCALE);
-      ctx.rotate(this.angle);
+      //ctx.rotate(this.angle);
       ctx.translate(-(this.x) * SCALE, -(this.y) * SCALE);
       
       ctx.fillStyle = this.color;
@@ -880,7 +882,10 @@ namespace.module('bot.main', function (exports, require) {
       ctx.closePath();
       ctx.fill();
       //ctx.stroke();
-      
+      if(SHOWNAMES){
+        ctx.fillStyle="rgba(0,0,0,1)"; 
+        ctx.fillText(this.id, this.x-20, this.y+30);
+      }
       ctx.restore();
       
       Entity.prototype.draw.call(this, ctx);

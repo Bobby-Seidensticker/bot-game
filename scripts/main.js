@@ -284,11 +284,12 @@ namespace.module('bot.main', function (exports, require) {
         //oldctx.fillStyle="#0000FF"; //Hero color is blue
         //oldctx.fillRect(this.hero.x- this.hero.size/2, this.hero.y- this.hero.size/2,this.hero.size,this.hero.size);
         var temptarg = this.hero.target ? this.hero.target.name : "undefined";
+        var tempaction = this.hero.currentAction ? this.hero.currentAction : "undefined";
         $('#room').html(sprintf("Room #: %d", this.roomIndex));
-        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>MP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d<br>Target: %s",
+        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>MP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d<br>Target: %s<br>Action: %s<br>Cooldown: %d",
                                 this.hero.name, this.hero.level, this.hero.xp,
                                 Math.ceil(this.hero.hp), this.hero.hpMax, Math.ceil(this.hero.mp), this.hero.mpMax, this.hero.weapon.level,
-                                this.hero.armor.level, temptarg));
+                                this.hero.armor.level, temptarg, tempaction, this.hero.cooldownTime));
         var tempstr = "<br><br>";
         for (var i in monsters) {
             tempstr += sprintf("%s's HP: %d/%d<br>", monsters[i].name, monsters[i].hp, monsters[i].hpMax);
@@ -312,10 +313,16 @@ namespace.module('bot.main', function (exports, require) {
 
     Instance.prototype.updateEntityPositions = function() {
         bodiesState = box.getState();
+        //console.log(bodiesState);
         for(var i = 0; i < this.entities.length; i++) {
             for(var j = 0; j < this.entities[i].length; j++) {
-                this.entities[i][j].x = bodiesState[this.entities[i][j].name].x;
-                this.entities[i][j].y = bodiesState[this.entities[i][j].name].y;
+                //console.log(bodiesState[this.entities[i][j].name]);
+                if(bodiesState[this.entities[i][j].name]) {
+                    this.entities[i][j].x = bodiesState[this.entities[i][j].name].x;
+                    this.entities[i][j].y = bodiesState[this.entities[i][j].name].y;
+                } else {
+                    console.log(["ELSE", bodiesState]);
+                }
             }
         }
     };
@@ -600,8 +607,8 @@ namespace.module('bot.main', function (exports, require) {
 
         this.actionChain = ["heavyStrike", "basicAttack", "approachTarget", "getNearestTarget"];
 
-        var weapon = weapon ? weapon : new Weapon(1);
-        var armor = armor ? armor : new Armor(5); //temporarily buffing armor, should start at 1
+        var weapon = weapon ? weapon : new Weapon(6);
+        var armor = armor ? armor : new Armor(6); //temporarily buffing armor, should start at 1
         var dmgMod = this.str / 3;
         var hpMax = this.vit * 5;
         var mspa = 700;
@@ -714,14 +721,14 @@ namespace.module('bot.main', function (exports, require) {
         //var monster = { 'hp': 5, 'dmgLow': 2, 'dmgHigh': 4, 'spa': 1 };
 
         for (var i = 0; i < this.len; i++) {
-            monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic', 'j', 'boo', 'bob', 'smelly', 'harold', 'carter'];
+            monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic', 'jay', 'boo', 'bob', 'smelly', 'harold', 'frank', 'gunther', 'saul', 'jesse', 'walt', 'chris', 'gus', 'mike', 'gale', 'jr', 'dustin', 'alan', 'alex'];
 
-            monsterCount = 3;
+            monsterCount = 17;
             //monsterCount = prob.pProb(this.monster_count) + 2;// increasing monster count by one so monster always present TODO - tune this value better.
             mons = [];
             level = 1; // force weak monsters TODO remove
             for (var j = 0; j < monsterCount; j++) {
-                mons[j] = new Monster(this.getMonsterName(monsterNames), level);
+                mons[j] = new Monster(this.getMonsterName(monsterNames)+j, level);
             }
             this.rooms[i] = new Room(mons);
         }
@@ -795,7 +802,8 @@ namespace.module('bot.main', function (exports, require) {
     function removeDeadFromBox2D(killed) {
         if(killed.length > 0) {
             for(var i = 0; i < killed.length; i++) {
-                delete world[killed[0]];
+                box.destroyByName(killed[i]);
+                delete world[killed[i]];
             }
         }
     }
@@ -938,6 +946,13 @@ namespace.module('bot.main', function (exports, require) {
       {id: "b2", x:17, y: ctx.canvas.height / SCALE - 5, halfHeight: 0.25, halfWidth: 2},
       {id: "box1", x:17, y: ctx.canvas.height / SCALE - 20, halfHeight:1, halfWidth: 1}
     ];*/
+
+    var boundaries = [
+        {id:"ceiling", x: ctx.canvas.width / 2, y: 0, halfHeight: 0.5, halfWidth: ctx.canvas.width, color: 'yellow'},
+        {id:"ground", x: ctx.canvas.width / 2, y: ctx.canvas.height, halfHeight: 0.5, halfWidth: ctx.canvas.width, color: 'yellow'},
+        {id:"lwall", x: 0, y: ctx.canvas.height/2, halfHeight: ctx.canvas.height, halfWidth: 0.5, color: 'yellow'},
+        {id:"rwall", x: ctx.canvas.width, y: ctx.canvas.height/2, halfHeight: ctx.canvas.height, halfWidth: 0.5, color: 'yellow'}
+    ];
     
     var running = true;
     var impulseTimeout = null;
@@ -945,20 +960,23 @@ namespace.module('bot.main', function (exports, require) {
     
     function box2DInit(inst) {
         world = {};
-        for (var i = 0; i < inst.entities.length; i++) {
+        for(var i = 0; i < boundaries.length; i++) {
+            world[boundaries[i].id] = Entity.build(boundaries[i]);
+        }
+        for (i = 0; i < inst.entities.length; i++) {
             for (var j = 0; j < inst.entities[i].length; j++) {
                 var entX = inst.entities[i][j]["x"];
                 var entY = inst.entities[i][j]["y"];
                 var entName = inst.entities[i][j]["name"];
                 var entColor = (i == 0) ? 'blue' : 'red';
-                world[entName] = Entity.build({id: entName, x: entX, y: entY, radius: 30, color: entColor});
+                world[entName] = Entity.build({id: entName, x: entX, y: entY, radius: 20, color: entColor});
                 //console.log(["initBox2d", entX, entY, world]);
             }
         }
       var bulletElem = {"checked":true}; //PLACEHOLDER ASSIGNMENT~~~
       box = new bTest(60, false, canvasWidth, canvasHeight, SCALE);
       box.setBodies(world, bulletElem.checked);
-      box.activateListener();
+      //box.activateListener();
       //console.log(box);
     //initListen();
 

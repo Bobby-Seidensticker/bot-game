@@ -84,7 +84,7 @@ bTest.prototype.setBodies = function(bodyEntities, enableBullet) {
     for(var id in bodyEntities) {
         var entity = bodyEntities[id];
         
-        if (entity.id == 'ground') {
+        if (entity.id == 'ceiling' || entity.id == 'ground' || entity.id == 'lwall' || entity.id == 'rwall') {
             bodyDef.type = b2Body.b2_staticBody;
         } else {
             bodyDef.type = b2Body.b2_dynamicBody;
@@ -160,5 +160,11 @@ bTest.prototype.activateListener = function() {
 }
 
 bTest.prototype.destroyByName = function(bodyId) {
-    this.world.DestroyBody(bodyId);
+    //console.log(bodyId);
+    console.log(this.bodiesMap[bodyId]);
+    if(this.bodiesMap[bodyId]) {
+      this.world.DestroyBody(this.bodiesMap[bodyId]);
+    } else {
+      console.log(["destroyByName else: ", bodyId]);
+    }
 }

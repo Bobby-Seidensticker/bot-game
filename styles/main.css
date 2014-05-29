@@ -10,10 +10,11 @@ canvas {
 
 .block {
     width: 300px;
-    height: 297px;
+    height: 590px;
     float: left;
 
     /*margin: 5px;*/
     margin-top: 4px;
     border: 1px solid black;
+    padding: 5px;
 }

@@ -185,12 +185,15 @@ namespace.module('bot.main', function (exports, require) {
         //console.log(dt);
         this.previousTime = now;
 
+        var killed = [];
+
         for( var i in this.entities ) {
             for ( var j in this.entities[i] ) {
                 //console.log(this.entities);    
                 if(this.entities[i][j] !== undefined){
                     if(i == 1 && this.entities[i][j].dead) {
                         //console.log("dead cleanup");
+                        killed.push(this.entities[i][j].name);
                         this.entities[i].splice(j, 1);
                     } else {
                         this.entities[i][j].update(dt);
@@ -201,13 +204,16 @@ namespace.module('bot.main', function (exports, require) {
         this.tryFinishRoom();
         //console.log(this.map.rooms[this.roomIndex].monsters);
         //console.log(this.entities[1]);
-
+        removeDeadFromBox2D(killed);
         this.timeAccumulator += dt;
         if(this.timeAccumulator >= FRAMERATE){
             //this.timeAccumulator -= FRAMERATE;
             this.timeAccumulator = 0;
             //box.applyImpulse("Bobbeh", parseInt(0), parseInt(9999));
+
             box2DUpdate();
+            this.updateEntityPositions();
+
             draw();
 
             this.dumbRender(this.entities[1]);    
@@ -272,22 +278,22 @@ namespace.module('bot.main', function (exports, require) {
 
     Instance.prototype.dumbRender = function(monsters) {
         //$('#room').html("Room #: " + this.roomIndex);
-        cvs = document.getElementById("myCanvas");
-        var oldctx=cvs.getContext("2d");
-        oldctx.clearRect(0,0,900,600);
-        oldctx.fillStyle="#0000FF"; //Hero color is blue
-        oldctx.fillRect(this.hero.x- this.hero.size/2, this.hero.y- this.hero.size/2,this.hero.size,this.hero.size);
-
+        //cvs = document.getElementById("myCanvas");
+        //var oldctx=cvs.getContext("2d");
+        //oldctx.clearRect(0,0,900,600);
+        //oldctx.fillStyle="#0000FF"; //Hero color is blue
+        //oldctx.fillRect(this.hero.x- this.hero.size/2, this.hero.y- this.hero.size/2,this.hero.size,this.hero.size);
+        var temptarg = this.hero.target ? this.hero.target.name : "undefined";
         $('#room').html(sprintf("Room #: %d", this.roomIndex));
-        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>MP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d",
+        $('#hero').html(sprintf("%s <br>Lvl: %d <br>XP: %d <br>HP: %d/%d<br>MP: %d/%d<br>Weapon Lvl: %d <br>Armor Lvl: %d<br>Target: %s",
                                 this.hero.name, this.hero.level, this.hero.xp,
                                 Math.ceil(this.hero.hp), this.hero.hpMax, Math.ceil(this.hero.mp), this.hero.mpMax, this.hero.weapon.level,
-                                this.hero.armor.level));
+                                this.hero.armor.level, temptarg));
         var tempstr = "<br><br>";
         for (var i in monsters) {
             tempstr += sprintf("%s's HP: %d/%d<br>", monsters[i].name, monsters[i].hp, monsters[i].hpMax);
-            oldctx.fillStyle="#444444"; //Enemy color is dark grey
-            oldctx.fillRect(monsters[i].x-monsters[i].size/2,monsters[i].y - monsters[i].size/2,monsters[i].size,monsters[i].size);      
+            //oldctx.fillStyle="#444444"; //Enemy color is dark grey
+            //oldctx.fillRect(monsters[i].x-monsters[i].size/2,monsters[i].y - monsters[i].size/2,monsters[i].size,monsters[i].size);      
         }
         $('#mobs').html(tempstr);
 
@@ -303,6 +309,17 @@ namespace.module('bot.main', function (exports, require) {
     Instance.prototype.getDistance = function(a1, a2) {
         return Math.sqrt(Math.pow(a1.x - a2.x, 2), Math.pow(a1.y - a2.y, 2));  
     };
+
+    Instance.prototype.updateEntityPositions = function() {
+        bodiesState = box.getState();
+        for(var i = 0; i < this.entities.length; i++) {
+            for(var j = 0; j < this.entities[i].length; j++) {
+                this.entities[i][j].x = bodiesState[this.entities[i][j].name].x;
+                this.entities[i][j].y = bodiesState[this.entities[i][j].name].y;
+            }
+        }
+    };
+
 
     function Actor(type, name, hpMax, mspa, dmgMod, weapon, armor, level) {
         this.type = type;
@@ -332,6 +349,7 @@ namespace.module('bot.main', function (exports, require) {
 
 
     }
+
 
 
     //Update decrements cooldownTime until it reaches zero, then performs another action.
@@ -555,7 +573,7 @@ namespace.module('bot.main', function (exports, require) {
             var dist = this.target[axis] - this[axis]; // dist on axis between enemies directionally
             if (Math.abs(dist) >= sizeBuffer + this.movementSpeed) {
                 var direction = dist / Math.abs(dist);
-                this[axis] += this.movementSpeed * direction;
+                //this[axis] += this.movementSpeed * direction;
                 var angle = this.angleToTarget(this.target);
                 box.applyImpulse(this.name, parseInt(angle), parseInt(9999));
 
@@ -583,7 +601,7 @@ namespace.module('bot.main', function (exports, require) {
         this.actionChain = ["heavyStrike", "basicAttack", "approachTarget", "getNearestTarget"];
 
         var weapon = weapon ? weapon : new Weapon(1);
-        var armor = armor ? armor : new Armor(1);
+        var armor = armor ? armor : new Armor(5); //temporarily buffing armor, should start at 1
         var dmgMod = this.str / 3;
         var hpMax = this.vit * 5;
         var mspa = 700;
@@ -697,8 +715,11 @@ namespace.module('bot.main', function (exports, require) {
 
         for (var i = 0; i < this.len; i++) {
             monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic', 'j', 'boo', 'bob', 'smelly', 'harold', 'carter'];
-            monsterCount = prob.pProb(this.monster_count) + 1;// increasing monster count by one so monster always present TODO - tune this value better.
+
+            monsterCount = 3;
+            //monsterCount = prob.pProb(this.monster_count) + 2;// increasing monster count by one so monster always present TODO - tune this value better.
             mons = [];
+            level = 1; // force weak monsters TODO remove
             for (var j = 0; j < monsterCount; j++) {
                 mons[j] = new Monster(this.getMonsterName(monsterNames), level);
             }
@@ -740,10 +761,10 @@ namespace.module('bot.main', function (exports, require) {
 
     DamageIndicator.prototype.render = function() {
         if (this.age < 30) {
-            cvs = document.getElementById("myCanvas");
+            cvs = document.getElementById("physCanvas");
             var ctx=cvs.getContext("2d");
             
-            ctx.fillStyle="rgba(255,0,0," + parseFloat((25-this.age)/25) + ")"; //Damage is red
+            ctx.fillStyle="rgba(99,99,99," + parseFloat((25-this.age)/25) + ")"; //Damage is red
             ctx.fillText(parseInt(this.dmg), this.x, this.y-this.age*2);
             this.age++;
             return false;
@@ -770,6 +791,14 @@ namespace.module('bot.main', function (exports, require) {
         //Detect collision
     }
 
+
+    function removeDeadFromBox2D(killed) {
+        if(killed.length > 0) {
+            for(var i = 0; i < killed.length; i++) {
+                delete world[killed[0]];
+            }
+        }
+    }
 
 
     //Stuff from Box2d example
@@ -879,10 +908,12 @@ namespace.module('bot.main', function (exports, require) {
     function box2DUpdate(animStart) {
       box.update();
       bodiesState = box.getState();
-      
+      //console.log(bodiesState);
       for (var id in bodiesState) {
         var entity = world[id];
-        if (entity) entity.update(bodiesState[id]);
+        if (entity) {
+            entity.update(bodiesState[id]);
+        }
       }
     }
     
@@ -913,6 +944,7 @@ namespace.module('bot.main', function (exports, require) {
     var initTimeout = null;
     
     function box2DInit(inst) {
+        world = {};
         for (var i = 0; i < inst.entities.length; i++) {
             for (var j = 0; j < inst.entities[i].length; j++) {
                 var entX = inst.entities[i][j]["x"];
@@ -991,6 +1023,8 @@ namespace.module('bot.main', function (exports, require) {
         box.applyImpulse("Bobbeh", 180, parseInt(1000000));
       }
     }
+
+
 
 
 });

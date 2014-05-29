@@ -142,7 +142,7 @@ bTest.prototype.applyImpulse = function(bodyId, degrees, power) {
 bTest.prototype.activateListener = function() {
     var listener = new Box2D.Dynamics.b2ContactListener;
     listener.BeginContact = function(contact) {
-        console.log('bump');
+        //console.log('bump');
         //console.log(contact.GetFixtureA().GetBody().GetUserData());
         //console.log(contact.GetFixtureB().GetBody().GetUserData());        
     }
@@ -157,4 +157,8 @@ bTest.prototype.activateListener = function() {
 
     }
     this.world.SetContactListener(listener);
+}
+
+bTest.prototype.destroyByName = function(bodyId) {
+    this.world.DestroyBody(bodyId);
 }

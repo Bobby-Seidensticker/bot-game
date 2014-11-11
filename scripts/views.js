@@ -30,14 +30,14 @@ namespace.module('bot.views', function (exports, require) {
         log.info('onResize, width: %d, height: %d, char: %s, vis: %s, user: %s', width, height, this.$char, this.$vis, this.$user);
 
         setSizeLoc(this.$char,
-                   width - 10, 150 - 10,
+                   width - 400 - 10, 150 - 10,
                    0, 0);
         setSizeLoc(this.$vis,
                    width - 400 - 10, height - 150 - 10,
                    0, 150);
         setSizeLoc(this.$user,
-                   400 - 10, height - 150 - 10,
-                   width - 400, 150);
+                   400 - 10, height - 10,
+                   width - 400, 0);
     }
 
     function init() {

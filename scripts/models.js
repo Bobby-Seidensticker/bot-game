@@ -7,10 +7,14 @@ namespace.module('bot.models', function (exports, require) {
     var views = namespace.bot.views;
     var itemref = namespace.bot.itemref;
 
+    var data;
+
     exports.extend({
-        'onReady': onReady
+        'init': init
     });
 
-
+    function init(rawData) {
+        data = rawData;
+    }
 
 });

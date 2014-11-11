@@ -4,11 +4,13 @@ namespace.module('bot.main', function (exports, require) {
 
     var prob = namespace.bot.prob;
     var log = namespace.bot.log;
-    var views = namespace.bot.views;
-    var itemref = namespace.bot.itemref;
 
+    var itemref = namespace.bot.itemref;
     var storage = namespace.bot.storage;
+
+    var views = namespace.bot.views;
     var models = namespace.bot.models;
+    var control = namespace.bot.control;
 
     var user;
 

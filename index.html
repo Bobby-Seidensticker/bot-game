@@ -1,32 +1,34 @@
 <!DOCTYPE html>
-<div class="block">
-  <div id="room"></div>
-  <div id="hero"></div>
-  <div id="mobs"></div>
-</div>
-<div class="block">
-  <div>
-    <label for="auto-run">Auto Run</label><input name="auto-run" id="auto-run" type="checkbox" />
+<head>
+  <link href="styles/main.css" rel="stylesheet">
+
+  <!--<script src="scripts/Box2D.js"></script>
+  <script type="text/javascript" src="scripts/bTest.js"></script>-->
+
+  <script type="text/javascript" src="scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="scripts/namespace-plus.js"></script>
+  <script type="text/javascript" src="scripts/sprintf.min.js"></script>
+
+  <script type="text/javascript" src="scripts/log.js"></script>
+  <script type="text/javascript" src="scripts/views.js"></script>
+
+  <script type="text/javascript" src="scripts/prob.js"></script>
+  <script type="text/javascript" src="scripts/itemref.js"></script>
+  <script type="text/javascript" src="scripts/main.js"></script>
+</head>
+
+<body>
+  <div class="char">
   </div>
-  <div>
-    <input id="single-run" type="button" value="Single Run"></input>
+
+  <div class="vis">
   </div>
-</div>
-<!--<canvas id="myCanvas" width="900" height="600" style="border: thin black solid;" ></canvas>--!>
-<canvas id="physCanvas" width="900" height="600" style="border: thin black solid;" ></canvas>
-<link href="styles/main.css" rel="stylesheet">
-<script type="text/javascript" src="scripts/jquery.min.js"></script>
-<script type="text/javascript" src="scripts/sprintf.min.js"></script>
-<script src="scripts/namespace-plus.js"></script>
-<script src="scripts/prob.js"></script>
-<script src="scripts/Box2D.js"></script>
-<script src="scripts/bTest.js"></script>
 
+  <div class="user">
+  </div>
 
+  <script>
+    namespace.bot.main.onReady();
+  </script>
 
-<script src="scripts/main.js"></script>
-
-
-<script>
-  namespace.bot.main.onReady();
-</script>
+</body>

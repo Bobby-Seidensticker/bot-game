@@ -1,3 +1,32 @@
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.char {
+    position: absolute;
+    padding: 5px;
+
+    background-color: #FEE;
+}
+
+.vis {
+    position: absolute;
+    padding: 5px;
+
+    background-color: #EFE;
+}
+
+.user {
+    position: absolute;
+    padding: 5px;
+
+    background-color: #EEF;
+}
+
 canvas {
     width: 800px;
     height: 600px;
@@ -6,15 +35,4 @@ canvas {
     /*margin: 5px;*/
     margin: 4px;
     border: 1px solid black;
-}
-
-.block {
-    width: 300px;
-    height: 590px;
-    float: left;
-
-    /*margin: 5px;*/
-    margin-top: 4px;
-    border: 1px solid black;
-    padding: 5px;
 }

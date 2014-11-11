@@ -22,9 +22,9 @@ namespace.module('bot.main', function (exports, require) {
         tests();
 
         var data = localStorage['char'];
-        models.init(data);
-        views.init(models.model);
-        controls.init(models.model);
+        var model = models.init(data);
+        views.init(model);
+        controls.init(model);
 
         //requestAnimationFrame(tick);
     }
@@ -39,6 +39,7 @@ namespace.module('bot.main', function (exports, require) {
 
     function tests() {
         itemref.expand('test', 'harf');
+        log.info("TESTS COMPLETE\n\n");
     }
 
 /*

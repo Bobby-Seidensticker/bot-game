@@ -15,6 +15,7 @@ namespace.module('bot.models', function (exports, require) {
     function init(data) {
         user = new User(loadRawData(data));
         user.init();
+        return user;
     }
 
     function ensureProps(obj) {
@@ -41,7 +42,7 @@ namespace.module('bot.models', function (exports, require) {
                 log.error('models.loadRawData(), Tried to parse corrupt JSON, given %s, reverting to default', data);
             }
             d = {
-                chars: [],
+                chars: [{name: 'bobbeh'}],
                 inventory: {
                     weapons: [],
                     armor: [],
@@ -79,6 +80,10 @@ namespace.module('bot.models', function (exports, require) {
         for (var i = 0; i < this.chars.length; i++) {
             this.chars.tick
         }
+    }
+
+    function Char(data) {
+        this.name = data.name;
     }
 
 });

@@ -15,6 +15,7 @@ namespace.module('bot.views', function (exports, require) {
         this.user = new User($('.user'), model);
         this.chars = [];
         for (i = 0; i < model.chars.length; i++) {
+            // Major note here, each is using the same dom element
             this.chars[i] = new Char($('.char'), model.chars[i]);
         }
         this.vis = new Vis($('.vis'), model);

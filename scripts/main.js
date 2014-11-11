@@ -10,10 +10,9 @@ namespace.module('bot.main', function (exports, require) {
 
     var views = namespace.bot.views;
     var models = namespace.bot.models;
-    var control = namespace.bot.control;
+    var controls = namespace.bot.controls;
 
     var user;
-
 
     exports.extend({
         'onReady': onReady
@@ -22,22 +21,25 @@ namespace.module('bot.main', function (exports, require) {
     function onReady() {
         tests();
 
-
-
         var data = localStorage['char'];
         models.init(data);
         views.init(models.model);
-        control.init(models.model);
+        controls.init(models.model);
 
-        
+        requestAnimationFrame(tick);
     }
 
-    
+    function tick() {
+        controls.tick();
+        models.tick();
+        views.tick();
+
+        requestAnimationFrame(tick);
+    }
 
     function tests() {
         itemref.expand('test', 'harf');
     }
-
 
 /*
     function onTick() {

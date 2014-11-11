@@ -1,4 +1,4 @@
-namespace.module('bot.control', function (exports, require) {
+namespace.module('bot.controls', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
@@ -7,5 +7,7 @@ namespace.module('bot.control', function (exports, require) {
     });
 
     function init() {}
+
+    function tick() {}
 
 });

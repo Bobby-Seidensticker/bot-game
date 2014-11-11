@@ -28,9 +28,10 @@ namespace.module('bot.models', function (exports, require) {
 
         try {
             d = JSON.parse(data);
-            if (!('chars' in d && 'inventory' in d && 'weapons' in d['inventory'] &&
-                  'weapons' in d['inventory'] && 'weapons' in d['inventory'] && 'weapons' in d['inventory']) {
-                
+            if (!('chars' in d && 'inventory' in d &&
+                  'weapons' in d['inventory'] && 'armor' in d['inventory'] &&
+                  'skills' in d['inventory'] && 'affixes' in d['inventory'])) {
+                throw('fuck');
             }
         }
         catch (e) {
@@ -44,8 +45,8 @@ namespace.module('bot.models', function (exports, require) {
                 inventory: {
                     weapons: [],
                     armor: [],
-                    affixes: [],
-                    skills: []
+                    skills: [],
+                    affixes: []
                 }
             };
         }
@@ -61,7 +62,7 @@ namespace.module('bot.models', function (exports, require) {
         this.inventory = {};
     }
 
-    User.prototype.init() {
+    User.prototype.init = function() {
         var i, chars;
         rawChars = this.data.chars;
         for (i = 0; i < rawChars.length; i++) {
@@ -70,7 +71,7 @@ namespace.module('bot.models', function (exports, require) {
         
     }
 
-    User.prototype.tick() {
+    User.prototype.tick = function() {
         var t = new Date().getTime();
         var diff = t - this.lastTime;
         this.lastTime = t;

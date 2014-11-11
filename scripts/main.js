@@ -26,7 +26,7 @@ namespace.module('bot.main', function (exports, require) {
         views.init(models.model);
         controls.init(models.model);
 
-        requestAnimationFrame(tick);
+        //requestAnimationFrame(tick);
     }
 
     function tick() {

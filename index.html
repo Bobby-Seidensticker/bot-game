@@ -21,7 +21,25 @@
 
 <body>
   <div class="char">
-    Stats
+    <div class="headerstats">
+      Hero Bobbeh - Level <span id="header.hero.level">2</span><br>
+      Zone: <span id="header.zone.name">Dark Woods</span> - <span id="header.zone.roomnum">8</span>/<span id="header.zone.roomcount">10</span><br>
+      HP - <span id="header.hero.hp">90</span>/<span id="header.hero.maxhp">100</span><br>
+      MP - <span id="header.hero.mp">17</span>/<span id="header.hero.maxmp">30</span><br>
+      XP - <span id="header.hero.xp">117</span>/<span id="header.hero.nextlvlxp">250</span><br>
+      <br>
+      DPS - <span id="header.hero.dps">72.3</span>
+    </div>
+    <div class="headerskillchain">
+      Fireball<br>
+      Basic Attack<br>
+    </div>
+    <div class="headerinventory">
+      Helmet <br>
+      Armor <br>
+      Gloves <br>
+      Pants <br>
+    </div>
   </div>
 
   <div class="vis">
@@ -52,16 +70,36 @@
 	<input id="mapgo" type="button" value="Go" />
       </div>
       <div class="itemcontent">
-	item here
+	Armor \/<br>
+	Weapons \/<br>
+	Skills \/<br>
       </div>
       <div class="craftcontent">
-	craft here
+	Armor \/<br>
+	Weapons\/<br>
+	Skills \/<br>
       </div>
       <div class="lvlupcontent">
-      Ur item, level it up
+	<div class="lvlupitemholder">
+	  <div class="lvlupitemimg">
+	    <img src="http://img1.wikia.nocookie.net/__cb20080817200550/diablo/images/4/4f/D2-u-Treadsofcthon.gif" />
+	  </div>
+	  <div class="lvlupitemstats">
+            Magic Shoes <br>
+	    + 5 Fire Damage<br>
+	    + 10 Armor<br>
+	  </div>
+	</div>
+	<div class="lvluprollbox">
+	  Affix on next level: <br><br>
+	  + 3 Fire Damage
+	</div>
+	<input type="button" value="Reroll" />
+	<input type="button" value="Level Up" />
       </div>
       <div class="settingscontent">
-      Settings
+        <input type="button" value="Save" />
+	<input type="button" value="Mute" />
       </div>
     </div>
   </div>

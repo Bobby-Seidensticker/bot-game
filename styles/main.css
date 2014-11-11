@@ -13,6 +13,26 @@ body {
     background-color: #FEE;
 }
 
+.headerstats {
+    float:left;
+    width:100px;
+    height:100%;
+    padding: 10px 50px;
+}
+
+.headerskillchain {
+   float:left;
+   background-color: #CEC;	   
+   height:100%;
+   padding: 10px 50px;
+}
+
+.headerinventory {
+   float:left;
+   height:100%;
+   padding: 10px 50px;
+}
+
 .vis {
     position: absolute;
     padding: 5px;
@@ -63,6 +83,31 @@ body {
     display:none;
     padding:30px;
 }
+
+.lvlupitemholder {
+    width:100%;
+    background-color: #DDF;
+    height: 70px;
+    padding: 10px;
+}
+
+.lvlupitemimg {
+    float:left;
+    margin 5px;
+}
+
+.lvlupitemstats {
+    float:left;
+    margin: 5px;
+}
+
+.lvluprollbox {
+    height: 70px;
+    background-color: #DCF;
+    padding:10px;
+    width:100%;
+}
+
 
 .settingscontent {
     display:none;

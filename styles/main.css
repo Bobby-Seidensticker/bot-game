@@ -27,6 +27,49 @@ body {
     background-color: #EEF;
 }
 
+.tabholder {
+    height: 50px;
+    background-color: #EFF;
+}
+
+.tab {
+    background-color: #DFF;
+    float:left;
+    padding:15px;
+    border: 1px solid white;
+}
+
+.contentholder {
+    background-color: #DEE;
+    height:100%;
+}	   
+
+.mapcontent {
+    display:block;
+    padding:30px;
+}
+
+.itemcontent {
+    display:none;
+    padding:30px;
+}
+
+.craftcontent {
+    display:none;
+    padding:30px;
+}
+
+.lvlupcontent {
+    display:none;
+    padding:30px;
+}
+
+.settingscontent {
+    display:none;
+    padding:30px;
+}
+
+
 canvas {
     width: 800px;
     height: 600px;

@@ -3,7 +3,8 @@ namespace.module('bot.views', function (exports, require) {
     /*var funcs = */require('org.startpad.funcs').patch();
 
     exports.extend({
-        'init': init
+        'init': init,
+        'tick': tick
     });
 
     var log = require('bot.log');
@@ -102,7 +103,7 @@ namespace.module('bot.views', function (exports, require) {
         view.resize();
     }
 
-    function update() {
+    function tick() {
         view.update();
     }
 });

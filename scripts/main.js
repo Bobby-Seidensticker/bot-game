@@ -21,17 +21,19 @@ namespace.module('bot.main', function (exports, require) {
     function onReady() {
         tests();
 
-        var data = localStorage['char'];
-        var model = models.init(data);
-        views.init(model);
-        controls.init(model);
+        var data;
 
-        //requestAnimationFrame(tick);
+        data = localStorage['char'];
+        user = models.init(data);
+        views.init(user);
+        controls.init(user);
+
+        requestAnimationFrame(tick);
     }
 
     function tick() {
         controls.tick();
-        models.tick();
+        user.tick();
         views.tick();
 
         requestAnimationFrame(tick);
@@ -42,7 +44,7 @@ namespace.module('bot.main', function (exports, require) {
         log.info("TESTS COMPLETE\n\n");
     }
 
-/*
+    /*
     function onTick() {
     }
 

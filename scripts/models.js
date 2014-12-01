@@ -2,12 +2,13 @@ namespace.module('bot.models', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
-    var prob = namespace.bot.prob;
     var log = namespace.bot.log;
     var itemref = namespace.bot.itemref;
+    var views = namespace.bot.views;
+    var controllers = namespace.bot.controllers;
 
     exports.extend({
-        'init': init
+        'Game': Game
     });
 
     var user;
@@ -19,9 +20,12 @@ namespace.module('bot.models', function (exports, require) {
     }
 
     function ensureProps(obj) {
-        if (arguments.length <= 1) {
-            log.warning('Called ensureProps with just an ');
+        for (var i = 1; i < arguments.length; i++) {
+            if (!(arguments[i] in obj)) {
+                return false;
+            }
         }
+        return true
     }
 
     function loadRawData(data) {
@@ -29,10 +33,12 @@ namespace.module('bot.models', function (exports, require) {
 
         try {
             d = JSON.parse(data);
-            if (!('chars' in d && 'inventory' in d &&
-                  'weapons' in d['inventory'] && 'armor' in d['inventory'] &&
-                  'skills' in d['inventory'] && 'affixes' in d['inventory'])) {
-                throw('fuck');
+            fucked = false
+            if (!('chars' in d)) { fucked = true; }
+            if (!('inventory' in d)) { fucked = true; }
+            if (!ensureProps(d['inventory'], 'weapons', 'armor', 'skills', 'affixes', 'mats')) { fucked = true; }
+            if (fucked) {
+                throw('loadRawData: fucked');
             }
         }
         catch (e) {
@@ -47,7 +53,8 @@ namespace.module('bot.models', function (exports, require) {
                     weapons: [],
                     armor: [],
                     skills: [],
-                    affixes: []
+                    affixes: [],
+                    mats: []
                 }
             };
         }
@@ -55,35 +62,52 @@ namespace.module('bot.models', function (exports, require) {
         return d;
     }
 
-    // expects an object, not a string
-    function User(data) {
-        this.data = data;
-        this.lastTime = new Date().getTime();
+    function Game() {
+        var data, i;
+        data = loadRawData(localStorage['char']);
+
+        this.view = new views.GameView(this);
+        this.controller = new controllers.GameController(this);
+
         this.chars = [];
-        this.inventory = {};
-    }
-
-    User.prototype.init = function() {
-        var i, chars;
-        rawChars = this.data.chars;
-        for (i = 0; i < rawChars.length; i++) {
-            this.chars[i] = new Char(rawChars[i]);
+        for (i = 0; i < data.chars.length; i++) {
+            this.chars[this.chars.length] = new Char(data.chars[i]);
         }
-        
+
+        this.inventory = new Inventory(data.inventory);
+
+        this.view.init(this.controller);
+        this.controller.init(this.view);
     }
 
-    User.prototype.tick = function() {
-        var t = new Date().getTime();
-        var diff = t - this.lastTime;
-        this.lastTime = t;
-
-        for (var i = 0; i < this.chars.length; i++) {
-            this.chars.tick
-        }
-    }
+    Game.prototype.init = function() {}
 
     function Char(data) {
         this.name = data.name;
+
+        this.view = new views.CharView(this);
+        this.controller = new controllers.CharController(this);
+        this.view.controller = this.controller;
+        this.controller.view = this.view;
     }
+
+    function Inventory(data) {
+        this.weapons = data.weapons;
+        this.armor = data.armor;
+        this.skills = data.skills;
+        this.affixes = data.affixes;
+        this.mats = data.mats;
+
+        this.view = new views.InventoryView(this);
+        this.controller = new controllers.InventoryController(this);
+        this.view.controller = this.controller;
+        this.controller.view = this.view;
+    }
+
+    /*
+    function Map(data) {
+        this.data = data;
+        this.view = new views.MapView(this);
+    }*/
 
 });

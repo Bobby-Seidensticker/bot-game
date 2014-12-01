@@ -9,30 +9,34 @@ namespace.module('bot.views', function (exports, require) {
 
     var log = require('bot.log');
 
-    function GameView(model) {
-        var i;
-        this.model = model;
+    function GameView(controller) {
+        this.controller = controller;
 
         this.$user = $('.user');
         this.$char = $('.char');
         this.$vis = $('.vis');
     }
 
-    GameView.prototype.init = function(controller) {
-        var i, c, charTmpl, mainTmpl;
-        this.controller = controller;
-        this.resize();
+    GameView.prototype.init = function(chars) {
+        var i, c, charTmpl, mainTmpl, visTmpl;
 
-        charTmpl = $('#char-tmpl').html();
-        Mustache.parse(charTmpl);
-        for (i = 0; i < this.model.chars.length; i++) {
-            c = this.model.chars[i];
-            this.$char.append(Mustache.render(charTmpl, {"name": c.name}));
+        this.mainTmpl = $('#game-main-menu-tmpl').html();
+        Mustache.parse(this.mainTmpl);
+        this.$user.append(Mustache.render(this.mainTmpl, {}));
+
+        this.charTmpl = $('#char-tmpl').html();
+        Mustache.parse(this.charTmpl);
+        for (i = 0; i < chars.length; i++) {
+            this.newChar(chars[i]);
         }
 
-        mainTmpl = $('#game-main-menu-tmpl').html()
-        Mustache.parse(mainTmpl);
-        this.$user.append(mainTmpl.render())
+        this.visTmpl = $('#vis-tmpl').html();
+        Mustache.parse(this.visTmpl);
+        this.$vis.append(Mustache.render(this.visTmpl, {}));
+    }
+
+    GameView.prototype.newChar = function(c) {
+        this.$char.append(Mustache.render(this.charTmpl, {"name": c.name}));
     }
 
     GameView.prototype.resize = function() {

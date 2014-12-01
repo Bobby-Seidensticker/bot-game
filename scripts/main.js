@@ -4,10 +4,10 @@ namespace.module('bot.main', function (exports, require) {
 
     var log = namespace.bot.log;
 
-    //var itemref = namespace.bot.itemref;
+    var itemref = namespace.bot.itemref;
 
     //var views = namespace.bot.views;
-    var models = namespace.bot.models;
+    //var models = namespace.bot.models;
     //var controls = namespace.bot.controls;
 
     var user;

@@ -1,8 +1,7 @@
-Game has user
-Game has selected_tab and selected_user
+Game has selected_tab and selected_char
 
-user has N chars
-user has 1 inventory
+Game has N chars
+Game has 1 inventory
 
 inventory has items in typed groups: armor, weapons, skills, materials, and recipes
 

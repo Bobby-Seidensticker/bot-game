@@ -124,3 +124,7 @@ canvas {
     margin: 4px;
     border: 1px solid black;
 }
+
+.closed {
+    display: none;
+}

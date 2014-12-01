@@ -63,32 +63,32 @@ namespace.module('bot.models', function (exports, require) {
     }
 
     function Game() {
-        var data, i;
+        var data, i, view, controller;
         data = loadRawData(localStorage['char']);
-
-        this.view = new views.GameView(this);
-        this.controller = new controllers.GameController(this);
-
-        this.chars = [];
-        for (i = 0; i < data.chars.length; i++) {
-            this.chars[this.chars.length] = new Char(data.chars[i]);
-        }
 
         this.inventory = new Inventory(data.inventory);
 
-        this.view.init(this.controller);
-        this.controller.init(this.view);
+        this.chars = [];
+        for (i = 0; i < data.chars.length; i++) {
+            this.chars[this.chars.length] = new Char(data.chars[i], this.inventory);
+        }
+
+        view = new views.GameView();
+        controller = new controllers.GameController(this, view);
+        controller.init();
     }
 
     Game.prototype.init = function() {}
 
-    function Char(data) {
+    function Char(data, inventory) {
         this.name = data.name;
+        this.inventory = inventory;
 
         this.view = new views.CharView(this);
         this.controller = new controllers.CharController(this);
-        this.view.controller = this.controller;
-        this.controller.view = this.view;
+
+        this.view.init();
+        this.controller.init(this.view);
     }
 
     function Inventory(data) {
@@ -100,12 +100,12 @@ namespace.module('bot.models', function (exports, require) {
 
         this.view = new views.InventoryView(this);
         this.controller = new controllers.InventoryController(this);
-        this.view.controller = this.controller;
-        this.controller.view = this.view;
+
+        this.view.init(this.controller);
+        this.controller.init(this.view);
     }
 
-    /*
-    function Map(data) {
+    /*function Map(data) {
         this.data = data;
         this.view = new views.MapView(this);
     }*/

@@ -8,16 +8,21 @@ User === :
 - skillchain and equiped items need state from inventory
 - hero stats needs access to hero model for max hp, max mp, xp, nextlvlxp
 - current level info, current hp, mp, dps needs access to simulation/instance state
+
+has N chars
+has 1 inv
+
 -- Controllers:
 --- Clicking on skillchain/equipped items sets current_tab to 'item' and sets focus of the tab to clicked item
+
 
 Map Tab === :
 - Tab in right pane
 - Shows map, including areas which can be travelled to, current area
 
 - needs access to:
--- unlocked_areas (boolean array/dict of which areas have been unlocked so far)
--- current_area (string? areaname of current locations eg. "darkwoods")
+-- char.unlocked_areas (boolean array/dict of which areas have been unlocked so far)
+-- char.current_area (string? areaname of current locations eg. "darkwoods")
 
 - temp variable:
 -- selected_next_area - defaults to current area.  when user clicks on non-current area, changes to clicked area
@@ -30,7 +35,6 @@ Map Tab === :
 --- Hover detection for showing info of non-selected areas
 --- Click on non-current area (set selected_next_area)
 --- "Go" button - starts new simulation/instance at selected_next_area
-
 
 
 Item Tab === :

@@ -1,10 +1,18 @@
 Game has user
+Game has selected_tab and selected_user
+
 user has N chars
 user has 1 inventory
-char has 1 map
-char has N equipped items (derived from inventory items flagged as equiped by user?)
-char has N equipped skills in ordinal list (skillchain) 
+
 inventory has items in typed groups: armor, weapons, skills, materials, and recipes
+
+char has 1 map
+char.map has dict unlocked_areas {areaname: bool}, string current_area
+char has 1 simulation
+char has N equipped items (derived from inventory items flagged as equiped by user?)
+char has N equipped skills in ordinal list (skillchain)
+
+
 
 items have name, img, equipslot:( {charname}.skillslot[3] or undefined), and type-specific values
 

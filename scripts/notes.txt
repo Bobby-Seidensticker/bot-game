@@ -1,0 +1,51 @@
+A Model is a chunk of game state with associated methods for operating on that chunk of state
+
+The Model has-a View instance for the visual representation of the model
+Each View has-a read-only reference to the model that it represents
+
+The Model has-a Controller instance for the UI interactions with the Model
+Each Controller has-a read-write reference to the model that it controls
+
+Models can change themselves, Views cannot change Models, and Controllers can change Models
+Note: What if Models could not change themselves?
+
+Main.onReady creates a ModelGame, sets up requestAnimationFrame callbacks to call Main.tick
+Main.tick calls tick on the ModelGame
+that is all
+
+ModelGame has-a ModelUser
+Methods:
+    Save  Save state to local storage
+    Load  Load from local storage, some parsing, defensive programming
+    Init  Main.onReady calls this, creates ModelUser
+
+
+ModelUser has-a ViewUser
+ModelUser has-a ControllerUser
+ModelUser has-a list of ModelHero
+ModelUser has-a ModelInventory
+  Stores main game menu state
+
+ViewUser shows/hides stuff according to ModelUser
+
+ControllerUser sets event bindings to handle UI and update ModelUser menu state
+
+
+ModelHero has-a ViewHero, given ModelHero
+ModelHero has-a ControllerHero, given ModelHero
+
+ViewHero
+    Constructor grabs DOM element it's supposed to be in, dynamically generates html to represent ModelHero
+
+ControllerHero
+    Constructor grabs DOM elements ViewHero created and adds event bindings to handle user interactions
+
+ModelInventory has-a ViewInventory
+ModelInventory has-a ControllerInventory
+
+ViewInventory
+    Constructor grabs DOM element, generates html
+
+ControllerInventory
+    Constructor grabs DOM elements ViewInventory created and adds UI event bindings
+    Saves state of menus visible, other stuff and changes based on UI

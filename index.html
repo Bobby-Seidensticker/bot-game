@@ -8,6 +8,7 @@
   <script type="text/javascript" src="scripts/jquery.min.js"></script>
   <script type="text/javascript" src="scripts/namespace-plus.js"></script>
   <script type="text/javascript" src="scripts/sprintf.min.js"></script>
+  <script type="text/javascript" src="scripts/mustache.js"></script>
 
   <script type="text/javascript" src="scripts/log.js"></script>
   <script type="text/javascript" src="scripts/views.js"></script>
@@ -103,6 +104,28 @@
       </div>
     </div>
   </div>
+
+
+  <script id="game-main-menu" type="x-tmpl-mustache">
+    <div class="game-main-menu">
+      <div class="tab" id="map">
+	Map
+      </div>
+      <div class="tab" id="inv">
+        Items
+      </div>
+      <div class="tab" id="craft">
+	Craft
+      </div>
+      <div class="tab" id="lvl">
+	LvlUp
+      </div>
+      <div class="tab" id="settings">
+	Settings
+      </div>
+    </div>
+  </script>
+
 
   <script>
     namespace.bot.main.onReady();

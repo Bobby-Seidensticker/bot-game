@@ -47,15 +47,15 @@ body {
     background-color: #EEF;
 }
 
-.tabholder {
+.game-main-menu {
     height: 50px;
     background-color: #EFF;
 }
 
-.tab {
+.game-main-menu .tab {
     background-color: #DFF;
-    float:left;
-    padding:15px;
+    float: left;
+    padding: 15px;
     border: 1px solid white;
 }
 

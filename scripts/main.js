@@ -2,15 +2,13 @@ namespace.module('bot.main', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
-    var prob = namespace.bot.prob;
     var log = namespace.bot.log;
 
-    var itemref = namespace.bot.itemref;
-    var storage = namespace.bot.storage;
+    //var itemref = namespace.bot.itemref;
 
-    var views = namespace.bot.views;
+    //var views = namespace.bot.views;
     var models = namespace.bot.models;
-    var controls = namespace.bot.controls;
+    //var controls = namespace.bot.controls;
 
     var user;
 
@@ -22,19 +20,16 @@ namespace.module('bot.main', function (exports, require) {
         tests();
 
         var data;
-
         data = localStorage['char'];
-        user = models.init(data);
-        views.init(user);
-        controls.init(user);
+
+        var game = new models.Game();
+        game.init();
 
         requestAnimationFrame(tick);
     }
 
     function tick() {
-        controls.tick();
-        user.tick();
-        views.tick();
+        game.tick();
 
         requestAnimationFrame(tick);
     }

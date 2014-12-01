@@ -1,0 +1,97 @@
+Game === :
+- top level, contains everything else
+- tempvariables - current selected tab
+
+User === :
+- Header at top of screen
+- contains hero stats (such as hp/hpmax), current level info, skillchain and equipped items
+- skillchain and equiped items need state from inventory
+- hero stats needs access to hero model for max hp, max mp, xp, nextlvlxp
+- current level info, current hp, mp, dps needs access to simulation/instance state
+-- Controllers:
+--- Clicking on skillchain/equipped items sets current_tab to 'item' and sets focus of the tab to clicked item
+
+Map Tab === :
+- Tab in right pane
+- Shows map, including areas which can be travelled to, current area
+
+- needs access to:
+-- unlocked_areas (boolean array/dict of which areas have been unlocked so far)
+-- current_area (string? areaname of current locations eg. "darkwoods")
+
+- temp variable:
+-- selected_next_area - defaults to current area.  when user clicks on non-current area, changes to clicked area
+
+- possibly show progress within area (room 14/20 of dungeon)?
+- default shows info on selected_next_area.
+- on hover, shows info on non-current areas
+
+-- Controllers:
+--- Hover detection for showing info of non-selected areas
+--- Click on non-current area (set selected_next_area)
+--- "Go" button - starts new simulation/instance at selected_next_area
+
+
+
+Item Tab === :
+- Tab in right pane
+- Contains list of all unequipped items, grouped by type (weap/armor/skill)
+- Equipped items remain in inventory with "equipped on {charname}" flag in item info
+- Items with enough experience to level up have "sparkle/glow"
+- Lvlup Button appears on focus item, glows when ready
+
+- Needs access to:
+-- user inventory
+-- Equiped items/skills (for swapping)
+
+- temp variables:
+-- for each type (weap/armor/skills) boolean "collapsed" variable
+-- focus_item: defaults to first item, clicking on item sets it as focus item, shows expanded info and equip/unequip/moveup/movedown
+
+
+-- Controllers:
+--- Clicking on Type heading toggles corresponding boolean 'collapsed' var
+--- Clicking on an item sets it as focus item. 
+--- Focus item has Equip/Unequip button and LvlUp button. If skill, also has moveup/movedown buttons (to order skill chain)
+--- Clicking lvlup button with sufficient item xp sets Lvlup to current tab, with clicked item as focus
+
+
+Craft Tab === :
+- Tab in right pane
+- Contains list of all recipes, grouped by type (weap/armor/skill)
+- Recipes for which you don't have enough ingredients are "greyed out"
+- Clicking on a recipe expands it and shows more info about the costs and resulting item
+- Focused recipe has craft button.  Upon click (with enough mats), takes you to Item tab with newly crafted item selected
+
+- temp variables:
+-- focus_item: defaults to first recipe, clicking on recipe sets it as focus item, shows expanded info and "craft" button
+
+
+-- Controllers:
+--- Click on recipe to set it as focus_item.
+--- Click on Craft to expend materials and move user to Item tab, viewing newly created item
+
+
+
+LvlUp Tab === :
+- Tab in right pane
+- Defaults to character lvlup.  Can show item level up if navigated to through Item tab.
+- Shows detailed item stats
+- Box with "rolled_next_affix" (prop on each item/char so it persists)
+- Reroll button shows cost and upon click rerolls 'rolled_next_affix'
+
+- needs access to:
+--- Focus item/char (item stats, rolled_next_affix)
+
+-- Controllers:
+--- Reroll button - expends Mats for new random "rolled_next_affix"
+
+
+
+Settings Tab === :
+- Tab in right pane
+- temp variables:
+-- mute: boolean
+
+- Controllers:
+-- Save button

@@ -1,13 +1,27 @@
+Game has user
+user has N chars
+user has 1 inventory
+char has 1 map
+char has N equipped items (derived from inventory items flagged as equiped by user?)
+char has N equipped skills in ordinal list (skillchain) 
+inventory has items in typed groups: armor, weapons, skills, materials, and recipes
+
+items have name, img, equipslot:( {charname}.skillslot[3] or undefined), and type-specific values
+
 Game === :
 - top level, contains everything else
-- tempvariables - current selected tab
+- tempvariables:
+-- current selected tab
+-- current selected character
 
 User === :
 - Header at top of screen
 - contains hero stats (such as hp/hpmax), current level info, skillchain and equipped items
-- skillchain and equiped items need state from inventory
-- hero stats needs access to hero model for max hp, max mp, xp, nextlvlxp
-- current level info, current hp, mp, dps needs access to simulation/instance state
+
+-needs access to:
+-- inventory for equiped items and skills
+-- char model for max hp, max mp, xp, nextlvlxp
+-- simulation state for current level info, current hp, mp, dps
 
 has N chars
 has 1 inv
@@ -19,10 +33,12 @@ has 1 inv
 Map Tab === :
 - Tab in right pane
 - Shows map, including areas which can be travelled to, current area
+- each character has own map
 
 - needs access to:
 -- char.unlocked_areas (boolean array/dict of which areas have been unlocked so far)
 -- char.current_area (string? areaname of current locations eg. "darkwoods")
+-- Simulation Controller (for starting new instance on "Go")
 
 - temp variable:
 -- selected_next_area - defaults to current area.  when user clicks on non-current area, changes to clicked area
@@ -47,6 +63,7 @@ Item Tab === :
 - Needs access to:
 -- user inventory
 -- Equiped items/skills (for swapping)
+-- Current tab/focus-item, for when click "LvlUp" button
 
 - temp variables:
 -- for each type (weap/armor/skills) boolean "collapsed" variable
@@ -67,6 +84,12 @@ Craft Tab === :
 - Clicking on a recipe expands it and shows more info about the costs and resulting item
 - Focused recipe has craft button.  Upon click (with enough mats), takes you to Item tab with newly crafted item selected
 
+- needs access to:
+-- recipe inventory 
+-- materials inventory (for determining if enough to craft and to decrement when spending mats)
+-- item inventory (for placing item once crafted)
+-- Current tab/focus-item, for when click "craft" button (redirect back into item tab with new item selected)
+
 - temp variables:
 -- focus_item: defaults to first recipe, clicking on recipe sets it as focus item, shows expanded info and "craft" button
 
@@ -86,6 +109,8 @@ LvlUp Tab === :
 
 - needs access to:
 --- Focus item/char (item stats, rolled_next_affix)
+--- Materials inventory (for re-rolling items)
+--- Inventory (to modify item)
 
 -- Controllers:
 --- Reroll button - expends Mats for new random "rolled_next_affix"

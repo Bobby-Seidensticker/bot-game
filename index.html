@@ -106,7 +106,10 @@
   </div>
 
 
-  <script id="game-main-menu" type="x-tmpl-mustache">
+
+
+
+  <script id="game-main-menu-tmpl" type="x-tmpl-mustache">
     <div class="game-main-menu">
       <div class="tab" id="map">
 	Map
@@ -126,6 +129,15 @@
     </div>
   </script>
 
+  <script id="char-tmpl" type="x-tmpl-mustache">
+    <div class="char" id="char-{{name}}">
+      
+    </div>
+  </script>
+
+  <script id="inv-tmpl" type="x-tmpl-mustache">
+    <!-- shit -->
+  </script>
 
   <script>
     namespace.bot.main.onReady();

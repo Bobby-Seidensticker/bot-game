@@ -16,20 +16,23 @@ namespace.module('bot.views', function (exports, require) {
         this.$user = $('.user');
         this.$char = $('.char');
         this.$vis = $('.vis');
-
-        this.mainTemplate = $('#game-main-menu').html()
-        Mustache.parse(this.mainTemplate);
-        this.$user.append(this.mainTemplate.render())
     }
 
-    GameView.prototype.init = function() {
-        this.resize(); // ?
+    GameView.prototype.init = function(controller) {
+        var i, c, charTmpl, mainTmpl;
+        this.controller = controller;
+        this.resize();
 
-        // not even sure that chars is initialized or even the correct length at this point in time...
-        for (var i = 0; i < this.model.chars.length; i++) {
-            // do a mustache template here for a div, class = char div, id = i, maybe
-            //this.$char.append(
+        charTmpl = $('#char-tmpl').html();
+        Mustache.parse(charTmpl);
+        for (i = 0; i < this.model.chars.length; i++) {
+            c = this.model.chars[i];
+            this.$char.append(Mustache.render(charTmpl, {"name": c.name}));
         }
+
+        mainTmpl = $('#game-main-menu-tmpl').html()
+        Mustache.parse(mainTmpl);
+        this.$user.append(mainTmpl.render())
     }
 
     GameView.prototype.resize = function() {
@@ -70,6 +73,11 @@ namespace.module('bot.views', function (exports, require) {
         // need to get the correct div out of the many divs
     }
 
+    CharView.prototype.init = function(controller) {
+        this.controller = controller;
+        // stuff
+    }
+
     // decorator for this?  probs not
     CharView.prototype.onTick = function() {
         if (!this.model.dirty) {
@@ -84,7 +92,11 @@ namespace.module('bot.views', function (exports, require) {
 
     function InventoryView(model) {
         this.model = model;
-        this.$ele = $('.inv');
+        //this.$ele = $('.inv'); wrong
+    }
+
+    InventoryView.prototype.init = function(controller) {
+        this.controller = controller;
     }
 
     InventoryView.prototype.onTick = function() {
@@ -93,13 +105,5 @@ namespace.module('bot.views', function (exports, require) {
         }
 
         this.model.dirty = false;
-    }
-
-    function init(model) {
-        view = new GameView(model);
-    }
-
-    function tick() {
-        view.update();
     }
 });

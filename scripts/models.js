@@ -68,8 +68,6 @@ namespace.module('bot.models', function (exports, require) {
 
         this.view = new views.GameView(this);
         this.controller = new controllers.GameController(this);
-        this.controller.view = this.view;
-        this.view.controller = this.controller;
 
         this.chars = [];
         for (i = 0; i < data.chars.length; i++) {
@@ -77,6 +75,9 @@ namespace.module('bot.models', function (exports, require) {
         }
 
         this.inventory = new Inventory(data.inventory);
+
+        this.view.init(this.controller);
+        this.controller.init(this.view);
     }
 
     Game.prototype.init = function() {}
@@ -102,5 +103,11 @@ namespace.module('bot.models', function (exports, require) {
         this.view.controller = this.controller;
         this.controller.view = this.view;
     }
+
+    /*
+    function Map(data) {
+        this.data = data;
+        this.view = new views.MapView(this);
+    }*/
 
 });

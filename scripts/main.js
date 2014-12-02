@@ -152,16 +152,17 @@ namespace.module('bot.main', function (exports, require) {
             return $('#' + x + '-content-holder');
         });
         for (var i = 0; i < this.tabs.length; i++) {
-            this.tabs[i].on('click', function(eleIndex) {
-                console.log('Click on element ' + eleIndex);
-                for (var i = 0; i < this.tabs.length; i++) {
-                    if (i === eleIndex) {
-                        this.contents[i].removeClass('closed');
-                    } else {
-                        this.contents[i].addClass('closed');
-                    }
-                }
-            }.curry(i).bind(this));
+            this.tabs[i].on('click', onTabClick.curry(this.contents, i));
+        }
+    }
+
+    function onTabClick(contents, eleIndex) {
+        for (var i = 0; i < contents.length; i++) {
+            if (i === eleIndex) {
+                contents[i].removeClass('closed');
+            } else {
+                contents[i].addClass('closed');
+            }
         }
     }
 

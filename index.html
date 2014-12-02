@@ -42,8 +42,8 @@
     </table>
 
     <div class="contentholder">
-      <div class="map-content-holder"></div>
-      <div class="inv-content-holder">
+      <div id="map-content-holder"></div>
+      <div id="inv-content-holder">
         <div class="item-type-header">Armor</div>
 	<div class="item-collapsed">Shorts - level 2</div>
 	<div class="item-collapsed">Jeans - level 8</div>
@@ -58,9 +58,9 @@
 	<div class="item-type-header">Weapons</div>
 	<div class="item-type-header">Skills</div>
       </div>
-      <div class="craft-content-holder"></div>
-      <div class="lvlup-content-holder"></div>
-      <div class="settings-content-holder"></div>
+      <div id="craft-content-holder"></div>
+      <div id="lvlup-content-holder"></div>
+      <div id="settings-content-holder"></div>
     </div>
 
     <!--
@@ -160,7 +160,7 @@
   </script>
 
   <script id="header-stats-tmpl" type="x-tmpl-mustache">
-    <div class="headerstats {{focused}}" id="header-{{name}}">
+    <div class="headerstats" id="header-{{name}}">
       <div class="stats">
         Hero {{name}} - Level <span id="header.hero.level">2</span><br>
         Zone: <span id="header.zone.name">Dark Woods</span> - <span id="header.zone.roomnum">8</span>/<span id="header.zone.roomcount">10</span><br>

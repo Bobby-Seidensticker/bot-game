@@ -150,20 +150,24 @@ body {
     text-align: center;
 }
 
-.item-focused-mid {
+.item-body {
+    background-color:#FFD;
+}
+
+.item-mid {
     width:100%;
     height:110px;
     border-bottom: 1px solid white;
 }
 
-.item-focused-img {
+.item-img {
     width:90px;
     height:90px;
     padding: 10px;
     float: left;
 }
 
-.item-focused-mid-text {
+.item-mid-text {
     width:60%;
     text-align:center;
     line-height: 150%;
@@ -173,15 +177,15 @@ body {
     font-family:sans-serif;
 }
 
-.item-focused-affixes {
+.item-affixes {
     text-align:center;
 }
 
-.item-focused-buttonbox {
+.item-buttonbox {
     width:100%;
 }
 
-.item-focused-button {
+.item-button {
     background-color:#FED;
     margin: 10px 50px 10px 70px;
     width:60px;

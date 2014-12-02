@@ -49,15 +49,24 @@ body {
 
 .tabs .tabholder {
     display: table;
-    width: 390px;
-    height: 75px;
+    width: 400px;
+    margin-left: -5px;
+    margin-top: -5px;
+    height: 65px;
+    border-collapse: collapse;
 }
 
 .tabs .tabholder td {
+    border: 5px solid #EEF;
     text-align: center;
     vertical-align: middle;
     background-color: #DDF;
-    width: 75px;
+    width: 74px;
+}
+
+.contentholder div {
+    overflow: hidden;
+    background-color: #DDF;
 }
 
 /*.tabs .tab {

@@ -219,6 +219,23 @@ namespace.module('bot.main', function (exports, require) {
         this.$ele = $(Mustache.render($('#inv-tab-tmpl').html(), tmplData));
 
         this.$dest.append(this.$ele);
+
+        this.$dest.on('click', function(event) {
+            var $target, $parent, wasCollapsed;
+
+            $target = $(event.target);
+            if ($target.hasClass('item-header')) {
+                $parent = $target.parent();
+                wasCollapsed = $parent.hasClass('collapsed');
+
+                $('.item').addClass('collapsed');
+                if (wasCollapsed) {
+                    $parent.removeClass('collapsed');
+                }
+            }
+            console.log(event);
+            console.log($(event.target));
+        });
     }
 
     Inv.prototype.init = function() {

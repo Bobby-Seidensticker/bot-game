@@ -6,7 +6,7 @@ body {
     position: relative;
 }
 
-.char {
+.header {
     position: absolute;
     padding: 5px;
 
@@ -40,12 +40,40 @@ body {
     background-color: #EFE;
 }
 
-.user {
+.tabs {
     position: absolute;
     padding: 5px;
 
     background-color: #EEF;
 }
+
+.tabs .tabholder {
+    display: table;
+    width: 390px;
+    height: 75px;
+}
+
+.tabs .tabholder td {
+    text-align: center;
+    vertical-align: middle;
+    background-color: #DDF;
+    width: 75px;
+}
+
+/*.tabs .tab {
+    width: 58px;
+    height: 58px;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    float: left;
+    background-color: #DDF;
+}
+
+.vert-centered {
+    margin-top: 50%;
+    font-size: 16px;
+}*/
 
 .game-main-menu {
     height: 50px;

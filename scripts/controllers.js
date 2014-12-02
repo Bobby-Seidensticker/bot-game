@@ -21,7 +21,6 @@ namespace.module('bot.controllers', function (exports, require) {
         this.view.init();
     }
 
-
     function CharController(model) {
         this.model = model;
     }

@@ -3,7 +3,7 @@
   <link href="styles/main.css" rel="stylesheet">
 
   <!--<script src="scripts/Box2D.js"></script>
-  <script type="text/javascript" src="scripts/bTest.js"></script>-->
+      <script type="text/javascript" src="scripts/bTest.js"></script>-->
 
   <script type="text/javascript" src="scripts/jquery.min.js"></script>
   <script type="text/javascript" src="scripts/namespace-plus.js"></script>
@@ -12,8 +12,9 @@
 
   <script type="text/javascript" src="scripts/log.js"></script>
   <script type="text/javascript" src="scripts/views.js"></script>
-  <script type="text/javascript" src="scripts/models.js"></script>
-  <script type="text/javascript" src="scripts/controls.js"></script>
+  <!--
+      <script type="text/javascript" src="scripts/models.js"></script>
+      <script type="text/javascript" src="scripts/controls.js"></script>-->
 
   <script type="text/javascript" src="scripts/prob.js"></script>
   <script type="text/javascript" src="scripts/itemref.js"></script>
@@ -22,111 +23,146 @@
 
 <body>
   <div class="header">
-    <div class="headerstats">
-      Hero Bobbeh - Level <span id="header.hero.level">2</span><br>
-      Zone: <span id="header.zone.name">Dark Woods</span> - <span id="header.zone.roomnum">8</span>/<span id="header.zone.roomcount">10</span><br>
-      HP - <span id="header.hero.hp">90</span>/<span id="header.hero.maxhp">100</span><br>
-      MP - <span id="header.hero.mp">17</span>/<span id="header.hero.maxmp">30</span><br>
-      XP - <span id="header.hero.xp">117</span>/<span id="header.hero.nextlvlxp">250</span><br>
-      DPS - <span id="header.hero.dps">72.3</span>
-    </div>
-    <div class="headerskillchain">
-      Fireball<br>
-      Basic Attack<br>
-    </div>
-    <div class="headerinventory">
-      Helmet <br>
-      Armor <br>
-      Gloves <br>
-      Pants <br>
-    </div>
   </div>
 
   <div class="vis">
   </div>
 
-  <div class="user">
-    <div class="tabholder">
-      <div class="tab">
-	Map
-      </div>
-      <div class="tab">
-        Items
-      </div>
-      <div class="tab">
-	Craft
-      </div>
-      <div class="tab">
-	LvlUp
-      </div>
-      <div class="tab">
-	Settings
-      </div>
-    </div>
+  <div class="tabs">
+    <table class="tabholder">
+      <tbody>
+        <td id="map">Map</td>
+        <td id="inv">Items</td>
+        <td id="craft">Craft</td>
+        <td id="lvlup">LvlUp</td>
+        <td id="settings">Settings</td>
+      </tbody>
+    </table>
+
     <div class="contentholder">
-      <div class="mapcontent">
-	Mappy<br><br>
-	<img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px;height300px;" />
-	<input id="mapgo" type="button" value="Go" />
-      </div>
-      <div class="itemcontent">
-	Armor \/<br>
-	Weapons \/<br>
-	Skills \/<br>
-      </div>
-      <div class="craftcontent">
-	Armor \/<br>
-	Weapons\/<br>
-	Skills \/<br>
-      </div>
-      <div class="lvlupcontent">
-	<div class="lvlupitemholder">
-	  <div class="lvlupitemimg">
-	    <img src="http://img1.wikia.nocookie.net/__cb20080817200550/diablo/images/4/4f/D2-u-Treadsofcthon.gif" />
-	  </div>
-	  <div class="lvlupitemstats">
-            Magic Shoes <br>
-	    + 5 Fire Damage<br>
-	    + 10 Armor<br>
-	  </div>
-	</div>
-	<div class="lvluprollbox">
-	  Affix on next level: <br><br>
-	  + 3 Fire Damage
-	</div>
-	<input type="button" value="Reroll" />
-	<input type="button" value="Level Up" />
-      </div>
-      <div class="settingscontent">
-        <input type="button" value="Save" />
-	<input type="button" value="Mute" />
-      </div>
+      <div class="map-content-holder"></div>
+      <div class="inv-content-holder"></div>
+      <div class="craft-content-holder"></div>
+      <div class="lvlup-content-holder"></div>
+      <div class="settings-content-holder"></div>
     </div>
+
+    <!--
+        <div class="contentholder">
+          <div class="mapcontent">
+	    Mappy<br><br>
+	    <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px;height300px;" />
+	    <input id="mapgo" type="button" value="Go" />
+          </div>
+          <div class="itemcontent">
+	    Armor \/<br>
+	    Weapons \/<br>
+	    Skills \/<br>
+          </div>
+          <div class="craftcontent">
+	    Armor \/<br>
+	    Weapons\/<br>
+	    Skills \/<br>
+          </div>
+          <div class="lvlupcontent">
+	    <div class="lvlupitemholder">
+	      <div class="lvlupitemimg">
+	        <img src="http://img1.wikia.nocookie.net/__cb20080817200550/diablo/images/4/4f/D2-u-Treadsofcthon.gif" />
+	      </div>
+	      <div class="lvlupitemstats">
+                Magic Shoes <br>
+	        + 5 Fire Damage<br>
+	        + 10 Armor<br>
+	      </div>
+	    </div>
+	    <div class="lvluprollbox">
+	      Affix on next level: <br><br>
+	      + 3 Fire Damage
+	    </div>
+	    <input type="button" value="Reroll" />
+	    <input type="button" value="Level Up" />
+          </div>
+          <div class="settingscontent">
+            <input type="button" value="Save" />
+	    <input type="button" value="Mute" />
+          </div>
+        </div>
+        -->
   </div>
 
 
-  <script id="game-main-menu-tmpl" type="x-tmpl-mustache">
-    <div class="game-main-menu">
-      <div class="tab" id="map">
-	Map
-      </div>
-      <div class="tab closed" id="inv">
-        Items
-      </div>
-      <div class="tab closed" id="craft">
-	Craft
-      </div>
-      <div class="tab closed" id="lvl">
-	LvlUp
-      </div>
-      <div class="tab closed" id="settings">
-	Settings
-      </div>
+  <script id="map-tab-tmpl" type="x-tmpl-mustache">
+    <div class="mapcontent">
+      Mappy<br><br>
+      <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px;height300px;" />
+      <input id="mapgo" type="button" value="Go" />
     </div>
   </script>
 
-  <script id="char-tmpl" type="x-tmpl-mustache">
-    <div class="char" id="char-{{name}}">
+  <script id="inv-tab-tmpl" type="x-tmpl-mustache">
+    <div class="invcontent">
+      Armor \/<br>
+      Weapons \/<br>
+      Skills \/<br>
+    </div>
+  </script>
+
+  <script id="craft-tab-tmpl" type="x-tmpl-mustache">
+    <div class="craftcontent">
+      Armor \/<br>
+      Weapons\/<br>
+      Skills \/<br>
+    </div>
+  </script>
+
+  <script id="lvlup-tab-tmpl" type="x-tmpl-mustache">
+    <div class="lvlupcontent">
+      <div class="lvlupitemholder">
+	<div class="lvlupitemimg">
+	  <img src="http://img1.wikia.nocookie.net/__cb20080817200550/diablo/images/4/4f/D2-u-Treadsofcthon.gif" />
+	</div>
+	<div class="lvlupitemstats">
+          Magic Shoes <br>
+	  + 5 Fire Damage<br>
+	  + 10 Armor<br>
+	</div>
+      </div>
+      <div class="lvluprollbox">
+	Affix on next level: <br><br>
+	+ 3 Fire Damage
+      </div>
+      <input type="button" value="Reroll" />
+      <input type="button" value="Level Up" />
+    </div>
+  </script>
+
+  <script id="settings-tab-tmpl" type="x-tmpl-mustache">
+    <div class="settingscontent">
+      <input type="button" value="Save" />
+      <input type="button" value="Mute" />
+    </div>
+  </script>
+
+  <script id="header-stats-tmpl" type="x-tmpl-mustache">
+    <div class="headerstats {{focused}}" id="header-{{name}}">
+      <div class="stats">
+        Hero {{name}} - Level <span id="header.hero.level">2</span><br>
+        Zone: <span id="header.zone.name">Dark Woods</span> - <span id="header.zone.roomnum">8</span>/<span id="header.zone.roomcount">10</span><br>
+        HP - <span id="header.hero.hp">90</span>/<span id="header.hero.maxhp">100</span><br>
+        MP - <span id="header.hero.mp">17</span>/<span id="header.hero.maxmp">30</span><br>
+        XP - <span id="header.hero.xp">117</span>/<span id="header.hero.nextlvlxp">250</span><br>
+        DPS - <span id="header.hero.dps">72.3</span>
+      </div>
+      <div class="headerskillchain">
+        Fireball<br>
+        Basic Attack<br>
+      </div>
+      <div class="headerinventory">
+        Helmet <br>
+        Armor <br>
+        Gloves <br>
+        Pants <br>
+      </div>
     </div>
   </script>
 

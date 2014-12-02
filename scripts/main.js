@@ -6,11 +6,11 @@ namespace.module('bot.main', function (exports, require) {
 
     var itemref = namespace.bot.itemref;
 
-    //var views = namespace.bot.views;
+    var views = namespace.bot.views;
     //var models = namespace.bot.models;
     //var controls = namespace.bot.controls;
 
-    var user;
+    var game;
 
     exports.extend({
         'onReady': onReady
@@ -22,7 +22,7 @@ namespace.module('bot.main', function (exports, require) {
         var data;
         data = localStorage['char'];
 
-        var game = new models.Game();
+        game = new Game();
         game.init();
 
         requestAnimationFrame(tick);
@@ -38,6 +38,160 @@ namespace.module('bot.main', function (exports, require) {
         itemref.expand('test', 'harf');
         log.info("TESTS COMPLETE\n\n");
     }
+
+    function ensureProps(obj) {
+        for (var i = 1; i < arguments.length; i++) {
+            if (!(arguments[i] in obj)) {
+                return false;
+            }
+        }
+        return true
+    }
+
+    function loadRawData(data) {
+        var d;
+
+        try {
+            d = JSON.parse(data);
+            fucked = false
+            if (!('chars' in d)) { fucked = true; }
+            if (!('inventory' in d)) { fucked = true; }
+            if (!ensureProps(d['inventory'], 'weapons', 'armor', 'skills', 'affixes', 'mats')) { fucked = true; }
+            if (fucked) {
+                throw('loadRawData: fucked');
+            }
+        }
+        catch (e) {
+            if (data === undefined) {
+                log.info('models.loadRawData(), No data in localStorage reverting to default');
+            } else {
+                log.error('models.loadRawData(), Tried to parse corrupt JSON, given %s, reverting to default', data);
+            }
+            d = {
+                chars: [{name: 'bobbeh'}],
+                inv: {
+                    weapons: [],
+                    armor: [],
+                    skills: [],
+                    affixes: [],
+                    mats: []
+                }
+            };
+        }
+
+        return d;
+    }
+
+    function Game() {
+        this.view = new views.GameView();
+        this.view.resize();
+        $(window).on('resize', this.view.resize.bind(this.view));
+
+        this.data = loadRawData(localStorage['char']);
+
+        console.log(this.data);
+        //log.info('data from ls: ', JSON.stringify(this.data));
+
+        this.map = new Map({});
+        this.map.init();
+        this.inv = new Inv(this.data.inv);
+        this.inv.init();
+        this.craft = new Craft({});
+        this.craft.init();
+        this.lvlup = new Lvlup({});
+        this.lvlup.init();
+        this.settings = new Settings({});
+        this.settings.init();
+
+        this.chars = [];
+        for (var i = 0; i < this.data.chars.length; i++) {
+            this.chars[i] = new Char(this.data.chars[i], this.inv);
+            this.data.chars[i].focus = i === 0;
+            this.chars[i].init();
+        }
+    }
+
+    Game.prototype.init = function (data) {
+    }
+
+    Game.prototype.tick = function() {
+    }
+
+
+    function Char(data, inv) {
+        this.data = data;
+        this.inv = inv;
+
+        this.$header = $('.header');
+        this.$tabs = $('.tabs');
+        this.statsTmpl = $('#header-stats-tmpl').html();
+    }
+
+    Char.prototype.init = function() {
+        this.data.focused = this.data.focus ? '' : 'closed';
+        this.$statsView = $(Mustache.render(this.statsTmpl, this.data));
+        this.$header.append(this.$statsView);
+    }
+
+    Char.prototype.toggle = function() {
+        this.$view.toggleClass('closed');
+    }
+
+    function Map(data) {
+        this.data = data;
+
+        this.$ele = $('#map-content-holder');
+        this.tmpl = $('#map-tab-tmpl').html();
+    }
+
+    Map.prototype.init = function() {
+        this.$ele.append(Mustache.render(this.tmpl, this.data));
+    }
+
+    function Inv(data, $ele, tmpl) {
+        this.data = data;
+
+        this.$ele = $('#inv-content-holder');
+        this.tmpl = $('#inv-tab-tmpl').html();
+    }
+
+    Inv.prototype.init = function() {
+        this.$ele.append(Mustache.render(this.tmpl, this.data));
+    }
+
+    function Craft(data) {
+        this.data = data;
+
+        this.$ele = $('#craft-content-holder');
+        this.tmpl = $('#craft-tab-tmpl').html();
+    }
+
+    Craft.prototype.init = function() {
+        this.$ele.append(Mustache.render(this.tmpl, this.data));
+    }
+
+    function Lvlup(data) {
+        this.data = data;
+
+        this.$ele = $('#lvlup-content-holder');
+        this.tmpl = $('#lvlup-tab-tmpl').html();
+    }
+
+    Lvlup.prototype.init = function() {
+        this.$ele.append(Mustache.render(this.tmpl, this.data));
+    }
+
+    function Settings(data) {
+        this.data = data;
+
+        this.$ele = $('#settings-content-holder');
+        this.tmpl = $('#settings-tab-tmpl').html();
+    }
+
+    Settings.prototype.init = function() {
+        this.$ele.append(Mustache.render(this.tmpl, this.data));
+    }
+
 
     /*
     function onTick() {

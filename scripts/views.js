@@ -3,40 +3,15 @@ namespace.module('bot.views', function (exports, require) {
     require('org.startpad.funcs').patch();
 
     exports.extend({
-        'init': init,
-        'tick': tick
+        'GameView': GameView
     });
 
     var log = require('bot.log');
 
-    function GameView(controller) {
-        this.controller = controller;
-
-        this.$user = $('.user');
-        this.$char = $('.char');
+    function GameView() {
+        this.$tabs = $('.tabs');
+        this.$header = $('.header');
         this.$vis = $('.vis');
-    }
-
-    GameView.prototype.init = function(chars) {
-        var i, c, charTmpl, mainTmpl, visTmpl;
-
-        this.mainTmpl = $('#game-main-menu-tmpl').html();
-        Mustache.parse(this.mainTmpl);
-        this.$user.append(Mustache.render(this.mainTmpl, {}));
-
-        this.charTmpl = $('#char-tmpl').html();
-        Mustache.parse(this.charTmpl);
-        for (i = 0; i < chars.length; i++) {
-            this.newChar(chars[i]);
-        }
-
-        this.visTmpl = $('#vis-tmpl').html();
-        Mustache.parse(this.visTmpl);
-        this.$vis.append(Mustache.render(this.visTmpl, {}));
-    }
-
-    GameView.prototype.newChar = function(c) {
-        this.$char.append(Mustache.render(this.charTmpl, {"name": c.name}));
     }
 
     GameView.prototype.resize = function() {
@@ -46,21 +21,17 @@ namespace.module('bot.views', function (exports, require) {
 
         log.info('onResize, width: %d, height: %d', width, height);
 
-        this.setSizeLoc(this.$char,
-            width - 400 - 10, 150 - 10,
-            0, 0);
+        this.setSizeLoc(this.$header,
+                        width - 400 - 10, 150 - 10,
+                        0, 0);
 
-        this.setSizeLoc(this.$user,
-            400 - 10, height - 10,
-            width - 400, 0);
+        this.setSizeLoc(this.$tabs,
+                        400 - 10, height - 10,
+                        width - 400, 0);
 
         this.setSizeLoc(this.$vis,
-            width - 400 - 10, height - 150 - 10,
-            0, 150);
-    }
-
-    GameView.prototype.update = function() {
-        log.info('GameView.update called');
+                        width - 400 - 10, height - 150 - 10,
+                        0, 150);
     }
 
     GameView.prototype.setSizeLoc = function($ele, width, height, left, top) {
@@ -70,6 +41,7 @@ namespace.module('bot.views', function (exports, require) {
         $ele.css('top', top);
     }
 
+    /*
     function CharView(model) {
         this.model = model;
         // this is wrong:
@@ -109,5 +81,5 @@ namespace.module('bot.views', function (exports, require) {
         }
 
         this.model.dirty = false;
-    }
+    }*/
 });

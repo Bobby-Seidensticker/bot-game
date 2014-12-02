@@ -4,6 +4,7 @@ namespace.module('bot.itemref', function (exports, require) {
     var ref = {
         "weapon": {
             "weapon": {
+                "exp": 0,
                 "affixes": [],
                 "level": 0,
                 "speed": 1,
@@ -48,9 +49,9 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "armor": {
             "armor": {
+                "exp": 0,
                 "level": 0,
-                "affixes": [],
-                "al": 1, // armor level
+                "affixes": ["armor 1"],
                 "weight": 1
             },
             "balsa helmet": {
@@ -69,6 +70,7 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "skill": {
             "basic": {
+                "exp": 0,
                 "affixes": [],
                 "mana": 0
             },
@@ -124,6 +126,7 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "affix": {
             "basic stat": {
+                "exp": 0,
                 "level": 1,
                 "mod": [1, "flat"],
                 "type": "stat",
@@ -209,11 +212,17 @@ namespace.module('bot.itemref', function (exports, require) {
         for (var i = 0; i < names.length; i++) {
             item = $.extend(true, item, ref[type][names[i]]);
         }
-        log.info("Final item: %s", JSON.stringify(item));
         if ('itemType' in item) {
             throw(sprintf('Found a "itemType" key in item %s. No item is allowed to have "itemType" as it it set in expand', JSON.stringify(item)))
         }
         item['itemType'] = type;
+        if ('name' in item) {
+            throw(sprintf('Found a "name" key in item %s. No item is allowed to have "name" as it it set in expand', JSON.stringify(item)))
+        }
+        item['name'] = name;
+
+        log.info("Final item: %s", JSON.stringify(item));
+
         return item;
     }
 

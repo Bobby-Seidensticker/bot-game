@@ -169,6 +169,7 @@ namespace.module('bot.main', function (exports, require) {
         for (var i = 0; i < this.tabs.length; i++) {
             this.tabs[i].on('click', onTabClick.curry(this.contents, i));
         }
+        onTabClick(this.contents, 1);
     }
 
     function onTabClick(contents, eleIndex) {
@@ -184,68 +185,92 @@ namespace.module('bot.main', function (exports, require) {
     function Map(model) {
         this.model = model;
 
-        this.$ele = $('#map-content-holder');
+        this.$dest = $('#map-content-holder');
         this.tmpl = $('#map-tab-tmpl').html();
     }
 
     Map.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.model));
+        this.$dest.append(Mustache.render(this.tmpl, this.model));
     }
 
     function Inv(model) {
+        var tmplData = {
+            'weapons': '',
+            'armor': '',
+            'skills': ''
+        };
         this.model = model;
 
-        this.$ele = $('#inv-content-holder');
+        this.$dest = $('#inv-content-holder');
         this.tmpl = $('#inv-tab-tmpl').html();
+
+        for (var i = 0; i < this.model.weapons.length; i++) {
+            tmplData.weapons += makeInvItem(this.model.weapons[i]);
+        }
+
+        for (var i = 0; i < this.model.skills.length; i++) {
+            tmplData.skills += makeInvItem(this.model.skills[i]);
+        }
+
+        for (var i = 0; i < this.model.armor.length; i++) {
+            tmplData.armor += makeInvItem(this.model.armor[i]);
+        }
+
+        this.$ele = $(Mustache.render($('#inv-tab-tmpl').html(), tmplData));
+
+        this.$dest.append(this.$ele);
     }
 
     Inv.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.model));
+        //this.$dest.append(Mustache.render(this.tmpl, this.model));
     }
 
     Inv.prototype.newItem = function(type, name) {
         var dest = this.model[type];
-        dest[dest.length] = InvItem(itemref.expand(type, name));
+        dest[dest.length] = makeInvItem(itemref.expand(type, name));
     }
 
-    function InvItem(model) {
-        this.model = model;
-
-        
+    function makeInvItem(model) {
+        model.renderedAffixes = '';
+        for (var i = 0; i < model.affixes.length; i++) {
+            model.renderedAffixes += Mustache.render($('#inv-tab-item-affix-tmpl').html(), {'str': model.affixes[i]});
+        }
+        log.info("makeInvItem, model: %s", JSON.stringify(model));
+        return Mustache.render($('#inv-tab-item-tmpl').html(), model);
     }
 
 
     function Craft(model) {
         this.model = model;
 
-        this.$ele = $('#craft-content-holder');
+        this.$dest = $('#craft-content-holder');
         this.tmpl = $('#craft-tab-tmpl').html();
     }
 
     Craft.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.model));
+        this.$dest.append(Mustache.render(this.tmpl, this.model));
     }
 
     function Lvlup(model) {
         this.model = model;
 
-        this.$ele = $('#lvlup-content-holder');
+        this.$dest = $('#lvlup-content-holder');
         this.tmpl = $('#lvlup-tab-tmpl').html();
     }
 
     Lvlup.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.model));
+        this.$dest.append(Mustache.render(this.tmpl, this.model));
     }
 
     function Settings(model) {
         this.model = model;
 
-        this.$ele = $('#settings-content-holder');
+        this.$dest = $('#settings-content-holder');
         this.tmpl = $('#settings-tab-tmpl').html();
     }
 
     Settings.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.model));
+        this.$dest.append(Mustache.render(this.tmpl, this.model));
     }
 
 

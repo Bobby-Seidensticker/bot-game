@@ -92,6 +92,9 @@ namespace.module('bot.main', function (exports, require) {
         console.log(this.data);
         //log.info('data from ls: ', JSON.stringify(this.data));
 
+        this.tabs = new Tabs(this.data);
+        this.tabs.init();
+
         this.map = new Map({});
         this.map.init();
         this.inv = new Inv(this.data.inv);
@@ -135,6 +138,31 @@ namespace.module('bot.main', function (exports, require) {
 
     Char.prototype.toggle = function() {
         this.$view.toggleClass('closed');
+    }
+
+    function Tabs(data) {
+        this.data = data;
+    }
+
+    Tabs.prototype.init = function() {
+        this.tabs = ['map', 'inv', 'craft', 'lvlup', 'settings'].map(function(x) {
+            return $('#' + x);
+        });
+        this.contents = ['map', 'inv', 'craft', 'lvlup', 'settings'].map(function(x) {
+            return $('#' + x + '-content-holder');
+        });
+        for (var i = 0; i < this.tabs.length; i++) {
+            this.tabs[i].on('click', function(eleIndex) {
+                console.log('Click on element ' + eleIndex);
+                for (var i = 0; i < this.tabs.length; i++) {
+                    if (i === eleIndex) {
+                        this.contents[i].removeClass('closed');
+                    } else {
+                        this.contents[i].addClass('closed');
+                    }
+                }
+            }.curry(i).bind(this));
+        }
     }
 
     function Map(data) {

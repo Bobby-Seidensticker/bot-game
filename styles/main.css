@@ -159,9 +159,10 @@ body {
 .item-focused-mid-text {
     width:60%;
     text-align:center;
+    line-height: 150%;
     float: left;
-    padding-top:30px;
-    padding-bottom: 30px;
+    padding-top:20px;
+    padding-bottom: 20px;
     font-family:sans-serif;
 }
 

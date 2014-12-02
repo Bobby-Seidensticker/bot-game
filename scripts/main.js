@@ -11,6 +11,7 @@ namespace.module('bot.main', function (exports, require) {
     //var controls = namespace.bot.controls;
 
     var game;
+    var TABS = ['map', 'inv', 'craft', 'lvlup', 'settings'];
 
     exports.extend({
         'onReady': onReady
@@ -18,9 +19,6 @@ namespace.module('bot.main', function (exports, require) {
 
     function onReady() {
         tests();
-
-        var data;
-        data = localStorage['char'];
 
         game = new Game();
         game.init();
@@ -36,7 +34,7 @@ namespace.module('bot.main', function (exports, require) {
 
     function tests() {
         itemref.expand('test', 'harf');
-        log.info("TESTS COMPLETE\n\n");
+        log.info('TESTS COMPLETE\n\n');
     }
 
     function ensureProps(obj) {
@@ -48,38 +46,55 @@ namespace.module('bot.main', function (exports, require) {
         return true
     }
 
-    function loadRawData(data) {
-        var d;
+    function loadModel(model) {
+        var data = localStorage['model'];
+
+        var model;
 
         try {
-            d = JSON.parse(data);
+            model = JSON.parse(data);
             fucked = false
-            if (!('chars' in d)) { fucked = true; }
-            if (!('inventory' in d)) { fucked = true; }
-            if (!ensureProps(d['inventory'], 'weapons', 'armor', 'skills', 'affixes', 'mats')) { fucked = true; }
+            if (!('chars' in model)) { fucked = true; }
+            if (!('inv' in model)) { fucked = true; }
+            if (!ensureProps(model['inv'], 'weapons', 'armor', 'skills', 'affixes', 'mats')) { fucked = true; }
             if (fucked) {
-                throw('loadRawData: fucked');
+                throw('loadRawModel: fucked');
             }
         }
         catch (e) {
             if (data === undefined) {
-                log.info('models.loadRawData(), No data in localStorage reverting to default');
+                log.info('models.loadRawModel(), No data in localStorage reverting to default');
             } else {
-                log.error('models.loadRawData(), Tried to parse corrupt JSON, given %s, reverting to default', data);
+                log.error('models.loadRawModel(), Tried to parse corrupt JSON, given %s, reverting to default', data);
             }
-            d = {
-                chars: [{name: 'bobbeh'}],
-                inv: {
-                    weapons: [],
-                    armor: [],
-                    skills: [],
-                    affixes: [],
-                    mats: []
-                }
+            model = {
+                'chars': [{'name': 'bobbeh'}],
+                'inv': brandNewInv()
             };
         }
 
-        return d;
+        return model;
+    }
+
+    function brandNewInv() {
+        var inv = {
+            'weapons': [
+                itemref.expand('weapon', 'wooden sword'),
+                itemref.expand('weapon', 'shitty bow'),
+                itemref.expand('weapon', 'magic stick')
+            ],
+            'armor': [
+                itemref.expand('armor', 'cardboard kneepads')
+            ],
+            'skills': [
+                itemref.expand('skill', 'basic melee'),
+                itemref.expand('skill', 'basic range'),
+                itemref.expand('skill', 'basic spell')
+            ],
+            'affixes': [],
+            'mats': []
+        };
+        return inv;
     }
 
     function Game() {
@@ -87,17 +102,17 @@ namespace.module('bot.main', function (exports, require) {
         this.view.resize();
         $(window).on('resize', this.view.resize.bind(this.view));
 
-        this.data = loadRawData(localStorage['char']);
+        this.model = loadModel();
 
-        console.log(this.data);
-        //log.info('data from ls: ', JSON.stringify(this.data));
+        console.log(this.model);
+        //log.info('model from ls: ', JSON.stringify(this.model));
 
-        this.tabs = new Tabs(this.data);
+        this.tabs = new Tabs(this.model);
         this.tabs.init();
 
         this.map = new Map({});
         this.map.init();
-        this.inv = new Inv(this.data.inv);
+        this.inv = new Inv(this.model.inv);
         this.inv.init();
         this.craft = new Craft({});
         this.craft.init();
@@ -107,22 +122,22 @@ namespace.module('bot.main', function (exports, require) {
         this.settings.init();
 
         this.chars = [];
-        for (var i = 0; i < this.data.chars.length; i++) {
-            this.chars[i] = new Char(this.data.chars[i], this.inv);
-            this.data.chars[i].focus = i === 0;
+        for (var i = 0; i < this.model.chars.length; i++) {
+            this.chars[i] = new Char(this.model.chars[i], this.inv);
+            this.model.chars[i].focus = i === 0;
             this.chars[i].init();
         }
     }
 
-    Game.prototype.init = function (data) {
+    Game.prototype.init = function (model) {
     }
 
     Game.prototype.tick = function() {
     }
 
 
-    function Char(data, inv) {
-        this.data = data;
+    function Char(model, inv) {
+        this.model = model;
         this.inv = inv;
 
         this.$header = $('.header');
@@ -131,8 +146,8 @@ namespace.module('bot.main', function (exports, require) {
     }
 
     Char.prototype.init = function() {
-        this.data.focused = this.data.focus ? '' : 'closed';
-        this.$statsView = $(Mustache.render(this.statsTmpl, this.data));
+        this.model.focused = this.model.focus ? '' : 'closed';
+        this.$statsView = $(Mustache.render(this.statsTmpl, this.model));
         this.$header.append(this.$statsView);
     }
 
@@ -140,15 +155,15 @@ namespace.module('bot.main', function (exports, require) {
         this.$view.toggleClass('closed');
     }
 
-    function Tabs(data) {
-        this.data = data;
+    function Tabs(model) {
+        this.model = model;
     }
 
     Tabs.prototype.init = function() {
-        this.tabs = ['map', 'inv', 'craft', 'lvlup', 'settings'].map(function(x) {
+        this.tabs = TABS.map(function(x) {
             return $('#' + x);
         });
-        this.contents = ['map', 'inv', 'craft', 'lvlup', 'settings'].map(function(x) {
+        this.contents = TABS.map(function(x) {
             return $('#' + x + '-content-holder');
         });
         for (var i = 0; i < this.tabs.length; i++) {
@@ -166,59 +181,71 @@ namespace.module('bot.main', function (exports, require) {
         }
     }
 
-    function Map(data) {
-        this.data = data;
+    function Map(model) {
+        this.model = model;
 
         this.$ele = $('#map-content-holder');
         this.tmpl = $('#map-tab-tmpl').html();
     }
 
     Map.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.data));
+        this.$ele.append(Mustache.render(this.tmpl, this.model));
     }
 
-    function Inv(data, $ele, tmpl) {
-        this.data = data;
+    function Inv(model) {
+        this.model = model;
 
         this.$ele = $('#inv-content-holder');
         this.tmpl = $('#inv-tab-tmpl').html();
     }
 
     Inv.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.data));
+        this.$ele.append(Mustache.render(this.tmpl, this.model));
     }
 
-    function Craft(data) {
-        this.data = data;
+    Inv.prototype.newItem = function(type, name) {
+        var dest = this.model[type];
+        dest[dest.length] = InvItem(itemref.expand(type, name));
+    }
+
+    function InvItem(model) {
+        this.model = model;
+
+        
+    }
+
+
+    function Craft(model) {
+        this.model = model;
 
         this.$ele = $('#craft-content-holder');
         this.tmpl = $('#craft-tab-tmpl').html();
     }
 
     Craft.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.data));
+        this.$ele.append(Mustache.render(this.tmpl, this.model));
     }
 
-    function Lvlup(data) {
-        this.data = data;
+    function Lvlup(model) {
+        this.model = model;
 
         this.$ele = $('#lvlup-content-holder');
         this.tmpl = $('#lvlup-tab-tmpl').html();
     }
 
     Lvlup.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.data));
+        this.$ele.append(Mustache.render(this.tmpl, this.model));
     }
 
-    function Settings(data) {
-        this.data = data;
+    function Settings(model) {
+        this.model = model;
 
         this.$ele = $('#settings-content-holder');
         this.tmpl = $('#settings-tab-tmpl').html();
     }
 
     Settings.prototype.init = function() {
-        this.$ele.append(Mustache.render(this.tmpl, this.data));
+        this.$ele.append(Mustache.render(this.tmpl, this.model));
     }
 
 

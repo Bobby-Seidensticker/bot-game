@@ -210,6 +210,11 @@ namespace.module('bot.itemref', function (exports, require) {
             item = $.extend(true, item, ref[type][names[i]]);
         }
         log.info("Final item: %s", JSON.stringify(item));
+        if ('itemType' in item) {
+            throw(sprintf('Found a "itemType" key in item %s. No item is allowed to have "itemType" as it it set in expand', JSON.stringify(item)))
+        }
+        item['itemType'] = type;
+        return item;
     }
 
     exports.extend({

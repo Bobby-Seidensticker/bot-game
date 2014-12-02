@@ -4,6 +4,7 @@ body {
     margin: 0;
     overflow: hidden;
     position: relative;
+    font-family: sans-serif;
 }
 
 .header {
@@ -66,7 +67,7 @@ body {
 
 .contentholder div {
     overflow: hidden;
-    background-color: #DDF;
+    /*background-color: #DDF;*/
 }
 
 /*.tabs .tab {
@@ -144,12 +145,13 @@ body {
 
 .item-focused-mid {
     width:100%;
-    height:84px;
+    height:110px;
+    border-bottom: 1px solid white;
 }
 
 .item-focused-img {
-    width:64px;
-    height:64px;
+    width:90px;
+    height:90px;
     padding: 10px;
     float: left;
 }
@@ -160,6 +162,23 @@ body {
     float: left;
     padding-top:30px;
     padding-bottom: 30px;
+    font-family:sans-serif;
+}
+
+.item-focused-affixes {
+    text-align:center;
+}
+
+.item-focused-buttonbox {
+    width:100%;
+}
+
+.item-focused-button {
+    background-color:#FED;
+    margin: 10px 50px 10px 70px;
+    width:60px;
+    height:30px;
+    text-align:center;
 }
 
 .craftcontent {

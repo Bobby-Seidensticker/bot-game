@@ -43,28 +43,7 @@
 
     <div class="contentholder">
       <div id="map-content-holder"></div>
-      <div id="inv-content-holder">
-        <div class="item-type-header">Armor</div>
-	<div class="item-collapsed">Shorts - level 2</div>
-	<div class="item-collapsed">Jeans - level 8</div>
-	<div class="item-focused">
-	  <div class="item-focused-header">Pantaloons of Flame - level 11</div>
-	  <div class="item-focused-mid">
-	    <div class="item-focused-img"><img src="pantaloons.png" height="90" width="90"></div>
-	    <div class="item-focused-mid-text">Type: Leg Armor <br/>Weight: 2<br/>1,036 / 2,743 XP</div>
-	  </div>
-	  <div class="item-focused-affixes">
-	    <p>Armor +10</p>
-	    <p>Fire Damage +10</p>
-	    <p>Fire Res +15%</p>
-	  </div>
-	  <div class="item-focused-buttonbox">
-	    <input class="item-focused-button" value="Level Up" type="button"/>
-	    <input class="item-focused-button" value="Equip" type="button"  />
-	</div>
-	<div class="item-type-header">Weapons</div>
-	<div class="item-type-header">Skills</div>
-      </div>
+      <div id="inv-content-holder"></div>
       <div id="craft-content-holder"></div>
       <div id="lvlup-content-holder"></div>
       <div id="settings-content-holder"></div>
@@ -124,9 +103,26 @@
 
   <script id="inv-tab-tmpl" type="x-tmpl-mustache">
     <div class="invcontent">
-      Armor \/<br>
-      Weapons \/<br>
-      Skills \/<br>
+      <div class="item-type-header">Armor</div>
+      <div class="item-collapsed">Shorts - level 2</div>
+      <div class="item-collapsed">Jeans - level 8</div>
+      <div class="item-focused">
+	<div class="item-focused-header">Pantaloons of Flame - level 11</div>
+	<div class="item-focused-mid">
+	  <div class="item-focused-img"><img src="pantaloons.png" height="90" width="90"></div>
+	  <div class="item-focused-mid-text">Type: Leg Armor <br/>Weight: 2<br/>1,036 / 2,743 XP</div>
+	</div>
+	<div class="item-focused-affixes">
+	  <p>Armor +10</p>
+	  <p>Fire Damage +10</p>
+	  <p>Fire Res +15%</p>
+	</div>
+	<div class="item-focused-buttonbox">
+	  <input class="item-focused-button" value="Level Up" type="button"/>
+	  <input class="item-focused-button" value="Equip" type="button"  />
+	</div>
+	<div class="item-type-header">Weapons</div>
+	<div class="item-type-header">Skills</div>
     </div>
   </script>
 

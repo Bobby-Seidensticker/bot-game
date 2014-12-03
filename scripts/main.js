@@ -95,7 +95,8 @@ namespace.module('bot.main', function (exports, require) {
             'recipes': [
 		itemref.expand('recipe', 'smelly cod piece'),
 		itemref.expand('recipe', 'balsa helmet'),
-		itemref.expand('recipe', 'lightning arrow')
+		itemref.expand('recipe', 'lightning arrow'),
+		itemref.expand('recipe', 'poison ball')
 	    ],
 	    'mats': []
         };
@@ -313,15 +314,15 @@ namespace.module('bot.main', function (exports, require) {
         this.tmpl = $('#inv-tab-tmpl').html();
 
         for (var i = 0; i < this.model.weapons.length; i++) {
-            tmplData.weapons += makeInvItem(this.model.weapons[i]);
+            tmplData.weapons += makeInvItem(this.model.weapons[i], "weapon");
         }
 
         for (var i = 0; i < this.model.skills.length; i++) {
-            tmplData.skills += makeInvItem(this.model.skills[i]);
+            tmplData.skills += makeInvItem(this.model.skills[i], "skill");
         }
 
         for (var i = 0; i < this.model.armor.length; i++) {
-            tmplData.armor += makeInvItem(this.model.armor[i]);
+            tmplData.armor += makeInvItem(this.model.armor[i], "armor");
         }
 
         this.$ele = $(Mustache.render($('#inv-tab-tmpl').html(), tmplData));
@@ -355,8 +356,32 @@ namespace.module('bot.main', function (exports, require) {
         dest[dest.length] = makeInvItem(itemref.expand(type, name));
     }
 
-    function makeInvItem(model) {
+    function makeInvItem(model, type, isRecipe) {
         model.renderedAffixes = '';
+	model.type = model.type ? model.type + " " + type : type;
+	console.log(model);
+
+	if (type == "armor") {
+	    model.renderedAffixes += Mustache.render($('#inv-tab-item-affix-tmpl').html(), {'str': "Weight: " + model.weight});
+	}
+
+	if (type == "weapon") {
+	    model.renderedAffixes += Mustache.render($('#inv-tab-item-affix-tmpl').html(), {'str': "Base Damage: " + model.damage});
+	    model.renderedAffixes += Mustache.render($('#inv-tab-item-affix-tmpl').html(), {'str': "Attack Speed: " + model.speed});
+	    model.renderedAffixes += Mustache.render($('#inv-tab-item-affix-tmpl').html(), {'str': "Range: " + model.range});
+	}
+	if (type =="skill"){
+	    var skilltypes = model.types.join(" ") + " skill";
+	    model.type = skilltypes;
+	    model.renderedAffixes += Mustache.render($('#inv-tab-item-affix-tmpl').html(), {'str': "Mana Cost: " + model.mana});
+	}
+
+	if (isRecipe) {
+	    model.buttonbox = Mustache.render($('#item-recipe-buttons-tmpl').html(), model);
+        } else    {
+	    model.buttonbox = Mustache.render($('#item-buttons-tmpl').html(), {});
+	}
+
         for (var i = 0; i < model.affixes.length; i++) {
             model.renderedAffixes += Mustache.render($('#inv-tab-item-affix-tmpl').html(), {'str': model.affixes[i]});
         }
@@ -381,15 +406,16 @@ namespace.module('bot.main', function (exports, require) {
 	for (var i = 0; i < recipes.length; i++) {
 	    var recipe = recipes[i];
 	    var item = itemref.expand(recipe.type, recipe.name);
+	    item.cost = recipe.cost;
 	    console.log(item);
 	    if (recipe.type == "armor") {
-		tmplData['armor'] += makeInvItem(item);
+		tmplData['armor'] += makeInvItem(item, "armor", true);
 	    }
 	    if (recipe.type == "weapon"){
-		tmplData['weapons'] += makeInvItem(item);
+		tmplData['weapons'] += makeInvItem(item, "weapon", true);
             }
 	    if (recipe.type == "skill"){
-		tmplData['skills'] += makeInvItem(item);
+		tmplData['skills'] += makeInvItem(item, "skill", true);
             }
 	}
 

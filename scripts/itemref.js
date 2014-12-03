@@ -65,7 +65,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "cardboard kneepads": {
                 "prototype": ["armor"],
-                "type": "legs",
+                "type": "leg",
             }
         },
         "skill": {
@@ -168,7 +168,11 @@ namespace.module('bot.itemref', function (exports, require) {
 	    "lightning arrow": {
 		"type": "skill",
 		"cost": "10 sparks"
-	    }
+	    },
+            "poison ball": {
+                "type": "skill",
+                "cost": "10 tumors"
+            }
 	},
         "test": {
             "hngg": {"a": 10},

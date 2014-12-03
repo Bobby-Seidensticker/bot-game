@@ -92,7 +92,12 @@ namespace.module('bot.main', function (exports, require) {
                 itemref.expand('skill', 'basic spell')
             ],
             'affixes': [],
-            'mats': []
+            'recipes': [
+		itemref.expand('recipe', 'smelly cod piece'),
+		itemref.expand('recipe', 'balsa helmet'),
+		itemref.expand('recipe', 'lightning arrow')
+	    ],
+	    'mats': []
         };
         return inv;
     }
@@ -114,7 +119,7 @@ namespace.module('bot.main', function (exports, require) {
         this.map.init();
         this.inv = new Inv(this.model.inv);
         this.inv.init();
-        this.craft = new Craft({});
+        this.craft = new Craft(this.model.inv);
         this.craft.init();
         this.lvlup = new Lvlup({});
         this.lvlup.init();
@@ -258,14 +263,57 @@ namespace.module('bot.main', function (exports, require) {
 
 
     function Craft(model) {
-        this.model = model;
-
+	var tmplData = {
+	    'armor': "",
+	    'weapons': "",
+	    'skills': ""
+	}
+	
+	this.model = model;
+	var recipes = this.model.recipes;
         this.$dest = $('#craft-content-holder');
         this.tmpl = $('#craft-tab-tmpl').html();
+	
+      //	console.log(itemref.ref);
+	for (var i = 0; i < recipes.length; i++) {
+	    var recipe = recipes[i];
+	    var item = itemref.expand(recipe.type, recipe.name);
+	    console.log(item);
+	    if (recipe.type == "armor") {
+		tmplData['armor'] += makeInvItem(item);
+	    }
+	    if (recipe.type == "weapon"){
+		tmplData['weapons'] += makeInvItem(item);
+            }
+	    if (recipe.type == "skill"){
+		tmplData['skills'] += makeInvItem(item);
+            }
+	}
+
+	this.$ele = $(Mustache.render($('#craft-tab-tmpl').html(), tmplData));
+
+        this.$dest.append(this.$ele);
+
+	this.$dest.on('click', function(event) {
+		var $target, $parent, wasCollapsed;
+
+		$target = $(event.target);
+		if ($target.hasClass('item-header')) {
+		    $parent = $target.parent();
+		    wasCollapsed = $parent.hasClass('collapsed');
+
+		    $('.item').addClass('collapsed');
+		    if (wasCollapsed) {
+			$parent.removeClass('collapsed');
+		    }
+		}
+		console.log(event);
+		console.log($(event.target));
+	    });
     }
 
     Craft.prototype.init = function() {
-        this.$dest.append(Mustache.render(this.tmpl, this.model));
+        //nothing here
     }
 
     function Lvlup(model) {

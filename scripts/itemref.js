@@ -156,6 +156,20 @@ namespace.module('bot.itemref', function (exports, require) {
                 "type": "dmg"
             },
         },
+	"recipe": {
+	    "smelly cod piece" : {
+		"type": "armor",
+		"cost": "4 poops"
+	    },
+	    "balsa helmet" : {
+		"type": "armor",
+		"cost": "9 poops"
+	    },
+	    "lightning arrow": {
+		"type": "skill",
+		"cost": "10 sparks"
+	    }
+	},
         "test": {
             "hngg": {"a": 10},
             "fwah": {"b": 10},

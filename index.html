@@ -153,10 +153,24 @@
 
   <script id="craft-tab-tmpl" type="x-tmpl-mustache">
     <div class="craftcontent">
-      wat
-      Armor \/<br>
-      Weapons\/<br>
-      Skills \/<br>
+      <div class="item-group armor">
+        <div class="item-group-header">
+          Armor
+	  </div>
+        {{{armor}}}
+      </div>
+      <div class="item-group weapon">
+        <div class="item-group-header">
+          Weapon
+        </div>
+        {{{weapons}}}
+      </div>
+      <div class="item-group skill">
+        <div class="item-group-header">
+          Skill
+        </div>
+        {{{skills}}}
+      </div>
     </div>
   </script>
 

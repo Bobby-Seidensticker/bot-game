@@ -109,6 +109,8 @@ namespace.module('bot.main', function (exports, require) {
 
         this.model = loadModel();
 
+        var charmodel = newCharModel({'name': 'bobbeh'});
+
         console.log(this.model);
         //log.info('model from ls: ', JSON.stringify(this.model));
 
@@ -126,12 +128,13 @@ namespace.module('bot.main', function (exports, require) {
         this.settings = new Settings({});
         this.settings.init();
 
+        /*
         this.chars = [];
         for (var i = 0; i < this.model.chars.length; i++) {
-            this.chars[i] = new Char(this.model.chars[i], this.inv);
-            this.model.chars[i].focus = i === 0;
+            this.charsStats[i] = new Header(this.model.chars[i]);
+            this.chars[i].focus = i === 0;
             this.chars[i].init();
-        }
+        }*/
     }
 
     Game.prototype.init = function (model) {
@@ -140,25 +143,125 @@ namespace.module('bot.main', function (exports, require) {
     Game.prototype.tick = function() {
     }
 
+    // A model holds data that calls callbacks when modified using the 'set'
+    function Subject() {
+        log.debug('Subject constructor start');
+        this._attrs = {};
+        this._listeners = {};
+        this.nonce = 0;
+        this.initialized = false;
+        log.debug('Subject constructor end');
+    }
 
-    function Char(model, inv) {
+    Subject.prototype.init = function(data) {
+        log.debug('Subject init start');
+        iterate(data, function(name, value) {
+            this._attrs[name] = value;
+            this._listeners[name] = {};
+        }.bind(this));
+        this.initialized = true;
+        log.debug('Subject init end');
+    }
+
+    Subject.prototype.set = function(name, val) {
+        this._attrs[name] = val;
+        iterate(this._listeners[name], function(key, val) {
+            val();
+        });
+    }
+
+    Subject.prototype.get = function(name) {
+        return this._attrs[name];
+    }
+
+    Subject.prototype.addListener = function(name, callback) {
+        this.nonce++;
+
+        assert(name in this._listeners);
+        assert(!(this.nonce in this._listeners[name]));
+
+        this._listeners[name][this.nonce] = callback;
+
+        assert(this.nonce in this._listeners[name]);
+        return this.nonce;
+    }
+
+    Subject.prototype.removeListener = function(name, nonce) {
+        log.info('rm list, name: %s, nonce: %d', name, nonce);
+        console.log(this._listeners);
+        assert(this._listeners[name][nonce] !== undefined);
+        delete this._listeners[name][nonce];
+        assert(this._listeners[name][nonce] === undefined);
+    }
+
+    // CharModel is-a Subject
+    function CharModel() {
+        log.debug('CharModel constructor start');
+        Subject.call(this);
+        log.debug('CharModel constructor end');
+    }
+
+    CharModel.subclass(Subject);
+
+    CharModel.prototype.init = function(data) {
+        log.debug('CharModel init start');
+        Subject.prototype.init.call(this, data);
+        log.debug('CharModel init end');
+    }
+
+    function newCharModel(data) {
+        log.debug('newCharModel start');
+        console.log(data);
+        var cm = new CharModel();
+        cm.init(data);
+        assert(cm.initialized);
+        
+        var namePrinterNonce = cm.addListener('name', function(cm) {
+            log.info('LISTENER: %s', cm.get('name'));
+        }.curry(cm));
+
+        log.info('set name handler, current name: %s', cm.get('name'));
+        cm.set('name', 'hurr');
+        log.info('current name: %s', cm.get('name'));
+        
+        cm.removeListener('name', namePrinterNonce);
+
+        cm.set('name', 'cunt');
+        log.info('current name: %s', cm.get('name'));
+
+        log.debug('newCharModel end');
+        return cm;
+    }
+
+
+
+    /* CharModel.prototype.setup = function(data) {
+        this.name = data.name;
+        this.level = 0;
+        this.hp = 10;
+        this.maxHp = 10;
+        this.mana = 20;
+        this.maxMana = 20;
+        this.xp = 0;
+        this.nextLevelXp = 100;
+        this.zone = 'Dark Woods';
+    } */
+/*
+    function HeaderCharView(model) {
         this.model = model;
-        this.inv = inv;
-
-        this.$header = $('.header');
-        this.$tabs = $('.tabs');
-        this.statsTmpl = $('#header-stats-tmpl').html();
+        this.tmp = {'init': false};
     }
 
-    Char.prototype.init = function() {
-        this.model.focused = this.model.focus ? '' : 'closed';
-        this.$statsView = $(Mustache.render(this.statsTmpl, this.model));
-        this.$header.append(this.$statsView);
-    }
+    HeaderCharView.prototype.init = function() {
+        this.$ele = Mustache.render($('#header-stats-tmpl').html(), this.model._model);
+        $('.header').append(this.$ele);
 
-    Char.prototype.toggle = function() {
-        this.$view.toggleClass('closed');
-    }
+        //this.model.
+
+        if (!(this.tmp.init === true)) {
+            this.tmp.init = true;
+        }
+    }*/
 
     function Tabs(model) {
         this.model = model;

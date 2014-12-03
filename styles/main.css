@@ -227,12 +227,6 @@ body {
 }
 
 
-.settings-content {
-    display:none;
-    padding:30px;
-}
-
-
 canvas {
     width: 800px;
     height: 600px;

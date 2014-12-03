@@ -71,6 +71,7 @@ namespace.module('bot.itemref', function (exports, require) {
         "skill": {
             "basic": {
                 "exp": 0,
+                "level": 0,
                 "affixes": [],
                 "mana": 0
             },

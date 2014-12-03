@@ -193,12 +193,11 @@ body {
     text-align:center;
 }
 
-.craftcontent {
-    display:none;
+.craft-content {
     padding:30px;
 }
 
-.lvlupcontent {
+.lvlup-content {
     display:none;
     padding:30px;
 }

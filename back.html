@@ -2,15 +2,6 @@
 <head>
   <link href="styles/back.css" rel="stylesheet">
 
-  <script type="text/javascript" src="scripts/sugar.js"></script>
-
-  <script type="text/javascript" src="scripts/jquery.min.js"></script>
-  <script type="text/javascript" src="scripts/namespace-plus.js"></script>
-  <script type="text/javascript" src="scripts/sprintf.min.js"></script>
-  <script type="text/javascript" src="scripts/underscore.js"></script>
-  <script type="text/javascript" src="scripts/backbone.js"></script>
-
-  <script type="text/javascript" src="scripts/log.js"></script>
 
 
 
@@ -21,7 +12,7 @@
   <script type="text/javascript" src="scripts/controls.js"></script>
 
   <script type="text/javascript" src="scripts/prob.js"></script>
-  <script type="text/javascript" src="scripts/itemref.js"></script>
+
   <script type="text/javascript" src="scripts/main.js"></script>-->
 </head>
 
@@ -41,8 +32,23 @@
         <div class="menu"></div>
   </script>-->
 
+
+  <!-- Libs -->
+  <script type="text/javascript" src="scripts/sugar.js"></script>
+  <script type="text/javascript" src="scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="scripts/namespace-plus.js"></script>
+  <script type="text/javascript" src="scripts/sprintf.min.js"></script>
+  <script type="text/javascript" src="scripts/underscore.js"></script>
+  <script type="text/javascript" src="scripts/backbone.js"></script>
+  <script type="text/javascript" src="scripts/backbone.localStorage.js"></script>
+
+  <!-- Our files -->
+  <script type="text/javascript" src="scripts/log.js"></script>
+  <script type="text/javascript" src="scripts/itemref.js"></script>
+  <script type="text/javascript" src="scripts/inventory.js"></script>
   <script type="text/javascript" src="scripts/back.js"></script>
 
+  <!-- Entry point -->
   <script>
     $(namespace.bot.main.onReady());
   </script>

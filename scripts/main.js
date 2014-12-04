@@ -68,7 +68,7 @@ namespace.module('bot.main', function (exports, require) {
                 log.error('models.loadRawModel(), Tried to parse corrupt JSON, given %s, reverting to default', data);
             }
             model = {
-                'chars': [{'name': 'bobbeh'}],
+                'chars': [brandNewChar()],
                 'inv': brandNewInv()
             };
         }
@@ -102,6 +102,23 @@ namespace.module('bot.main', function (exports, require) {
         return inv;
     }
 
+    function brandNewChar() {
+        var char = {
+            'id': 0,
+            'name': 'shitlord',
+            'level': 0,
+            'hp': 10,
+            'maxHp': 10,
+            'mana': 10,
+            'maxMana': 10,
+            'xp': 0,
+            'nextLvlXp': 100,
+            'dps': 0,
+            'zone': 'Dark Woods'
+        };
+        return char;
+    }
+
     function Game() {
         this.view = new views.GameView();
         this.view.resize();
@@ -128,13 +145,17 @@ namespace.module('bot.main', function (exports, require) {
         this.settings = new Settings({});
         this.settings.init();
 
-        /*
-        this.chars = [];
+
+        this.charModels = [];
+        this.charViews = [];
         for (var i = 0; i < this.model.chars.length; i++) {
-            this.charsStats[i] = new Header(this.model.chars[i]);
-            this.chars[i].focus = i === 0;
-            this.chars[i].init();
-        }*/
+            this.charModels[i] = newCharModel(this.model.chars[i]);
+            console.log('RIGHT HERE', this.charModels[i]);
+            this.charViews[i] = newHeaderCharView(this.charModels[i]);
+            //this.charsStats[i] = new Header(this.model.chars[i]);
+            //this.chars[i].focus = i === 0;
+            //this.chars[i].init();
+        }
     }
 
     Game.prototype.init = function (model) {
@@ -194,6 +215,11 @@ namespace.module('bot.main', function (exports, require) {
         assert(this._listeners[name][nonce] === undefined);
     }
 
+    Subject.prototype.triggerListener = function(name, nonce) {
+        assert(this._listeners[name][nonce] !== undefined);
+        this._listeners[name][nonce]();
+    }
+
     // CharModel is-a Subject
     function CharModel() {
         log.debug('CharModel constructor start');
@@ -209,14 +235,22 @@ namespace.module('bot.main', function (exports, require) {
         log.debug('CharModel init end');
     }
 
+    function htmlMod(model, key, $ele) {
+        log.debug('htmlMod called on key %s, val: %s', key, model.get(key));
+        console.log($ele);
+        assert($ele.length === 1);
+        $ele[0].innerHTML = model.get(key);
+        //$ele.html(model.get(key));
+    }
+
     function newCharModel(data) {
         log.debug('newCharModel start');
         console.log(data);
         var cm = new CharModel();
         cm.init(data);
         assert(cm.initialized);
-        
-        var namePrinterNonce = cm.addListener('name', function(cm) {
+
+        /*var namePrinterNonce = cm.addListener('name', function(cm) {
             log.info('LISTENER: %s', cm.get('name'));
         }.curry(cm));
 
@@ -227,41 +261,55 @@ namespace.module('bot.main', function (exports, require) {
         cm.removeListener('name', namePrinterNonce);
 
         cm.set('name', 'cunt');
-        log.info('current name: %s', cm.get('name'));
+        log.info('current name: %s', cm.get('name'));*/
 
         log.debug('newCharModel end');
         return cm;
     }
 
-
-
-    /* CharModel.prototype.setup = function(data) {
-        this.name = data.name;
-        this.level = 0;
-        this.hp = 10;
-        this.maxHp = 10;
-        this.mana = 20;
-        this.maxMana = 20;
-        this.xp = 0;
-        this.nextLevelXp = 100;
-        this.zone = 'Dark Woods';
-    } */
-/*
     function HeaderCharView(model) {
+        log.info('HeaderCharView constructor start');
         this.model = model;
-        this.tmp = {'init': false};
+        
+        var html = Mustache.render($('#header-stats-tmpl').html(), this.model._attrs);
+        $(html).appendTo('.header');
+        this.$ele = $('#header-' + this.model.get('id'));
+
+        console.log('right here');
+
+        this.listeners = [];
+
+        log.info('HeaderCharView constructor end');
+    }
+
+    HeaderCharView.prototype.htmlModListener = function(key, $ele) {
+        log.info('HeaderCharView.htmlModListener(%s, %s)', key, $ele.toString())
+        var nonce = this.model.addListener(key, htmlMod.curry(this.model, key, $ele));
+        this.model.triggerListener(key, nonce);
+        this.listeners.append(nonce);
     }
 
     HeaderCharView.prototype.init = function() {
-        this.$ele = Mustache.render($('#header-stats-tmpl').html(), this.model._model);
-        $('.header').append(this.$ele);
-
-        //this.model.
-
-        if (!(this.tmp.init === true)) {
-            this.tmp.init = true;
-        }
-    }*/
+        log.info('HeaderCharView.init start');
+        this.htmlModListener('name', this.$ele.find('.hero-name'));
+        this.htmlModListener('level', this.$ele.find('.hero-level'));
+        this.htmlModListener('hp', this.$ele.find('.hero-hp'));
+        this.htmlModListener('maxHp', this.$ele.find('.hero-maxHp'));
+        this.htmlModListener('mana', this.$ele.find('.hero-mana'));
+        this.htmlModListener('maxMana', this.$ele.find('.hero-maxMana'));
+        this.htmlModListener('xp', this.$ele.find('.hero-xp'));
+        this.htmlModListener('nextLvlXp', this.$ele.find('.hero-nextLvlXp'));
+        this.htmlModListener('dps', this.$ele.find('.hero-dps'));
+        log.info('HeaderCharView.init end');
+    }
+    function newHeaderCharView(model) {
+        log.info('newHeaderCharView start');
+        var view = new HeaderCharView(model);
+        view.init();
+        log.info('newHeaderCharView end');
+        return view;
+    }
+    
 
     function Tabs(model) {
         this.model = model;

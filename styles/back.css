@@ -1,0 +1,29 @@
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    font-family: sans-serif;
+}
+
+.header {
+    position: absolute;
+    padding: 5px;
+
+    background-color: #FEE;
+}
+
+.vis {
+    position: absolute;
+    padding: 5px;
+
+    background-color: #EFE;
+}
+
+.menu {
+    position: absolute;
+    padding: 5px;
+
+    background-color: #EEF;
+}

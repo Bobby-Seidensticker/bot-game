@@ -14,7 +14,7 @@
    inkscape:version="0.48.4 r9939"
    width="100%"
    height="100%"
-   sodipodi:docname="shitty bow.svg">
+   sodipodi:docname="pocket-bow.svg">
   <metadata
      id="metadata24">
     <rdf:RDF>
@@ -114,6 +114,10 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <path
+     d="M 512,512 0,512 0,0 512,0 z"
+     id="path4"
+     inkscape:connector-curvature="0" />
+  <path
      style="fill:#ffff00;stroke:#c1a34b;stroke-width:18.68857956000000100;stroke-opacity:1"
      inkscape:connector-curvature="0"
      id="path12"
@@ -129,11 +133,10 @@
      id="path10"
      d="m 209.02435,186.69318 54.31275,-54.31275 c 38.64425,54.39311 79.14614,106.92484 139.55324,139.55323 l -54.31276,54.31275 C 313.45801,268.3305 268.26715,220.484 209.02435,186.69318 z" />
   <path
-     style="fill:#aa4400;stroke:#000000;stroke-width:17.59852219"
+     style="fill:#aa4400;stroke:#000000;stroke-width:18.68857956000000100"
      inkscape:connector-curvature="0"
      id="path14"
-     d="M 81.926618,443.93009 76.048531,444.19024 411.75794,145.32506 380.42376,113.93173 z"
-     sodipodi:nodetypes="ccccc" />
+     d="M 60.227746,465.04836 71.097024,475.09348 419.65025,168.47742 360.27664,109.10754 60.227746,465.04836 z" />
   <path
      style="fill:#808080;fill-opacity:1;stroke:none"
      inkscape:connector-curvature="0"

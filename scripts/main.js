@@ -95,7 +95,17 @@ namespace.module('bot.main', function (exports, require) {
             'recipes': [
 		itemref.expand('recipe', 'smelly cod piece'),
 		itemref.expand('recipe', 'balsa helmet'),
+                itemref.expand('recipe', 'fire slice'),
+		itemref.expand('recipe', 'ice slice'),
+		itemref.expand('recipe', 'lightning slice'),
+		itemref.expand('recipe', 'poison slice'),
+                itemref.expand('recipe', 'fire arrow'),
+                itemref.expand('recipe', 'ice arrow'),
 		itemref.expand('recipe', 'lightning arrow'),
+                itemref.expand('recipe', 'poison arrow'),
+                itemref.expand('recipe', 'fire ball'),
+		itemref.expand('recipe', 'ice ball'),
+		itemref.expand('recipe', 'lightning ball'),
 		itemref.expand('recipe', 'poison ball')
 	    ],
 	    'mats': []

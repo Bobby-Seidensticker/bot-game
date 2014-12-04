@@ -91,37 +91,66 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj"],
             },
 
-            "fireball": {
+
+            "fire slice": {
+                "prototype": ["basic melee"],
+                "affixes": ["added fire damage 3"],
+                "mana": 5
+            },
+	    "ice slice": {
+                "prototype": ["basic melee"],
+                "affixes": ["added ice damage 3"],
+                "mana": 5
+            },
+	    "lightning slice": {
+                "prototype": ["basic melee"],
+                "affixes": ["added lightning damage 3"],
+                "mana": 5
+            },
+            "poison slice": {
+                "prototype": ["basic melee"],
+                "affixes": ["added poison damage 3"],
+                "mana": 5
+            },
+            "fire arrow": {
+                "prototype": ["basic range"],
+                "affixes": ["added fire damage 3"],
+                "mana": 5
+            },
+            "ice arrow": {
+                "prototype": ["basic range"],
+                "affixes": ["added ice damage 3"],
+                "mana": 5
+            },
+            "lightning arrow": {
+                "prototype": ["basic range"],
+                "affixes": ["added elec damage 3"],
+                "mana": 5
+            },
+            "poison arrow": {
+                "prototype": ["basic range"],
+                "affixes": ["added poison damage 3"],
+                "mana": 5
+            },
+            "fire ball": {
                 "prototype": ["basic spell"],
                 "affixes": ["added fire damage 3"],
+                "mana": 5
+            },
+            "ice ball": {
+                "prototype": ["basic spell"],
+                "affixes": ["added ice damage 3"],
+                "mana": 5
+            },
+            "lightning ball": {
+                "prototype": ["basic spell"],
+                "affixes": ["added lightning damage 3"],
                 "mana": 5
             },
             "poison ball": {
                 "prototype": ["basic spell"],
                 "types": ["proj", "DOT"],
                 "affixes": ["added poison damage 3"],
-                "mana": 5
-            },
-
-            "super smash": {
-                "prototype": ["basic melee"],
-                "affixes": ["added melee damage 3"],
-                "mana": 5
-            },
-            "flame strike": {
-                "prototype": ["basic melee"],
-                "affixes": ["added fire damage 3"],
-                "mana": 5
-            },
-
-            "fire arrow": {
-                "prototype": ["basic range"],
-                "affixes": ["added fire damage 3"],
-                "mana": 5
-            },
-            "lightning arrow": {
-                "prototype": ["basic range"],
-                "affixes": ["added elec damage 3"],
                 "mana": 5
             }
         },
@@ -165,10 +194,50 @@ namespace.module('bot.itemref', function (exports, require) {
 		"type": "armor",
 		"cost": "9 poops"
 	    },
-	    "lightning arrow": {
+            "fire slice": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice slice": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning slice": {
+                "type": "skill",
+                "cost": "10 sparks"
+            },
+	    "poison slice": {
+                "type": "skill",
+                "cost": "10 tumors"
+            },
+            "fire arrow": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice arrow": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning arrow": {
+                "type": "skill",
+                "cost": "10 sparks"
+            },
+	    "poison arrow": {
 		"type": "skill",
-		"cost": "10 sparks"
+		"cost": "10 tumors"
 	    },
+            "fire ball": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice ball": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning ball": {
+                "type": "skill",
+                "cost": "10 sparks"
+            },
             "poison ball": {
                 "type": "skill",
                 "cost": "10 tumors"

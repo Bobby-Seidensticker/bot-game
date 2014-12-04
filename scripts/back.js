@@ -5,10 +5,19 @@ namespace.module('bot.main', function (exports, require) {
     });
 
     var log = namespace.bot.log;
+    var inv = namespace.bot.inv;
 
     function onReady() {
         log.info('onReady');
-        window.game = new GameView();
+        var gameView = new GameView();
+
+        var invModel = new inv.InvModel();
+        var invTabView = new inv.InvTabView({model: invModel});
+        
+
+        window.invModel = invModel;
+        window.invTabView = invTabView;
+        window.game = gameView;
     }
 
     var WindowModel = Backbone.Model.extend({
@@ -24,9 +33,10 @@ namespace.module('bot.main', function (exports, require) {
 
     var HolderView = Backbone.View.extend({
         initialize: function() {
-            console.log('HolderView init ', this.el);
             this.listenTo(this.model, 'change', this.resize);
             this.resize();
+
+            //this.$el.html(this.template(
         }
     });
 
@@ -61,7 +71,7 @@ namespace.module('bot.main', function (exports, require) {
     var VisView = HolderView.extend({
         el: $('.vis'),
 
-        resize: function(asdf, ss, fdsa) {
+        resize: function() {
             var ss = this.model.get('ss');
             this.$el.css({
                 width: ss[0] - 400 - 10,
@@ -78,7 +88,7 @@ namespace.module('bot.main', function (exports, require) {
         initialize: function() {
             console.log('GameView initialize');
 
-            this.windowModel = new WindowModel;
+            this.windowModel = new WindowModel();
             this.headerView = new HeaderView({model: this.windowModel});
             this.menuView = new MenuView({model: this.windowModel});
             this.visView = new VisView({model: this.windowModel});

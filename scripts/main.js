@@ -79,9 +79,9 @@ namespace.module('bot.main', function (exports, require) {
     function brandNewInv() {
         var inv = {
             'weapons': [
-                itemref.expand('weapon', 'wooden sword'),
+                itemref.expand('weapon', 'bowie knife'),
                 itemref.expand('weapon', 'shitty bow'),
-                itemref.expand('weapon', 'magic stick')
+                itemref.expand('weapon', 'crappy wand')
             ],
             'armor': [
                 itemref.expand('armor', 'cardboard kneepads')

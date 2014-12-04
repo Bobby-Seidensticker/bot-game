@@ -11,7 +11,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "damage": 1,
                 "range": 1
             },
-            "wooden sword": {
+            "bowie knife": {
                 "prototype": ["weapon"],
                 "type": "melee",
                 "damage": 2,
@@ -22,7 +22,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "damage": 2,
                 "range": 4
             },
-            "magic stick": {
+            "crappy wand": {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "range": 6

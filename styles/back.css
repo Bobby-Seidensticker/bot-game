@@ -27,3 +27,20 @@ body {
 
     background-color: #EEF;
 }
+
+.tabholder {
+    display: table;
+    width: 400px;
+    margin-left: -5px;
+    margin-top: -5px;
+    height: 65px;
+    border-collapse: collapse;
+}
+
+.tabholder td {
+    border: 5px solid #EEF;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #DDF;
+    width: 74px;
+}

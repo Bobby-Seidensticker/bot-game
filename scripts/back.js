@@ -6,6 +6,7 @@ namespace.module('bot.main', function (exports, require) {
 
     var log = namespace.bot.log;
     var inv = namespace.bot.inv;
+    var menu = namespace.bot.menu;
 
     function onReady() {
         log.info('onReady');
@@ -13,7 +14,10 @@ namespace.module('bot.main', function (exports, require) {
 
         var invModel = new inv.InvModel();
         var invTabView = new inv.InvTabView({model: invModel});
+
+        var m = menu.newMenu();
         
+        //var menuView = new menu.MenuView(
 
         window.invModel = invModel;
         window.invTabView = invTabView;
@@ -32,7 +36,8 @@ namespace.module('bot.main', function (exports, require) {
     });
 
     var HolderView = Backbone.View.extend({
-        initialize: function() {
+        initialize: function(a) {
+            console.log('a: ', a);
             this.listenTo(this.model, 'change', this.resize);
             this.resize();
 

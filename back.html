@@ -21,8 +21,21 @@
 
   <div class="vis"></div>
 
-  <div class="menu"></div>
+  <div class="menu">
+    <table class="tabholder">
+      <tbody>
+        <tr>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
+
+
+
+  <script type="text/template" id="menu-tab-template">
+    <td class="tab" id="<%- name %>"><%- name %></td>
+  </script>
 
   <!--  <script type="text/template" id="main-template">
         <div class="header"></div>
@@ -45,6 +58,8 @@
   <!-- Our files -->
   <script type="text/javascript" src="scripts/log.js"></script>
   <script type="text/javascript" src="scripts/itemref.js"></script>
+
+  <script type="text/javascript" src="scripts/menu.js"></script>
   <script type="text/javascript" src="scripts/inventory.js"></script>
   <script type="text/javascript" src="scripts/back.js"></script>
 

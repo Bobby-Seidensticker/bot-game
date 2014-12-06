@@ -7,12 +7,12 @@ namespace.module('bot.menu', function (exports, require) {
     var MenuModel = Backbone.Model.extend({
         defaults: function() {
             return {
-                selectedTab: 0
+                selected: 0
             }
         },
 
         tabClick: function(index) {
-            this.set('selectedTab', index)
+            this.set('selected', index)
         }
     });
 
@@ -31,6 +31,10 @@ namespace.module('bot.menu', function (exports, require) {
 
         el: $('.menu'),
 
+        events: {
+            'click .tab': 'onClick'
+        },
+
         render: function() {
             this.collection.each(function(tab) {
                 var tabView = new TabView({model: tab});
@@ -40,8 +44,17 @@ namespace.module('bot.menu', function (exports, require) {
         },
 
         initialize: function() {
-            
         },
+
+        onClick: function(event) {
+            var oldTab = this.collection.where({'selected': true})[0];
+            var newTab = this.collection.where({'name': event.target.id})[0];
+            oldTab.set({'selected': false});
+            newTab.set({'selected': true});
+
+            log.info('Had selected %s, now selected %s',
+                     oldTab.get('name'), newTab.get('name'));
+        }
     });
 
     var TabView = Backbone.View.extend({
@@ -66,9 +79,8 @@ namespace.module('bot.menu', function (exports, require) {
                 {name: 'lvlup', selected: false},
                 {name: 'settings', selected: false},
         ]);
-        var view = new TabsView({collection: tabs});
-
-        view.render();
+        var tabsView = new TabsView({collection: tabs});
+        tabsView.render();
     }
 
     exports.extend({

@@ -28,7 +28,7 @@ body {
     background-color: #EEF;
 }
 
-.tabholder {
+.tab-holder {
     display: table;
     width: 400px;
     margin-left: -5px;
@@ -37,7 +37,7 @@ body {
     border-collapse: collapse;
 }
 
-.tabholder td {
+.tab-holder td {
     border: 5px solid #EEF;
     text-align: center;
     vertical-align: middle;

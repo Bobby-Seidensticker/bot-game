@@ -15,7 +15,8 @@ namespace.module('bot.main', function (exports, require) {
         var invModel = new inv.InvModel();
         var invTabView = new inv.InvTabView({model: invModel});
 
-        var m = menu.newMenu();
+        var m = new menu.MenuView();
+        //var m = menu.newMenu();
         
         //var menuView = new menu.MenuView(
 

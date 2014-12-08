@@ -44,3 +44,13 @@ body {
     background-color: #DDF;
     width: 74px;
 }
+
+/* within menu holder */
+.sub-menu {
+    
+}
+
+
+.closed {
+    display: none;
+}

@@ -6,8 +6,12 @@ namespace.module('bot.char', function (exports, require) {
 
     var CharModel = Backbone.Model.extend({
         defaults: {
-            str: 5,
-            intel: 5
+            strength: 1,
+            dexterity: 1,
+	    wisdom: 1,
+	    vitality: 1,
+	    level: 1,
+	    weapon: {"baseDamage": 1, "attackSpeed":1} //"fists" weapon auto equipped when unarmed.
         },
 
         initialize: function() {
@@ -15,19 +19,47 @@ namespace.module('bot.char', function (exports, require) {
         },
 
         computeAttrs: function() {
-            var hp = this.str * 10;
-            var mana = this.intel * 10;
+	    var strength = this.get('strength');
+	    var dexterity = this.get('dexterity');
+	    var wisdom = this.get('wisdom');
+	    var vitality = this.get('vitality');
+	    var level = this.get('level');
+	    
+
+	    // Todo? should we pull these constants out and give them easily manipulable names 
+	    // so we can balance away from crucial code? 
+	    // eg
+	    // HP_PER_LVL = 10;
+	    // HP_PER_VIT = 2;
+
+            var hp = level * 10 + vitality * 2 ;
+            var mana = level * 5 + wis * 2;
+	    var armor = strength * 1;
+	    var dodge = dexterity * 1;
+	    var eleResistAll = 1 - Math.pow(0.997, wisdom); //temp var only
+	    var fireResist = eleResistAll;
+	    var coldResist = eleResistAll;
+	    var lightResist = eleResistAll;
+	    var poisResist = eleResistAll;
+	    
+
             this.set({
                 hp: hp,
                 maxHp: hp,
                 mana: mana,
-                maxMana: mana
+		maxMana: mana,
+	      	armor: armor,
+	       	dodge: dodge,
+	       	fireResist = fireResist,
+	       	coldResist = coldResist,
+	       	lightResist = lightResist,
+	       	poisResist = poisResist 
             });
         },
         
     });
 
-    var c = new CharModel({ str: 10, intel: 20, fuckyou: 'hey' });
+    var c = new CharModel({ strength: 10, wisdom: 20, fuckyou: 'hey' });
 
 
     exports.extend({

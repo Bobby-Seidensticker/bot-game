@@ -135,7 +135,7 @@ namespace.module('bot.inv', function (exports, require) {
 
 
     var InvTabView = Backbone.Model.extend({
-        model: InvModel,
+        model: new InvModel(),
 
         el: $('#inv-menu-holder')
     });

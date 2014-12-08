@@ -12,13 +12,11 @@ namespace.module('bot.main', function (exports, require) {
         log.info('onReady');
         var gameView = new GameView();
 
+        var m = new menu.TabView();
+
         var invModel = new inv.InvModel();
         var invTabView = new inv.InvTabView({model: invModel});
 
-        var m = new menu.MenuView();
-        //var m = menu.newMenu();
-        
-        //var menuView = new menu.MenuView(
 
         window.invModel = invModel;
         window.invTabView = invTabView;

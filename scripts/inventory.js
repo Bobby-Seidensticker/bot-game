@@ -131,37 +131,12 @@ namespace.module('bot.inv', function (exports, require) {
         initialize: function() {
             console.log('inventory initialize');
         }
-
-        
-        /*function brandNewInv() {
-          var inv = {
-          'weapons': [
-          itemref.expand('weapon', 'wooden sword'),
-          itemref.expand('weapon', 'shitty bow'),
-          itemref.expand('weapon', 'magic stick')
-          ],
-          'armor': [
-          itemref.expand('armor', 'cardboard kneepads')
-          ],
-          'skills': [
-          itemref.expand('skill', 'basic melee'),
-          itemref.expand('skill', 'basic range'),
-          itemref.expand('skill', 'basic spell')
-          ],
-          'affixes': [],
-          'recipes': [
-	  itemref.expand('recipe', 'smelly cod piece'),
-	  itemref.expand('recipe', 'balsa helmet'),
-	  itemref.expand('recipe', 'lightning arrow')
-	  ],
-	  'mats': []
-          };
-          return inv;
-          }*/
     });
 
 
     var InvTabView = Backbone.Model.extend({
+        el: $('#inv-content-holder'),
+
         
     });
 

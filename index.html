@@ -1,98 +1,35 @@
 <!DOCTYPE html>
 <head>
-  <link href="styles/main.css" rel="stylesheet">
-
-  <!--<script src="scripts/Box2D.js"></script>
-      <script type="text/javascript" src="scripts/bTest.js"></script>-->
-
-  <script type="text/javascript" src="scripts/sugar.js"></script>
-
-  <script type="text/javascript" src="scripts/jquery.min.js"></script>
-  <script type="text/javascript" src="scripts/namespace-plus.js"></script>
-  <script type="text/javascript" src="scripts/sprintf.min.js"></script>
-  <script type="text/javascript" src="scripts/mustache.js"></script>
-
-  <script type="text/javascript" src="scripts/log.js"></script>
-  <script type="text/javascript" src="scripts/views.js"></script>
-  <!--
-      <script type="text/javascript" src="scripts/models.js"></script>
-      <script type="text/javascript" src="scripts/controls.js"></script>-->
-
-  <script type="text/javascript" src="scripts/prob.js"></script>
-  <script type="text/javascript" src="scripts/itemref.js"></script>
-  <script type="text/javascript" src="scripts/main.js"></script>
+  <link href="styles/back.css" rel="stylesheet">
 </head>
 
 <body>
-  <div class="header">
-  </div>
+  <div class="header"></div>
 
-  <div class="vis">
-  </div>
+  <div class="vis"></div>
 
-  <div class="tabs">
-    <table class="tabholder">
+  <div class="menu">
+    <table class="tab-holder">
       <tbody>
         <tr>
-          <td id="map">Map</td>
-          <td id="inv">Items</td>
-          <td id="craft">Craft</td>
-          <td id="lvlup">LvlUp</td>
-          <td id="settings">Settings</td>
+          <td class="tab" id="map">Map</td>
+          <td class="tab" id="inv">Inv</td>
+          <td class="tab" id="craft">Craft</td>
+          <td class="tab" id="lvlup">Lvlup</td>
+          <td class="tab" id="settings">Settings</td>
         </tr>
       </tbody>
     </table>
 
-    <div class="contentholder">
-      <div id="map-content-holder"></div>
-      <div id="inv-content-holder"></div>
-      <div id="craft-content-holder"></div>
-      <div id="lvlup-content-holder"></div>
-      <div id="settings-content-holder"></div>
+    <div class="menu-holder">
+      <div class="sub-menu closed" id="map-menu-holder">map</div>
+      <div class="sub-menu closed" id="inv-menu-holder">inv</div>
+      <div class="sub-menu closed" id="craft-menu-holder">craft</div>
+      <div class="sub-menu closed" id="lvlup-menu-holder">lvlup</div>
+      <div class="sub-menu closed" id="settings-menu-holder">settings</div>
     </div>
-
-    <!--
-        <div class="contentholder">
-          <div class="mapcontent">
-	    Mappy<br><br>
-	    <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px;height300px;" />
-	    <input id="mapgo" type="button" value="Go" />
-          </div>
-          <div class="itemcontent">
-	    Armor \/<br>
-	    Weapons \/<br>
-	    Skills \/<br>
-          </div>
-          <div class="craftcontent">
-	    Armor \/<br>
-	    Weapons\/<br>
-	    Skills \/<br>
-          </div>
-          <div class="lvlupcontent">
-	    <div class="lvlupitemholder">
-	      <div class="lvlupitemimg">
-	        <img src="http://img1.wikia.nocookie.net/__cb20080817200550/diablo/images/4/4f/D2-u-Treadsofcthon.gif" />
-	      </div>
-	      <div class="lvlupitemstats">
-                Magic Shoes <br>
-	        + 5 Fire Damage<br>
-	        + 10 Armor<br>
-	      </div>
-	    </div>
-	    <div class="lvluprollbox">
-	      Affix on next level: <br><br>
-	      + 3 Fire Damage
-	    </div>
-	    <input type="button" value="Reroll" />
-	    <input type="button" value="Level Up" />
-          </div>
-          <div class="settingscontent">
-            <input type="button" value="Save" />
-	    <input type="button" value="Mute" />
-          </div>
-        </div>
-        -->
   </div>
+
 
 
   <script id="map-tab-tmpl" type="x-tmpl-mustache">
@@ -231,8 +168,32 @@
     <!-- shit -->
   </script>
 
+
+
+  <script type="text/template" id="menu-tab-template">
+    <td class="tab" id="<%- name %>"><%- name %></td>
+  </script>
+
+  <!-- Libs -->
+  <script type="text/javascript" src="scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="scripts/namespace-plus.js"></script>
+  <script type="text/javascript" src="scripts/sprintf.min.js"></script>
+  <script type="text/javascript" src="scripts/underscore.js"></script>
+  <script type="text/javascript" src="scripts/backbone.js"></script>
+  <script type="text/javascript" src="scripts/backbone.localStorage.js"></script>
+
+  <!-- Our files -->
+  <script type="text/javascript" src="scripts/log.js"></script>
+  <script type="text/javascript" src="scripts/itemref.js"></script>
+
+  <script type="text/javascript" src="scripts/char.js"></script>
+  <script type="text/javascript" src="scripts/menu.js"></script>
+  <script type="text/javascript" src="scripts/inventory.js"></script>
+  <script type="text/javascript" src="scripts/back.js"></script>
+
+  <!-- Entry point -->
   <script>
-    namespace.bot.main.onReady();
+    $(namespace.bot.main.onReady());
   </script>
 
 </body>

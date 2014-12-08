@@ -1,606 +1,101 @@
 namespace.module('bot.main', function (exports, require) {
 
-    var funcs = require('org.startpad.funcs').patch();
-
-    var log = namespace.bot.log;
-
-    var itemref = namespace.bot.itemref;
-
-    var views = namespace.bot.views;
-    //var models = namespace.bot.models;
-    //var controls = namespace.bot.controls;
-
-    var game;
-    var TABS = ['map', 'inv', 'craft', 'lvlup', 'settings'];
-
     exports.extend({
-        'onReady': onReady
+        onReady: onReady
     });
 
+    var log = namespace.bot.log;
+    var inv = namespace.bot.inv;
+    var menu = namespace.bot.menu;
+
     function onReady() {
-        tests();
+        log.info('onReady');
+        var gameView = new GameView();
 
-        game = new Game();
-        game.init();
+        var m = new menu.TabView();
 
-        requestAnimationFrame(tick);
+        var invTabView = new inv.InvTabView();
+
+
+        window.invTabView = invTabView;
+        window.game = gameView;
     }
 
-    function tick() {
-        game.tick();
+    var WindowModel = Backbone.Model.extend({
+        initialize: function() {
+            this.resize();
+        },
 
-        requestAnimationFrame(tick);
-    }
-
-    function tests() {
-        itemref.expand('test', 'harf');
-        log.info('TESTS COMPLETE\n\n');
-    }
-
-    function ensureProps(obj) {
-        for (var i = 1; i < arguments.length; i++) {
-            if (!(arguments[i] in obj)) {
-                return false;
-            }
+        resize: function() {
+            console.log('resize, this: ', this);
+            this.set({ss: [window.innerWidth, window.innerHeight]});
         }
-        return true
-    }
+    });
 
-    function loadModel(model) {
-        var data = localStorage['model'];
+    var HolderView = Backbone.View.extend({
+        initialize: function(a) {
+            console.log('a: ', a);
+            this.listenTo(this.model, 'change', this.resize);
+            this.resize();
 
-        var model;
-
-        try {
-            model = JSON.parse(data);
-            fucked = false
-            if (!('chars' in model)) { fucked = true; }
-            if (!('inv' in model)) { fucked = true; }
-            if (!ensureProps(model['inv'], 'weapons', 'armor', 'skills', 'affixes', 'mats')) { fucked = true; }
-            if (fucked) {
-                throw('loadRawModel: fucked');
-            }
+            //this.$el.html(this.template(
         }
-        catch (e) {
-            if (data === undefined) {
-                log.info('models.loadRawModel(), No data in localStorage reverting to default');
-            } else {
-                log.error('models.loadRawModel(), Tried to parse corrupt JSON, given %s, reverting to default', data);
-            }
-            model = {
-                'chars': [brandNewChar()],
-                'inv': brandNewInv()
-            };
+    });
+
+    var HeaderView = HolderView.extend({
+        el: $('.header'),
+
+        resize: function() {
+            var ss = this.model.get('ss');
+            this.$el.css({
+                width: ss[0] - 400 - 10,
+                height: 150 - 10,
+                left: 0,
+                top: 0
+            });
         }
+    });
 
-        return model;
-    }
+    var MenuView = HolderView.extend({
+        el: $('.menu'),
 
-    function brandNewInv() {
-        var inv = {
-            'weapons': [
-                itemref.expand('weapon', 'wooden sword'),
-                itemref.expand('weapon', 'shitty bow'),
-                itemref.expand('weapon', 'magic stick')
-            ],
-            'armor': [
-                itemref.expand('armor', 'cardboard kneepads')
-            ],
-            'skills': [
-                itemref.expand('skill', 'basic melee'),
-                itemref.expand('skill', 'basic range'),
-                itemref.expand('skill', 'basic spell')
-            ],
-            'affixes': [],
-            'recipes': [
-		itemref.expand('recipe', 'smelly cod piece'),
-		itemref.expand('recipe', 'balsa helmet'),
-		itemref.expand('recipe', 'lightning arrow')
-	    ],
-	    'mats': []
-        };
-        return inv;
-    }
-
-    function brandNewChar() {
-        var char = {
-            'id': 0,
-            'name': 'shitlord',
-            'level': 0,
-            'hp': 10,
-            'maxHp': 10,
-            'mana': 10,
-            'maxMana': 10,
-            'xp': 0,
-            'nextLvlXp': 100,
-            'dps': 0,
-            'zone': 'Dark Woods'
-        };
-        return char;
-    }
-
-    function Game() {
-        this.view = new views.GameView();
-        this.view.resize();
-        $(window).on('resize', this.view.resize.bind(this.view));
-
-        this.model = loadModel();
-
-        var charmodel = newCharModel({'name': 'bobbeh'});
-
-        console.log(this.model);
-        //log.info('model from ls: ', JSON.stringify(this.model));
-
-        this.tabs = new Tabs(this.model);
-        this.tabs.init();
-
-        this.map = new Map({});
-        this.map.init();
-        this.inv = new Inv(this.model.inv);
-        this.inv.init();
-        this.craft = new Craft(this.model.inv);
-        this.craft.init();
-        this.lvlup = new Lvlup({});
-        this.lvlup.init();
-        this.settings = new Settings({});
-        this.settings.init();
-
-
-        this.charModels = [];
-        this.charViews = [];
-        for (var i = 0; i < this.model.chars.length; i++) {
-            this.charModels[i] = newCharModel(this.model.chars[i]);
-            console.log('RIGHT HERE', this.charModels[i]);
-            this.charViews[i] = newHeaderCharView(this.charModels[i]);
-            //this.charsStats[i] = new Header(this.model.chars[i]);
-            //this.chars[i].focus = i === 0;
-            //this.chars[i].init();
+        resize: function() {
+            var ss = this.model.get('ss');
+            this.$el.css({
+                width: 400 - 10,
+                height: ss[1] - 10,
+                left: ss[0] - 400,
+                top: 0
+            });
         }
-    }
+    });
 
-    Game.prototype.init = function (model) {
-    }
+    var VisView = HolderView.extend({
+        el: $('.vis'),
 
-    Game.prototype.tick = function() {
-    }
-
-    // A model holds data that calls callbacks when modified using the 'set'
-    function Subject() {
-        log.debug('Subject constructor start');
-        this._attrs = {};
-        this._listeners = {};
-        this.nonce = 0;
-        this.initialized = false;
-        log.debug('Subject constructor end');
-    }
-
-    Subject.prototype.init = function(data) {
-        log.debug('Subject init start');
-        iterate(data, function(name, value) {
-            this._attrs[name] = value;
-            this._listeners[name] = {};
-        }.bind(this));
-        this.initialized = true;
-        log.debug('Subject init end');
-    }
-
-    Subject.prototype.set = function(name, val) {
-        this._attrs[name] = val;
-        iterate(this._listeners[name], function(key, val) {
-            val();
-        });
-    }
-
-    Subject.prototype.get = function(name) {
-        return this._attrs[name];
-    }
-
-    Subject.prototype.addListener = function(name, callback) {
-        this.nonce++;
-
-        assert(name in this._listeners);
-        assert(!(this.nonce in this._listeners[name]));
-
-        this._listeners[name][this.nonce] = callback;
-
-        assert(this.nonce in this._listeners[name]);
-        return this.nonce;
-    }
-
-    Subject.prototype.removeListener = function(name, nonce) {
-        log.info('rm list, name: %s, nonce: %d', name, nonce);
-        console.log(this._listeners);
-        assert(this._listeners[name][nonce] !== undefined);
-        delete this._listeners[name][nonce];
-        assert(this._listeners[name][nonce] === undefined);
-    }
-
-    Subject.prototype.triggerListener = function(name, nonce) {
-        assert(this._listeners[name][nonce] !== undefined);
-        this._listeners[name][nonce]();
-    }
-
-    // CharModel is-a Subject
-    function CharModel() {
-        log.debug('CharModel constructor start');
-        Subject.call(this);
-        log.debug('CharModel constructor end');
-    }
-
-    CharModel.subclass(Subject);
-
-    CharModel.prototype.init = function(data) {
-        log.debug('CharModel init start');
-        Subject.prototype.init.call(this, data);
-        log.debug('CharModel init end');
-    }
-
-    function htmlMod(model, key, $ele) {
-        log.debug('htmlMod called on key %s, val: %s', key, model.get(key));
-        console.log($ele);
-        assert($ele.length === 1);
-        $ele[0].innerHTML = model.get(key);
-        //$ele.html(model.get(key));
-    }
-
-    function newCharModel(data) {
-        log.debug('newCharModel start');
-        console.log(data);
-        var cm = new CharModel();
-        cm.init(data);
-        assert(cm.initialized);
-
-        /*var namePrinterNonce = cm.addListener('name', function(cm) {
-            log.info('LISTENER: %s', cm.get('name'));
-        }.curry(cm));
-
-        log.info('set name handler, current name: %s', cm.get('name'));
-        cm.set('name', 'hurr');
-        log.info('current name: %s', cm.get('name'));
-        
-        cm.removeListener('name', namePrinterNonce);
-
-        cm.set('name', 'cunt');
-        log.info('current name: %s', cm.get('name'));*/
-
-        log.debug('newCharModel end');
-        return cm;
-    }
-
-    function HeaderCharView(model) {
-        log.info('HeaderCharView constructor start');
-        this.model = model;
-        
-        var html = Mustache.render($('#header-stats-tmpl').html(), this.model._attrs);
-        $(html).appendTo('.header');
-        this.$ele = $('#header-' + this.model.get('id'));
-
-        console.log('right here');
-
-        this.listeners = [];
-
-        log.info('HeaderCharView constructor end');
-    }
-
-    HeaderCharView.prototype.htmlModListener = function(key, $ele) {
-        log.info('HeaderCharView.htmlModListener(%s, %s)', key, $ele.toString())
-        var nonce = this.model.addListener(key, htmlMod.curry(this.model, key, $ele));
-        this.model.triggerListener(key, nonce);
-        this.listeners.append(nonce);
-    }
-
-    HeaderCharView.prototype.init = function() {
-        log.info('HeaderCharView.init start');
-        this.htmlModListener('name', this.$ele.find('.hero-name'));
-        this.htmlModListener('level', this.$ele.find('.hero-level'));
-        this.htmlModListener('hp', this.$ele.find('.hero-hp'));
-        this.htmlModListener('maxHp', this.$ele.find('.hero-maxHp'));
-        this.htmlModListener('mana', this.$ele.find('.hero-mana'));
-        this.htmlModListener('maxMana', this.$ele.find('.hero-maxMana'));
-        this.htmlModListener('xp', this.$ele.find('.hero-xp'));
-        this.htmlModListener('nextLvlXp', this.$ele.find('.hero-nextLvlXp'));
-        this.htmlModListener('dps', this.$ele.find('.hero-dps'));
-        log.info('HeaderCharView.init end');
-    }
-    function newHeaderCharView(model) {
-        log.info('newHeaderCharView start');
-        var view = new HeaderCharView(model);
-        view.init();
-        log.info('newHeaderCharView end');
-        return view;
-    }
-    
-
-    function Tabs(model) {
-        this.model = model;
-    }
-
-    Tabs.prototype.init = function() {
-        this.tabs = TABS.map(function(x) {
-            return $('#' + x);
-        });
-        this.contents = TABS.map(function(x) {
-            return $('#' + x + '-content-holder');
-        });
-        for (var i = 0; i < this.tabs.length; i++) {
-            this.tabs[i].on('click', onTabClick.curry(this.contents, i));
+        resize: function() {
+            var ss = this.model.get('ss');
+            this.$el.css({
+                width: ss[0] - 400 - 10,
+                height: ss[1] - 150 - 10,
+                left: 0,
+                top: 150
+            });
         }
-        onTabClick(this.contents, 1);
-    }
+    });
 
-    function onTabClick(contents, eleIndex) {
-        for (var i = 0; i < contents.length; i++) {
-            if (i === eleIndex) {
-                contents[i].removeClass('closed');
-            } else {
-                contents[i].addClass('closed');
-            }
-        }
-    }
+    var GameView = Backbone.View.extend({
+        el: $('body'),
 
-    function Map(model) {
-        this.model = model;
+        initialize: function() {
+            console.log('GameView initialize');
 
-        this.$dest = $('#map-content-holder');
-        this.tmpl = $('#map-tab-tmpl').html();
-    }
+            this.windowModel = new WindowModel();
+            this.headerView = new HeaderView({model: this.windowModel});
+            this.menuView = new MenuView({model: this.windowModel});
+            this.visView = new VisView({model: this.windowModel});
 
-    Map.prototype.init = function() {
-        this.$dest.append(Mustache.render(this.tmpl, this.model));
-    }
-
-    function Inv(model) {
-        var tmplData = {
-            'weapons': '',
-            'armor': '',
-            'skills': ''
-        };
-        this.model = model;
-
-        this.$dest = $('#inv-content-holder');
-        this.tmpl = $('#inv-tab-tmpl').html();
-
-        for (var i = 0; i < this.model.weapons.length; i++) {
-            tmplData.weapons += makeInvItem(this.model.weapons[i]);
-        }
-
-        for (var i = 0; i < this.model.skills.length; i++) {
-            tmplData.skills += makeInvItem(this.model.skills[i]);
-        }
-
-        for (var i = 0; i < this.model.armor.length; i++) {
-            tmplData.armor += makeInvItem(this.model.armor[i]);
-        }
-
-        this.$ele = $(Mustache.render($('#inv-tab-tmpl').html(), tmplData));
-
-        this.$dest.append(this.$ele);
-
-        this.$dest.on('click', function(event) {
-            var $target, $parent, wasCollapsed;
-
-            $target = $(event.target);
-            if ($target.hasClass('item-header')) {
-                $parent = $target.parent();
-                wasCollapsed = $parent.hasClass('collapsed');
-
-                $('.item').addClass('collapsed');
-                if (wasCollapsed) {
-                    $parent.removeClass('collapsed');
-                }
-            }
-            console.log(event);
-            console.log($(event.target));
-        });
-    }
-
-    Inv.prototype.init = function() {
-        //this.$dest.append(Mustache.render(this.tmpl, this.model));
-    }
-
-    Inv.prototype.newItem = function(type, name) {
-        var dest = this.model[type];
-        dest[dest.length] = makeInvItem(itemref.expand(type, name));
-    }
-
-    function makeInvItem(model) {
-        model.renderedAffixes = '';
-        for (var i = 0; i < model.affixes.length; i++) {
-            model.renderedAffixes += Mustache.render($('#inv-tab-item-affix-tmpl').html(), {'str': model.affixes[i]});
-        }
-        log.info("makeInvItem, model: %s", JSON.stringify(model));
-        return Mustache.render($('#inv-tab-item-tmpl').html(), model);
-    }
-
-
-    function Craft(model) {
-	var tmplData = {
-	    'armor': "",
-	    'weapons': "",
-	    'skills': ""
-	}
-	
-	this.model = model;
-	var recipes = this.model.recipes;
-        this.$dest = $('#craft-content-holder');
-        this.tmpl = $('#craft-tab-tmpl').html();
-	
-      //	console.log(itemref.ref);
-	for (var i = 0; i < recipes.length; i++) {
-	    var recipe = recipes[i];
-	    var item = itemref.expand(recipe.type, recipe.name);
-	    console.log(item);
-	    if (recipe.type == "armor") {
-		tmplData['armor'] += makeInvItem(item);
-	    }
-	    if (recipe.type == "weapon"){
-		tmplData['weapons'] += makeInvItem(item);
-            }
-	    if (recipe.type == "skill"){
-		tmplData['skills'] += makeInvItem(item);
-            }
-	}
-
-	this.$ele = $(Mustache.render($('#craft-tab-tmpl').html(), tmplData));
-
-        this.$dest.append(this.$ele);
-
-	this.$dest.on('click', function(event) {
-		var $target, $parent, wasCollapsed;
-
-		$target = $(event.target);
-		if ($target.hasClass('item-header')) {
-		    $parent = $target.parent();
-		    wasCollapsed = $parent.hasClass('collapsed');
-
-		    $('.item').addClass('collapsed');
-		    if (wasCollapsed) {
-			$parent.removeClass('collapsed');
-		    }
-		}
-		console.log(event);
-		console.log($(event.target));
-	    });
-    }
-
-    Craft.prototype.init = function() {
-        //nothing here
-    }
-
-    function Lvlup(model) {
-        this.model = model;
-
-        this.$dest = $('#lvlup-content-holder');
-        this.tmpl = $('#lvlup-tab-tmpl').html();
-    }
-
-    Lvlup.prototype.init = function() {
-        this.$dest.append(Mustache.render(this.tmpl, this.model));
-    }
-
-    function Settings(model) {
-        this.model = model;
-
-        this.$dest = $('#settings-content-holder');
-        this.tmpl = $('#settings-tab-tmpl').html();
-    }
-
-    Settings.prototype.init = function() {
-        this.$dest.append(Mustache.render(this.tmpl, this.model));
-    }
-
-
-    /*
-    function onTick() {
-    }
-
-    // run through a map, takes a hero and a map
-    function Instance(hero, map) {
-        this.entities = [[],[]];  // 0  is hero and allied entities, 1 is enemies
-
-        requestAnimationFrame(this.run.bind(this));
-
-        console.log('instance constructor start');
-        this.hero = hero;
-        this.map = map;
-        this.roomIndex = 0;
-        this.complete = false;
-
-        this.init();
-
-        this.timeAccumulator = 0;
-
-        console.log('instance constructor end');
-    }
-
-    Instance.prototype.init = function() {
-        console.log('new instance');
-        this.roomIndex = 0;
-        this.startTime = new Date().getTime();
-        this.previousTime = this.startTime;
-        this.curTime = 0;
-
-        this.damageIndicators = [];
-        this.entities[0] = [this.hero];
-        this.hero.dead = false;
-        this.initRoom();
-    };
-
-    Instance.prototype.initRoom = function() {
-        console.log(['New Room contains', this.entities[1]]);
-        var room = this.map.rooms[this.roomIndex];
-        this.entities[1] = room.monsters;
-        this.hero.onEnterRoom(this.curTime);
-        room.init(this.curTime);
-        box2DInit(this);
-    };
-
-
-    Instance.prototype.tryFinishRoom = function() {
-        while (this.entities[1].length === 0 && this.roomIndex < this.map.rooms.length) {
-            this.roomIndex++;
-            console.log('entering room ' + this.roomIndex);
-            if (this.roomIndex < this.map.rooms.length) {
-                this.initRoom();
-            }
-        }
-    };
-
-    Instance.prototype.isComplete = function() {
-        if (!this.hero.isAlive()) {
-            console.log('hero dead');
-            return true;
-        }
-        if (this.roomIndex >= this.map.rooms.length) {
-            return true;
-        }
-        return false;
-    };
-
-
-    Instance.prototype.finishRoom = function() {
-
-    };
-
-    Instance.prototype.run = function() {
-        var now = new Date().getTime();
-
-        if (this.isComplete()) {
-            onTick();
-        } else {
-            requestAnimFrame(this.run.bind(this));
-        }
-
-    };
-
-    window.requestAnimFrame = (function(){
-          return  window.requestAnimationFrame       || 
-                  window.webkitRequestAnimationFrame || 
-                  window.mozRequestAnimationFrame    || 
-                  window.oRequestAnimationFrame      || 
-                  window.msRequestAnimationFrame     || 
-                  function(callback, element){
-                    window.setTimeout(callback, 1000 / 60);
-                  };
-    })();
-
-    document.onkeypress = function (e) {
-      e = e || window.event;
-      var charCode = e.charCode || e.keyCode,
-      character = String.fromCharCode(charCode);
-      
-      if(character == 'w') {
-        box.applyImpulse('Bobbeh', 270, parseInt(1000000));
-      }
-      if(character == 's') {
-        box.applyImpulse('Bobbeh', 90, parseInt(1000000));
-      }
-      if(character == 'd') {
-        box.applyImpulse('Bobbeh', 0, parseInt(1000000));
-      }
-      if(character == 'a') {
-        box.applyImpulse('Bobbeh', 180, parseInt(1000000));
-      }
-    }
-*/
+            $(window).on('resize', this.windowModel.resize.bind(this.windowModel));
+        },
+    });
 });

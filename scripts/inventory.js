@@ -135,13 +135,12 @@ namespace.module('bot.inv', function (exports, require) {
 
 
     var InvTabView = Backbone.Model.extend({
-        el: $('#inv-content-holder'),
+        model: InvModel,
 
-        
+        el: $('#inv-menu-holder')
     });
 
     exports.extend({
-        InvModel: InvModel,
         InvTabView: InvTabView
     });
 

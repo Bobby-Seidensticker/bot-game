@@ -73,7 +73,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "exp": 0,
                 "level": 0,
                 "affixes": [],
-                "mana": 0
+                "mana": 0,
+		"cooldown": 0
             },
             "basic melee": {
                 "prototype": ["basic"],
@@ -90,8 +91,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "spell",
                 "types": ["proj"],
             },
-
-
             "fire slice": {
                 "prototype": ["basic melee"],
                 "affixes": ["added fire damage 3"],

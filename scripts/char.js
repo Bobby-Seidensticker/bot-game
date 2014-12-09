@@ -11,8 +11,8 @@ namespace.module('bot.char', function (exports, require) {
 	    wisdom: 10,
 	    vitality: 10,
 	    level: 1,
-	    weapon: {"baseDamage": 1, "attackSpeed":1}, //"fists" weapon auto equipped when unarmed.
-	    affixes: ["strength more 1.5", "strength more 2", "strength added 10"]
+	    weapon: {'baseDamage': 1, 'attackSpeed':1}, //'fists' weapon auto equipped when unarmed.
+	    affixes: ['strength more 1.5', 'strength more 2', 'strength added 10']
 	},
 
         initialize: function() {
@@ -20,24 +20,32 @@ namespace.module('bot.char', function (exports, require) {
 	    this.computeAttrs();
 	},
 
-	applyAffixMods: function(startVal, mods) {
+	applyAffixes: function(startVal, mods) {
 	    var moreAffs = [];
 	    var addedAffs = [];
 	    for(var i = 0; i < mods.length; i++) {
 		var splits = mods[i].split(' ');
 		var modtype = splits[0];
 		var amount = parseFloat(splits[1]);
-		if (modtype == "added") {
+		if (modtype == 'added') {
 		    addedAffs.push(amount);
-		} else if (modtype == "more") {
+		} else if (modtype == 'more') {
 		    moreAffs.push(amount);
 		}
 	    }
 	    var flat = addedAffs.reduce(function(a,b) {return a+b;}, startVal);
 	    var mult = moreAffs.reduce(function(a,b) {return a*b;}, flat);
 	    return mult;
-		
 	},
+
+        applyAllAffixes: function(t, stats, affixDict) {
+	    for (i = 0; i < stats.length; i++) {
+		var stat = stats[i];
+		if(affixDict[stat]) {
+		    t[stat] = this.applyAffixes(t[stat], affixDict[stat]);
+		}
+	    }
+        },
 
         computeAttrs: function() {
             var t = {}; //temp values
@@ -49,11 +57,11 @@ namespace.module('bot.char', function (exports, require) {
 	    t.affixes = this.get('affixes');
 	    
 	    //Add affix bonuses
-	    //Affix format is "stat modtype amount"
+	    //Affix format is 'stat modtype amount'
 	    var affixDict = {};
 	    for (var i = 0; i < t.affixes.length; i++) {
 		var stat = t.affixes[i].split(' ')[0];
-		var mod = t.affixes[i].split(" ").slice(1).join(" ");
+		var mod = t.affixes[i].split(' ').slice(1).join(' ');
 		if (affixDict[stat]) {
 		    affixDict[stat].push(mod);
 		} else {
@@ -61,14 +69,7 @@ namespace.module('bot.char', function (exports, require) {
 		}
 	    }
 
-	    var statsToAffix = ["strength", "dexterity", "wisdom", "vitality"];
-	    for (i = 0; i < statsToAffix.length; i++) {
-		var stat = statsToAffix[i];
-		if(affixDict[stat]) {
-		    t[stat] = this.applyAffixMods(t[stat], affixDict[stat]);
-		}
-	    }
-
+            this.applyAllAffixes(t, ['strength', 'dexterity', 'wisdom', 'vitality'], affixDict);
 
 	    // Todo? should we pull these constants out and give them easily manipulable names 
 	    // so we can balance away from crucial code? 
@@ -82,27 +83,16 @@ namespace.module('bot.char', function (exports, require) {
 	    t.dodge = t.dexterity * 0.5;
 	    t.eleResistAll = 1 - Math.pow(0.997, t.wisdom); //temp var only
 
-	    var statsToAffix = ["hp", "mana", "armor", "dodge", "eleResistAll"];
-            for(i = 0; i < statsToAffix.length; i++) {
-		var stat = statsToAffix[i];
-                if(affixDict[stat]) {
-                    t[stat] = this.applyAffixMods(t[stat], affixDict[stat]);
-		}
-            }
+            this.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
 
 	    t.fireResist = t.eleResistAll;
 	    t.coldResist = t.eleResistAll;
 	    t.lightResist = t.eleResistAll;
 	    t.poisResist = t.eleResistAll;
 	    
-	    var statsToAffix = ["fireResist","coldResist", "lightResist", "poisResist"];
-            for(i = 0; i < statsToAffix.length; i++) {
-		var stat = statsToAffix[i];
-                if(affixDict[stat]) {
-                    t[stat] = this.applyAffixMods(t[stat], affixDict[stat]);
-		}
-            }
-	    console.log(["charmade with stats ", t]);
+            this.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
+
+	    console.log('charmade with stats ', t);
             this.set({
 	        strength: t.strength,
 		dexterity: t.dexterity,

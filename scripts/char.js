@@ -17,7 +17,8 @@ namespace.module('bot.char', function (exports, require) {
 
         initialize: function() {
             console.log(this.get('fuckyou'));  // prints 'hey'
-        },
+	    this.computeAttrs();
+	},
 
 	applyAffixMods: function(startVal, mods) {
 	    var moreAffs = [];
@@ -45,13 +46,14 @@ namespace.module('bot.char', function (exports, require) {
 	    t.wisdom = this.get('wisdom');
 	    t.vitality = this.get('vitality');
 	    t.level = this.get('level');
+	    t.affixes = this.get('affixes');
 	    
 	    //Add affix bonuses
 	    //Affix format is "stat modtype amount"
 	    var affixDict = {};
-	    for (var i = 0; i < affixes.length; i++) {
-		var stat = affixes[i].split(' ')[0];
-		var mod = affixes[i].split(" ").slice(1).join(" ");
+	    for (var i = 0; i < t.affixes.length; i++) {
+		var stat = t.affixes[i].split(' ')[0];
+		var mod = t.affixes[i].split(" ").slice(1).join(" ");
 		if (affixDict[stat]) {
 		    affixDict[stat].append(mod);
 		} else {

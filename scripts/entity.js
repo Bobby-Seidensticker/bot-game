@@ -114,7 +114,13 @@ namespace.module('bot.entity', function (exports, require) {
 
     var c = new EntityModel({ strength: 10, wisdom: 20 });
 
+    // stub
+    function newEntity(type, name, level) {
+        return new EntityModel();
+    }
+
     exports.extend({
-        EntityModel: EntityModel
+        EntityModel: EntityModel,
+        newEntity: newEntity
     });
 });

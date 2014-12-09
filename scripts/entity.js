@@ -130,12 +130,9 @@ namespace.module('bot.entity', function (exports, require) {
     });
 
     var CharModel = EntityModel.extend({
-        defaults: _.extend({}, EntityModel.prototype.defaults(),
-                           function() {
-                               return {
-                                   team: TEAM_CHAR,
-                               };
-                           }),
+        defaults: _.extend({}, EntityModel.prototype.defaults(), {
+            team: TEAM_CHAR,
+        }),
 
         localStorage: new Backbone.LocalStorage('char'),
 
@@ -147,12 +144,9 @@ namespace.module('bot.entity', function (exports, require) {
     });
 
     var MonsterModel = EntityModel.extend({
-        defaults: _.extend({}, EntityModel.prototype.defaults(),
-                           function() {
-                               return {
-                                   team: TEAM_MONSTER,
-                               };
-                           }),
+        defaults: _.extend({}, EntityModel.prototype.defaults(), {
+            team: TEAM_MONSTER,
+        }),
 
         initialize: function() {
             //fetchMonsterConstants(name, level);

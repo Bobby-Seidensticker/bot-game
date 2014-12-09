@@ -136,10 +136,7 @@ namespace.module('bot.inv', function (exports, require) {
         }
     });
 
-
     var InvMenuView = Backbone.View.extend({
-        model: new InvModel,
-
         el: $('#inv-menu-holder'),
 
         template: _.template($('#inv-menu-template').html()),
@@ -177,5 +174,4 @@ namespace.module('bot.inv', function (exports, require) {
         InvModel: InvModel,
         InvMenuView: InvMenuView
     });
-
 });

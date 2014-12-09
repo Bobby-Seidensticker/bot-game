@@ -93,35 +93,35 @@ namespace.module('bot.itemref', function (exports, require) {
 
             "fireball": {
                 "prototype": ["basic spell"],
-                "affixes": ["added fire damage 3"],
+                "affixes": ["fireDmg added 10"],
                 "mana": 5
             },
             "poison ball": {
                 "prototype": ["basic spell"],
                 "types": ["proj", "DOT"],
-                "affixes": ["added poison damage 3"],
+                "affixes": ["poisDmg added 5"],
                 "mana": 5
             },
 
             "super smash": {
                 "prototype": ["basic melee"],
-                "affixes": ["added melee damage 3"],
+                "affixes": ["PhysDmg more 1.4"],
                 "mana": 5
             },
             "flame strike": {
                 "prototype": ["basic melee"],
-                "affixes": ["added fire damage 3"],
+                "affixes": ["fireDmg more 1.25"],
                 "mana": 5
             },
 
             "fire arrow": {
                 "prototype": ["basic range"],
-                "affixes": ["added fire damage 3"],
+                "affixes": ["fireDmg more 1.3"],
                 "mana": 5
             },
             "lightning arrow": {
                 "prototype": ["basic range"],
-                "affixes": ["added elec damage 3"],
+                "affixes": ["lightDmg more 1.3"],
                 "mana": 5
             }
         },

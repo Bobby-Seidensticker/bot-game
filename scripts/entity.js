@@ -1,10 +1,10 @@
-namespace.module('bot.char', function (exports, require) {
+namespace.module('bot.entity', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
     var log = namespace.bot.log;
 
-    var CharModel = Backbone.Model.extend({
+    var EntityModel = Backbone.Model.extend({
         defaults: {
             strength: 10,
             dexterity: 10,
@@ -16,7 +16,7 @@ namespace.module('bot.char', function (exports, require) {
 	},
 
         initialize: function() {
-            console.log(this.get('fuckyou'));  // prints 'hey'
+            log.debug('EntityModel initialize');
 	    this.computeAttrs();
 	},
 
@@ -92,7 +92,7 @@ namespace.module('bot.char', function (exports, require) {
 	    
             this.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
 
-	    console.log('charmade with stats ', t);
+	    console.log('entitymade with stats ', t);
             this.set({
 	        strength: t.strength,
 		dexterity: t.dexterity,
@@ -110,13 +110,11 @@ namespace.module('bot.char', function (exports, require) {
 	       	poisResist: t.poisResist 
             });
         },
-        
     });
 
-    var c = new CharModel({ strength: 10, wisdom: 20, fuckyou: 'hey' });
-
+    var c = new EntityModel({ strength: 10, wisdom: 20 });
 
     exports.extend({
-        CharModel: CharModel
+        EntityModel: EntityModel
     });
 });

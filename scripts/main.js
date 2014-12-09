@@ -7,7 +7,7 @@ namespace.module('bot.main', function (exports, require) {
     var log = namespace.bot.log;
     var inv = namespace.bot.inv;
     var menu = namespace.bot.menu;
-    var char = namespace.bot.char;
+    var entity = namespace.bot.entity;
 
     function onReady() {
         log.info('onReady');
@@ -19,7 +19,7 @@ namespace.module('bot.main', function (exports, require) {
         var invMenuView = new inv.InvMenuView({model: invModel});
         //var craftMenuView = new inv.CraftMenuView({model: invModel});
         //var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
-	var charModel = new char.CharModel();
+        var entityModel = new entity.EntityModel();
 	
         window.invMenuView = invMenuView;
         window.game = gameView;

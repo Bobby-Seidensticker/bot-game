@@ -6,13 +6,13 @@ namespace.module('bot.char', function (exports, require) {
 
     var CharModel = Backbone.Model.extend({
         defaults: {
-            strength: 1,
-            dexterity: 1,
-	    wisdom: 1,
-	    vitality: 1,
+            strength: 10,
+            dexterity: 10,
+	    wisdom: 10,
+	    vitality: 10,
 	    level: 1,
 	    weapon: {"baseDamage": 1, "attackSpeed":1}, //"fists" weapon auto equipped when unarmed.
-	    affixes: []
+	    affixes: ["strength more 1.5", "strength more 2", "strength added 10"]
 	},
 
         initialize: function() {
@@ -26,16 +26,16 @@ namespace.module('bot.char', function (exports, require) {
 	    for(var i = 0; i < mods.length; i++) {
 		var splits = mods[i].split(' ');
 		var modtype = splits[0];
-		var amount = splits[1];
+		var amount = parseFloat(splits[1]);
 		if (modtype == "added") {
-		    addedAffs.append(amount);
+		    addedAffs.push(amount);
 		} else if (modtype == "more") {
-		    moreAffs.append(amount);
+		    moreAffs.push(amount);
 		}
 	    }
-	    var flat = addedAffs.reduce(function(a,b) {return a+b;});
-	    var mult = moreAffs.reduce(function(a,b) {return a*b;});
-	    return (startVal + flat) * mult;
+	    var flat = addedAffs.reduce(function(a,b) {return a+b;}, startVal);
+	    var mult = moreAffs.reduce(function(a,b) {return a*b;}, flat);
+	    return mult;
 		
 	},
 
@@ -55,7 +55,7 @@ namespace.module('bot.char', function (exports, require) {
 		var stat = t.affixes[i].split(' ')[0];
 		var mod = t.affixes[i].split(" ").slice(1).join(" ");
 		if (affixDict[stat]) {
-		    affixDict[stat].append(mod);
+		    affixDict[stat].push(mod);
 		} else {
 		    affixDict[stat] = [mod];
 		}
@@ -65,7 +65,7 @@ namespace.module('bot.char', function (exports, require) {
 	    for (i = 0; i < statsToAffix.length; i++) {
 		var stat = statsToAffix[i];
 		if(affixDict[stat]) {
-		    t[stat] = this.ApplyAffixMods(t[stat], affixDict[stat]);
+		    t[stat] = this.applyAffixMods(t[stat], affixDict[stat]);
 		}
 	    }
 
@@ -77,16 +77,16 @@ namespace.module('bot.char', function (exports, require) {
 	    // HP_PER_VIT = 2;
 
             t.hp = t.level * 10 + t.vitality * 2 ;
-	    t.mana = t.level * 5 + t.wis * 2;
-	    t.armor = t.strength * 1;
-	    t.dodge = t.dexterity * 1;
+	    t.mana = t.level * 5 + t.wisdom * 2;
+	    t.armor = t.strength * 0.5;
+	    t.dodge = t.dexterity * 0.5;
 	    t.eleResistAll = 1 - Math.pow(0.997, t.wisdom); //temp var only
 
-	    var statsToAffix = ["hp","mana", "armor", "dodge", "eleResistAll"];
+	    var statsToAffix = ["hp", "mana", "armor", "dodge", "eleResistAll"];
             for(i = 0; i < statsToAffix.length; i++) {
 		var stat = statsToAffix[i];
                 if(affixDict[stat]) {
-                    t[stat] = this.ApplyAffixMods(t[stat], affixDict[stat]);
+                    t[stat] = this.applyAffixMods(t[stat], affixDict[stat]);
 		}
             }
 
@@ -99,7 +99,7 @@ namespace.module('bot.char', function (exports, require) {
             for(i = 0; i < statsToAffix.length; i++) {
 		var stat = statsToAffix[i];
                 if(affixDict[stat]) {
-                    t[stat] = this.ApplyAffixMods(t[stat], affixDict[stat]);
+                    t[stat] = this.applyAffixMods(t[stat], affixDict[stat]);
 		}
             }
 	    console.log(["charmade with stats ", t]);

@@ -49,6 +49,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         initialize: function() {
+            log.debug('Weapon Model attributes at initialize: %s', JSON.stringify(this.attributes));
             if (!('id' in this)) {
                 log.debug('loading weapon %s from file', this.get('name'));
                 this.set(itemref.expand('weapon', this.get('name')));
@@ -60,11 +61,13 @@ namespace.module('bot.inv', function (exports, require) {
         defaults: function() {
             return {
                 mana: 0,
-                types: []
+                types: [],
+                type: 'skill' // remove this
             }
         },
 
         initialize: function() {
+            log.debug('Skill Model attributes at initialize: %s', JSON.stringify(this.attributes));
             if (!('id' in this)) {
                 log.debug('loading skill %s from file', this.get('name'));
                 this.set(itemref.expand('skill', this.get('name')));
@@ -75,7 +78,7 @@ namespace.module('bot.inv', function (exports, require) {
     var ArmorCollection = Backbone.Collection.extend({
         model: ArmorModel,
 
-        localStorage: new Backbone.LocalStorage('armor-collection'),
+        localStorage: new Backbone.LocalStorage('armor'),
 
         initialize: function() {
             this.fetch();
@@ -91,7 +94,7 @@ namespace.module('bot.inv', function (exports, require) {
     var WeaponCollection = Backbone.Collection.extend({
         model: WeaponModel,
 
-        localStorage: new Backbone.LocalStorage('weapon-collection'),
+        localStorage: new Backbone.LocalStorage('weapons'),
 
         initialize: function() {
             this.fetch();
@@ -108,7 +111,7 @@ namespace.module('bot.inv', function (exports, require) {
     var SkillCollection = Backbone.Collection.extend({
         model: SkillModel,
 
-        localStorage: new Backbone.LocalStorage('skill-collection'),
+        localStorage: new Backbone.LocalStorage('skills'),
 
         initialize: function() {
             this.fetch();
@@ -134,14 +137,46 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
 
-    var InvTabView = Backbone.Model.extend({
-        model: new InvModel(),
+    var InvMenuView = Backbone.View.extend({
+        model: new InvModel,
 
-        el: $('#inv-menu-holder')
+        el: $('#inv-menu-holder'),
+
+        template: _.template($('#inv-menu-template').html()),
+
+        itemTemplate: _.template($('#inv-menu-item-template').html()),
+
+        initialize: function() {
+            console.log('here', this.model.armor.toJSON());
+            this.render();
+        },
+
+        render: function() {
+            var rendered = this.template({
+                itemTemplate: this.itemTemplate,
+                armor: this.model.armor.toJSON(),
+                weapons: this.model.weapons.toJSON(),
+                skills: this.model.skills.toJSON(),
+            });
+            console.log(this.el);
+            console.log(this.$el);
+            this.$el.html(rendered);
+            /*
+            console.log('inv menu view render');
+            console.log(this.model);
+            this.model.armor.each(function(armorModel) {
+                log.info('armor name: %s', armorModel.get('name'));
+            });
+            this.model.weapons.each(function(weaponModel) {
+                log.info('weapon name: %s', weaponModel.get('name'));
+            });*/
+            return this;
+        },
     });
 
     exports.extend({
-        InvTabView: InvTabView
+        InvModel: InvModel,
+        InvMenuView: InvMenuView
     });
 
 });

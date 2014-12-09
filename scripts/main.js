@@ -14,10 +14,12 @@ namespace.module('bot.main', function (exports, require) {
 
         var m = new menu.TabView();
 
-        var invTabView = new inv.InvTabView();
+        var invModel = new inv.InvModel();
+        var invMenuView = new inv.InvMenuView({model: invModel});
+        //var craftMenuView = new inv.CraftMenuView({model: invModel});
+        //var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
 
-
-        window.invTabView = invTabView;
+        window.invMenuView = invMenuView;
         window.game = gameView;
     }
 

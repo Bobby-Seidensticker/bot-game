@@ -40,24 +40,23 @@
     </div>
   </script>
 
-  <script id="inv-tab-item-affix-tmpl" type="x-tmpl-mustache">
-    <p>
-      {{str}}
-    </p>
-  </script>
-
-  <script id="inv-tab-item-tmpl" type="x-tmpl-mustache">
+  <script id="inv-menu-item-template" type="text/template">
     <div class="item collapsed">
       <div class="item-header">
-        {{name}} - level {{level}}
+        <% console.log(name); %>
+        <%= name %> - level <%= level %>
       </div>
       <div class="item-body">
         <div class="item-mid">
-	  <div class="item-img"><img src="assets/{{name}}.svg" height="90" width="90"></div>
-	  <div class="item-mid-text">Type: {{type}}<br/>{{exp}} / 2,743 XP</div>
+	  <div class="item-img"><img src="assets/<%= name %>.svg" height="90" width="90"></div>
+	  <div class="item-mid-text">Type: <%= type %><br/><%= exp %> / 2,743 XP</div>
         </div>
         <div class="item-affixes">
-          {{{renderedAffixes}}}
+          <% _.each(affixes, function(affix) { %>
+          <p>
+            <%= affix %>
+          </p>
+          <% }); %>
         </div>
         <div class="item-buttonbox">
 	  <input class="item-button" value="Level Up" type="button"/>
@@ -67,25 +66,31 @@
     </div>
   </script>
 
-  <script id="inv-tab-tmpl" type="x-tmpl-mustache">
+  <script id="inv-menu-template" type="text/template">
     <div class="invcontent">
       <div class="item-group armor">
         <div class="item-group-header">
           Armor
         </div>
-        {{{armor}}}
+        <% _.each(armor, function(item) { %>
+        <%= itemTemplate(item) %>
+        <% }); %>
       </div>
       <div class="item-group weapon">
         <div class="item-group-header">
           Weapon
         </div>
-        {{{weapons}}}
+        <% _.each(weapons, function(item) { %>
+        <%= itemTemplate(item) %>
+        <% }); %>
       </div>
       <div class="item-group skill">
         <div class="item-group-header">
           Skill
         </div>
-        {{{skills}}}
+        <% _.each(skills, function(item) { %>
+        <%= itemTemplate(item) %>
+        <% }); %>
       </div>
     </div>
   </script>

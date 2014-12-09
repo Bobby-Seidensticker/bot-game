@@ -47,9 +47,83 @@ body {
 
 /* within menu holder */
 .sub-menu {
-    
+    overflow: hidden;
 }
 
+.invcontent { padding: 10px; }
+
+.item-group-header {
+    width: 100%;
+    height: 20px;
+    padding: 3px;
+    text-align: center;
+    margin: 1px;
+    background-color: #CFC;
+}
+.item-header {
+    width:100%;
+    text-align: center;
+    height:20px;
+    padding: 1px;
+    margin: 1px;
+    /* focused  */
+    background-color: #FFE;
+    border-bottom: 1px solid white;
+    margin-bottom: 0;
+}
+
+.item.collapsed .item-header {
+    /* collapsed */
+    background-color: #DDC;
+    margin: 1px;
+    border-bottom: none;
+}
+
+.item.collapsed .item-body {
+    display: none;
+}
+.item-body {
+    background-color:#FFD;
+}
+
+.item-mid {
+    width:100%;
+    height:110px;
+    border-bottom: 1px solid white;
+}
+
+.item-img {
+    width:90px;
+    height:90px;
+    padding: 10px;
+    float: left;
+}
+
+.item-mid-text {
+    width:60%;
+    text-align:center;
+    line-height: 150%;
+    float: left;
+    padding-top:20px;
+    padding-bottom: 20px;
+    font-family:sans-serif;
+}
+
+.item-affixes {
+    text-align:center;
+}
+
+.item-buttonbox {
+    width:100%;
+}
+
+.item-button {
+    background-color:#FED;
+    margin: 10px 50px 10px 70px;
+    width:60px;
+    height:30px;
+    text-align:center;
+}
 
 .closed {
     display: none;

@@ -10,7 +10,12 @@ namespace.module('bot.zone', function (exports, require) {
     var ZoneModel = Backbone.Model.extend({
         defaults: {
             rooms: [],
-            charPos: 0
+            charPos: 0,
+
+            roomCount: 20,
+            monsters: ['skeletons'],
+            monsterQuantity: 2,
+            level: 1,
 	},
 
         initialize: function() {
@@ -25,7 +30,7 @@ namespace.module('bot.zone', function (exports, require) {
 
                 for (j = 0; j < monCount; j++) {
                     monName = this.get('monsters')[prob.pyRand(0, this.get('monsters').length)]
-                    monsters[j] = entity.newEntity('monster', monName, this.get('level'));
+                    monsters[j] = entity.newMonster('monster', monName, this.get('level'));
                 }
 
                 trooms[i] = {
@@ -51,6 +56,15 @@ namespace.module('bot.zone', function (exports, require) {
             return liveMons === 0;
         },
 
+        nextRoom: function() {
+            var room;
+            if (!this.done()) {
+                return false;
+            }
+            room = this.get('rooms')[this.get('charPos')];
+            
+        },
+
         done: function() {
             if (this.get('charPos') === this.get('rooms').length - 1 &&
                 this.roomCleared()) {
@@ -73,5 +87,9 @@ namespace.module('bot.zone', function (exports, require) {
     }
 
     var currentZone = new ZoneModel(zoneA);
+
+    exports.extend({
+        ZoneModel: ZoneModel,
+    });
 });
 

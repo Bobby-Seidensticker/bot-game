@@ -1,19 +1,25 @@
 namespace.module('bot.entity', function (exports, require) {
 
+    var TEAM_CHAR = 0;
+    var TEAM_MONSTER = 1;
+
     var funcs = require('org.startpad.funcs').patch();
 
     var log = namespace.bot.log;
 
     var EntityModel = Backbone.Model.extend({
-        defaults: {
-            strength: 10,
-            dexterity: 10,
-	    wisdom: 10,
-	    vitality: 10,
-	    level: 1,
-	    weapon: {'baseDamage': 1, 'attackSpeed': 1}, //'fists' weapon auto equipped when unarmed.
-	    affixes: ['strength more 1.5', 'strength more 2', 'strength added 10']
-	},
+        defaults: function () { 
+            return {
+                strength: 10,
+                dexterity: 10,
+	        wisdom: 10,
+	        vitality: 10,
+	        level: 1,
+	        weapon: {'baseDamage': 1, 'attackSpeed': 1}, //'fists' weapon auto equipped when unarmed.
+	        affixes: ['strength more 1.5', 'strength more 2', 'strength added 10'],
+                team: 1
+	    };
+        },
 
         initialize: function() {
             log.debug('EntityModel initialize');
@@ -26,7 +32,7 @@ namespace.module('bot.entity', function (exports, require) {
 	    for(var i = 0; i < mods.length; i++) {
 		var splits = mods[i].split(' ');
 		var modtype = splits[0];
-		var amount = parseFloat(splits[1]);
+                var amount = parseFloat(splits[1]);
 		if (modtype == 'added') {
 		    addedAffs.push(amount);
 		} else if (modtype == 'more') {
@@ -59,6 +65,9 @@ namespace.module('bot.entity', function (exports, require) {
 	    //Add affix bonuses
 	    //Affix format is 'stat modtype amount'
 	    var affixDict = {};
+            if (t.affixes === undefined) {
+                log.debug('right here');
+            }
 	    for (var i = 0; i < t.affixes.length; i++) {
 		var stat = t.affixes[i].split(' ')[0];
 		var mod = t.affixes[i].split(' ').slice(1).join(' ');
@@ -110,17 +119,68 @@ namespace.module('bot.entity', function (exports, require) {
 	       	poisResist: t.poisResist 
             });
         },
+
+        isMonster: function() {
+            return this.get('team') === TEAM_MONSTER;
+        },
+
+        isChar: function() {
+            return this.get('team') === TEAM_CHAR;
+        },
     });
 
-    var c = new EntityModel({ strength: 10, wisdom: 20 });
+    var CharModel = EntityModel.extend({
+        defaults: _.extend({}, EntityModel.prototype.defaults(),
+                           function() {
+                               return {
+                                   team: TEAM_CHAR,
+                               };
+                           }),
 
-    // stub
-    function newEntity(type, name, level) {
-        return new EntityModel();
+        localStorage: new Backbone.LocalStorage('char'),
+
+        initialize: function() {
+            log.debug('CharModel initialize');
+            this.fetch();
+            this.computeAttrs();
+        }
+    });
+
+    var MonsterModel = EntityModel.extend({
+        defaults: _.extend({}, EntityModel.prototype.defaults(),
+                           function() {
+                               return {
+                                   team: TEAM_MONSTER,
+                               };
+                           }),
+
+        initialize: function() {
+            //fetchMonsterConstants(name, level);
+            // lookup given name and level
+            log.debug('MonsterModel initialize');
+            this.computeAttrs();
+        }
+    });
+
+    function newMonster(name, level) {
+        //return new MonsterModel({name: name, level: level});
+        return new MonsterModel();
+    }
+
+    function newChar() {
+        return new CharModel();
     }
 
     exports.extend({
-        EntityModel: EntityModel,
-        newEntity: newEntity
+        newChar: newChar,
+        newMonster: newMonster,
     });
+
+    // testing
+    (function() {
+        var x;
+        x = new EntityModel({ strength: 10, wisdom: 20 });
+        x = newMonster('hurr', 10);
+        x = newChar();
+    })();
 });

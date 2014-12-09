@@ -22,12 +22,13 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var ArmorModel = GearModel.extend({
-        defaults: function() {
-            return {
-                weight: 0,
-                type: 'ERR type',
-            }
-        },
+        defaults: _.extend(
+            {}, GearModel.prototype.defaults(), function() {
+                return {
+                    weight: 0,
+                    type: 'ERR type',
+                }
+            }),
 
         initialize: function() {
             log.debug('Armor Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
@@ -39,14 +40,15 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var WeaponModel = GearModel.extend({
-        defaults: function() {
-            return {
-                speed: 0,
-                type: 'ERR type',
-                damage: 0,
-                range: 0
-            }
-        },
+        defaults: _.extend(
+            {}, GearModel.prototype.defaults(), function() {
+                return {
+                    speed: 0,
+                    type: 'ERR type',
+                    damage: 0,
+                    range: 0
+                }
+            }),
 
         initialize: function() {
             log.debug('Weapon Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
@@ -58,13 +60,14 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var SkillModel = GearModel.extend({
-        defaults: function() {
-            return {
-                mana: 0,
-                types: [],
-                type: 'skill' // remove this
-            }
-        },
+        defaults: _.extend(
+            {}, GearModel.prototype.defaults(), function() {
+                return {
+                    mana: 0,
+                    types: [],
+                    type: 'skill' // remove this
+                }
+            }),
 
         initialize: function() {
             log.debug('Skill Model attributes at initialize: %s', JSON.stringify(this.toJSON()));

@@ -8,22 +8,64 @@ namespace.module('bot.main', function (exports, require) {
     var inv = namespace.bot.inv;
     var menu = namespace.bot.menu;
     var entity = namespace.bot.entity;
+    var zone = namespace.bot.zone;
 
     function onReady() {
         log.info('onReady');
-        var gameView = new GameView();
+        var gameModel = new GameModel();
 
+        var gameView = new GameView();
         var m = new menu.TabView();
 
         var invModel = new inv.InvModel();
         var invMenuView = new inv.InvMenuView({model: invModel});
         //var craftMenuView = new inv.CraftMenuView({model: invModel});
         //var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
-        var entityModel = new entity.EntityModel();
+        var char = new entity.newChar();
 	
         window.invMenuView = invMenuView;
         window.game = gameView;
+
+        //gameModel.start();
     }
+
+    var GameModel = Backbone.Model.extend({
+        defaults: function() {
+            return {
+                running: false,
+                inZone: false
+            }
+        },
+
+        initialize: function() {
+            this.set({'shit': 'fuck'});
+            this.char = new entity.newChar();
+        },
+
+        start: function() {
+            this.set({running: true});
+            requestAnimFrame(this.tick.bind(this));
+        },
+
+        stop: function() {
+            this.set({running: false});
+        },
+
+        tick: function() {
+            if (!this.get('inZone')) {
+                this.zoneModel = new zone.ZoneModel();
+                
+            }
+
+            if (this.get('running')) {
+                requestAnimFrame(this.tick.bind(this));
+            }
+        },
+    });
+
+
+
+
 
     var WindowModel = Backbone.Model.extend({
         initialize: function() {

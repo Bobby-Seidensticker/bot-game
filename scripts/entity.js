@@ -11,7 +11,7 @@ namespace.module('bot.entity', function (exports, require) {
 	    wisdom: 10,
 	    vitality: 10,
 	    level: 1,
-	    weapon: {'baseDamage': 1, 'attackSpeed':1}, //'fists' weapon auto equipped when unarmed.
+	    weapon: {'baseDamage': 1, 'attackSpeed': 1}, //'fists' weapon auto equipped when unarmed.
 	    affixes: ['strength more 1.5', 'strength more 2', 'strength added 10']
 	},
 

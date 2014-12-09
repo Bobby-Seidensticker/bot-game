@@ -24,15 +24,13 @@ namespace.module('bot.inv', function (exports, require) {
     var ArmorModel = GearModel.extend({
         defaults: function() {
             return {
-                speed: 0,
+                weight: 0,
                 type: 'ERR type',
-                damage: 0,
-                range: 0
             }
         },
 
         initialize: function() {
-            log.debug('Armor Model attributes at initialize: %s', JSON.stringify(this.attributes));
+            log.debug('Armor Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
             if (!('id' in this)) {
                 log.debug('loading armor %s from file', this.get('name'));
                 this.set(itemref.expand('armor', this.get('name')));
@@ -43,13 +41,15 @@ namespace.module('bot.inv', function (exports, require) {
     var WeaponModel = GearModel.extend({
         defaults: function() {
             return {
-                weight: 0,
+                speed: 0,
                 type: 'ERR type',
+                damage: 0,
+                range: 0
             }
         },
 
         initialize: function() {
-            log.debug('Weapon Model attributes at initialize: %s', JSON.stringify(this.attributes));
+            log.debug('Weapon Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
             if (!('id' in this)) {
                 log.debug('loading weapon %s from file', this.get('name'));
                 this.set(itemref.expand('weapon', this.get('name')));
@@ -67,7 +67,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         initialize: function() {
-            log.debug('Skill Model attributes at initialize: %s', JSON.stringify(this.attributes));
+            log.debug('Skill Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
             if (!('id' in this)) {
                 log.debug('loading skill %s from file', this.get('name'));
                 this.set(itemref.expand('skill', this.get('name')));
@@ -89,7 +89,6 @@ namespace.module('bot.inv', function (exports, require) {
             }
         }
     });
-
 
     var WeaponCollection = Backbone.Collection.extend({
         model: WeaponModel,

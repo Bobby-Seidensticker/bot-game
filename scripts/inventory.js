@@ -146,6 +146,10 @@ namespace.module('bot.inv', function (exports, require) {
 
         itemTemplate: _.template($('#inv-menu-item-template').html()),
 
+        events: {
+            'click .item': 'onItemClick'
+        },
+
         initialize: function() {
             console.log('here', this.model.armor.toJSON());
             this.render();
@@ -161,16 +165,11 @@ namespace.module('bot.inv', function (exports, require) {
             console.log(this.el);
             console.log(this.$el);
             this.$el.html(rendered);
-            /*
-            console.log('inv menu view render');
-            console.log(this.model);
-            this.model.armor.each(function(armorModel) {
-                log.info('armor name: %s', armorModel.get('name'));
-            });
-            this.model.weapons.each(function(weaponModel) {
-                log.info('weapon name: %s', weaponModel.get('name'));
-            });*/
             return this;
+        },
+
+        onItemClick: function(event) {
+            $(event.currentTarget).toggleClass('collapsed');
         },
     });
 

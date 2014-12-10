@@ -122,6 +122,7 @@ namespace.module('bot.entity', function (exports, require) {
 	        wholeSkill.speed = t.weapon.speed;
 		//TODO calculate damage affix bonuses
 		console.log(wholeSkill);
+		t.skillChain.push(wholeSkill);
 	    }
 	    
 

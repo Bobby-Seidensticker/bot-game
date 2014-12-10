@@ -72,7 +72,7 @@ namespace.module('bot.entity', function (exports, require) {
 		    t.affixes = t.affixes.concat(t.armor[i].affixes);
 		}
 	    }
-	    console.log(t.affixes);
+	    //console.log(t.affixes);
 
 	    //Add affix bonuses
 	    //Affix format is 'stat modtype amount'
@@ -121,13 +121,13 @@ namespace.module('bot.entity', function (exports, require) {
 		wholeSkill.range = t.weapon.range;
 	        wholeSkill.speed = t.weapon.speed;
 		//TODO calculate damage affix bonuses
-		console.log(wholeSkill);
+		//console.log(wholeSkill);
 		t.skillChain.push(wholeSkill);
 	    }
 	    
 
 
-	    console.log('entitymade with stats ', t);
+	    //console.log('entitymade with stats ', t);
             this.set({
 	        strength: t.strength,
 		dexterity: t.dexterity,
@@ -164,21 +164,31 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         takeDamage: function(damage) {
-            // apply armor deductions
-            // apply elemental deductions
+	    var physDmg = damage.physDmg;
+	    var armorReductionMult = physDmg / (physDmg + this.get('armor'));
+	    physDmg = physDmg * armorReductionMult;
 
+            // TODO: apply elemental damage and mitigation
+
+	    this.set('hp', this.get('hp') - physDmg);
             // modify own health
         },
 
-        attackTarget: function(target) {
+        attackTarget: function(target, skillIndex) {
+	    var skillToUse = this.skillchain[skillIndex];
             /*var dodged = this.rollDodge(this.get('accuracy'), target.get('dodge'));
             if (dodged) {
                 // clean up cooldowns for 'this'
                 return;
-            }
-
-            target.takeDamage(this.getDamage());*/
+	    }*/
+	    // TODO: use duration value on skillToUse to set nextAction value on entity
+            target.takeDamage(this.getDamage(skillIndex));
         },
+
+	getDamage: function(skillIndex) {
+	    var skillChain = this.get('skillChain');
+            return {"physDmg": skillChain[skillIndex].physDmg};
+	},    
     });
 
     var CharModel = EntityModel.extend({

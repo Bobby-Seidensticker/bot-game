@@ -126,35 +126,32 @@ namespace.module('bot.itemref', function (exports, require) {
             }
         },
         "affix": {
-            "basic stat": {
-                "exp": 0,
-                "level": 1,
-                "mod": [1, "flat"],
-                "type": "stat",
-            },
-
-            "str": {
-                "prototype": ["basic stat"],
-                "target": "str"
-            },
-            "dex": {
-                "prototype": ["basic stat"],
-                "target": "dex"
-            },
-            "int": {
-                "prototype": ["basic stat"],
-                "target": "int"
-            },
-            "vit": {
-                "prototype": ["basic stat"],
-                "target": "vit"
-            },
-
-            "basic dmg": {
-                "level": 1,
-                "mod": [1.1, "pct"],
-                "type": "dmg"
-            },
+            "list of all valid affixes": [
+	        "strength",
+		"dexterity",
+		"widsom",
+		"vitality",
+		"hp",
+		"mana",
+		"armor",
+		"dodge",
+		"eleResistAll",
+		"fireResist",
+		"coldResist",
+		"lightResist",
+		"poisResist",
+		"meleeDmg",
+		"rangeDmg",
+		"spellDmg",
+		"physDmg",
+		"fireDmg",
+		"coldDmg",
+		"lightDmg",
+		"poisDmg",
+		"attSpd",
+		"range",
+		"manaCost"
+	    ]
         },
 	"recipe": {
 	    "smelly cod piece" : {

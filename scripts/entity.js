@@ -15,8 +15,10 @@ namespace.module('bot.entity', function (exports, require) {
 	        wisdom: 10,
 	        vitality: 10,
 	        level: 1,
-	        weapon: {'baseDamage': 1, 'attackSpeed': 1}, //'fists' weapon auto equipped when unarmed.
+	        weapon: {'damage': 1, 'range':1, 'speed': 1, "affixes": ["strength more 1.1"]}, //'fists' weapon auto equipped when unarmed.
+		armor: [],
 	        affixes: ['strength more 1.5', 'strength more 2', 'strength added 10'],
+		skillChainDef: [{"name":"basic melee", "affixes": ['meleeDmg more 1.5']}],  
                 team: 1
 	    };
         },
@@ -60,8 +62,18 @@ namespace.module('bot.entity', function (exports, require) {
 	    t.wisdom = this.get('wisdom');
 	    t.vitality = this.get('vitality');
 	    t.level = this.get('level');
-	    t.affixes = this.get('affixes');
 	    
+	    t.weapon = this.get('weapon');
+	    t.armor = this.get('armor');
+	    t.skillChainDef = this.get('skillChainDef');
+	    t.affixes = t.weapon.affixes;
+	    for (var i = 0; i < t.armor.length; i++) {
+		if(t.armor[i].affixes) {
+		    t.affixes = t.affixes.concat(t.armor[i].affixes);
+		}
+	    }
+	    console.log(t.affixes);
+
 	    //Add affix bonuses
 	    //Affix format is 'stat modtype amount'
 	    var affixDict = {};
@@ -101,6 +113,19 @@ namespace.module('bot.entity', function (exports, require) {
 	    
             this.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
 
+	    t.skillChain = [];
+	    for(var i = 0; i < t.skillChainDef.length; i++) {
+		var tskill = t.skillChainDef[i];
+		var wholeSkill = namespace.bot.itemref.expand("skill", tskill.name);
+		wholeSkill.physDmg = t.weapon.damage;
+		wholeSkill.range = t.weapon.range;
+	        wholeSkill.speed = t.weapon.speed;
+		//TODO calculate damage affix bonuses
+		console.log(wholeSkill);
+	    }
+	    
+
+
 	    console.log('entitymade with stats ', t);
             this.set({
 	        strength: t.strength,
@@ -116,7 +141,8 @@ namespace.module('bot.entity', function (exports, require) {
 	       	fireResist: t.fireResist,
 	       	coldResist: t.coldResist,
 	       	lightResist: t.lightResist,
-	       	poisResist: t.poisResist 
+       		poisResist: t.poisResist,
+	       	skillChain: t.skillChain
             });
         },
 

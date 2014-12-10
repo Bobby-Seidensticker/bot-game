@@ -117,6 +117,9 @@ namespace.module('bot.main', function (exports, require) {
                 left: ss[0] - 400,
                 top: 0
             });
+            this.$('.menu-holder').css({
+                height: ss[1] - 10 - 60
+            });
         }
     });
 

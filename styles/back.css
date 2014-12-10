@@ -12,6 +12,7 @@ body {
     padding: 5px;
 
     background-color: #FEE;
+    overflow: hidden;
 }
 
 .vis {
@@ -19,6 +20,7 @@ body {
     padding: 5px;
 
     background-color: #EFE;
+    overflow: hidden;
 }
 
 .menu {
@@ -26,6 +28,7 @@ body {
     padding: 5px;
 
     background-color: #EEF;
+    overflow: hidden;
 }
 
 .tab-holder {
@@ -45,9 +48,14 @@ body {
     width: 74px;
 }
 
+.menu-holder {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 /* within menu holder */
 .sub-menu {
-    overflow: hidden;
+
 }
 
 .invcontent { padding: 10px; }

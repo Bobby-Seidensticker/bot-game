@@ -11,58 +11,60 @@ namespace.module('bot.zone', function (exports, require) {
         defaults: {
             rooms: [],
             charPos: 0,
-
             roomCount: 20,
-            monsters: ['skeletons'],
+            monsterChoices: ['skeletons'],
+
             monsterQuantity: 2,
             level: 1,
 	},
 
         initialize: function() {
-            var i, j, trooms, monsters, monCount, monName;
+            var i, j, rooms, monsters, count, names, choices, level;
             log.debug('ZoneModel initialize');
 
-            trooms = [];
+            rooms = [];
 
             for (i = 0; i < this.get('roomCount'); i++) {
-                monsters = [];
-                monCount = 1 + prob.pProb(this.get('monsterQuantity'));
+                monsters = new MonsterCollection;
+                count = 1 + prob.pProb(this.get('monsterQuantity'));
 
-                for (j = 0; j < monCount; j++) {
-                    monName = this.get('monsters')[prob.pyRand(0, this.get('monsters').length)]
-                    monsters[j] = entity.newMonster('monster', monName, this.get('level'));
+                choices = this.get('monsterChoices');
+                level = this.get('level');
+
+                names = _.map(_.range(count), function() {
+                    return choices[prob.pyRand(0, choices.length)];
+                });
+
+                for (j = 0; j < count; j++) {
+                    monsters.add(entity.newMonster(names[j], level));
                 }
 
-                trooms[i] = {
-                    entities: monsters
+                rooms[i] = {
+                    monsters: monsters
                 };
             }
-            this.set({rooms: trooms});
+            this.set({rooms: rooms});
 	},
 
-        // argument for using a backbone collection for each room:
-        //   nicer syntax, maybe faster, filtering of submodels
-        // in that world each room would be a Collection of entity models rather than an array, whatevs
+        getCurrentRoom: function() {
+            return this.get('rooms')[this.get('charPos')];
+        },
+
         roomCleared: function() {
-            var rooms, charPos, entities;
-
-            rooms = this.get('rooms');
-            charPos = this.get('charPos');
-
-            var liveMons = _.filter(rooms[charPos], function(entity) {
-                return entity.get('team') === 1 && entity.get('hp') > 0;
-            });
-
-            return liveMons === 0;
+            var room = this.getCurrentRoom()
+            return room.monsters.cleared();
         },
 
         nextRoom: function() {
-            var room;
-            if (!this.done()) {
-                return false;
+            if (this.roomCleared() && !this.done()) {
+                log.debug('Zone.nextRoom() success, pos: %d', this.get('charPos'));
+                this.set({
+                    'charPos': this.get('charPos') + 1
+                });
+                return true;
             }
-            room = this.get('rooms')[this.get('charPos')];
-            
+            log.debug('Zone.nextRoom() fail');
+            return false;
         },
 
         done: function() {
@@ -74,22 +76,24 @@ namespace.module('bot.zone', function (exports, require) {
         }
     });
 
-    var zoneA = {
-        roomCount: 20,
-        monsters: ['skeletons'],
-        monsterQuantity: 2,
-        level: 1,
+    var MonsterCollection = Backbone.Collection.extend({
+        model: entity.MonsterModel,
 
-        // not in use
-        tileset: 'forest',
-        difficultyProgression: 2,  // starts at lvl - dp and goes to lvl + dp
-        affixes: [],
+        cleared: function() {
+            return !(this.find(function(monster) { return monster.isAlive(); }));
+        }
+    });
+
+    function newZoneModel(char) {
+        return new ZoneModel({char: char});
     }
 
-    var currentZone = new ZoneModel(zoneA);
-
     exports.extend({
-        ZoneModel: ZoneModel,
+        newZoneModel: newZoneModel
     });
+
+    (function() {
+        var currentZone = new ZoneModel();
+    })();
 });
 

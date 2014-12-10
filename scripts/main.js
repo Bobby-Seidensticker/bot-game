@@ -53,8 +53,12 @@ namespace.module('bot.main', function (exports, require) {
 
         tick: function() {
             if (!this.get('inZone')) {
-                this.zoneModel = new zone.ZoneModel();
-                
+                this.zoneModel = newZoneModel(this.char);
+            }
+            if (this.zoneModel.done()) {
+                log.info('Completed zone!');
+                this.char.computeAttrs();
+                this.zoneModel = newZoneModel(this.char);
             }
 
             if (this.get('running')) {

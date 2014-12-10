@@ -153,6 +153,31 @@ namespace.module('bot.entity', function (exports, require) {
         isChar: function() {
             return this.get('team') === TEAM_CHAR;
         },
+
+        isAlive: function() {
+            var hp = this.get('hp'), maxHp = this.get('maxHp');
+            if (hp !== undefined && maxHp !== undefined && hp > 0) {
+                return true;
+            }
+            return false;
+        },
+
+        takeDamage: function(damage) {
+            // apply armor deductions
+            // apply elemental deductions
+
+            // modify own health
+        },
+
+        attackTarget: function(target) {
+            /*var dodged = this.rollDodge(this.get('accuracy'), target.get('dodge'));
+            if (dodged) {
+                // clean up cooldowns for 'this'
+                return;
+            }
+
+            target.takeDamage(this.getDamage());*/
+        },
     });
 
     var CharModel = EntityModel.extend({
@@ -194,6 +219,7 @@ namespace.module('bot.entity', function (exports, require) {
     exports.extend({
         newChar: newChar,
         newMonster: newMonster,
+        MonsterModel: MonsterModel,
     });
 
     // testing

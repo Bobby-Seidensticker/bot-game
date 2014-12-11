@@ -41,7 +41,7 @@ namespace.module('bot.entity', function (exports, require) {
 	    t.weapon = this.get('weapon');
 	    t.armor = this.get('armor');
             t.skillChain = this.get('skillChain');
-	    t.affixes = t.weapon.affixes;
+	    t.affixes = t.weapon.affixes; // TODO - make this open up the weapon's affixes from the weapon model, ex t.weapon.get('affixes')
 
 	    for (var i = 0; i < t.armor.length; i++) {
 		if (t.armor[i].affixes) {

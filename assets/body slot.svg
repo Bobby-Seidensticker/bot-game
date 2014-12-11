@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 512 512"
+   id="svg18229"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   width="100%"
+   height="100%"
+   sodipodi:docname="head slot.svg">
+  <metadata
+     id="metadata18257">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs18255" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1378"
+     id="namedview18253"
+     showgrid="false"
+     inkscape:zoom="1.3037281"
+     inkscape:cx="556.26582"
+     inkscape:cy="149.51922"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg18229" />
+  <path
+     d="m0,0h512v512h-512z"
+     id="path18231" />
+  <path
+     inkscape:connector-curvature="0"
+     id="path18237"
+     d="m 260.89276,150.64204 45.92157,353.38797 h -91.84502 z" />
+  <path
+     id="path18889"
+     d="m 254.00255,-226.95285 c -60.38731,7.80025 -107.53067,73.07433 -107.53067,151.851992 4e-4,43.631625 15.04366,82.5961651 38.21454,110.358045 C 59.101633,58.735467 49.604233,269.02812 49.608333,416.65769 h 87.092107 l 23.1054,308.12219 h 221.28261 l 20.43864,-308.12219 h 82.64623 c 0,-148.0416 2.98984,-362.030413 -134.19052,-383.166973 22.17267,-27.6354099 36.43532,-66.03697 36.43532,-108.591575 -0.002,-84.032222 -53.8432,-151.851992 -119.97318,-151.851992 -4.13513,0 -8.4134,-0.51811 -12.44239,0 z"
+     inkscape:connector-curvature="0"
+     style="fill:#808080;fill-rule:evenodd;stroke:#000000;stroke-width:40.84899521" />
+</svg>

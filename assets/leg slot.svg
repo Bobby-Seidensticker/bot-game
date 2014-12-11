@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 512 512"
+   id="svg18229"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   width="100%"
+   height="100%"
+   sodipodi:docname="trousers.svg">
+  <metadata
+     id="metadata18257">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs18255" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1378"
+     id="namedview18253"
+     showgrid="false"
+     inkscape:zoom="1.3037281"
+     inkscape:cx="527.16872"
+     inkscape:cy="260.41178"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg18229" />
+  <path
+     d="m0,0h512v512h-512z"
+     id="path18231" />
+  <path
+     style="fill:#808080"
+     inkscape:connector-curvature="0"
+     id="path18235"
+     d="m 258.37167,21.143263 c -44.55732,0.186886 -87.23456,7.400678 -118.55662,21.024653 L 93.093602,467.91806 220.99451,493.61486 H 305.6762 L 434.74327,467.33311 388.02182,42.167916 C 349.32338,27.859939 302.92711,20.973197 258.3698,21.143263 z" />
+  <path
+     inkscape:connector-curvature="0"
+     id="path18237"
+     d="m 260.89276,150.64204 45.92157,353.38797 h -91.84502 z" />
+</svg>

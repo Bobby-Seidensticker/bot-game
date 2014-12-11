@@ -163,14 +163,27 @@ namespace.module('bot.itemref', function (exports, require) {
 		"skillChain": ["basic melee"],
 		"weapon" : ["wooden sword"],
 		"armor": ["smelly cod piece"],
-		"affixes": ["physDmg added 5", "hp added 20"]
+		"affixes": ["physDmg added 5", "hp added 20", "fireResist added -20"]
 	    },
 	    "skelleton archer" : {
+                "prototype" : ["skelleton"],
 		"skillChain": ["basic range"],
-                "weapon" : ["shitty bow"],
                 "armor": ["smelly cod piece"],
-		"affixes": ["physDmg added 2", "hp added 10"]
+		"weapon": "shitty bow",
+		"affixes": ["physDmg added 2", "hp added 10", "fireResist added -20"]
 	    },
+	    "skelleton mage" : {
+                "prototype" : ["skelleton"],
+		"skillChain": ["basic spell"],
+                "armor": ["smelly cod piece"],
+		"weapon": "magic stick",
+                "affixes": ["spellDmg more 2", "fireResist added -20"]
+            },
+	    "skelleton king" : {
+                "prototype" : ["skelleton"],
+		"skillChain": ["fire slash", "basic melee"],
+                "affixes": ["physDmg added 10", "hp added 50", "fireResist added -20"]
+            },
         },
         "test": {
             "hngg": {"a": 10},

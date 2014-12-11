@@ -15,10 +15,10 @@ namespace.module('bot.entity', function (exports, require) {
 	        wisdom: 10,
 	        vitality: 10,
 	        level: 1,
-	        weapon: {'damage': 1, 'range':1, 'speed': 1, "affixes": ["strength more 1.1"]}, //'fists' weapon auto equipped when unarmed.
+	        weapon: {'damage': 1, 'range':1, 'speed': 1, 'affixes': ['strength more 1.1']}, //'fists' weapon auto equipped when unarmed.
 		armor: [],
 	        affixes: ['strength more 1.5', 'strength more 2', 'strength added 10'],
-		skillChainDef: [{"name":"basic melee", "affixes": ['meleeDmg more 1.5']}],  
+		skillChainDef: [{'name':'basic melee', 'affixes': ['meleeDmg more 1.5']}],  
                 team: 1
 	    };
         },
@@ -31,7 +31,7 @@ namespace.module('bot.entity', function (exports, require) {
 	applyAffixes: function(startVal, mods) {
 	    var moreAffs = [];
 	    var addedAffs = [];
-	    for(var i = 0; i < mods.length; i++) {
+	    for (var i = 0; i < mods.length; i++) {
 		var splits = mods[i].split(' ');
 		var modtype = splits[0];
                 var amount = parseFloat(splits[1]);
@@ -114,9 +114,9 @@ namespace.module('bot.entity', function (exports, require) {
             this.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
 
 	    t.skillChain = [];
-	    for(var i = 0; i < t.skillChainDef.length; i++) {
+	    for (var i = 0; i < t.skillChainDef.length; i++) {
 		var tskill = t.skillChainDef[i];
-		var wholeSkill = namespace.bot.itemref.expand("skill", tskill.name);
+		var wholeSkill = namespace.bot.itemref.expand('skill', tskill.name);
 		wholeSkill.physDmg = t.weapon.damage;
 		wholeSkill.range = t.weapon.range;
 	        wholeSkill.speed = t.weapon.speed;
@@ -156,11 +156,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         isAlive: function() {
-            var hp = this.get('hp'), maxHp = this.get('maxHp');
-            if (hp !== undefined && maxHp !== undefined && hp > 0) {
-                return true;
-            }
-            return false;
+            return this.get('hp') > 0;
         },
 
         takeDamage: function(damage) {
@@ -174,21 +170,65 @@ namespace.module('bot.entity', function (exports, require) {
             // modify own health
         },
 
-        attackTarget: function(target, skillIndex) {
-	    var skillToUse = this.skillchain[skillIndex];
+        attackTarget: function(target, skill) {
+	    //var skillToUse = this.skillchain[skillIndex];
             /*var dodged = this.rollDodge(this.get('accuracy'), target.get('dodge'));
             if (dodged) {
                 // clean up cooldowns for 'this'
                 return;
 	    }*/
 	    // TODO: use duration value on skillToUse to set nextAction value on entity
-            target.takeDamage(this.getDamage(skillIndex));
+            this.set({
+                mana: this.get('mana') - skill.get('manaCost')
+            });
+            target.takeDamage(this.getDamage(skill));
         },
 
-	getDamage: function(skillIndex) {
-	    var skillChain = this.get('skillChain');
-            return {"physDmg": skillChain[skillIndex].physDmg};
-	},    
+	getDamage: function(skill) {
+            skill.use();
+            //return {'physDmg': skillChain[skillIndex].physDmg};
+            return {'physDmg': skill.get('physDmg')};
+	},
+
+        ready: function() {
+            // STUB
+            // TODO: 
+            // check skill chain to see when next cooldown done
+            // check mana
+            // if have mana and cool skill, return true, else false
+            // check if in range
+            return true;
+        },
+
+        inRange: function(target) {
+            return true;
+        },
+
+        tryDoStuff: function(enemies) {
+            if (!this.ready()) {
+                return;
+            }
+
+            var skills = this.get('skillChain');
+
+            var skill = skills.find(function(skill) {
+                if (this.get('mana') >= skill.get('manaCost') && skill.cool()) {
+                    var enemy = _.find(enemies, function(enemy) { return this.inRange(enemy, skill); }, this);
+                }
+                return false;
+            }, this);
+
+            var target = enemies.find(function(enemy) { return this.inRange(enemy, skill); }, this);
+
+            this.attackTarget(target, skill);
+        },
+
+        update: function(dt) {
+            var skills = this.get('skills');
+            skills.each(function(skill) { skill.set('cooldown', skill.get('cooldown') - dt); });
+
+            this.set('nextAction', this.get('nextAction') - dt);
+        }
     });
 
     var CharModel = EntityModel.extend({

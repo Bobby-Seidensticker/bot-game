@@ -43,7 +43,10 @@ namespace.module('bot.zone', function (exports, require) {
                     monsters: monsters
                 };
             }
-            this.set({rooms: rooms});
+            this.set({
+                rooms: rooms,
+                curMonsters: rooms[this.get('charPos')]
+            });
 	},
 
         getCurrentRoom: function() {
@@ -78,6 +81,14 @@ namespace.module('bot.zone', function (exports, require) {
 
     var MonsterCollection = Backbone.Collection.extend({
         model: entity.MonsterModel,
+
+        update: function(t) {
+            _.each(function(monster) { monster.update(t) });
+        },
+
+        tryDoStuff: function() {
+            this.each(monster.tryDoStuff);
+        },
 
         cleared: function() {
             return !(this.find(function(monster) { return monster.isAlive(); }));

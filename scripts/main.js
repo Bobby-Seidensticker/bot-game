@@ -40,6 +40,8 @@ namespace.module('bot.main', function (exports, require) {
         initialize: function() {
             this.set({'shit': 'fuck'});
             this.char = new entity.newChar();
+            this.inv = new inv.InvModel();
+            this.lastTime = new Date().getTime();
         },
 
         start: function() {
@@ -53,12 +55,38 @@ namespace.module('bot.main', function (exports, require) {
 
         tick: function() {
             if (!this.get('inZone')) {
-                this.zoneModel = newZoneModel(this.char);
+                this.zone = zone.newZoneModel(this.char);
             }
-            if (this.zoneModel.done()) {
-                log.info('Completed zone!');
+            if (!this.char.hp || this.char.hp <= 0 || this.zone.done()) {
+                log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();
-                this.zoneModel = newZoneModel(this.char);
+                this.zone = zone.newZoneModel(this.char);
+            }
+
+            var thisTime = new Date().getTime();
+            var monsters = this.zone.getCurrentRoom().monsters;  // type MonsterCollection
+            for (var t = this.lastTime; t < thisTime; t++) {
+                // pass new time to char and all monsters
+                this.char.update(t);
+                monsters.update(t);
+
+                this.char.tryDoStuff(monsters.models);
+
+                // Check if cleared / done, if so get out
+                if (monsters.cleared()) {
+                    if (this.zone.done()) {
+                        break;
+                    }
+                    this.zone.nextRoom();
+                    monsters = this.zone.getCurrentRoom().monsters;
+                    continue;
+                }
+
+                monsters.tryDoStuff([this.char]);
+
+                if (!this.char.isAlive()) {
+                    break;
+                }
             }
 
             if (this.get('running')) {
@@ -66,8 +94,6 @@ namespace.module('bot.main', function (exports, require) {
             }
         },
     });
-
-
 
 
 

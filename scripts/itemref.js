@@ -4,9 +4,6 @@ namespace.module('bot.itemref', function (exports, require) {
     var ref = {
         "weapon": {
             "weapon": {
-                "exp": 0,
-                "affixes": [],
-                "level": 0,
                 "speed": 1,
                 "damage": 1,
                 "range": 1
@@ -49,8 +46,6 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "armor": {
             "armor": {
-                "exp": 0,
-                "level": 0,
                 "affixes": ["armor 1"],
                 "weight": 1
             },
@@ -70,10 +65,6 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "skill": {
             "basic": {
-                "exp": 0,
-                "level": 0,
-                "affixes": [],
-                "mana": 0
             },
             "basic melee": {
                 "prototype": ["basic"],
@@ -94,35 +85,35 @@ namespace.module('bot.itemref', function (exports, require) {
             "fireball": {
                 "prototype": ["basic spell"],
                 "affixes": ["fireDmg added 10"],
-                "mana": 5
+                "manaCost": 5
             },
             "poison ball": {
                 "prototype": ["basic spell"],
                 "types": ["proj", "DOT"],
                 "affixes": ["poisDmg added 5"],
-                "mana": 5
+                "manaCost": 5
             },
 
             "super smash": {
                 "prototype": ["basic melee"],
                 "affixes": ["PhysDmg more 1.4"],
-                "mana": 5
+                "manaCost": 5
             },
             "flame strike": {
                 "prototype": ["basic melee"],
                 "affixes": ["fireDmg more 1.25"],
-                "mana": 5
+                "manaCost": 5
             },
 
             "fire arrow": {
                 "prototype": ["basic range"],
                 "affixes": ["fireDmg more 1.3"],
-                "mana": 5
+                "manaCost": 5
             },
             "lightning arrow": {
                 "prototype": ["basic range"],
                 "affixes": ["lightDmg more 1.3"],
-                "mana": 5
+                "manaCost": 5
             }
         },
         "affix": {
@@ -242,52 +233,5 @@ namespace.module('bot.itemref', function (exports, require) {
         'ref': ref,
         'expand': expand
     });
-
-    /*
-    "weapon": {
-        "name": "buh",
-        "level": 0,
-        "type": ["melee", "range", "spell"],
-        "affixes": [],
-        "speed": 1,
-        "damage": 1,
-        "range": 1
-    },
-
-    "armor": {
-        "name": "buh",
-        "level": 0,
-        "type": ["head", "body", "legs", "feet", "hands"],
-        "affixes": [],
-        "al": 1, // armor level
-        "weight": 1 // v2?
-    },
-
-    "skill": {
-        "name": "buh",
-        "level": 0,
-        "class": ["melee", "range", "spell"],
-        "type": ["circle", "cone", "melee", "proj", "DOT"], // can have multiple ie: circle DOT
-        "affixes": [],
-        "mana": 1
-    },
-
-    "affix": {
-        "name": "herpderp",
-        "kinds": [
-        "strength up",
-        "int up",
-        "dexterity up",
-        "vitality up",
-        "hp up",
-        "mana up",
-        "armor/cold/fire/elec/poison resist up",
-        "added spell/melee/range/cold/fire/elec/poison damage",
-        "attack speed up"
-        ],
-        "modType": ["pct", "flat"],
-        "mod": 1,
-    }
-    */
 
 });

@@ -185,6 +185,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
 	getDamage: function(skill) {
+            skill.use();
             //return {'physDmg': skillChain[skillIndex].physDmg};
             return {'physDmg': skill.get('physDmg')};
 	},

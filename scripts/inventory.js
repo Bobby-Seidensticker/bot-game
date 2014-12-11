@@ -55,7 +55,9 @@ namespace.module('bot.inv', function (exports, require) {
 
     var SkillModel = GearModel.extend({
         defaults: _.extend({}, GearModel.prototype.defaults(), {
-            mana: 0,
+            manaCost: 0,
+            cooldown: 0,
+            cooldownTime: 800,
             types: [],
             type: 'skill' // remove this
         }),
@@ -67,7 +69,28 @@ namespace.module('bot.inv', function (exports, require) {
                 this.set(itemref.expand('skill', this.get('name')));
             }
         },
+
+        cool: function() {
+            return this.get('cooldown') <= 0;
+        },
+
+        use: function() {
+            this.set('cooldown', this.get('cooldownTime'));
+        }
     });
+
+    var SkillChain = Backbone.Collection.extend({
+        model: SkillModel
+    });
+
+    function newSkillChain() {
+        var sk;
+        sk = new SkillChain();
+
+
+        return sk;
+    }
+
 
     var ArmorCollection = Backbone.Collection.extend({
         model: ArmorModel,
@@ -101,6 +124,7 @@ namespace.module('bot.inv', function (exports, require) {
         }
     });
 
+    // this is all for inventory
     var SkillCollection = Backbone.Collection.extend({
         model: SkillModel,
 

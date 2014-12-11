@@ -80,13 +80,22 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var SkillChain = Backbone.Collection.extend({
-        model: SkillModel
+        model: SkillModel,
+
+        bestSkill: function(mana, distances) {
+            var range = this.get('range');
+            return this.find(function(skill) {
+                if (mana >= skill.get('manaCost') && skill.cool()) {
+                    return _.some(distances, function(dist) { return range >= dist; });
+                }
+                return false;
+            });
+        }
     });
 
     function newSkillChain() {
         var sk;
         sk = new SkillChain();
-
 
         return sk;
     }
@@ -189,6 +198,7 @@ namespace.module('bot.inv', function (exports, require) {
 
     exports.extend({
         InvModel: InvModel,
-        InvMenuView: InvMenuView
+        InvMenuView: InvMenuView,
+        SkillChain: SkillChain
     });
 });

@@ -6,6 +6,8 @@ namespace.module('bot.entity', function (exports, require) {
     var funcs = require('org.startpad.funcs').patch();
 
     var log = namespace.bot.log;
+    var vector = namespace.bot.vector;
+    var inv = namespace.bot.inv;
 
     var EntityModel = Backbone.Model.extend({
         defaults: function () { 
@@ -128,7 +130,10 @@ namespace.module('bot.entity', function (exports, require) {
 
 
 	    //console.log('entitymade with stats ', t);
-            this.set({
+            t.maxHp = t.hp;
+            t.maxMana = t.mana;
+            this.set(t);
+            /*this.set({
 	        strength: t.strength,
 		dexterity: t.dexterity,
 		wisdom: t.wisdom,
@@ -144,7 +149,7 @@ namespace.module('bot.entity', function (exports, require) {
 	       	lightResist: t.lightResist,
        		poisResist: t.poisResist,
 	       	skillChain: t.skillChain
-            });
+            });*/
         },
 
         isMonster: function() {
@@ -179,7 +184,8 @@ namespace.module('bot.entity', function (exports, require) {
 	    }*/
 	    // TODO: use duration value on skillToUse to set nextAction value on entity
             this.set({
-                mana: this.get('mana') - skill.get('manaCost')
+                mana: this.get('mana') - skill.get('manaCost'),
+                
             });
             target.takeDamage(this.getDamage(skill));
         },
@@ -204,6 +210,11 @@ namespace.module('bot.entity', function (exports, require) {
             return true;
         },
 
+        getCoords: function() {
+            //return [this.get('x'), this.get('y')];
+            return [0, 0];
+        },
+
         tryDoStuff: function(enemies) {
             if (!this.ready()) {
                 return;
@@ -211,14 +222,15 @@ namespace.module('bot.entity', function (exports, require) {
 
             var skills = this.get('skillChain');
 
-            var skill = skills.find(function(skill) {
-                if (this.get('mana') >= skill.get('manaCost') && skill.cool()) {
-                    var enemy = _.find(enemies, function(enemy) { return this.inRange(enemy, skill); }, this);
-                }
-                return false;
-            }, this);
+            var distances = vector.getDistances(
+                this.getCoords(),
+                _.map(enemies, function(e) { return e.getCoords(); })
+            );
 
-            var target = enemies.find(function(enemy) { return this.inRange(enemy, skill); }, this);
+            var skill = this.get('skillChain').bestSkill(this.get('mana'), distances);
+
+            var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.get('range') >= distances[i]; });
+            var target = enemies[targetIndex];
 
             this.attackTarget(target, skill);
         },
@@ -264,8 +276,29 @@ namespace.module('bot.entity', function (exports, require) {
     }
 
     function newChar() {
-        return new CharModel();
+        var char = new CharModel();
+        char.set('skillChain', new CharSkillChain());
+        return char;
     }
+
+    var CharSkillChain = inv.SkillChain.extend({
+        localStorage: new Backbone.LocalStorage('char-skillchain'),
+
+        initialize: function() {
+            this.fetch();
+            log.info('Initialize character skill chain, after fetch has %d elements', this.length);
+            if (this.length === 0) {
+                this.loadDefaults();
+                this.save();
+                log.info('Had no skills so added some defaults, now has %d elements', this.length);
+            }
+        },
+
+        loadDefaults: function() {
+            // this needs access to inv model
+            this.add(invModel.skills.findWhere({'name': 'basic melee'}));
+        }
+    });
 
     exports.extend({
         newChar: newChar,

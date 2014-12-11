@@ -183,18 +183,62 @@ namespace.module('bot.itemref', function (exports, require) {
 	    ]
         },
 	"recipe": {
-	    "smelly cod piece" : {
-		"type": "armor",
-		"cost": "4 poops"
-	    },
-	    "balsa helmet" : {
-		"type": "armor",
-		"cost": "9 poops"
-	    },
-	    "lightning arrow": {
-		"type": "skill",
+            "smelly cod piece" : {
+                "type": "armor",
+                "cost": "4 poops"
+            },
+            "balsa helmet" : {
+                "type": "armor",
+                "cost": "9 poops"
+            },
+            "fire slice": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice slice": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning slice": {
+                "type": "skill",
 		"cost": "10 sparks"
-	    }
+            },
+            "poison slice": {
+                "type": "skill",
+                "cost": "10 tumors"
+            },
+            "fire arrow": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice arrow": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning arrow": {
+                "type": "skill",
+                "cost": "10 sparks"
+            },
+            "poison arrow": {
+                "type": "skill",
+                "cost": "10 tumors"
+            },
+            "fire ball": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice ball": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning ball": {
+                "type": "skill",
+                "cost": "10 sparks"
+            },
+            "poison ball": {
+                "type": "skill",
+                "cost": "10 tumors"
+            },
 	},
 	"monster": {
 	    "skelleton" : {

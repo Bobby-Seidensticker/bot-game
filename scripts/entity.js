@@ -289,7 +289,7 @@ namespace.module('bot.entity', function (exports, require) {
             log.info('Initialize character skill chain, after fetch has %d elements', this.length);
             if (this.length === 0) {
                 this.loadDefaults();
-                this.sync();
+                //this.sync();
                 log.info('Had no skills so added some defaults, now has %d elements', this.length);
             }
         },

@@ -8,6 +8,7 @@ namespace.module('bot.entity', function (exports, require) {
     var log = namespace.bot.log;
     var vector = namespace.bot.vector;
     var inv = namespace.bot.inv;
+    var utils = namespace.bot.utils;
 
     var EntityModel = Backbone.Model.extend({
         defaults: function () { 
@@ -20,7 +21,6 @@ namespace.module('bot.entity', function (exports, require) {
 	        weapon: {'damage': 1, 'range':1, 'speed': 1, 'affixes': ['strength more 1.1']}, //'fists' weapon auto equipped when unarmed.
 		armor: [],
 	        affixes: ['strength more 1.5', 'strength more 2', 'strength added 10'],
-		skillChainDef: [{'name':'basic melee', 'affixes': ['meleeDmg more 1.5']}],  
                 team: 1
 	    };
         },
@@ -29,33 +29,6 @@ namespace.module('bot.entity', function (exports, require) {
             log.debug('EntityModel initialize');
 	    this.computeAttrs();
 	},
-
-	applyAffixes: function(startVal, mods) {
-	    var moreAffs = [];
-	    var addedAffs = [];
-	    for (var i = 0; i < mods.length; i++) {
-		var splits = mods[i].split(' ');
-		var modtype = splits[0];
-                var amount = parseFloat(splits[1]);
-		if (modtype == 'added') {
-		    addedAffs.push(amount);
-		} else if (modtype == 'more') {
-		    moreAffs.push(amount);
-		}
-	    }
-	    var flat = addedAffs.reduce(function(a,b) {return a+b;}, startVal);
-	    var mult = moreAffs.reduce(function(a,b) {return a*b;}, flat);
-	    return mult;
-	},
-
-        applyAllAffixes: function(t, stats, affixDict) {
-	    for (i = 0; i < stats.length; i++) {
-		var stat = stats[i];
-		if(affixDict[stat]) {
-		    t[stat] = this.applyAffixes(t[stat], affixDict[stat]);
-		}
-	    }
-        },
 
         computeAttrs: function() {
             var t = {}; //temp values
@@ -67,10 +40,11 @@ namespace.module('bot.entity', function (exports, require) {
 	    
 	    t.weapon = this.get('weapon');
 	    t.armor = this.get('armor');
-	    t.skillChainDef = this.get('skillChainDef');
-	    t.affixes = t.weapon.affixes;
+            t.skillChain = this.get('skillChain');
+	    t.affixes = t.weapon.get('affixes');
+
 	    for (var i = 0; i < t.armor.length; i++) {
-		if(t.armor[i].affixes) {
+		if (t.armor[i].affixes) {
 		    t.affixes = t.affixes.concat(t.armor[i].affixes);
 		}
 	    }
@@ -79,12 +53,10 @@ namespace.module('bot.entity', function (exports, require) {
 	    //Add affix bonuses
 	    //Affix format is 'stat modtype amount'
 	    var affixDict = {};
-            if (t.affixes === undefined) {
-                log.debug('right here');
-            }
 	    for (var i = 0; i < t.affixes.length; i++) {
-		var stat = t.affixes[i].split(' ')[0];
-		var mod = t.affixes[i].split(' ').slice(1).join(' ');
+                var affix = t.affixes[i].split(' ');
+		var stat = affix[0];
+		var mod = affix.slice(1).join(' ');
 		if (affixDict[stat]) {
 		    affixDict[stat].push(mod);
 		} else {
@@ -92,7 +64,7 @@ namespace.module('bot.entity', function (exports, require) {
 		}
 	    }
 
-            this.applyAllAffixes(t, ['strength', 'dexterity', 'wisdom', 'vitality'], affixDict);
+            utils.applyAllAffixes(t, ['strength', 'dexterity', 'wisdom', 'vitality'], affixDict);
 
 	    // Todo? should we pull these constants out and give them easily manipulable names 
 	    // so we can balance away from crucial code? 
@@ -106,16 +78,17 @@ namespace.module('bot.entity', function (exports, require) {
 	    t.dodge = t.dexterity * 0.5;
 	    t.eleResistAll = 1 - Math.pow(0.997, t.wisdom); //temp var only
 
-            this.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
+            utils.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
 
 	    t.fireResist = t.eleResistAll;
 	    t.coldResist = t.eleResistAll;
 	    t.lightResist = t.eleResistAll;
 	    t.poisResist = t.eleResistAll;
 	    
-            this.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
+            utils.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
 
-	    t.skillChain = [];
+            t.skillChain.computeAttrs(t.weapon, affixDict);
+	    /*t.skillChain = [];
 	    for (var i = 0; i < t.skillChainDef.length; i++) {
 		var tskill = t.skillChainDef[i];
 		var wholeSkill = namespace.bot.itemref.expand('skill', tskill.name);
@@ -125,31 +98,13 @@ namespace.module('bot.entity', function (exports, require) {
 		//TODO calculate damage affix bonuses
 		//console.log(wholeSkill);
 		t.skillChain.push(wholeSkill);
-	    }
-	    
-
+	    }*/
 
 	    //console.log('entitymade with stats ', t);
             t.maxHp = t.hp;
             t.maxMana = t.mana;
+            delete t.eleResistAll;
             this.set(t);
-            /*this.set({
-	        strength: t.strength,
-		dexterity: t.dexterity,
-		wisdom: t.wisdom,
-		vitality: t.vitality,
-                hp: t.hp,
-                maxHp: t.hp,
-                mana: t.mana,
-		maxMana: t.mana,
-	      	armor: t.armor,
-	       	dodge: t.dodge,
-	       	fireResist: t.fireResist,
-	       	coldResist: t.coldResist,
-	       	lightResist: t.lightResist,
-       		poisResist: t.poisResist,
-	       	skillChain: t.skillChain
-            });*/
         },
 
         isMonster: function() {

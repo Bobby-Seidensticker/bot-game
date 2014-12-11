@@ -77,7 +77,6 @@ namespace.module('bot.inv', function (exports, require) {
         use: function() {
             this.set('cooldown', this.get('cooldownTime'));
         },
-	
 	computeAttrs: function(weapon, affixDict) {
 	    var damage = weapon.damage;
 	    var range = weapon.range;
@@ -97,7 +96,11 @@ namespace.module('bot.inv', function (exports, require) {
                 }
                 return false;
             });
-        }
+        },
+
+        computeAttrs: function(weapon, affixDict) {
+            this.invoke('computeAttr', weapon, affixDict);
+        },
     });
 
     function newSkillChain() {

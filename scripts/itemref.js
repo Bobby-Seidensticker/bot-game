@@ -167,6 +167,20 @@ namespace.module('bot.itemref', function (exports, require) {
 		"cost": "10 sparks"
 	    }
 	},
+	"monster": {
+	    "skelleton" : {
+		"skillChain": ["basic melee"],
+		"weapon" : ["wooden sword"],
+		"armor": ["smelly cod piece"],
+		"affixes": ["physDmg added 5", "hp added 20"]
+	    },
+	    "skelleton archer" : {
+		"skillChain": ["basic range"],
+                "weapon" : ["shitty bow"],
+                "armor": ["smelly cod piece"],
+		"affixes": ["physDmg added 2", "hp added 10"]
+	    },
+        },
         "test": {
             "hngg": {"a": 10},
             "fwah": {"b": 10},

@@ -13,13 +13,18 @@ namespace.module('bot.itemref', function (exports, require) {
                 "type": "melee",
                 "damage": 2,
             },
+            "bowie knife": {
+                "prototype": ["weapon"],
+                "type": "melee",
+                "damage": 3,
+            },
             "shitty bow": {
                 "prototype": ["weapon"],
                 "type": "range",
                 "damage": 2,
                 "range": 4
             },
-            "magic stick": {
+            "crappy wand": {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "range": 6
@@ -37,7 +42,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "damage": 4,
                 "range": 5
             },
-            "crap wand": {
+            "decent wand": {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "damage": 3,
@@ -81,40 +86,73 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "spell",
                 "types": ["proj"],
             },
-
-            "fireball": {
+            "super smash": {
+                "prototype": ["basic melee"],
+                "affixes": ["physDmg more 1.4"],
+                "manaCost": 5
+            },	    
+            "fire slash": {
+                "prototype": ["basic melee"],
+                "affixes": ["fireDmg added 10"],
+                "manaCost": 3
+            },
+            "ice slash": {
+                "prototype": ["basic melee"],
+                "affixes": ["coldDmg added 11"],
+                "manaCost": 5
+            },
+            "lightning slash": {
+                "prototype": ["basic melee"],
+                "affixes": ["lightDmg added 12"],
+                "manaCost": 6
+            },
+            "poison slash": {
+                "prototype": ["basic melee"],
+                "affixes": ["poisDmg added 13"],
+                "manaCost": 7
+            },
+            "fire arrow": {
+                "prototype": ["basic range"],
+                "affixes": ["fireDmg added 8"],
+                "manaCost": 3
+            },
+	    "ice arrow": {
+		"prototype": ["basic range"],
+                "affixes": ["coldDmg added 9"],
+                "manaCost": 4
+            },
+            "lightning arrow": {
+                "prototype": ["basic range"],
+                "affixes": ["lightDmg added 10"],
+                "manaCost": 5
+            },
+            "poison arrow": {
+		"prototype": ["basic range"],
+                "affixes": ["poisDmg added 11"],
+                "manaCost": 5
+            },
+            "fire ball": {
                 "prototype": ["basic spell"],
                 "affixes": ["fireDmg added 10"],
+                "manaCost": 5
+            },
+	    "ice ball": {
+                "prototype": ["basic spell"],
+                "affixes": ["coldDmg added 10"],
+                "manaCost": 5
+            },
+            "lightning ball": {
+                "prototype": ["basic spell"],
+                "affixes": ["lightDmg added 10"],
                 "manaCost": 5
             },
             "poison ball": {
                 "prototype": ["basic spell"],
                 "types": ["proj", "DOT"],
-                "affixes": ["poisDmg added 5"],
+                "affixes": ["poisDmg added 15"],
                 "manaCost": 5
             },
 
-            "super smash": {
-                "prototype": ["basic melee"],
-                "affixes": ["PhysDmg more 1.4"],
-                "manaCost": 5
-            },
-            "flame strike": {
-                "prototype": ["basic melee"],
-                "affixes": ["fireDmg more 1.25"],
-                "manaCost": 5
-            },
-
-            "fire arrow": {
-                "prototype": ["basic range"],
-                "affixes": ["fireDmg more 1.3"],
-                "manaCost": 5
-            },
-            "lightning arrow": {
-                "prototype": ["basic range"],
-                "affixes": ["lightDmg more 1.3"],
-                "manaCost": 5
-            }
         },
         "affix": {
             "list of all valid affixes": [
@@ -145,19 +183,90 @@ namespace.module('bot.itemref', function (exports, require) {
 	    ]
         },
 	"recipe": {
-	    "smelly cod piece" : {
-		"type": "armor",
-		"cost": "4 poops"
-	    },
-	    "balsa helmet" : {
-		"type": "armor",
-		"cost": "9 poops"
-	    },
-	    "lightning arrow": {
-		"type": "skill",
+            "smelly cod piece" : {
+                "type": "armor",
+                "cost": "4 poops"
+            },
+            "balsa helmet" : {
+                "type": "armor",
+                "cost": "9 poops"
+            },
+            "fire slice": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice slice": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning slice": {
+                "type": "skill",
 		"cost": "10 sparks"
-	    }
+            },
+            "poison slice": {
+                "type": "skill",
+                "cost": "10 tumors"
+            },
+            "fire arrow": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice arrow": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning arrow": {
+                "type": "skill",
+                "cost": "10 sparks"
+            },
+            "poison arrow": {
+                "type": "skill",
+                "cost": "10 tumors"
+            },
+            "fire ball": {
+                "type": "skill",
+                "cost": "10 embers"
+            },
+            "ice ball": {
+                "type": "skill",
+                "cost": "10 ice cubes"
+            },
+            "lightning ball": {
+                "type": "skill",
+                "cost": "10 sparks"
+            },
+            "poison ball": {
+                "type": "skill",
+                "cost": "10 tumors"
+            },
 	},
+	"monster": {
+	    "skelleton" : {
+		"skillChain": ["basic melee"],
+		"weapon" : ["wooden sword"],
+		"armor": ["smelly cod piece"],
+		"affixes": ["physDmg added 5", "hp added 20", "fireResist added -20"]
+	    },
+	    "skelleton archer" : {
+                "prototype" : ["skelleton"],
+		"skillChain": ["basic range"],
+                "armor": ["smelly cod piece"],
+		"weapon": "shitty bow",
+		"affixes": ["physDmg added 2", "hp added 10", "fireResist added -20"]
+	    },
+	    "skelleton mage" : {
+                "prototype" : ["skelleton"],
+		"skillChain": ["basic spell"],
+                "armor": ["smelly cod piece"],
+		"weapon": "magic stick",
+                "affixes": ["spellDmg more 2", "fireResist added -20"]
+            },
+	    "skelleton king" : {
+                "prototype" : ["skelleton"],
+		"skillChain": ["fire slash", "basic melee"],
+                "affixes": ["physDmg added 10", "hp added 50", "fireResist added -20"]
+            },
+        },
         "test": {
             "hngg": {"a": 10},
             "fwah": {"b": 10},

@@ -84,12 +84,10 @@ namespace.module('bot.zone', function (exports, require) {
 
         update: function(t) {
             _.each(function(monster) { monster.update(t) });
-        }
+        },
 
         tryDoStuff: function() {
-            this.each(function(monster) {
-                monster.tryDoStuff();
-            });
+            this.each(monster.tryDoStuff);
         },
 
         cleared: function() {

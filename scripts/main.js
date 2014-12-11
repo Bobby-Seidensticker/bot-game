@@ -70,7 +70,7 @@ namespace.module('bot.main', function (exports, require) {
                 this.char.update(t);
                 monsters.update(t);
 
-                this.char.tryDoStuff(monsters);
+                this.char.tryDoStuff(monsters.models);
 
                 // Check if cleared / done, if so get out
                 if (monsters.cleared()) {
@@ -82,7 +82,7 @@ namespace.module('bot.main', function (exports, require) {
                     continue;
                 }
 
-                monsters.tryDoStuff(this.char);
+                monsters.tryDoStuff([this.char]);
 
                 if (!this.char.isAlive()) {
                     break;

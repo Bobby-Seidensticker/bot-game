@@ -26,7 +26,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         initialize: function() {
-            log.debug('EntityModel initialize');
+	    log.debug('EntityModel initialize');
 	    this.computeAttrs();
 	},
 
@@ -41,7 +41,7 @@ namespace.module('bot.entity', function (exports, require) {
 	    t.weapon = this.get('weapon');
 	    t.armor = this.get('armor');
             t.skillChain = this.get('skillChain');
-	    t.affixes = t.weapon.get('affixes');
+	    t.affixes = t.weapon.affixes;
 
 	    for (var i = 0; i < t.armor.length; i++) {
 		if (t.armor[i].affixes) {
@@ -87,6 +87,7 @@ namespace.module('bot.entity', function (exports, require) {
 	    
             utils.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
 
+	    console.log(t);
             t.skillChain.computeAttrs(t.weapon, affixDict);
 	    /*t.skillChain = [];
 	    for (var i = 0; i < t.skillChainDef.length; i++) {
@@ -227,16 +228,16 @@ namespace.module('bot.entity', function (exports, require) {
 
     function newMonster(name, level) {
         //return new MonsterModel({name: name, level: level});
-        return new MonsterModel();
+        return new MonsterModel({ "skillChain": new inv.SkillChain() });
     }
 
     function newChar() {
-        var char = new CharModel();
-        char.set('skillChain', new CharSkillChain());
+        var char = new CharModel( { "skillChain": new inv.SkillChain() } );
+        //char.set('skillChain', new CharSkillChain());
         return char;
     }
 
-    var CharSkillChain = inv.SkillChain.extend({
+    /*var CharSkillChain = inv.SkillChain.extend({
         localStorage: new Backbone.LocalStorage('char-skillchain'),
 
         initialize: function() {
@@ -253,7 +254,7 @@ namespace.module('bot.entity', function (exports, require) {
             // this needs access to inv model
             //this.add(invModel.skills.findWhere({'name': 'basic melee'}));
         }
-    });
+    });*/
 
     exports.extend({
         newChar: newChar,
@@ -262,10 +263,10 @@ namespace.module('bot.entity', function (exports, require) {
     });
 
     // testing
-    (function() {
+    /*(function() {
         var x;
         x = new EntityModel({ strength: 10, wisdom: 20 });
         x = newMonster('hurr', 10);
         x = newChar();
-    })();
+    })();*/
 });

@@ -3,7 +3,7 @@ namespace.module('bot.inv', function (exports, require) {
     var funcs = require('org.startpad.funcs').patch();
 
     var log = namespace.bot.log;
-
+    var utils = namespace.bot.utils;
     var itemref = namespace.bot.itemref;
 
     var GearModel = Backbone.Model.extend({

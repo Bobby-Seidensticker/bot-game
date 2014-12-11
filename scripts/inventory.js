@@ -77,11 +77,23 @@ namespace.module('bot.inv', function (exports, require) {
         use: function() {
             this.set('cooldown', this.get('cooldownTime'));
         },
+
 	computeAttrs: function(weapon, affixDict) {
-	    var damage = weapon.damage;
-	    var range = weapon.range;
-	    var speed = weapon.speed;
-	    
+	    log.info('Skill compute attrs');
+	    var t = {
+		"physDmg": weapon.damage,
+		"range": weapon.range,
+		"speed": weapon.speed,
+		"fireDmg": 0,
+		"coldDmg": 0,
+		"lightDmg": 0,
+		"poisDmg": 0,
+		"manaCost": this.get('manaCost')
+	    };
+
+	    utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], affixDict);
+	    console.log("skill computeAttrs", t, this);
+	    this.set(t);
 	},
     });
 
@@ -99,14 +111,15 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         computeAttrs: function(weapon, affixDict) {
-            this.invoke('computeAttr', weapon, affixDict);
+	    log.info('skill chain compute attrs len: %d', this.length);
+	    this.invoke('computeAttrs', weapon, affixDict);
         },
     });
 
     function newSkillChain() {
         var sk;
         sk = new SkillChain();
-
+	sk.add({"name": "basic melee"});
         return sk;
     }
 
@@ -209,6 +222,7 @@ namespace.module('bot.inv', function (exports, require) {
     exports.extend({
         InvModel: InvModel,
         InvMenuView: InvMenuView,
-        SkillChain: SkillChain
+	SkillChain: SkillChain,
+	newSkillChain: newSkillChain	
     });
 });

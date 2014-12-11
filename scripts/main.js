@@ -38,8 +38,10 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         initialize: function() {
-            this.char = new entity.newChar();
             this.inv = new inv.InvModel();
+
+            this.char = new entity.newChar();
+
             this.lastTime = new Date().getTime();
         },
 

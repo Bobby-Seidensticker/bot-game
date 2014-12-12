@@ -106,7 +106,7 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         resize: function() {
-            console.log('resize, this: ', this);
+		//console.log('resize, this: ', this);
             this.set({ss: [window.innerWidth, window.innerHeight]});
         }
     });

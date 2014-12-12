@@ -12,7 +12,7 @@ namespace.module('bot.zone', function (exports, require) {
             rooms: [],
             charPos: 0,
             roomCount: 20,
-            monsterChoices: ['skeletons'],
+            monsterChoices: ['skeleton'],
 
             monsterQuantity: 2,
             level: 1,
@@ -25,19 +25,16 @@ namespace.module('bot.zone', function (exports, require) {
             rooms = [];
 
             for (i = 0; i < this.get('roomCount'); i++) {
-                monsters = new MonsterCollection;
                 count = 1 + prob.pProb(this.get('monsterQuantity'));
-
                 choices = this.get('monsterChoices');
                 level = this.get('level');
 
-                names = _.map(_.range(count), function() {
-                    return choices[prob.pyRand(0, choices.length)];
-                });
-
-                for (j = 0; j < count; j++) {
-                    monsters.add(entity.newMonster(names[j], level));
-                }
+                monsters = new MonsterCollection(_.map(_.range(count), function() {
+                    return {
+                        name: choices[prob.pyRand(0, choices.length)],
+                        level: level
+                    };
+                }));
 
                 rooms[i] = {
                     monsters: monsters

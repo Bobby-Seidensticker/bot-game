@@ -142,7 +142,8 @@ namespace.module('bot.inv', function (exports, require) {
             var canEquipItem = true;
 
             if (!canEquipItem) {
-                log.warning('You cannot equip this item');
+                log.warning('You cannot equip this item name: %s type: %s', item.get('name'), item.itemType);
+                throw('shit');
             }
 
             if (item.itemType === 'weapon') {
@@ -150,17 +151,20 @@ namespace.module('bot.inv', function (exports, require) {
                     this.unequip(this.get(slot));
                     this.set(slot, item);
                 } else {
-                    log.info('ya done fucked up equipping a weapon');
+                    log.info('ya done fucked up equipping a weapon name: %s type: %s', item.get('name'), item.itemType);
+                    throw('shit');
                 }
             } else if (item.itemType === 'armor') {
-                if (item.get('type') !== slot) {
+                if (item.get('type') === slot) {
                     this.unequip(this.get(slot));
                     this.set(slot, item);
                 } else {
-                    log.info('ya done fucked up equipped armor');
+                    log.info('ya done fucked up equipped armor name: %s type: %s', item.get('name'), item.itemType);
+                    throw('shit');
                 }
             } else {
-                log.info('ya done fucked up equipped sumpin\' ya don\'t equip');
+                log.info('ya done fucked up equipped sumpin\' ya don\'t equip name: %s type: %s', item.get('name'), item.itemType);
+                throw('shit');
             }
         },
 

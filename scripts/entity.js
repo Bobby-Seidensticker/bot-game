@@ -9,6 +9,7 @@ namespace.module('bot.entity', function (exports, require) {
     var vector = namespace.bot.vector;
     var inventory = namespace.bot.inv;
     var utils = namespace.bot.utils;
+    var itemref = namespace.bot.itemref;
 
     var EntityModel = Backbone.Model.extend({
         defaults: function () { 
@@ -215,19 +216,17 @@ namespace.module('bot.entity', function (exports, require) {
             //fetchMonsterConstants(name, level);
             // lookup given name and level
             log.debug('MonsterModel initialize');
+
+            this.set(itemref.expand('monster', this.get('name')));
+
+            this.set({
+                skillChain: inventory.newSkillChain(),
+                equipped: new inventory.EquippedGearModel()
+            });
+
             this.computeAttrs();
         }
     });
-
-    function newMonster(name, level) {
-        //return new MonsterModel({name: name, level: level});
-        var equipped = new inventory.EquippedGearModel();
-
-        return new MonsterModel({
-            skillChain: inventory.newSkillChain(),
-            equipped: equipped
-        });
-    }
 
     function newChar(inv) {
         // stopgap measures: basic equipped stuff
@@ -266,7 +265,6 @@ namespace.module('bot.entity', function (exports, require) {
 
     exports.extend({
         newChar: newChar,
-        newMonster: newMonster,
         MonsterModel: MonsterModel,
     });
 

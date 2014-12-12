@@ -21,8 +21,8 @@ namespace.module('bot.main', function (exports, require) {
         var invMenuView = new inv.InvMenuView({model: invModel});
         //var craftMenuView = new inv.CraftMenuView({model: invModel});
         //var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
-        var char = new entity.newChar();
-	
+
+	window.invModel = invModel;
         window.invMenuView = invMenuView;
         window.game = gameView;
 

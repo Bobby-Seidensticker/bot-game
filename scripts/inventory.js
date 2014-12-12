@@ -22,6 +22,8 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var ArmorModel = GearModel.extend({
+        itemType: 'armor',
+
         defaults: _.extend({}, GearModel.prototype.defaults(), {
             weight: 0,
             type: 'ERR type',
@@ -37,6 +39,8 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var WeaponModel = GearModel.extend({
+        itemType: 'weapon',
+
         defaults: _.extend({}, GearModel.prototype.defaults(), {
             speed: 0,
             type: 'ERR type',
@@ -54,6 +58,8 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var SkillModel = GearModel.extend({
+        itemType: 'skill',
+
         defaults: _.extend({}, GearModel.prototype.defaults(), {
             manaCost: 0,
             cooldown: 0,
@@ -78,25 +84,25 @@ namespace.module('bot.inv', function (exports, require) {
             this.set('cooldown', this.get('cooldownTime'));
         },
 
-	computeAttrs: function(weapon, affixDict) {
-	    //log.info('Skill compute attrs');
-	    var t = {
-		"physDmg": weapon.damage,
-		"range": weapon.range,
-		"speed": weapon.speed,
-		"fireDmg": 0,
-		"coldDmg": 0,
-		"lightDmg": 0,
-		"poisDmg": 0,
-		"manaCost": this.get('manaCost')
-	    };
+        computeAttrs: function(weapon, affixDict) {
+            //log.info('Skill compute attrs');
+            var t = {
+                "physDmg": weapon.damage,
+                "range": weapon.range,
+                "speed": weapon.speed,
+                "fireDmg": 0,
+                "coldDmg": 0,
+                "lightDmg": 0,
+                "poisDmg": 0,
+                "manaCost": this.get('manaCost')
+            };
 
-	    utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], affixDict);
-	    var skillAffDict = utils.affixesToAffDict(this.get('affixes'));
-	    utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], skillAffDict);
-	    //console.log("skill computeAttrs", t, this, affixDict);
-	    this.set(t);
-	},
+            utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], affixDict);
+            var skillAffDict = utils.affixesToAffDict(this.get('affixes'));
+            utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], skillAffDict);
+            //console.log("skill computeAttrs", t, this, affixDict);
+            this.set(t);
+        },
     });
 
     var SkillChain = Backbone.Collection.extend({
@@ -113,18 +119,78 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         computeAttrs: function(weapon, affixDict) {
-	    log.info('skill chain compute attrs len: %d', this.length);
-	    this.invoke('computeAttrs', weapon, affixDict);
+            log.info('skill chain compute attrs len: %d', this.length);
+            this.invoke('computeAttrs', weapon, affixDict);
         },
     });
 
     function newSkillChain() {
         var sk;
         sk = new SkillChain();
-	sk.add({"name": "basic melee"});
+        sk.add({"name": "basic melee"});
         return sk;
     }
 
+    var EquippedGearModel = Backbone.Model.extend({
+
+        // weapon slots: mainHand, offHand
+        // armor slots: head, chest, hands, legs
+        initialize: function() {
+        },
+
+        equip: function(item, slot) {
+            var canEquipItem = true;
+
+            if (!canEquipItem) {
+                log.warning('You cannot equip this item');
+            }
+
+            if (item.itemType === 'weapon') {
+                if (slot === 'mainHand' || slot === 'offHand') {
+                    this.unequip(this.get(slot));
+                    this.set(slot, item);
+                } else {
+                    log.info('ya done fucked up equipping a weapon');
+                }
+            } else if (item.itemType === 'armor') {
+                if (item.get('type') !== slot) {
+                    this.unequip(this.get(slot));
+                    this.set(slot, item);
+                } else {
+                    log.info('ya done fucked up equipped armor');
+                }
+            } else {
+                log.info('ya done fucked up equipped sumpin\' ya don\'t equip');
+            }
+        },
+
+        getWeapon: function() {
+            var weapon = this.get('mainHand');
+            if (weapon) {
+                return weapon;
+            }
+            return new WeaponModel({name: 'fists'});
+        },
+
+        getAffixes: function() {
+            var all = _.map(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
+                var item = this.get(name);
+                return item === undefined ? [] : item.get('affixes');
+            }, this);
+
+            return _.flatten(all);
+        },
+
+        getStats: function() {
+            // maybe refactor computeAttrs stuff into here possibly
+        },
+
+        unequip: function(item) {
+            if (item !== undefined) {
+                item.set('equipped', false);
+            }
+        }
+    });
 
     var ArmorCollection = Backbone.Collection.extend({
         model: ArmorModel,
@@ -224,7 +290,8 @@ namespace.module('bot.inv', function (exports, require) {
     exports.extend({
         InvModel: InvModel,
         InvMenuView: InvMenuView,
-	SkillChain: SkillChain,
-	newSkillChain: newSkillChain	
+        SkillChain: SkillChain,
+        newSkillChain: newSkillChain,
+        EquippedGearModel: EquippedGearModel,
     });
 });

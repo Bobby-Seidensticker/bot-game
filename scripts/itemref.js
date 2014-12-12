@@ -66,7 +66,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "smelly cod piece": {
                 "prototype": ["armor"],
-                "type": "body",
+                "type": "chest",
                 "weight": 2
             },
             "cardboard kneepads": {

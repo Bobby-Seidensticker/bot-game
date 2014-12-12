@@ -8,6 +8,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 "damage": 1,
                 "range": 1
             },
+	    "fists" : {
+		'damage': 0.1, 
+		'range':1, 
+		'speed': 1, 
+		'affixes': []
+	    },
             "wooden sword": {
                 "prototype": ["weapon"],
                 "type": "melee",

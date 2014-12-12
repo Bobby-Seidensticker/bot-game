@@ -16,7 +16,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             monsterQuantity: 2,
             level: 1,
-	},
+        },
 
         initialize: function() {
             var i, j, rooms, monsters, count, names, choices, level;
@@ -47,7 +47,7 @@ namespace.module('bot.zone', function (exports, require) {
                 rooms: rooms,
                 curMonsters: rooms[this.get('charPos')]
             });
-	},
+        },
 
         getCurrentRoom: function() {
             return this.get('rooms')[this.get('charPos')];

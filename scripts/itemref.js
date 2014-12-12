@@ -8,12 +8,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 "damage": 1,
                 "range": 1
             },
-	    "fists" : {
-		'damage': 0.1, 
-		'range':1, 
-		'speed': 1, 
-		'affixes': []
-	    },
+            "fists" : {
+                'damage': 0.1, 
+                'range':1, 
+                'speed': 1, 
+                'affixes': []
+            },
             "wooden sword": {
                 "prototype": ["weapon"],
                 "type": "melee",
@@ -96,7 +96,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "affixes": ["physDmg more 1.4"],
                 "manaCost": 5
-            },	    
+            },        
             "fire slash": {
                 "prototype": ["basic melee"],
                 "affixes": ["fireDmg added 10"],
@@ -122,8 +122,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "affixes": ["fireDmg added 8"],
                 "manaCost": 3
             },
-	    "ice arrow": {
-		"prototype": ["basic range"],
+            "ice arrow": {
+                "prototype": ["basic range"],
                 "affixes": ["coldDmg added 9"],
                 "manaCost": 4
             },
@@ -133,7 +133,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 5
             },
             "poison arrow": {
-		"prototype": ["basic range"],
+                "prototype": ["basic range"],
                 "affixes": ["poisDmg added 11"],
                 "manaCost": 5
             },
@@ -142,7 +142,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "affixes": ["fireDmg added 10"],
                 "manaCost": 5
             },
-	    "ice ball": {
+            "ice ball": {
                 "prototype": ["basic spell"],
                 "affixes": ["coldDmg added 10"],
                 "manaCost": 5
@@ -162,33 +162,33 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "affix": {
             "list of all valid affixes": [
-	        "strength",
-		"dexterity",
-		"widsom",
-		"vitality",
-		"hp",
-		"mana",
-		"armor",
-		"dodge",
-		"eleResistAll",
-		"fireResist",
-		"coldResist",
-		"lightResist",
-		"poisResist",
-		"meleeDmg",
-		"rangeDmg",
-		"spellDmg",
-		"physDmg",
-		"fireDmg",
-		"coldDmg",
-		"lightDmg",
-		"poisDmg",
-		"attSpd",
-		"range",
-		"manaCost"
-	    ]
+                "strength",
+                "dexterity",
+                "widsom",
+                "vitality",
+                "hp",
+                "mana",
+                "armor",
+                "dodge",
+                "eleResistAll",
+                "fireResist",
+                "coldResist",
+                "lightResist",
+                "poisResist",
+                "meleeDmg",
+                "rangeDmg",
+                "spellDmg",
+                "physDmg",
+                "fireDmg",
+                "coldDmg",
+                "lightDmg",
+                "poisDmg",
+                "attSpd",
+                "range",
+                "manaCost"
+            ]
         },
-	"recipe": {
+        "recipe": {
             "smelly cod piece" : {
                 "type": "armor",
                 "cost": "4 poops"
@@ -207,7 +207,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "lightning slice": {
                 "type": "skill",
-		"cost": "10 sparks"
+                "cost": "10 sparks"
             },
             "poison slice": {
                 "type": "skill",
@@ -245,31 +245,31 @@ namespace.module('bot.itemref', function (exports, require) {
                 "type": "skill",
                 "cost": "10 tumors"
             },
-	},
-	"monster": {
-	    "skelleton" : {
-		"skillChain": ["basic melee"],
-		"weapon" : ["wooden sword"],
-		"armor": ["smelly cod piece"],
-		"affixes": ["physDmg added 5", "hp added 20", "fireResist added -20"]
-	    },
-	    "skelleton archer" : {
-                "prototype" : ["skelleton"],
-		"skillChain": ["basic range"],
+        },
+        "monster": {
+            "skelleton" : {
+                "skillChain": ["basic melee"],
+                "weapon" : ["wooden sword"],
                 "armor": ["smelly cod piece"],
-		"weapon": "shitty bow",
-		"affixes": ["physDmg added 2", "hp added 10", "fireResist added -20"]
-	    },
-	    "skelleton mage" : {
+                "affixes": ["physDmg added 5", "hp added 20", "fireResist added -20"]
+            },
+            "skelleton archer" : {
                 "prototype" : ["skelleton"],
-		"skillChain": ["basic spell"],
+                "skillChain": ["basic range"],
                 "armor": ["smelly cod piece"],
-		"weapon": "crappy wand",
+                "weapon": "shitty bow",
+                "affixes": ["physDmg added 2", "hp added 10", "fireResist added -20"]
+            },
+            "skelleton mage" : {
+                "prototype" : ["skelleton"],
+                "skillChain": ["basic spell"],
+                "armor": ["smelly cod piece"],
+                "weapon": "crappy wand",
                 "affixes": ["spellDmg more 2", "fireResist added -20"]
             },
-	    "skelleton king" : {
+            "skelleton king" : {
                 "prototype" : ["skelleton"],
-		"skillChain": ["fire slash", "basic melee"],
+                "skillChain": ["fire slash", "basic melee"],
                 "affixes": ["physDmg added 10", "hp added 50", "fireResist added -20"]
             },
         },
@@ -294,17 +294,17 @@ namespace.module('bot.itemref', function (exports, require) {
     };
 
     /*
-    fuck: a = 1
-    fwah: a = 3
-    shit: a = 2
+      fuck: a = 1
+      fwah: a = 3
+      shit: a = 2
 
-    asdf: [fuck(2), shit(3)]
+      asdf: [fuck(2), shit(3)]
 
-    fdsa: [fwah(5)]
+      fdsa: [fwah(5)]
 
-    buh: [asdf(1), fdsa(4)]
+      buh: [asdf(1), fdsa(4)]
 
-    [asdf, fuck, shit, fdsa, fwah]
+      [asdf, fuck, shit, fdsa, fwah]
     */
 
     function recExtend(name, r, names) {

@@ -22,7 +22,7 @@ namespace.module('bot.main', function (exports, require) {
         //var craftMenuView = new inv.CraftMenuView({model: invModel});
         //var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
 
-	window.invModel = invModel;
+        window.invModel = invModel;
         window.invMenuView = invMenuView;
         window.game = gameView;
 

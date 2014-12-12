@@ -22,14 +22,14 @@ namespace.module('bot.utils', function (exports, require) {
         mores = 1;
         adds = startVal;
         _.each(mods, function(mod) {
-	    splits = mod.split(' ');
-	    modtype = splits[0];
+            splits = mod.split(' ');
+            modtype = splits[0];
             amt = parseFloat(splits[1]);
-	    if (modtype === 'added') {
+            if (modtype === 'added') {
                 adds += amt
-	    } else if (modtype === 'more') {
+            } else if (modtype === 'more') {
                 mores *= amt;
-	    } else {
+            } else {
                 log.error('Improperly formatted affix %s', mod);
             }
         });
@@ -42,23 +42,23 @@ namespace.module('bot.utils', function (exports, require) {
     }
 
     function affixesToAffDict (affixes) {
-	var affixDict = {};
-	for (var i = 0; i < affixes.length; i++) {
-	    var affix = affixes[i].split(' ');
-	    var stat = affix[0];
-	    var mod = affix.slice(1).join(' ');
-	    if (affixDict[stat]) {
-		affixDict[stat].push(mod);
-	    } else {
-		affixDict[stat] = [mod];
-	    }
-	}
-	return affixDict;
+        var affixDict = {};
+        for (var i = 0; i < affixes.length; i++) {
+            var affix = affixes[i].split(' ');
+            var stat = affix[0];
+            var mod = affix.slice(1).join(' ');
+            if (affixDict[stat]) {
+                affixDict[stat].push(mod);
+            } else {
+                affixDict[stat] = [mod];
+            }
+        }
+        return affixDict;
     }
 
     exports.extend({
-	    applyAllAffixes: applyAllAffixes,
-	    affixesToAffDict: affixesToAffDict
+        applyAllAffixes: applyAllAffixes,
+        affixesToAffDict: affixesToAffDict
     });
 
 });

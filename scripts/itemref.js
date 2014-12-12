@@ -258,7 +258,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype" : ["skelleton"],
 		"skillChain": ["basic spell"],
                 "armor": ["smelly cod piece"],
-		"weapon": "magic stick",
+		"weapon": "crappy wand",
                 "affixes": ["spellDmg more 2", "fireResist added -20"]
             },
 	    "skelleton king" : {

@@ -153,7 +153,7 @@ namespace.module('bot.inv', function (exports, require) {
                 log.info('No weapons in local storage.');
                 this.create({name: 'wooden sword'});
                 this.create({name: 'shitty bow'});
-                this.create({name: 'magic stick'});
+                this.create({name: 'crappy wand'});
             }
         }
     });

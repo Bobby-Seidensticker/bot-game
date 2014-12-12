@@ -121,7 +121,7 @@ namespace.module('bot.inv', function (exports, require) {
     function newSkillChain() {
         var sk;
         sk = new SkillChain();
-	sk.add({"name": "fire slash"});
+	sk.add({"name": "basic melee"});
         return sk;
     }
 

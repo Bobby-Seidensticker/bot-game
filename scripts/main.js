@@ -26,7 +26,7 @@ namespace.module('bot.main', function (exports, require) {
         window.invMenuView = invMenuView;
         window.game = gameView;
 
-        //gameModel.start();
+        gameModel.start();
     }
 
     var GameModel = Backbone.Model.extend({
@@ -97,22 +97,3 @@ namespace.module('bot.main', function (exports, require) {
     });
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

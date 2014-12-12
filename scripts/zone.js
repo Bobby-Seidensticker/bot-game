@@ -80,11 +80,11 @@ namespace.module('bot.zone', function (exports, require) {
         model: entity.MonsterModel,
 
         update: function(t) {
-            _.each(function(monster) { monster.update(t) });
+            this.each(function(monster) { monster.update(t) });
         },
 
         tryDoStuff: function() {
-            this.each(monster.tryDoStuff);
+            this.invoke('tryDoStuff');
         },
 
         cleared: function() {

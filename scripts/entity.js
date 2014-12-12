@@ -178,6 +178,10 @@ namespace.module('bot.entity', function (exports, require) {
             );
 
             var skill = this.get('skillChain').bestSkill(this.get('mana'), distances);
+            if (!skill) {
+                console.log('no best skill', this.get('mana'), distances);
+                return;
+            }
 
             var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.get('range') >= distances[i]; });
             var target = enemies[targetIndex];
@@ -186,10 +190,15 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         update: function(dt) {
-            var skills = this.get('skills');
-            skills.each(function(skill) { skill.set('cooldown', skill.get('cooldown') - dt); });
+            try {
+                var skills = this.get('skillChain');
+                skills.each(function(skill) { skill.set('cooldown', skill.get('cooldown') - dt); });
 
-            this.set('nextAction', this.get('nextAction') - dt);
+                this.set('nextAction', this.get('nextAction') - dt);
+            } catch (error) {
+                console.log('right here');
+                throw(error);
+            }
         }
     });
 

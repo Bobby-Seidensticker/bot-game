@@ -3,13 +3,16 @@ namespace.module('bot.vector', function (exports, require) {
     var log = namespace.bot.log;
 
     function dist(a, b) {
-        return Math.sqrt(Math.pow(a[0] - b[0]) + Math.pow(a[1] - b[1]));
+        return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
     }
 
     function getDistances(base, targets) {
         return _.map(targets, function(target) { return dist(base, target); });
     }
 
+    exports.extend({
+        getDistances: getDistances
+    });
 });
 
 

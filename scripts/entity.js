@@ -7,7 +7,7 @@ namespace.module('bot.entity', function (exports, require) {
 
     var log = namespace.bot.log;
     var vector = namespace.bot.vector;
-    var inv = namespace.bot.inv;
+    var inventory = namespace.bot.inv;
     var utils = namespace.bot.utils;
 
     var EntityModel = Backbone.Model.extend({
@@ -218,13 +218,13 @@ namespace.module('bot.entity', function (exports, require) {
 
     function newMonster(name, level) {
         //return new MonsterModel({name: name, level: level});
-        return new MonsterModel({ 'skillChain': inv.newSkillChain() });
+        return new MonsterModel({ 'skillChain': inventory.newSkillChain() });
     }
 
-    function newChar(invModel) {
+    function newChar(inventoryModel) {
         var char = new CharModel({
-            'skillChain': inv.newSkillChain(),
-            'inventory': invModel,
+            'skillChain': inventory.newSkillChain(),
+            'inv': inventoryModel,
         });
         //char.set('skillChain', new CharSkillChain());
         return char;

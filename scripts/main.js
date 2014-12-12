@@ -14,7 +14,7 @@ namespace.module('bot.main', function (exports, require) {
         log.info('onReady');
         var gameModel = new GameModel();
 
-        /*
+
         var gameView = new GameView();
         var m = new menu.TabView();
 
@@ -26,7 +26,6 @@ namespace.module('bot.main', function (exports, require) {
 	
         window.invMenuView = invMenuView;
         window.game = gameView;
-        */
 
         //gameModel.start();
     }
@@ -106,14 +105,14 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         resize: function() {
-		//console.log('resize, this: ', this);
+	    //console.log('resize, this: ', this);
             this.set({ss: [window.innerWidth, window.innerHeight]});
         }
     });
 
     var HolderView = Backbone.View.extend({
         initialize: function(a) {
-            console.log('a: ', a);
+            //console.log('a: ', a);
             this.listenTo(this.model, 'change', this.resize);
             this.resize();
 

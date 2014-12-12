@@ -14,6 +14,7 @@ namespace.module('bot.main', function (exports, require) {
         log.info('onReady');
         var gameModel = new GameModel();
 
+        /*
         var gameView = new GameView();
         var m = new menu.TabView();
 
@@ -25,6 +26,7 @@ namespace.module('bot.main', function (exports, require) {
 	
         window.invMenuView = invMenuView;
         window.game = gameView;
+        */
 
         //gameModel.start();
     }
@@ -40,7 +42,7 @@ namespace.module('bot.main', function (exports, require) {
         initialize: function() {
             this.inv = new inv.InvModel();
 
-            this.char = new entity.newChar();
+            this.char = new entity.newChar(this.inv);
 
             this.lastTime = new Date().getTime();
         },

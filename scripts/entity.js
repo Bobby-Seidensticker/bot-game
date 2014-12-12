@@ -218,11 +218,14 @@ namespace.module('bot.entity', function (exports, require) {
 
     function newMonster(name, level) {
         //return new MonsterModel({name: name, level: level});
-        return new MonsterModel({ "skillChain": inv.newSkillChain() });
+        return new MonsterModel({ 'skillChain': inv.newSkillChain() });
     }
 
-    function newChar() {
-        var char = new CharModel( { "skillChain": inv.newSkillChain() } );
+    function newChar(invModel) {
+        var char = new CharModel({
+            'skillChain': inv.newSkillChain(),
+            'inventory': invModel,
+        });
         //char.set('skillChain', new CharSkillChain());
         return char;
     }

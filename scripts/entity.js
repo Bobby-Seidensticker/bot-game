@@ -52,17 +52,7 @@ namespace.module('bot.entity', function (exports, require) {
 
 	    //Add affix bonuses
 	    //Affix format is 'stat modtype amount'
-	    var affixDict = {};
-	    for (var i = 0; i < t.affixes.length; i++) {
-                var affix = t.affixes[i].split(' ');
-		var stat = affix[0];
-		var mod = affix.slice(1).join(' ');
-		if (affixDict[stat]) {
-		    affixDict[stat].push(mod);
-		} else {
-		    affixDict[stat] = [mod];
-		}
-	    }
+	    var affixDict = utils.affixesToAffDict(t.affixes);
 
             utils.applyAllAffixes(t, ['strength', 'dexterity', 'wisdom', 'vitality'], affixDict);
 

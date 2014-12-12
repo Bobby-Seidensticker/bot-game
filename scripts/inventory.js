@@ -79,7 +79,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
 	computeAttrs: function(weapon, affixDict) {
-	    log.info('Skill compute attrs');
+	    //log.info('Skill compute attrs');
 	    var t = {
 		"physDmg": weapon.damage,
 		"range": weapon.range,
@@ -92,7 +92,9 @@ namespace.module('bot.inv', function (exports, require) {
 	    };
 
 	    utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], affixDict);
-	    console.log("skill computeAttrs", t, this);
+	    var skillAffDict = utils.affixesToAffDict(this.get('affixes'));
+	    utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], skillAffDict);
+	    //console.log("skill computeAttrs", t, this, affixDict);
 	    this.set(t);
 	},
     });
@@ -119,7 +121,7 @@ namespace.module('bot.inv', function (exports, require) {
     function newSkillChain() {
         var sk;
         sk = new SkillChain();
-	sk.add({"name": "basic melee"});
+	sk.add({"name": "fire slash"});
         return sk;
     }
 

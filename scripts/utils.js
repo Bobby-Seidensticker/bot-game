@@ -41,8 +41,24 @@ namespace.module('bot.utils', function (exports, require) {
         _.each(stats, function(stat) { t[stat] = applyAffixes(t[stat], affixDict[stat]); });
     }
 
+    function affixesToAffDict (affixes) {
+	var affixDict = {};
+	for (var i = 0; i < affixes.length; i++) {
+	    var affix = affixes[i].split(' ');
+	    var stat = affix[0];
+	    var mod = affix.slice(1).join(' ');
+	    if (affixDict[stat]) {
+		affixDict[stat].push(mod);
+	    } else {
+		affixDict[stat] = [mod];
+	    }
+	}
+	return affixDict;
+    }
+
     exports.extend({
-        applyAllAffixes: applyAllAffixes
+	    applyAllAffixes: applyAllAffixes,
+	    affixesToAffDict: affixesToAffDict
     });
 
 });

@@ -19,6 +19,8 @@ namespace.module('bot.main', function (exports, require) {
         var gameView = new namespace.bot.window.GameView();
         var m = new menu.TabView();
 
+        var invMenuView = new inv.InvMenuView({model: gameModel.inv});
+
         //var invModel = new inv.InvModel();
         //var invMenuView = new inv.InvMenuView({model: invModel});
         //var craftMenuView = new inv.CraftMenuView({model: invModel});

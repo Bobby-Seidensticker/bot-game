@@ -278,7 +278,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         initialize: function() {
-            console.log('here', this.model.armor.toJSON());
+            console.log('right here');
             this.render();
         },
 

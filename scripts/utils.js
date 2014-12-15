@@ -7,6 +7,7 @@ namespace.module('bot.vector', function (exports, require) {
     }
 
     function getDistances(base, targets) {
+        // log.error('vector, base: %s, targets: %s', JSON.stringify(base), JSON.stringify(targets));
         return _.map(targets, function(target) { return dist(base, target); });
     }
 

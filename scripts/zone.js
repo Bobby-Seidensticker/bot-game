@@ -83,8 +83,8 @@ namespace.module('bot.zone', function (exports, require) {
             this.each(function(monster) { monster.update(t) });
         },
 
-        tryDoStuff: function() {
-            this.invoke('tryDoStuff');
+        tryDoStuff: function(enemies) {
+            this.invoke('tryDoStuff', enemies);
         },
 
         cleared: function() {

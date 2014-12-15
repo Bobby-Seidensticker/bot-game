@@ -87,9 +87,9 @@ namespace.module('bot.inv', function (exports, require) {
         computeAttrs: function(weapon, affixDict) {
             //log.info('Skill compute attrs');
             var t = {
-                "physDmg": weapon.damage,
-                "range": weapon.range,
-                "speed": weapon.speed,
+                "physDmg": weapon.get('damage'),
+                "range": weapon.get('range'),
+                "speed": weapon.get('speed'),
                 "fireDmg": 0,
                 "coldDmg": 0,
                 "lightDmg": 0,
@@ -102,6 +102,8 @@ namespace.module('bot.inv', function (exports, require) {
             utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], skillAffDict);
             //console.log("skill computeAttrs", t, this, affixDict);
             this.set(t);
+
+            log.debug('Skill compute attrs: %s', JSON.stringify(t));
         },
     });
 
@@ -109,13 +111,17 @@ namespace.module('bot.inv', function (exports, require) {
         model: SkillModel,
 
         bestSkill: function(mana, distances) {
-            var range = this.get('range');
             return this.find(function(skill) {
                 if (mana >= skill.get('manaCost') && skill.cool()) {
-                    return _.some(distances, function(dist) { return range >= dist; });
+                    log.info('Cool and have mana, now checking distances');
+                    return _.some(distances, function(dist) {
+                        // shit
+                        console.log('range: %f, dist: %f', this.get('range'), dist);
+                        return this.get('range') >= dist;
+                    }, skill);
                 }
                 return false;
-            });
+            }, this);
         },
 
         computeAttrs: function(weapon, affixDict) {

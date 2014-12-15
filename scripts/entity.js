@@ -100,7 +100,6 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         takeDamage: function(damage) {
-            log.info('Team %s taking damage, hit for %s', this.teamString(), JSON.stringify(damage));
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;
@@ -108,6 +107,12 @@ namespace.module('bot.entity', function (exports, require) {
             // TODO: apply elemental damage and mitigation
 
             this.set('hp', this.get('hp') - physDmg);
+
+            if (this.get('hp') < 0) {
+                log.info('An entity from team %s DEAD, hit for %s', this.teamString(), JSON.stringify(damage));
+            } else {
+                log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.get('hp'));
+            }
             // modify own health
         },
 
@@ -122,7 +127,7 @@ namespace.module('bot.entity', function (exports, require) {
             this.set({
                 mana: this.get('mana') - skill.get('manaCost'),
             });
-            log.info('Team %s attacking target', this.teamString());
+            log.debug('Team %s attacking target', this.teamString());
             target.takeDamage(this.getDamage(skill));
         },
 
@@ -151,7 +156,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         tryDoStuff: function(enemies) {
-            if (!this.ready()) {
+            if (!this.ready() || !this.isAlive()) {
                 return;
             }
 

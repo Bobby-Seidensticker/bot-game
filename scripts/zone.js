@@ -57,10 +57,10 @@ namespace.module('bot.zone', function (exports, require) {
 
         nextRoom: function() {
             if (this.roomCleared() && !this.done()) {
-                log.debug('Zone.nextRoom() success, pos: %d', this.get('charPos'));
                 this.set({
                     'charPos': this.get('charPos') + 1
                 });
+                log.info('Zone.nextRoom() success, now on room: %d of %d', this.get('charPos'), this.get('rooms').length);
                 return true;
             }
             log.debug('Zone.nextRoom() fail');
@@ -85,6 +85,10 @@ namespace.module('bot.zone', function (exports, require) {
 
         tryDoStuff: function(enemies) {
             this.invoke('tryDoStuff', enemies);
+        },
+
+        living: function() {
+            return this.filter(function(m) { return m.isAlive(); });
         },
 
         cleared: function() {

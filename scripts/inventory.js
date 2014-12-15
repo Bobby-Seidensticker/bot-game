@@ -113,12 +113,7 @@ namespace.module('bot.inv', function (exports, require) {
         bestSkill: function(mana, distances) {
             return this.find(function(skill) {
                 if (mana >= skill.get('manaCost') && skill.cool()) {
-                    log.info('Cool and have mana, now checking distances');
-                    return _.some(distances, function(dist) {
-                        // shit
-                        console.log('range: %f, dist: %f', this.get('range'), dist);
-                        return this.get('range') >= dist;
-                    }, skill);
+                    return _.some(distances, function(dist) { return this.get('range') >= dist; }, skill);
                 }
                 return false;
             }, this);

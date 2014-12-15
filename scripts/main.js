@@ -41,6 +41,7 @@ namespace.module('bot.main', function (exports, require) {
             this.char = new entity.newChar(this.inv);
 
             this.lastTime = new Date().getTime();
+            this.zonesCleared = 0;
         },
 
         start: function() {
@@ -54,7 +55,7 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         tick: function() {
-            log.info('begin tick');
+            log.debug('begin tick');
             if (new Date().getTime() > window.STOP_AFTER) {
                 console.log('done');
                 this.stop();
@@ -62,6 +63,7 @@ namespace.module('bot.main', function (exports, require) {
             }
 
             if (!this.get('inZone')) {
+
                 this.zone = zone.newZoneModel(this.char);
                 this.set('inZone', true);
             }
@@ -80,11 +82,16 @@ namespace.module('bot.main', function (exports, require) {
                 this.char.update(t);
                 monsters.update(t);
 
-                this.char.tryDoStuff(monsters.models);
+                this.char.tryDoStuff(monsters.living());
 
                 // Check if cleared / done, if so get out
                 if (monsters.cleared()) {
                     if (this.zone.done()) {
+                        if (this.zonesCleared > 0) {
+                            log.warning('Cleared a zone, done!');
+                            return;
+                        }
+                        this.zonesCleared++;
                         break;
                     }
                     this.zone.nextRoom();
@@ -109,5 +116,4 @@ namespace.module('bot.main', function (exports, require) {
 
 });
 
-
-window.STOP_AFTER = new Date().getTime() + 3000;
+window.STOP_AFTER = new Date().getTime() + 100000;

@@ -32,7 +32,8 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         computeAttrs: function() {
-            var t = {}; //temp values
+            log.info('Computing Attrs for Entity on team %s', this.teamString());
+            var t = {};  // temp values
             t.strength = this.get('strength');
             t.dexterity = this.get('dexterity');
             t.wisdom = this.get('wisdom');
@@ -43,16 +44,6 @@ namespace.module('bot.entity', function (exports, require) {
             t.affixes = t.equipped.getAffixes();
 
             t.skillChain = this.get('skillChain');
-
-            //t.weapon = t.equipped.getWeapon();
-            //t.armor = t.equipped.getArmor();
-            /*t.affixes = t.weapon.affixes; // TODO - make this open up the weapon's affixes from the weapon model, ex t.weapon.get('affixes')
-              for (var i = 0; i < t.armor.length; i++) {
-              if (t.armor[i].affixes) {
-              t.affixes = t.affixes.concat(t.armor[i].affixes);
-              }
-              }*/
-            //console.log(t.affixes);
 
             //Add affix bonuses
             //Affix format is 'stat modtype amount'
@@ -72,13 +63,7 @@ namespace.module('bot.entity', function (exports, require) {
             t.dodge = t.dexterity * 0.5;
             t.eleResistAll = 1 - Math.pow(0.997, t.wisdom); //temp var only
 
-            console.log(affixDict);
-            try {
-                utils.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
-            } catch (error) {
-                console.log('right here1');
-                throw(error);
-            }
+            utils.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
 
             t.fireResist = t.eleResistAll;
             t.coldResist = t.eleResistAll;
@@ -87,21 +72,8 @@ namespace.module('bot.entity', function (exports, require) {
 
             utils.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
 
-            console.log(t);
             t.skillChain.computeAttrs(t.equipped.getWeapon(), affixDict);
-            /*t.skillChain = [];
-              for (var i = 0; i < t.skillChainDef.length; i++) {
-              var tskill = t.skillChainDef[i];
-              var wholeSkill = namespace.bot.itemref.expand('skill', tskill.name);
-              wholeSkill.physDmg = t.weapon.damage;
-              wholeSkill.range = t.weapon.range;
-              wholeSkill.speed = t.weapon.speed;
-              //TODO calculate damage affix bonuses
-              //console.log(wholeSkill);
-              t.skillChain.push(wholeSkill);
-              }*/
 
-            //console.log('entitymade with stats ', t);
             t.maxHp = t.hp;
             t.maxMana = t.mana;
             delete t.eleResistAll;
@@ -116,12 +88,19 @@ namespace.module('bot.entity', function (exports, require) {
             return this.get('team') === TEAM_CHAR;
         },
 
+        teamString: function() {
+            if (this.get('team') === TEAM_CHAR) {
+                return 'Character';
+            }
+            return 'Monster';
+        },
+
         isAlive: function() {
             return this.get('hp') > 0;
         },
 
         takeDamage: function(damage) {
-            log.info('taking damage, %.2f', damage);
+            log.info('Team %s taking damage, hit for %.2f', this.teamString(), damage);
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;
@@ -143,13 +122,12 @@ namespace.module('bot.entity', function (exports, require) {
             this.set({
                 mana: this.get('mana') - skill.get('manaCost'),
             });
-            log.info('attackTarget');
+            log.info('Team %s attacking target', this.teamString());
             target.takeDamage(this.getDamage(skill));
         },
 
         getDamage: function(skill) {
             skill.use();
-            //return {'physDmg': skillChain[skillIndex].physDmg};
             return {'physDmg': skill.get('physDmg')};
         },
 
@@ -186,7 +164,7 @@ namespace.module('bot.entity', function (exports, require) {
 
             var skill = this.get('skillChain').bestSkill(this.get('mana'), distances);
             if (!skill) {
-                //console.log('no best skill', this.get('mana'), distances);
+                log.debug('No best skill, mana: %.2f, distances: %s', this.get('mana'), JSON.stringify(distances));
                 return;
             }
 
@@ -197,15 +175,10 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         update: function(dt) {
-            try {
-                var skills = this.get('skillChain');
-                skills.each(function(skill) { skill.set('cooldown', skill.get('cooldown') - dt); });
+            var skills = this.get('skillChain');
+            skills.each(function(skill) { skill.set('cooldown', skill.get('cooldown') - dt); });
 
-                this.set('nextAction', this.get('nextAction') - dt);
-            } catch (error) {
-                console.log('right here2');
-                throw(error);
-            }
+            this.set('nextAction', this.get('nextAction') - dt);
         }
     });
 
@@ -217,7 +190,7 @@ namespace.module('bot.entity', function (exports, require) {
         localStorage: new Backbone.LocalStorage('char'),
 
         initialize: function() {
-            log.debug('CharModel initialize');
+            log.info('CharModel initialize');
             this.fetch();
             this.computeAttrs();
         }

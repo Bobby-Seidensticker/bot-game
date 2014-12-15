@@ -1,9 +1,5 @@
 namespace.module('bot.main', function (exports, require) {
 
-    exports.extend({
-        onReady: onReady,
-        GameModel: GameModel
-    });
 
     var log = namespace.bot.log;
     var inv = namespace.bot.inv;
@@ -117,6 +113,11 @@ namespace.module('bot.main', function (exports, require) {
                 requestAnimFrame(this.tick.bind(this));
             }
         },
+    });
+
+    exports.extend({
+        onReady: onReady,
+        GameModel: GameModel
     });
 
 });

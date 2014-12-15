@@ -9,22 +9,26 @@ namespace.module('bot.test', function (exports, require) {
     var menu = namespace.bot.menu;
     var entity = namespace.bot.entity;
     var zone = namespace.bot.zone;
+    var main = namespace.bot.main;
 
     function onReady() {
         log.info('LOADED');
 
-        QUnit.test( "a basic test example", function( assert ) {
-            var value = "hello";
-            assert.equal( value, "hello", "We expect value to be hello" );
-        });
+
+	QUnit.test( "page loaded", function( assert ) {
+	    assert.equal( "hello", "hello", "page has loaded successfully" );
+	});
 
         log.info('onReady');
-        var gameModel = new GameModel();
+	console.log(main);
+        //var gameModel = new main.GameModel();
 
-        var gameView = new namespace.bot.window.GameView();
-        var m = new menu.TabView();
+	//console.log(gameModel);
 
-        var invMenuView = new inv.InvMenuView({model: gameModel.inv});
+        //var gameView = new namespace.bot.window.GameView();
+        //var m = new menu.TabView();
+
+        //var invMenuView = new inv.InvMenuView({model: gameModel.inv});
 
         //var invModel = new inv.InvModel();
         //var invMenuView = new inv.InvMenuView({model: invModel});
@@ -33,7 +37,8 @@ namespace.module('bot.test', function (exports, require) {
 
         //gameModel.start();
     }
-
+});
+    /*
     var GameModel = Backbone.Model.extend({
         defaults: function() {
             return {
@@ -124,3 +129,4 @@ namespace.module('bot.test', function (exports, require) {
 });
 
 window.STOP_AFTER = new Date().getTime() + 100000;
+    */

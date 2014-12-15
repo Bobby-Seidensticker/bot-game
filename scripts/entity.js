@@ -100,13 +100,12 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         takeDamage: function(damage) {
-	    log.info('Team %s taking damage, hit for %s, start hp: %d', this.teamString(), JSON.stringify(damage), this.get('hp'));
+	    log.info('Team %s taking damage, hit for %s, start hp: %f', this.teamString(), JSON.stringify(damage), this.get('hp'));
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;
 
             // TODO: apply elemental damage and mitigation
-
             this.set('hp', this.get('hp') - physDmg);
             // modify own health
         },

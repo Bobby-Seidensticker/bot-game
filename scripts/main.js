@@ -1,7 +1,8 @@
 namespace.module('bot.main', function (exports, require) {
 
     exports.extend({
-        onReady: onReady
+        onReady: onReady,
+        GameModel: GameModel
     });
 
     var log = namespace.bot.log;
@@ -9,6 +10,8 @@ namespace.module('bot.main', function (exports, require) {
     var menu = namespace.bot.menu;
     var entity = namespace.bot.entity;
     var zone = namespace.bot.zone;
+
+    window.STOP_AFTER = new Date().getTime() + 100 * 1000;
 
     function onReady() {
         localStorage.clear();
@@ -117,5 +120,3 @@ namespace.module('bot.main', function (exports, require) {
     });
 
 });
-
-window.STOP_AFTER = new Date().getTime() + 100000;

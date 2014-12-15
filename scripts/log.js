@@ -2,9 +2,9 @@ namespace.module('bot.log', function (exports, require) {
 
     var LEVEL = 'info';
 
-    var FNS = [debug, info, warning, error];
+    var FNS = [debug, info, warning, error, line];
 
-    var NAMES = ['debug', 'info', 'warning', 'error'];
+    var NAMES = ['debug', 'info', 'warning', 'error', 'line'];
 
     var extender = {};
     var clear = false;
@@ -40,12 +40,19 @@ namespace.module('bot.log', function (exports, require) {
     function warning() {
         var a = arguments;
         a[0] = 'WARNING ' + dateStr() + ' ' + a[0];
-        console.log("%c" + sprintf.apply(null, a), "color: yellow");
+        console.log("%c" + sprintf.apply(null, a), "color: orange");
     }
 
     function error() {
         var a = arguments;
         a[0] = 'ERROR ' + dateStr() + ' ' + a[0];
         console.log("%c" + sprintf.apply(null, a), "color: red");
+    }
+
+
+    //  call with "log.line(new Error(), "your text here");
+    function line() {
+	e = arguments[0];
+	console.log("%c" + arguments[1] + " %s", "color:purple", e.stack);
     }
 });

@@ -77,7 +77,7 @@ namespace.module('bot.main', function (exports, require) {
             var monsters = this.zone.getCurrentRoom().monsters;  // type MonsterCollection
             //for (var t = this.lastTime; t < thisTime; t += 2) {
             for (var t = this.lastTime; t < thisTime; t += thisTime - this.lastTime) {
-                log.debug('update');
+                log.debug('tick calling update functions');
                 // pass new time to char and all monsters
                 this.char.update(t);
                 monsters.update(t);

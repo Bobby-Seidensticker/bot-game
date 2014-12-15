@@ -105,7 +105,6 @@ namespace.module('bot.entity', function (exports, require) {
             physDmg = physDmg * armorReductionMult;
 
             // TODO: apply elemental damage and mitigation
-
             this.set('hp', this.get('hp') - physDmg);
 
             if (this.get('hp') < 0) {

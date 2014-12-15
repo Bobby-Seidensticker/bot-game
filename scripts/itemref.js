@@ -57,7 +57,7 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "armor": {
             "armor": {
-                "affixes": ["armor 1"],
+                "affixes": ["armor added 1"],
                 "weight": 1
             },
             "balsa helmet": {
@@ -314,7 +314,7 @@ namespace.module('bot.itemref', function (exports, require) {
             }
         }
         names[names.length] = name;
-        log.info("recExtend, name %s, names now %s", name, JSON.stringify(names));
+        log.debug("recExtend, name %s, names now %s", name, JSON.stringify(names));
         return names;
     }
 
@@ -339,7 +339,7 @@ namespace.module('bot.itemref', function (exports, require) {
         }
         item['name'] = name;
 
-        log.info("Final item: %s", JSON.stringify(item));
+        log.debug("Final item: %s", JSON.stringify(item));
 
         return item;
     }

@@ -19,8 +19,8 @@ namespace.module('bot.entity', function (exports, require) {
                 wisdom: 10,
                 vitality: 10,
                 level: 1,
-                weapon: {'damage': 1, 'range':1, 'speed': 1, 'affixes': ['strength more 1.1']}, //'fists' weapon auto equipped when unarmed.
-                armor: [],
+                //weapon: {'damage': 1, 'range':1, 'speed': 1, 'affixes': ['strength more 1.1']}, //'fists' weapon auto equipped when unarmed.
+                //armor: [],
                 affixes: ['strength more 1.5', 'strength more 2', 'strength added 10'],
                 team: 1
             };
@@ -72,7 +72,12 @@ namespace.module('bot.entity', function (exports, require) {
             t.dodge = t.dexterity * 0.5;
             t.eleResistAll = 1 - Math.pow(0.997, t.wisdom); //temp var only
 
+            console.log(affixDict);
+            try {
             utils.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
+            } catch (error) {
+                console.log('right here');
+            }
 
             t.fireResist = t.eleResistAll;
             t.coldResist = t.eleResistAll;
@@ -115,6 +120,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         takeDamage: function(damage) {
+            log.info('taking damage, %.2f', damage);
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;
@@ -135,8 +141,8 @@ namespace.module('bot.entity', function (exports, require) {
             // TODO: use duration value on skillToUse to set nextAction value on entity
             this.set({
                 mana: this.get('mana') - skill.get('manaCost'),
-                
             });
+            log.info('attackTarget');
             target.takeDamage(this.getDamage(skill));
         },
 
@@ -179,7 +185,7 @@ namespace.module('bot.entity', function (exports, require) {
 
             var skill = this.get('skillChain').bestSkill(this.get('mana'), distances);
             if (!skill) {
-                console.log('no best skill', this.get('mana'), distances);
+                //console.log('no best skill', this.get('mana'), distances);
                 return;
             }
 

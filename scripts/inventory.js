@@ -119,7 +119,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         computeAttrs: function(weapon, affixDict) {
-            log.info('skill chain compute attrs len: %d', this.length);
+            log.debug('skill chain compute attrs len: %d', this.length);
             this.invoke('computeAttrs', weapon, affixDict);
         },
     });
@@ -136,6 +136,7 @@ namespace.module('bot.inv', function (exports, require) {
         // weapon slots: mainHand, offHand
         // armor slots: head, chest, hands, legs
         initialize: function() {
+            
         },
 
         equip: function(item, slot) {
@@ -166,6 +167,7 @@ namespace.module('bot.inv', function (exports, require) {
                 log.info('ya done fucked up equipped sumpin\' ya don\'t equip name: %s type: %s', item.get('name'), item.itemType);
                 throw('shit');
             }
+            console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
         },
 
         getWeapon: function() {
@@ -177,11 +179,17 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getAffixes: function() {
-            var all = _.map(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
-                var item = this.get(name);
-                return item === undefined ? [] : item.get('affixes');
+            _.each(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
+                console.log('getaffixes: ', name, this.get(name));
             }, this);
 
+            var all = _.map(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
+                console.log(name);
+                var item = this.get(name);
+                console.log(item);
+                return item === undefined ? [] : item.get('affixes');
+            }, this);
+            console.log(all);
             return _.flatten(all);
         },
 
@@ -203,7 +211,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         initialize: function() {
             this.fetch();
-            log.info('armor collection length: %d', this.length);
+            log.debug('armor collection length: %d', this.length);
             if (this.length === 0) {
                 log.info('No armor in local storage.');
                 this.create({name: 'cardboard kneepads'});
@@ -218,7 +226,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         initialize: function() {
             this.fetch();
-            log.info('weapon collection length: %d', this.length);
+            log.debug('weapon collection length: %d', this.length);
             if (this.length === 0) {
                 log.info('No weapons in local storage.');
                 this.create({name: 'wooden sword'});
@@ -236,7 +244,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         initialize: function() {
             this.fetch();
-            log.info('skill collection length: %d', this.length);
+            log.debug('skill collection length: %d', this.length);
             if (this.length === 0) {
                 log.info('No skills in local storage.');
                 this.create({name: 'basic melee'});

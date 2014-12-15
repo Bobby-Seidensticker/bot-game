@@ -1,4 +1,5 @@
 namespace.module('bot.log', function (exports, require) {
+
     exports.extend({
         'debug': debug,
         'info': info,

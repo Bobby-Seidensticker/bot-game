@@ -17,14 +17,10 @@ namespace.module('bot.main', function (exports, require) {
         var gameView = new namespace.bot.window.GameView();
         var m = new menu.TabView();
 
-        var invModel = new inv.InvModel();
-        var invMenuView = new inv.InvMenuView({model: invModel});
+        //var invModel = new inv.InvModel();
+        //var invMenuView = new inv.InvMenuView({model: invModel});
         //var craftMenuView = new inv.CraftMenuView({model: invModel});
         //var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
-
-        window.invModel = invModel;
-        window.invMenuView = invMenuView;
-        window.game = gameView;
 
         gameModel.start();
     }
@@ -55,6 +51,13 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         tick: function() {
+            log.info('begin tick');
+            if (new Date().getTime() > window.STOP_AFTER) {
+                console.log('done');
+                this.stop();
+                return;
+            }
+
             if (!this.get('inZone')) {
                 this.zone = zone.newZoneModel(this.char);
             }
@@ -62,11 +65,13 @@ namespace.module('bot.main', function (exports, require) {
                 log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();
                 this.zone = zone.newZoneModel(this.char);
+                return;
             }
 
             var thisTime = new Date().getTime();
             var monsters = this.zone.getCurrentRoom().monsters;  // type MonsterCollection
-            for (var t = this.lastTime; t < thisTime; t++) {
+            for (var t = this.lastTime; t < thisTime; t += 2) {
+                log.debug('update');
                 // pass new time to char and all monsters
                 this.char.update(t);
                 monsters.update(t);
@@ -90,6 +95,8 @@ namespace.module('bot.main', function (exports, require) {
                 }
             }
 
+            this.lastTime = thisTime;
+
             if (this.get('running')) {
                 requestAnimFrame(this.tick.bind(this));
             }
@@ -97,3 +104,6 @@ namespace.module('bot.main', function (exports, require) {
     });
 
 });
+
+
+window.STOP_AFTER = new Date().getTime() + 5000;

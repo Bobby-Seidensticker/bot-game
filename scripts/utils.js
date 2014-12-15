@@ -34,6 +34,8 @@ namespace.module('bot.utils', function (exports, require) {
                 mores *= amt;
             } else {
                 log.error('Improperly formatted affix %s', mod);
+                throw('up');
+                console.log(mods, startVal, mores, adds);
             }
         });
         return adds * mores;

@@ -6,6 +6,7 @@ namespace.module('bot.main', function (exports, require) {
     var menu = namespace.bot.menu;
     var entity = namespace.bot.entity;
     var zone = namespace.bot.zone;
+    var views = namespace.bot.views;
 
     window.STOP_AFTER = new Date().getTime() + 100 * 1000;
 
@@ -40,6 +41,8 @@ namespace.module('bot.main', function (exports, require) {
             this.inv = new inv.InvModel();
 
             this.char = new entity.newChar(this.inv);
+
+            // this.headerView = views.newHeaderView(this.char, this.inv);
 
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;

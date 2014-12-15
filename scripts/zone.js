@@ -104,4 +104,3 @@ namespace.module('bot.zone', function (exports, require) {
         var currentZone = new ZoneModel();
     })();
 });
-

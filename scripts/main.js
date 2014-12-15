@@ -63,8 +63,9 @@ namespace.module('bot.main', function (exports, require) {
 
             if (!this.get('inZone')) {
                 this.zone = zone.newZoneModel(this.char);
+                this.set('inZone', true);
             }
-            if (!this.char.hp || this.char.hp <= 0 || this.zone.done()) {
+            if (!this.char.get('hp') || this.char.get('hp') <= 0 || this.zone.done()) {
                 log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();
                 this.zone = zone.newZoneModel(this.char);

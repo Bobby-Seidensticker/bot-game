@@ -74,9 +74,10 @@ namespace.module('bot.entity', function (exports, require) {
 
             console.log(affixDict);
             try {
-            utils.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
+                utils.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
             } catch (error) {
-                console.log('right here');
+                console.log('right here1');
+                throw(error);
             }
 
             t.fireResist = t.eleResistAll;
@@ -202,7 +203,7 @@ namespace.module('bot.entity', function (exports, require) {
 
                 this.set('nextAction', this.get('nextAction') - dt);
             } catch (error) {
-                console.log('right here');
+                console.log('right here2');
                 throw(error);
             }
         }

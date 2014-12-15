@@ -167,7 +167,7 @@ namespace.module('bot.inv', function (exports, require) {
                 log.info('ya done fucked up equipped sumpin\' ya don\'t equip name: %s type: %s', item.get('name'), item.itemType);
                 throw('shit');
             }
-            console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
+            //console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
         },
 
         getWeapon: function() {
@@ -179,17 +179,17 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getAffixes: function() {
-            _.each(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
+            /*_.each(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
                 console.log('getaffixes: ', name, this.get(name));
-            }, this);
+            }, this);*/
 
             var all = _.map(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
-                console.log(name);
+                //console.log(name);
                 var item = this.get(name);
-                console.log(item);
+                //console.log(item);
                 return item === undefined ? [] : item.get('affixes');
             }, this);
-            console.log(all);
+            //console.log(all);
             return _.flatten(all);
         },
 

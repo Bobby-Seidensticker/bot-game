@@ -11,6 +11,8 @@ namespace.module('bot.main', function (exports, require) {
     var zone = namespace.bot.zone;
 
     function onReady() {
+        localStorage.clear();
+
         log.info('onReady');
         var gameModel = new GameModel();
 

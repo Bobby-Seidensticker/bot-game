@@ -100,7 +100,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         takeDamage: function(damage) {
-            log.info('Team %s taking damage, hit for %s', this.teamString(), JSON.stringify(damage));
+	    log.info('Team %s taking damage, hit for %s, start hp: %d', this.teamString(), JSON.stringify(damage), this.get('hp'));
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;

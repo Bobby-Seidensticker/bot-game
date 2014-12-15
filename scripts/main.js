@@ -11,6 +11,8 @@ namespace.module('bot.main', function (exports, require) {
     var zone = namespace.bot.zone;
 
     function onReady() {
+        localStorage.clear();
+
         log.info('onReady');
         var gameModel = new GameModel();
 
@@ -42,6 +44,7 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         start: function() {
+            log.info('start');
             this.set({running: true});
             requestAnimFrame(this.tick.bind(this));
         },
@@ -65,12 +68,12 @@ namespace.module('bot.main', function (exports, require) {
                 log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();
                 this.zone = zone.newZoneModel(this.char);
-                return;
             }
 
             var thisTime = new Date().getTime();
             var monsters = this.zone.getCurrentRoom().monsters;  // type MonsterCollection
-            for (var t = this.lastTime; t < thisTime; t += 2) {
+            //for (var t = this.lastTime; t < thisTime; t += 2) {
+            for (var t = this.lastTime; t < thisTime; t += thisTime - this.lastTime) {
                 log.debug('update');
                 // pass new time to char and all monsters
                 this.char.update(t);
@@ -106,4 +109,4 @@ namespace.module('bot.main', function (exports, require) {
 });
 
 
-window.STOP_AFTER = new Date().getTime() + 5000;
+window.STOP_AFTER = new Date().getTime() + 3000;

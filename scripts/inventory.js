@@ -30,7 +30,7 @@ namespace.module('bot.inv', function (exports, require) {
         }),
 
         initialize: function() {
-            log.debug('Armor Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
+            // log.debug('Armor Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
             if (!('id' in this)) {
                 log.debug('loading armor %s from file', this.get('name'));
                 this.set(itemref.expand('armor', this.get('name')));
@@ -49,7 +49,7 @@ namespace.module('bot.inv', function (exports, require) {
         }),
 
         initialize: function() {
-            log.debug('Weapon Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
+            // log.debug('Weapon Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
             if (!('id' in this)) {
                 log.debug('loading weapon %s from file', this.get('name'));
                 this.set(itemref.expand('weapon', this.get('name')));
@@ -69,7 +69,7 @@ namespace.module('bot.inv', function (exports, require) {
         }),
 
         initialize: function() {
-            log.debug('Skill Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
+            // log.debug('Skill Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
             if (!('id' in this)) {
                 log.debug('loading skill %s from file', this.get('name'));
                 this.set(itemref.expand('skill', this.get('name')));
@@ -167,7 +167,7 @@ namespace.module('bot.inv', function (exports, require) {
                 log.info('ya done fucked up equipped sumpin\' ya don\'t equip name: %s type: %s', item.get('name'), item.itemType);
                 throw('shit');
             }
-            console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
+            //console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
         },
 
         getWeapon: function() {
@@ -179,17 +179,17 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getAffixes: function() {
-            _.each(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
+            /*_.each(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
                 console.log('getaffixes: ', name, this.get(name));
-            }, this);
+            }, this);*/
 
             var all = _.map(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
-                console.log(name);
+                //console.log(name);
                 var item = this.get(name);
-                console.log(item);
+                //console.log(item);
                 return item === undefined ? [] : item.get('affixes');
             }, this);
-            console.log(all);
+            //console.log(all);
             return _.flatten(all);
         },
 

@@ -1,11 +1,25 @@
 namespace.module('bot.log', function (exports, require) {
 
-    exports.extend({
-        'debug': debug,
-        'info': info,
-        'warning': warning,
-        'error': error
-    });
+    var LEVEL = 'debug';
+
+    var FNS = [debug, info, warning, error];
+
+    var NAMES = ['debug', 'info', 'warning', 'error'];
+
+    var extender = {};
+    var clear = false;
+
+    for (var i = 0; i < FNS.length; i++) {
+        if (clear || LEVEL === NAMES[i]) {
+            extender[NAMES[i]] = FNS[i];
+            clear = true;
+            console.log(NAMES[i], ' clear');
+        } else {
+            extender[NAMES[i]] = function() {};
+        }
+    }
+
+    exports.extend(extender);
 
     function dateStr() {
         return (new Date()).toString().slice(4, -15);

@@ -314,7 +314,7 @@ namespace.module('bot.itemref', function (exports, require) {
             }
         }
         names[names.length] = name;
-        log.debug("recExtend, name %s, names now %s", name, JSON.stringify(names));
+        // log.debug("recExtend, name %s, names now %s", name, JSON.stringify(names));
         return names;
     }
 
@@ -339,7 +339,7 @@ namespace.module('bot.itemref', function (exports, require) {
         }
         item['name'] = name;
 
-        log.debug("Final item: %s", JSON.stringify(item));
+        log.debug("itemref.expand(%s, %s), Final item: %s", type, name, JSON.stringify(item));
 
         return item;
     }

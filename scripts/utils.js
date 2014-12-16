@@ -68,4 +68,3 @@ namespace.module('bot.utils', function (exports, require) {
     });
 
 });
-

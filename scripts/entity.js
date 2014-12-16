@@ -137,8 +137,8 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         onKill: function(target, skill) {
-            this.set('xp', this.get('xp') + target.level);
-            while (this.get('xp') > this.get('nextLevelXp')) {
+            this.set('xp', this.get('xp') + target.get('level'));
+            while (this.get('xp') >= this.get('nextLevelXp')) {
                 this.set('level', this.get('level') + 1);
                 this.set('xp', this.get('xp') - this.get('nextLevelXp'));
                 this.set('nextLevelXp', this.getNextLevelXp());

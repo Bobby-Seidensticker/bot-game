@@ -136,3 +136,11 @@ body {
 .closed {
     display: none;
 }
+
+/* header vis */
+
+.stats {
+    font-size: 16px;
+}
+
+/* / header vis */

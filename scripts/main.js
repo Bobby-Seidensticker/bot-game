@@ -26,7 +26,12 @@ namespace.module('bot.main', function (exports, require) {
         // var craftMenuView = new inv.CraftMenuView({model: invModel});
         // var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
 
-        // gameModel.start();
+        $(window).on('keypress', function(event) {
+            var SPACE = 32;
+            if (event.keyCode == SPACE) {
+                gameModel.start();
+            }
+        });
     }
 
     var GameModel = Backbone.Model.extend({

@@ -135,6 +135,8 @@ namespace.module('bot.inv', function (exports, require) {
 
     var EquippedGearModel = Backbone.Model.extend({
 
+        slots: ['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'],
+
         // weapon slots: mainHand, offHand
         // armor slots: head, chest, hands, legs
         initialize: function() {
@@ -187,7 +189,7 @@ namespace.module('bot.inv', function (exports, require) {
                 console.log('getaffixes: ', name, this.get(name));
             }, this);*/
 
-            var all = _.map(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
+            var all = _.map(this.slots, function(name) {
                 //console.log(name);
                 var item = this.get(name);
                 //console.log(item);
@@ -208,7 +210,13 @@ namespace.module('bot.inv', function (exports, require) {
                     'equippedBy': ''
                 });
             }
-        }
+        },
+
+        toDict: function() {
+            return _.object(
+                this.slots,
+                _.map(this.slots, this.get, this));
+        },
     });
 
     var ArmorCollection = Backbone.Collection.extend({

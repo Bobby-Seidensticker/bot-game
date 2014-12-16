@@ -1,6 +1,5 @@
 namespace.module('bot.main', function (exports, require) {
 
-
     var log = namespace.bot.log;
     var inv = namespace.bot.inv;
     var menu = namespace.bot.menu;

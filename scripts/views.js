@@ -7,9 +7,12 @@ namespace.module('bot.views', function (exports, require) {
             this.char = char;
             this.inv = inv;
 
-            console.log('right here');
+            console.log('right here views');
 
-            this.$el.html(this.template(this.char.toJSON()));
+            console.log(_.extend({ items: this.char.get('equipped').toDict() }, this.char.toJSON()));
+
+            this.$el.html(this.template(_.extend({ items: this.char.get('equipped').toDict() }, this.char.toJSON())));
+
             this.setElement(this.$('.stats'));
 
             this.char.on('change', this.render, this);

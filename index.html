@@ -170,6 +170,14 @@
         </tr>
       </table>
     </div>
+    <div class="equipped">
+      <% _.each(items, function(item, slot) { %>
+      <div class="<%= slot %>">
+        <img src="assets/<%= item === undefined ? 'empty' : item.get('name') %>.svg" width="60" height="60" />
+      </div>
+      <% }); %>
+    </div>
+
     <!--
     <div class="headerstats" id="header-{{id}}">
       <div class="stats">

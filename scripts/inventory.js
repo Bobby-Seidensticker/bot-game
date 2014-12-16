@@ -152,6 +152,7 @@ namespace.module('bot.inv', function (exports, require) {
                 if (slot === 'mainHand' || slot === 'offHand') {
                     this.unequip(this.get(slot));
                     this.set(slot, item);
+                    item.set('equippedBy', this.get('charName'));
                 } else {
                     log.info('ya done fucked up equipping a weapon name: %s type: %s', item.get('name'), item.itemType);
                     throw('shit');
@@ -160,6 +161,7 @@ namespace.module('bot.inv', function (exports, require) {
                 if (item.get('type') === slot) {
                     this.unequip(this.get(slot));
                     this.set(slot, item);
+                    item.set('equippedBy', this.get('charName'));
                 } else {
                     log.info('ya done fucked up equipped armor name: %s type: %s', item.get('name'), item.itemType);
                     throw('shit');
@@ -200,7 +202,10 @@ namespace.module('bot.inv', function (exports, require) {
 
         unequip: function(item) {
             if (item !== undefined) {
-                item.set('equipped', false);
+                item.set({
+                    'equipped': false,
+                    'equippedBy': ''
+                });
             }
         }
     });

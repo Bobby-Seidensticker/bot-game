@@ -14,13 +14,12 @@ namespace.module('bot.test', function (exports, require) {
     function onReady() {
         log.info('LOADED');
 
-
         QUnit.test('page loaded', function(assert) {
             assert.equal('hello', 'hello', 'page has loaded successfully');
         });
 
         log.info('onReady');
-        //console.log(main);
+
         var gameModel = new main.GameModel();
         console.log('gameModel', gameModel);
 
@@ -28,25 +27,24 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(gameModel.char, 'initialized with char');
             assert.ok(gameModel.inv, 'initialized with inv');
             assert.ok(gameModel.lastTime, 'able to get time');
-            assert.equal(gameModel.zonesCleared, 0, 'starting with 0 zones cleared');
         });
 
-        QUnit.test('character properly initialized', function(assert) {
+        QUnit.test('Character properly initialized', function(assert) {
             var char = gameModel.char;
             console.log('char', char);
             assert.ok(char, 'character created');
-            assert.equal(char.get('name'), 'bobbeh', 'char names bobbeh');
+            assert.equal(char.get('name'), 'bobbeh', 'char name is bobbeh');
             assert.equal(char.get('level'), 1, 'character level intialized to level 1');
             assert.equal(char.get('team'), 0, 'character on correct team');
             assert.equal(char.get('xp'), 0, 'Character xp initialize to 0');
-            assert.equal(char.get('nextLevelXp'), char.getNextLevelXp(), 'nextLevelXp saved on char');
+            assert.equal(char.get('nextLevelXp'), char.getNextLevelXp(), 'nextLevelXp initialized');
 
             validateAttributes(assert, char);
 
-            //Skills
+            // Skills
             var skillChain = char.get('skillChain');
             assert.equal(skillChain.length, 1, 'initialized skill chain with one skill');
-            var skill = skillChain.models[0];
+            var skill = skillChain.at(0);
             assert.equal(skill.get('name'), 'basic melee', 'initialized with "basic melee"');
             validateSkill(assert, skill);
             assert.equal(skill.get('exp'), 0, 'skill created with 0 xp');
@@ -54,22 +52,24 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
 	});
 
-	QUnit.test('ZONERBONER', function(assert) {
+	QUnit.test('Zone test', function(assert) {
             assert.equal(false, gameModel.get('inZone'), 'not inZone');
             assert.equal(false, gameModel.get('running'), 'not running');
-	    assert.ok(1, 'tick happens here (generates zone as side effect)');
 	    gameModel.tick();
+	    assert.ok(1, 'gameModel.tick didn\'t crash it');
             assert.equal(true, gameModel.get('inZone'), 'inZone');
-	    //console.log('zone', gameModel.zone);
+	    // console.log('zone', gameModel.zone);
 	    assert.ok(gameModel.zone, 'Zone created on tick');
-	    assert.ok(gameModel.zone.get('roomCount') >= 0,  ' has roomcount of at least 1');
-	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), ' roomcount matches number of rooms created');
-	    assert.ok(gameModel.zone.get('char'), ' has a char');
-	    var monsters = gameModel.zone.get('rooms')[0].monsters.models;
-	    //console.log(monsters);
+	    assert.ok(gameModel.zone.get('roomCount') >= 0, 'has roomcount of at least 1');
+	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), 'roomcount matches number of rooms created');
+	    assert.ok(gameModel.zone.get('char'), 'has a char');
+
+            assert.equal(gameModel.zone.get('charPos'), 0, 'Character is in room 0');
+	    var monsters = gameModel.zone.getCurrentRoom().monsters;
+	    // console.log(monsters);
 	    assert.ok(monsters.length, 'room 0 monsters have truthy length');
-	    var mon = monsters[namespace.bot.prob.pyRand(0,monsters.length)]; //grab random mon in room
-	    assert.equal(mon.get('team'), 1, 'rand monster on monster team');
+	    var mon = monsters.at(0);
+	    assert.equal(mon.get('team'), 1, 'First monster in room 0 is on correct team');
 	    validateAttributes(assert, mon);
 	    validateSkill(assert, mon.get('skillChain').models[0]);
 	});
@@ -142,7 +142,6 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(entity.get('lightResist') > 0, 'lightResist initialized with positive value: ' + entity.get('lightResist'));
             assert.ok(entity.get('poisResist') > 0, 'poisResist initialized with positive value: ' + entity.get('poisResist'));
         }
-
 
 	//NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
         function validateSkill(assert, skill) {

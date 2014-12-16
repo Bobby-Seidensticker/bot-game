@@ -8,6 +8,16 @@ namespace.module('bot.main', function (exports, require) {
         'onReady': onReady
     });
 
+
+    // Control Panel
+    var ROOMSPERMAP = 2;
+    var MONSTERSPERROOM = 1;
+    var LOG_ATTACKS = false;
+    var SHOWNAMES = true;
+
+
+
+
     // constants should be namespace and moved to another file
     var WEAPON_BASE = 2;
     var WEAPON_MULT = 1.2;
@@ -15,8 +25,7 @@ namespace.module('bot.main', function (exports, require) {
     var ARMOR_MULT = 1.2;
     var ITEM_TYPES = ['weapon', 'armor'];
 
-    var LOG_ATTACKS = false;
-    var SHOWNAMES = true;
+
 
     var TC = 1;  // time coefficient
     var FRAMERATE = 1000 / 60;
@@ -100,7 +109,7 @@ namespace.module('bot.main', function (exports, require) {
     function startInstance() {
         you.initStats();
         var mapLevel = you.level - 5 >= 1 ? you.level - 5 : 1;
-        var mapRooms = 50;
+        var mapRooms = ROOMSPERMAP;
         currentInstance = new Instance(you, new Map('forest', mapLevel, mapRooms));        
     }
 
@@ -121,7 +130,7 @@ namespace.module('bot.main', function (exports, require) {
         this.map = map;
         this.roomIndex = 0;
         this.complete = false;
-
+        this.killed = [];
         this.init();
 
         this.timeAccumulator = 0;
@@ -137,6 +146,8 @@ namespace.module('bot.main', function (exports, require) {
         this.curTime = 0;
 
         this.damageIndicators = [];
+        this.bigMessages = [];
+
         this.entities[0] = [this.hero];
         this.hero.dead = false;
         this.initRoom();
@@ -148,6 +159,8 @@ namespace.module('bot.main', function (exports, require) {
         this.entities[1] = room.monsters;
         this.hero.onEnterRoom(this.curTime);
         room.init(this.curTime);
+        removeDeadFromBox2D(this.killed);
+        this.killed = [];
         box2DInit(this);
     };
 
@@ -158,20 +171,33 @@ namespace.module('bot.main', function (exports, require) {
             console.log("entering room " + this.roomIndex);
             if (this.roomIndex < this.map.rooms.length) {
                 this.initRoom();
+            } else {
+                this.finishInstance();
             }
         }
     };
 
     Instance.prototype.isComplete = function() {
-        if (!this.hero.isAlive()) {
-            console.log("hero dead");
-            return true;
-        }
         if (this.roomIndex >= this.map.rooms.length) {
+            this.bigMessages.push(new BigMessage("Area Clear"));
             return true;
         }
+
+        if(this.bigMessages.length > 0 ) {
+            return false;
+        }
+
+        if (!this.hero.isAlive()) {
+            return true;
+        }
+
         return false;
     };
+
+    Instance.prototype.finishInstance = function() {
+        console.log("FINISH INSTANCE");
+        onTick();
+    }
 
 
     Instance.prototype.finishRoom = function() {
@@ -186,7 +212,6 @@ namespace.module('bot.main', function (exports, require) {
         //console.log(dt);
         this.previousTime = now;
 
-        var killed = [];
 
         for( var i in this.entities ) {
             for ( var j in this.entities[i] ) {
@@ -194,7 +219,7 @@ namespace.module('bot.main', function (exports, require) {
                 if(this.entities[i][j] !== undefined){
                     if(i == 1 && this.entities[i][j].dead) {
                         //console.log("dead cleanup");
-                        killed.push(this.entities[i][j].name);
+                        this.killed.push(this.entities[i][j].name);
                         this.entities[i].splice(j, 1);
                     } else {
                         this.entities[i][j].update(dt);
@@ -205,7 +230,7 @@ namespace.module('bot.main', function (exports, require) {
         this.tryFinishRoom();
         //console.log(this.map.rooms[this.roomIndex].monsters);
         //console.log(this.entities[1]);
-        removeDeadFromBox2D(killed);
+        removeDeadFromBox2D(this.killed);
         this.timeAccumulator += dt;
         if(this.timeAccumulator >= FRAMERATE){
             //this.timeAccumulator -= FRAMERATE;
@@ -224,9 +249,10 @@ namespace.module('bot.main', function (exports, require) {
 
         if (this.isComplete()) {
             onTick();
-        } else {
-            requestAnimFrame(this.run.bind(this));
-        }
+        } 
+        requestAnimFrame(this.run.bind(this));
+        
+        
 
     };
 
@@ -306,6 +332,11 @@ namespace.module('bot.main', function (exports, require) {
             }
         }
 
+        for( i in this.bigMessages) {
+            if(this.bigMessages[i].render()){ // render passes back true when indicator needs to be killed
+                this.bigMessages.splice(i, 1);
+            }
+        }
 
     };
 
@@ -323,7 +354,7 @@ namespace.module('bot.main', function (exports, require) {
                     this.entities[i][j].x = bodiesState[this.entities[i][j].name].x;
                     this.entities[i][j].y = bodiesState[this.entities[i][j].name].y;
                 } else {
-                    console.log(["ELSE", bodiesState]);
+                    console.log(["ELSE", bodiesState, this.entities[i]]);
                 }
             }
         }
@@ -571,24 +602,8 @@ namespace.module('bot.main', function (exports, require) {
 
     Actor.prototype.moveSkill = function(actionName) {
         // TODO - filter by action name to accomodate multiple different kinds of movement styles
-
-        var targDist = this.distanceTo(this.target);
-        var axes = ["x", "y"];
-
-        //TODO  - fix movement overlap bug - allow collisions between all enemies, not just target
-        for( var i in axes) {
-            var axis = axes[i];
-            var sizeBuffer = (this.size + this.target.size)/2; //widths of the nearest halves of each actor
-            var dist = this.target[axis] - this[axis]; // dist on axis between enemies directionally
-            if (Math.abs(dist) >= sizeBuffer + this.movementSpeed) {
-                var direction = dist / Math.abs(dist);
-                //this[axis] += this.movementSpeed * direction;
-                var angle = this.angleToTarget(this.target);
-                box.applyImpulse(this.name, parseInt(angle), parseInt(9999));
-
-            }
-
-        }
+        var angle = this.angleToTarget(this.target);
+        box.applyImpulse(this.name, parseInt(angle), parseInt(100));
 
     };
 
@@ -610,7 +625,7 @@ namespace.module('bot.main', function (exports, require) {
         this.actionChain = ["heavyStrike", "basicAttack", "approachTarget", "getNearestTarget"];
 
         var weapon = weapon ? weapon : new Weapon(6);
-        var armor = armor ? armor : new Armor(6); //temporarily buffing armor, should start at 1
+        var armor = armor ? armor : new Armor(1); //temporarily buffing armor, should start at 1
         var dmgMod = this.str / 3;
         var hpMax = this.vit * 5;
         var mspa = 700;
@@ -632,6 +647,14 @@ namespace.module('bot.main', function (exports, require) {
         this.cooldownTime = 0;
         this.mp = this.mpMax;
         this.initStats();
+    };
+
+    Hero.prototype.die = function() {
+        if(this.dead == false) {
+            this.dead = true;
+            currentInstance.bigMessages.push(new BigMessage("You Died"));
+            console.log("hero dead");
+        }
     };
 
     function Monster(name, level, weapon, armor, dmgMod) {
@@ -725,10 +748,10 @@ namespace.module('bot.main', function (exports, require) {
         for (var i = 0; i < this.len; i++) {
             monsterNames = ['Pogi', 'Doofus', 'Nerd', 'DURR', 'herp', 'derp', 'Nards', 'Kenny', 'Vic', 'jay', 'boo', 'bob', 'smelly', 'harold', 'frank', 'gunther', 'saul', 'jesse', 'walt', 'chris', 'gus', 'mike', 'gale', 'jr', 'dustin', 'alan', 'alex'];
 
-            monsterCount = 10;
+            monsterCount = MONSTERSPERROOM;
             //monsterCount = prob.pProb(this.monster_count) + 2;// increasing monster count by one so monster always present TODO - tune this value better.
             mons = [];
-            level = 1; // force weak monsters TODO remove
+            //level = 1; // force weak monsters TODO remove
             for (var j = 0; j < monsterCount; j++) {
                 mons[j] = new Monster(this.getMonsterName(monsterNames)+j, level);
             }
@@ -738,7 +761,7 @@ namespace.module('bot.main', function (exports, require) {
 
     Map.prototype.getMonsterName = function(names) {
         if (names.length === 0) {
-            return;
+            return "boringname";
         }
         var rand = prob.pyRand(0, names.length);
         var name = names[rand];
@@ -773,7 +796,7 @@ namespace.module('bot.main', function (exports, require) {
             cvs = document.getElementById("physCanvas");
             var ctx=cvs.getContext("2d");
             
-            ctx.fillStyle="rgba(99,99,99," + parseFloat((25-this.age)/25) + ")"; //Damage is red
+            ctx.fillStyle="rgba(99,99,99," + parseFloat((25-this.age)/25) + ")"; //Damage is grey
             ctx.fillText(parseInt(this.dmg), this.x, this.y-this.age*2);
             this.age++;
             return false;
@@ -808,6 +831,28 @@ namespace.module('bot.main', function (exports, require) {
                 delete world[killed[i]];
             }
         }
+    }
+
+    function BigMessage(str) {
+        this.str = str;
+        this.age = 0;
+    }
+
+    BigMessage.prototype.render = function() {
+        if (this.age < 30) {
+            cvs = document.getElementById("physCanvas");
+            var ctx=cvs.getContext("2d");
+            ctx.font="50px Arial";
+            ctx.fillStyle="rgba(0,0,0,"+parseInt(255-this.age)+")"; 
+            ctx.fillText(this.str, ctx.canvas.width/2-150, ctx.canvas.height/2-30);
+            ctx.font="10px Arial";
+            this.age++;
+            console.log([this.str, this.age]);
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
 
@@ -852,8 +897,6 @@ namespace.module('bot.main', function (exports, require) {
     Entity.build = function(def) {
       if (def.radius) {
         return new CircleEntity(def.id, def.x, def.y, def.angle, NULL_CENTER, def.color, def.radius);
-      } else if (def.polys) {
-        return new PolygonEntity(def.id, def.x, def.y, def.angle, NULL_CENTER, def.color, def.polys);
       } else {
         return new RectangleEntity(def.id, def.x, def.y, def.angle, NULL_CENTER, def.color, def.halfWidth, def.halfHeight);
       }
@@ -953,10 +996,10 @@ namespace.module('bot.main', function (exports, require) {
     ];*/
 
     var boundaries = [
-        {id:"ceiling", x: ctx.canvas.width / 2, y: 0, halfHeight: 0.5, halfWidth: ctx.canvas.width, color: 'yellow'},
-        {id:"ground", x: ctx.canvas.width / 2, y: ctx.canvas.height, halfHeight: 0.5, halfWidth: ctx.canvas.width, color: 'yellow'},
-        {id:"lwall", x: 0, y: ctx.canvas.height/2, halfHeight: ctx.canvas.height, halfWidth: 0.5, color: 'yellow'},
-        {id:"rwall", x: ctx.canvas.width, y: ctx.canvas.height/2, halfHeight: ctx.canvas.height, halfWidth: 0.5, color: 'yellow'}
+        {id:"ceiling", x: ctx.canvas.width / 2, y: 0, halfHeight: 0.5, halfWidth: ctx.canvas.width, color: 'gray'},
+        {id:"ground", x: ctx.canvas.width / 2, y: ctx.canvas.height, halfHeight: 0.5, halfWidth: ctx.canvas.width, color: 'gray'},
+        {id:"lwall", x: 0, y: ctx.canvas.height/2, halfHeight: ctx.canvas.height, halfWidth: 0.5, color: 'gray'},
+        {id:"rwall", x: ctx.canvas.width, y: ctx.canvas.height/2, halfHeight: ctx.canvas.height, halfWidth: 0.5, color: 'gray'}
     ];
     
     var running = true;
@@ -978,9 +1021,9 @@ namespace.module('bot.main', function (exports, require) {
                 //console.log(["initBox2d", entX, entY, world]);
             }
         }
-      var bulletElem = {"checked":true}; //PLACEHOLDER ASSIGNMENT~~~
       box = new bTest(60, false, canvasWidth, canvasHeight, SCALE);
-      box.setBodies(world, bulletElem.checked);
+      box.setBodies(world, false);
+
       //box.activateListener();
       //console.log(box);
     //initListen();

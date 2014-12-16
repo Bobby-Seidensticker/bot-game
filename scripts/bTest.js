@@ -22,7 +22,7 @@ function bTest(intervalRate, adaptive, width, height, scale) {
 
   this.world = new b2World(
         new b2Vec2(0, 0)    //gravity
-     ,  true                 //allow sleep
+     ,  false                 //allow sleep
   );
 
   this.fixDef = new b2FixtureDef;
@@ -161,10 +161,10 @@ bTest.prototype.activateListener = function() {
 
 bTest.prototype.destroyByName = function(bodyId) {
     //console.log(bodyId);
-    console.log(this.bodiesMap[bodyId]);
+    //console.log(this.bodiesMap[bodyId]);
     if(this.bodiesMap[bodyId]) {
       this.world.DestroyBody(this.bodiesMap[bodyId]);
     } else {
-      console.log(["destroyByName else: ", bodyId]);
+      console.log(["destroyByName bodyId not in bodiesMap: ", bodyId]);
     }
 }

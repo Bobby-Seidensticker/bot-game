@@ -22,6 +22,7 @@ namespace.module('bot.entity', function (exports, require) {
                 //weapon: {'damage': 1, 'range':1, 'speed': 1, 'affixes': ['strength more 1.1']}, //'fists' weapon auto equipped when unarmed.
                 //armor: [],
                 affixes: ['strength more 1.5', 'strength more 2', 'strength added 10'],
+                xp: 0,
                 team: 1
             };
         },
@@ -57,7 +58,7 @@ namespace.module('bot.entity', function (exports, require) {
             // HP_PER_LVL = 10;
             // HP_PER_VIT = 2;
 
-            t.hp = t.level * 10 + t.vitality * 2 ;
+            t.hp = t.level * 10 + t.vitality * 2;
             t.mana = t.level * 5 + t.wisdom * 2;
             t.armor = t.strength * 0.5;
             t.dodge = t.dexterity * 0.5;
@@ -78,6 +79,8 @@ namespace.module('bot.entity', function (exports, require) {
             t.maxMana = t.mana;
             delete t.eleResistAll;
             this.set(t);
+
+            this.set('nextLevelXp', this.getNextLevelXp());
         },
 
         isMonster: function() {
@@ -128,6 +131,22 @@ namespace.module('bot.entity', function (exports, require) {
             });
             log.debug('Team %s attacking target', this.teamString());
             target.takeDamage(this.getDamage(skill));
+            if (!target.isAlive()) {
+                this.onKill(target, skill);
+            }
+        },
+
+        onKill: function(target, skill) {
+            this.set('xp', this.get('xp') + target.level);
+            while (this.get('xp') > this.get('nextLevelXp')) {
+                this.set('level', this.get('level') + 1);
+                this.set('xp', this.get('xp') - this.get('nextLevelXp'));
+                this.set('nextLevelXp', this.getNextLevelXp());
+            }
+        },
+
+        getNextLevelXp: function() {
+            return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
         },
 
         getDamage: function(skill) {

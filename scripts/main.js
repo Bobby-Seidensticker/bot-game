@@ -21,12 +21,12 @@ namespace.module('bot.main', function (exports, require) {
 
         var invMenuView = new inv.InvMenuView({model: gameModel.inv});
 
-        //var invModel = new inv.InvModel();
-        //var invMenuView = new inv.InvMenuView({model: invModel});
-        //var craftMenuView = new inv.CraftMenuView({model: invModel});
-        //var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
+        // var invModel = new inv.InvModel();
+        // var invMenuView = new inv.InvMenuView({model: invModel});
+        // var craftMenuView = new inv.CraftMenuView({model: invModel});
+        // var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
 
-        gameModel.start();
+        // gameModel.start();
     }
 
     var GameModel = Backbone.Model.extend({
@@ -42,7 +42,7 @@ namespace.module('bot.main', function (exports, require) {
 
             this.char = new entity.newChar(this.inv);
 
-            // this.headerView = views.newHeaderView(this.char, this.inv);
+            this.headerView = views.newHeaderView(this.char, this.inv);
 
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;

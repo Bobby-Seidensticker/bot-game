@@ -35,7 +35,7 @@ namespace.module('bot.test', function (exports, require) {
             var char = gameModel.char;
             console.log("char", char);
             assert.ok(char, 'character created');
-            assert.equal(char.get('name'), 'bobbeh', 'char names Bobbeh');
+            assert.equal(char.get('name'), 'bobbeh', 'char names bobbeh');
             assert.equal(char.get('level'), 1, 'character level intialized to level 1');
             assert.equal(char.get('team'), 0, 'character on correct team');
             assert.equal(char.get('xp'), 0, 'Character xp initialize to 0');
@@ -51,7 +51,7 @@ namespace.module('bot.test', function (exports, require) {
             validateSkill(assert, skill);
             assert.equal(skill.get('exp'), 0, 'skill created with 0 xp');
             assert.equal(skill.get('level'), 1, 'skill should be initialized at level 1, current level: ' + skill.get('level'));
-            assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to Bobbeh');
+            assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
 	});
 
 	QUnit.test( 'ZONERBONER' , function( assert ) {

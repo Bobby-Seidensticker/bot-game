@@ -22,11 +22,9 @@ namespace.module('bot.test', function (exports, require) {
         log.info('onReady');
         //console.log(main);
         var gameModel = new main.GameModel();
-        console.log(gameModel);
+        console.log("gameModel", gameModel);
 
         QUnit.test( 'gameModel initialized' , function( assert ) {
-            assert.equal(false, gameModel.get('inZone'), 'not inZone');
-            assert.equal(false, gameModel.get('running'), 'not running');
             assert.ok(gameModel.char, 'initialized with char');
             assert.ok(gameModel.inv, 'initialized with inv');
             assert.ok(gameModel.lastTime, 'able to get time');
@@ -35,7 +33,7 @@ namespace.module('bot.test', function (exports, require) {
 
         QUnit.test( 'character properly initialized' , function( assert ) {
             var char = gameModel.char;
-            console.log(char);
+            console.log("char", char);
             assert.ok(char, 'character created');
             assert.equal(char.get('name'), 'bobbeh', 'char names Bobbeh');
             assert.equal(char.get('level'), 1, 'character level intialized to level 1');
@@ -54,8 +52,27 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(skill.get('exp'), 0, 'skill created with 0 xp');
             assert.equal(skill.get('level'), 1, 'skill should be initialized at level 1, current level: ' + skill.get('level'));
             assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to Bobbeh');
-        });
+	});
 
+	QUnit.test( 'ZONERBONER' , function( assert ) {
+            assert.equal(false, gameModel.get('inZone'), 'not inZone');
+            assert.equal(false, gameModel.get('running'), 'not running');
+	    assert.ok(1, "tick happens here (generates zone as side effect)");
+	    gameModel.tick();
+            assert.equal(true, gameModel.get('inZone'), 'inZone');
+	    console.log("zone", gameModel.zone);
+	    assert.ok(gameModel.zone, "Zone created on tick");
+	    assert.ok(gameModel.zone.get('roomCount') >= 0,  " has roomcount of at least 1");
+	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), " roomcount matches number of rooms created");
+	    assert.ok(gameModel.zone.get('char'), " has a char");
+	    var monsters = gameModel.zone.get('rooms')[0].monsters.models;
+	    console.log(monsters);
+	    assert.ok(monsters.length, "room 0 monsters have truthy length");
+	    var mon = monsters[namespace.bot.prob.pyRand(0,monsters.length)]; //grab random mon in room
+	    assert.equal(mon.get('team'), 1, "rand monster on monster team");
+	    validateAttributes(assert, mon);
+	});
+	
         function validateAttributes(assert, entity) {
             assert.ok(entity.get('maxHp') > 0, 'entity has  positive maxHp: ' + entity.get('maxHp'));
             assert.equal(entity.get('hp'), entity.get('maxHp'), 'hp initialized to maxHp');
@@ -90,7 +107,7 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(skill.get('speed') > 0, 'skill has positive speed: ' + skill.get('speed')); // TODO - figure out how speed actuallly works
             assert.ok(skill.get('affixes').length !== undefined, 'skill contains array of affixes');
 
-            console.log(skill.attributes);
+            //console.log(skill.attributes);
         }
 
         //var gameView = new namespace.bot.window.GameView();

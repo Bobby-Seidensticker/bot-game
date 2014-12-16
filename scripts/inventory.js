@@ -135,7 +135,7 @@ namespace.module('bot.inv', function (exports, require) {
 
     var EquippedGearModel = Backbone.Model.extend({
 
-        slots: ['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'],
+        slots: ['mainHand',  'head', 'offHand', 'hands', 'chest', 'legs'],
 
         // weapon slots: mainHand, offHand
         // armor slots: head, chest, hands, legs

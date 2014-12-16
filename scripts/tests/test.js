@@ -75,18 +75,53 @@ namespace.module('bot.test', function (exports, require) {
 	});
 
 	QUnit.test( 'inventory', function( assert ) {
-	    //TODO - why arent 
-	    assert.ok(!jQuery.isEmptyObject(gameModel.char.get('inv').attributes), "gameModel.char.inv is not empty object");
-	    assert.ok(!jQuery.isEmptyObject(gameModel.inv.attributes), "gameModel.inv is not empty object");
+	    //TODO - why dont these inv locations have any attributes?  Inv seems to work on index.html...?
+	    var inven = gameModel.char.get('inv');
 
-	    
+	    assert.ok(inven.weapons.length, "inventory has at least one weapon");
+	    assert.ok(inven.armor.length, "inventory has at least one armor");
+	    assert.ok(inven.skills.length, "inventory has at least one skill");
+
+	    console.log('wep0', inven.skills.models[0]);
+	    validateWeapon(assert, inven.weapons.models[0]);
+	    validateItem(assert, inven.armor.models[0]);
+	    validateItem(assert, inven.skills.models[0]);
 	});
 
-	
+	function validateWeapon(assert, item) {
+	    validateItem(assert, item);
+	    var name = item.get('name');
+	    var types = ['melee','range','spell']; //valid weapon types
+	    assert.ok(types.indexOf(item.get('type')) >= 0, name + " has valid type: " + item.get('type'));
+	    assert.ok(item.get('damage') >= 0, name + " has non-negative damage value: " + item.get('damage'));
+	    assert.ok(item.get('range') >= 0, name + " has non-negative range value: " + item.get('range'));
+	    assert.ok(item.get('speed') >= 0, name + " has non-negative speed value: " + item.get('speed'));	    
+	}
+
+	function validateItem(assert, item) {
+	    var name = item.get('name');
+	    assert.ok(name, name + " has valid name");
+
+	    assert.ok(item.get('exp') >= 0, name + " has non-negative exp value: " + item.get('exp'));
+	    var affs = item.get('affixes');
+	    assert.ok(jQuery.isArray(affs), name + " has affix array");
+
+	    //item affix validation
+	    if(affs.length === 0 ) {
+		assert.ok(1, "empty affix array is valid");
+	    } else {
+		for (var i = 0; i < affs.length; i++) {
+		    var split = affs[i].split(' ');
+		    assert.equal(split.length, 3, "affix:\"" + affs[i] + "\" should contain three space separated terms");
+		    var validModifiers = ["added", "more"]
+		    assert.ok(validModifiers.indexOf(split[1]) >= 0, "affix modifier is valid : " + split[1]);
+		}
+	    }
+	}
 	
         function validateAttributes(assert, entity) {
             assert.ok(entity.get('maxHp') > 0, 'entity has  positive maxHp: ' + entity.get('maxHp'));
-            assert.equal(entity.get('hp'), entity.get('maxHp'), 'hp initialized to maxHp');
+            assert.ok(entity.get('hp') <= entity.get('maxHp'), 'hp is <=  maxHp: ' + entity.get('hp'));
             assert.ok(entity.get('maxMana') > 0, 'character initialized with positive maxMana: ' + entity.get('maxMana'));
             assert.equal(entity.get('mana'), entity.get('maxMana'), 'mana initialized to maxMana');
 
@@ -108,7 +143,10 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(entity.get('poisResist') > 0, 'poisResist initialized with positive value: ' + entity.get('poisResist'));
         }
 
+
+	//NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
         function validateSkill(assert, skill) {
+	    console.log('validate skill', skill);
             assert.ok(skill.get('cooldownTime') > 0 , 'skill has positive cooldown time: ' + skill.get('cooldownTime'));
 
             var skillTypes = ['melee', 'range', 'spell'];

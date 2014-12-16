@@ -25,8 +25,6 @@ namespace.module('bot.test', function (exports, require) {
         console.log(gameModel);
 
         QUnit.test( 'gameModel initialized' , function( assert ) {
-            assert.equal(false, gameModel.get('inZone'), 'not inZone');
-            assert.equal(false, gameModel.get('running'), 'not running');
             assert.ok(gameModel.char, 'initialized with char');
             assert.ok(gameModel.inv, 'initialized with inv');
             assert.ok(gameModel.lastTime, 'able to get time');
@@ -54,8 +52,17 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(skill.get('exp'), 0, 'skill created with 0 xp');
             assert.equal(skill.get('level'), 1, 'skill should be initialized at level 1, current level: ' + skill.get('level'));
             assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to Bobbeh');
-        });
+	});
 
+	QUnit.test( 'ZONERBONER' , function( assert ) {
+            assert.equal(false, gameModel.get('inZone'), 'not inZone');
+            assert.equal(false, gameModel.get('running'), 'not running');
+	    assert.ok(1, "tick happens here (generates zone as side effect)");
+	    gameModel.tick();
+            assert.equal(true, gameModel.get('inZone'), 'inZone');
+	    console.log(gameModel.zone);
+	});
+	
         function validateAttributes(assert, entity) {
             assert.ok(entity.get('maxHp') > 0, 'entity has  positive maxHp: ' + entity.get('maxHp'));
             assert.equal(entity.get('hp'), entity.get('maxHp'), 'hp initialized to maxHp');

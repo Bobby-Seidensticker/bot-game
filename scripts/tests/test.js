@@ -21,9 +21,68 @@ namespace.module('bot.test', function (exports, require) {
 
         log.info('onReady');
 	console.log(main);
-        //var gameModel = new main.GameModel();
+        var gameModel = new main.GameModel();
+	console.log(gameModel);
 
-	//console.log(gameModel);
+	QUnit.test( "gameModel initialized" , function( assert ) {
+		assert.equal(false, gameModel.get('inZone'), "not inZone");
+    		assert.equal(false, gameModel.get('running'), "not running");
+		assert.ok(gameModel.char, "initialized with char");
+		assert.ok(gameModel.inv, "initialized with inv");
+		assert.ok(gameModel.lastTime, "able to get time");
+		assert.equal(gameModel.zonesCleared, 0, "starting with 0 zones cleared");
+	});
+
+       	QUnit.test( "character properly initialized" , function( assert ) {
+		var char = gameModel.char;
+		console.log(char);
+		assert.ok(char, "character created");
+		assert.equal(char.get('level'), 1, "character level intialized to level 1");
+		assert.equal(char.get('team'), 0, "character on correct team");
+		assert.ok(char.get('maxHp') > 0, "character initialized with positive maxHp");
+		assert.equal(char.get('hp'), char.get('maxHp'), "hp initialized to maxHp");
+                assert.ok(char.get('maxMana') > 0, "character initialized with positive maxMana");
+                assert.equal(char.get('mana'), char.get('maxMana'), "mana initialized to maxMana");
+
+		//Base Stats
+		assert.ok(char.get('strength') > 0, "strength intilaized with positive value");
+                assert.ok(char.get('dexterity') > 0,"dexterity intilaized with positive value");
+                assert.ok(char.get('wisdom') > 0,"wisdom intilaized with positive value");
+                assert.ok(char.get('vitality') > 0,"vitality intilaized with positive value");
+		
+		//Derivative Stats
+		assert.ok(char.get('armor') > 0, "armor initialized with positive value");
+		assert.ok(char.get('dodge') > 0, "dodge initialized with positive value");
+		assert.ok(char.get('fireResist') > 0, "fireResist initialized with positive value");
+		assert.ok(char.get('coldResist') > 0, "coldResist initialized with positive value");
+		assert.ok(char.get('lightResist') > 0, "lightResist initialized with positive value");
+		assert.ok(char.get('poisResist') > 0, "poisResist initialized with positive value");
+		
+		//Skills
+		var skillChain = char.get('skillChain');
+		assert.equal(skillChain.length, 1 , "initialized skill chain with one skill");
+		var skill = skillChain.models[0];
+		assert.equal(skill.get('name'), "basic melee", "initialized with 'basic melee'");
+		testSkill(assert, skill);
+
+
+	});
+
+	function testAttributes(assert, entity) {
+	    var boobs;
+	}
+	
+	function testSkill(assert, skill) {
+	    assert.ok(skill.get('cooldownTime') > 0 , "skill has positive cooldown time: " + skill.get('cooldownTime'));
+	    assert.ok(skill.get('physDmg') > 0 , "skill has positive physDmg: " + skill.get('physDmg'));
+	    var skillTypes = ["melee", "range", "spell"];
+	    assert.ok(skillTypes.indexOf(skill.get('class')) >= 0, "valid skill class: " + skill.get('class'));
+	    //TODO - equipped by is not properly set to char name on initialization                                                                                              
+	    console.log(skill.attributes);
+	}
+
+
+
 
         //var gameView = new namespace.bot.window.GameView();
         //var m = new menu.TabView();

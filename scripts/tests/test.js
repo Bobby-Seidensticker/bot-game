@@ -60,18 +60,29 @@ namespace.module('bot.test', function (exports, require) {
 	    assert.ok(1, "tick happens here (generates zone as side effect)");
 	    gameModel.tick();
             assert.equal(true, gameModel.get('inZone'), 'inZone');
-	    console.log("zone", gameModel.zone);
+	    //console.log("zone", gameModel.zone);
 	    assert.ok(gameModel.zone, "Zone created on tick");
 	    assert.ok(gameModel.zone.get('roomCount') >= 0,  " has roomcount of at least 1");
 	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), " roomcount matches number of rooms created");
 	    assert.ok(gameModel.zone.get('char'), " has a char");
 	    var monsters = gameModel.zone.get('rooms')[0].monsters.models;
-	    console.log(monsters);
+	    //console.log(monsters);
 	    assert.ok(monsters.length, "room 0 monsters have truthy length");
 	    var mon = monsters[namespace.bot.prob.pyRand(0,monsters.length)]; //grab random mon in room
 	    assert.equal(mon.get('team'), 1, "rand monster on monster team");
 	    validateAttributes(assert, mon);
+	    validateSkill(assert, mon.get('skillChain').models[0]);
 	});
+
+	QUnit.test( 'inventory', function( assert ) {
+	    //TODO - why arent 
+	    assert.ok(!jQuery.isEmptyObject(gameModel.char.get('inv').attributes), "gameModel.char.inv is not empty object");
+	    assert.ok(!jQuery.isEmptyObject(gameModel.inv.attributes), "gameModel.inv is not empty object");
+
+	    
+	});
+
+	
 	
         function validateAttributes(assert, entity) {
             assert.ok(entity.get('maxHp') > 0, 'entity has  positive maxHp: ' + entity.get('maxHp'));

@@ -66,6 +66,7 @@ namespace.module('bot.inv', function (exports, require) {
             cooldownTime: 800,
             types: [],
             level: 1,
+            type: 'skill' // remove this
         }),
 
         initialize: function() {

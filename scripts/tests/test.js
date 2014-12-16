@@ -15,25 +15,25 @@ namespace.module('bot.test', function (exports, require) {
         log.info('LOADED');
 
 
-        QUnit.test( 'page loaded', function( assert ) {
-            assert.equal( 'hello', 'hello', 'page has loaded successfully' );
+        QUnit.test('page loaded', function(assert) {
+            assert.equal('hello', 'hello', 'page has loaded successfully');
         });
 
         log.info('onReady');
         //console.log(main);
         var gameModel = new main.GameModel();
-        console.log("gameModel", gameModel);
+        console.log('gameModel', gameModel);
 
-        QUnit.test( 'gameModel initialized' , function( assert ) {
+        QUnit.test('gameModel initialized', function(assert) {
             assert.ok(gameModel.char, 'initialized with char');
             assert.ok(gameModel.inv, 'initialized with inv');
             assert.ok(gameModel.lastTime, 'able to get time');
             assert.equal(gameModel.zonesCleared, 0, 'starting with 0 zones cleared');
         });
 
-        QUnit.test( 'character properly initialized' , function( assert ) {
+        QUnit.test('character properly initialized', function(assert) {
             var char = gameModel.char;
-            console.log("char", char);
+            console.log('char', char);
             assert.ok(char, 'character created');
             assert.equal(char.get('name'), 'bobbeh', 'char names bobbeh');
             assert.equal(char.get('level'), 1, 'character level intialized to level 1');
@@ -45,7 +45,7 @@ namespace.module('bot.test', function (exports, require) {
 
             //Skills
             var skillChain = char.get('skillChain');
-            assert.equal(skillChain.length, 1 , 'initialized skill chain with one skill');
+            assert.equal(skillChain.length, 1, 'initialized skill chain with one skill');
             var skill = skillChain.models[0];
             assert.equal(skill.get('name'), 'basic melee', 'initialized with "basic melee"');
             validateSkill(assert, skill);
@@ -54,33 +54,33 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
 	});
 
-	QUnit.test( 'ZONERBONER' , function( assert ) {
+	QUnit.test('ZONERBONER', function(assert) {
             assert.equal(false, gameModel.get('inZone'), 'not inZone');
             assert.equal(false, gameModel.get('running'), 'not running');
-	    assert.ok(1, "tick happens here (generates zone as side effect)");
+	    assert.ok(1, 'tick happens here (generates zone as side effect)');
 	    gameModel.tick();
             assert.equal(true, gameModel.get('inZone'), 'inZone');
-	    //console.log("zone", gameModel.zone);
-	    assert.ok(gameModel.zone, "Zone created on tick");
-	    assert.ok(gameModel.zone.get('roomCount') >= 0,  " has roomcount of at least 1");
-	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), " roomcount matches number of rooms created");
-	    assert.ok(gameModel.zone.get('char'), " has a char");
+	    //console.log('zone', gameModel.zone);
+	    assert.ok(gameModel.zone, 'Zone created on tick');
+	    assert.ok(gameModel.zone.get('roomCount') >= 0,  ' has roomcount of at least 1');
+	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), ' roomcount matches number of rooms created');
+	    assert.ok(gameModel.zone.get('char'), ' has a char');
 	    var monsters = gameModel.zone.get('rooms')[0].monsters.models;
 	    //console.log(monsters);
-	    assert.ok(monsters.length, "room 0 monsters have truthy length");
+	    assert.ok(monsters.length, 'room 0 monsters have truthy length');
 	    var mon = monsters[namespace.bot.prob.pyRand(0,monsters.length)]; //grab random mon in room
-	    assert.equal(mon.get('team'), 1, "rand monster on monster team");
+	    assert.equal(mon.get('team'), 1, 'rand monster on monster team');
 	    validateAttributes(assert, mon);
 	    validateSkill(assert, mon.get('skillChain').models[0]);
 	});
 
-	QUnit.test( 'inventory', function( assert ) {
+	QUnit.test('inventory', function(assert) {
 	    //TODO - why dont these inv locations have any attributes?  Inv seems to work on index.html...?
 	    var inven = gameModel.char.get('inv');
 
-	    assert.ok(inven.weapons.length, "inventory has at least one weapon");
-	    assert.ok(inven.armor.length, "inventory has at least one armor");
-	    assert.ok(inven.skills.length, "inventory has at least one skill");
+	    assert.ok(inven.weapons.length, 'inventory has at least one weapon');
+	    assert.ok(inven.armor.length, 'inventory has at least one armor');
+	    assert.ok(inven.skills.length, 'inventory has at least one skill');
 
 	    console.log('wep0', inven.skills.models[0]);
 	    validateWeapon(assert, inven.weapons.models[0]);
@@ -92,29 +92,29 @@ namespace.module('bot.test', function (exports, require) {
 	    validateItem(assert, item);
 	    var name = item.get('name');
 	    var types = ['melee','range','spell']; //valid weapon types
-	    assert.ok(types.indexOf(item.get('type')) >= 0, name + " has valid type: " + item.get('type'));
-	    assert.ok(item.get('damage') >= 0, name + " has non-negative damage value: " + item.get('damage'));
-	    assert.ok(item.get('range') >= 0, name + " has non-negative range value: " + item.get('range'));
-	    assert.ok(item.get('speed') >= 0, name + " has non-negative speed value: " + item.get('speed'));	    
+	    assert.ok(types.indexOf(item.get('type')) >= 0, name + ' has valid type: ' + item.get('type'));
+	    assert.ok(item.get('damage') >= 0, name + ' has non-negative damage value: ' + item.get('damage'));
+	    assert.ok(item.get('range') >= 0, name + ' has non-negative range value: ' + item.get('range'));
+	    assert.ok(item.get('speed') >= 0, name + ' has non-negative speed value: ' + item.get('speed'));	    
 	}
 
 	function validateItem(assert, item) {
 	    var name = item.get('name');
-	    assert.ok(name, name + " has valid name");
+	    assert.ok(name, name + ' has valid name');
 
-	    assert.ok(item.get('exp') >= 0, name + " has non-negative exp value: " + item.get('exp'));
+	    assert.ok(item.get('exp') >= 0, name + ' has non-negative exp value: ' + item.get('exp'));
 	    var affs = item.get('affixes');
-	    assert.ok(jQuery.isArray(affs), name + " has affix array");
+	    assert.ok(jQuery.isArray(affs), name + ' has affix array');
 
 	    //item affix validation
-	    if(affs.length === 0 ) {
-		assert.ok(1, "empty affix array is valid");
+	    if (affs.length === 0) {
+		assert.ok(1, 'empty affix array is valid');
 	    } else {
 		for (var i = 0; i < affs.length; i++) {
 		    var split = affs[i].split(' ');
-		    assert.equal(split.length, 3, "affix:\"" + affs[i] + "\" should contain three space separated terms");
-		    var validModifiers = ["added", "more"]
-		    assert.ok(validModifiers.indexOf(split[1]) >= 0, "affix modifier is valid : " + split[1]);
+		    assert.equal(split.length, 3, 'affix:"' + affs[i] + '" should contain three space separated terms');
+		    var validModifiers = ['added', 'more']
+		    assert.ok(validModifiers.indexOf(split[1]) >= 0, 'affix modifier is valid : ' + split[1]);
 		}
 	    }
 	}
@@ -147,11 +147,11 @@ namespace.module('bot.test', function (exports, require) {
 	//NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
         function validateSkill(assert, skill) {
 	    console.log('validate skill', skill);
-            assert.ok(skill.get('cooldownTime') > 0 , 'skill has positive cooldown time: ' + skill.get('cooldownTime'));
+            assert.ok(skill.get('cooldownTime') > 0, 'skill has positive cooldown time: ' + skill.get('cooldownTime'));
 
             var skillTypes = ['melee', 'range', 'spell'];
             assert.ok(skillTypes.indexOf(skill.get('class')) >= 0, 'valid skill class: ' + skill.get('class'));
-            assert.ok(skill.get('physDmg') > 0 , 'skill has positive physDmg: ' + skill.get('physDmg'));
+            assert.ok(skill.get('physDmg') > 0, 'skill has positive physDmg: ' + skill.get('physDmg'));
             assert.ok(skill.get('range') > 0, 'skill has positive range: ' + skill.get('range'));
             assert.ok(skill.get('speed') > 0, 'skill has positive speed: ' + skill.get('speed')); // TODO - figure out how speed actuallly works
             assert.ok(skill.get('affixes').length !== undefined, 'skill contains array of affixes');

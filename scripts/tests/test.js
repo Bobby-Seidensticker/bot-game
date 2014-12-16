@@ -20,7 +20,7 @@ namespace.module('bot.test', function (exports, require) {
         });
 
         log.info('onReady');
-        console.log(main);
+        //console.log(main);
         var gameModel = new main.GameModel();
         console.log(gameModel);
 

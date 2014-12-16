@@ -39,44 +39,49 @@ namespace.module('bot.test', function (exports, require) {
 		assert.ok(char, "character created");
 		assert.equal(char.get('level'), 1, "character level intialized to level 1");
 		assert.equal(char.get('team'), 0, "character on correct team");
-		assert.ok(char.get('maxHp') > 0, "character initialized with positive maxHp");
-		assert.equal(char.get('hp'), char.get('maxHp'), "hp initialized to maxHp");
-                assert.ok(char.get('maxMana') > 0, "character initialized with positive maxMana");
-                assert.equal(char.get('mana'), char.get('maxMana'), "mana initialized to maxMana");
 
-		//Base Stats
-		assert.ok(char.get('strength') > 0, "strength intilaized with positive value");
-                assert.ok(char.get('dexterity') > 0,"dexterity intilaized with positive value");
-                assert.ok(char.get('wisdom') > 0,"wisdom intilaized with positive value");
-                assert.ok(char.get('vitality') > 0,"vitality intilaized with positive value");
-		
-		//Derivative Stats
-		assert.ok(char.get('armor') > 0, "armor initialized with positive value");
-		assert.ok(char.get('dodge') > 0, "dodge initialized with positive value");
-		assert.ok(char.get('fireResist') > 0, "fireResist initialized with positive value");
-		assert.ok(char.get('coldResist') > 0, "coldResist initialized with positive value");
-		assert.ok(char.get('lightResist') > 0, "lightResist initialized with positive value");
-		assert.ok(char.get('poisResist') > 0, "poisResist initialized with positive value");
+		validateAttributes(assert, char);
 		
 		//Skills
 		var skillChain = char.get('skillChain');
 		assert.equal(skillChain.length, 1 , "initialized skill chain with one skill");
 		var skill = skillChain.models[0];
 		assert.equal(skill.get('name'), "basic melee", "initialized with 'basic melee'");
-		testSkill(assert, skill);
+		validateSkill(assert, skill);
 
 
 	});
 
-	function testAttributes(assert, entity) {
-	    var boobs;
+	function validateAttributes(assert, entity) {
+	    assert.ok(entity.get('maxHp') > 0, "entity has  positive maxHp: " + entity.get('maxHp'));
+	    assert.equal(entity.get('hp'), entity.get('maxHp'), "hp initialized to maxHp");
+            assert.ok(entity.get('maxMana') > 0, "character initialized with positive maxMana: " + entity.get('maxMana'));
+            assert.equal(entity.get('mana'), entity.get('maxMana'), "mana initialized to maxMana");
+
+	    //Base Stats
+	    assert.ok(entity.get('strength') > 0, "strength intilaized with positive value: " + entity.get('strength'));
+            assert.ok(entity.get('dexterity') > 0,"dexterity intilaized with positive value: " + entity.get('dexterity'));
+            assert.ok(entity.get('wisdom') > 0,"wisdom intilaized with positive value: " + entity.get('wisdom'));
+            assert.ok(entity.get('vitality') > 0,"vitality intilaized with positive value: " + entity.get('vitality'));
+		
+	    //Derivative Stats
+	    assert.ok(entity.get('armor') > 0, "armor initialized with positive value: " + entity.get('armor'));
+	    assert.ok(entity.get('dodge') > 0, "dodge initialized with positive value: " + entity.get('dodge'));
+	    // TODO - cast resist floats (and probably all stats) to 2-decimal places only (currently long and ugly floats)
+	    assert.ok(entity.get('fireResist') > 0, "fireResist initialized with positive value: " + entity.get('fireResist'));
+	    assert.ok(entity.get('coldResist') > 0, "coldResist initialized with positive value: " + entity.get('coldResist'));
+	    assert.ok(entity.get('lightResist') > 0, "lightResist initialized with positive value: " + entity.get('lightResist'));
+	    assert.ok(entity.get('poisResist') > 0, "poisResist initialized with positive value: " + entity.get('poisResist'));
 	}
 	
-	function testSkill(assert, skill) {
+	function validateSkill(assert, skill) {
 	    assert.ok(skill.get('cooldownTime') > 0 , "skill has positive cooldown time: " + skill.get('cooldownTime'));
-	    assert.ok(skill.get('physDmg') > 0 , "skill has positive physDmg: " + skill.get('physDmg'));
+
 	    var skillTypes = ["melee", "range", "spell"];
 	    assert.ok(skillTypes.indexOf(skill.get('class')) >= 0, "valid skill class: " + skill.get('class'));
+	    assert.ok(skill.get('physDmg') > 0 , "skill has positive physDmg: " + skill.get('physDmg'));
+	    assert.ok(skill.get('range') > 0, "skill has positive range: " + skill.get('range'));
+	    assert.ok(skill.get('speed') > 0, "skill has positive speed: " + skill.get('speed')); // TODO - figure out how speed actuallly works
 	    //TODO - equipped by is not properly set to char name on initialization                                                                                              
 	    console.log(skill.attributes);
 	}

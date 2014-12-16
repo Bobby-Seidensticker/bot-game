@@ -48,7 +48,9 @@ namespace.module('bot.test', function (exports, require) {
 		var skill = skillChain.models[0];
 		assert.equal(skill.get('name'), "basic melee", "initialized with 'basic melee'");
 		validateSkill(assert, skill);
-
+		assert.equal(skill.get('exp'), 0, "skill created with 0 xp");
+		assert.equal(skill.get('level'), 1, "skill should be initialized at level 1, current level: " + skill.get('level'));
+		assert.equal(skill.get('equippedBy'), "Bobbeh", "skill's equippedBy should be set to Bobbeh");
 
 	});
 
@@ -68,6 +70,7 @@ namespace.module('bot.test', function (exports, require) {
 	    assert.ok(entity.get('armor') > 0, "armor initialized with positive value: " + entity.get('armor'));
 	    assert.ok(entity.get('dodge') > 0, "dodge initialized with positive value: " + entity.get('dodge'));
 	    // TODO - cast resist floats (and probably all stats) to 2-decimal places only (currently long and ugly floats)
+	    assert.equal(parseFloat(entity.get('fireResist').toFixed(2)), entity.get('fireResist'), "stats should have max of two decimal places");
 	    assert.ok(entity.get('fireResist') > 0, "fireResist initialized with positive value: " + entity.get('fireResist'));
 	    assert.ok(entity.get('coldResist') > 0, "coldResist initialized with positive value: " + entity.get('coldResist'));
 	    assert.ok(entity.get('lightResist') > 0, "lightResist initialized with positive value: " + entity.get('lightResist'));
@@ -82,7 +85,9 @@ namespace.module('bot.test', function (exports, require) {
 	    assert.ok(skill.get('physDmg') > 0 , "skill has positive physDmg: " + skill.get('physDmg'));
 	    assert.ok(skill.get('range') > 0, "skill has positive range: " + skill.get('range'));
 	    assert.ok(skill.get('speed') > 0, "skill has positive speed: " + skill.get('speed')); // TODO - figure out how speed actuallly works
-	    //TODO - equipped by is not properly set to char name on initialization                                                                                              
+
+
+
 	    console.log(skill.attributes);
 	}
 

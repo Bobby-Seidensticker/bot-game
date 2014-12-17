@@ -154,6 +154,20 @@ body {
     width: 60px;
     height: 60px;
     float: left;
+    position: relative;
+}
+
+.equipped img {
+    position: absolute;
+    z-index: 1;
+}
+
+.equipped .slot-background {
+    z-index: 0;
+}
+
+.equipped .empty {
+    display: none;
 }
 
 /* / header vis */

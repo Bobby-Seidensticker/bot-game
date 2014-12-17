@@ -173,7 +173,12 @@
     <div class="equipped">
       <% _.each(items, function(item, slot) { %>
       <div class="<%= slot %>">
-        <img src="assets/<%= item === undefined ? 'empty-'+slot : item.get('name') %>.svg" width="60" height="60" />
+        <img class="slot-background" src="assets/<%= 'empty-' + slot %>.svg" width="60" height="60" />
+        <% if (item) { %>
+        <img class="slot-img" src="assets/<%= item.get('name') %>.svg" width="60" height="60" />
+        <% } else { %>
+        <img class="empty slot-img" width="60" height="60" />
+        <% } %>
       </div>
       <% }); %>
     </div>

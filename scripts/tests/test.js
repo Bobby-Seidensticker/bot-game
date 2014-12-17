@@ -93,11 +93,10 @@ namespace.module('bot.test', function (exports, require) {
 	QUnit.test('Combat', function(assert) {
 	    var char = gameModel.char;
 
-	    char.set('hp', char.get('maxHp'));
-	    assert.equal(char.get('hp'), char.get('maxHp'), 'Character HP maxed for combat');
+
 
 	    var mon = new entity.MonsterModel({'name':'skeleton'});
-	    assert.equal(mon.get('hp'), mon.get('maxHp'), 'Monster HP maxed for combat');
+	    assert.equal(mon.get('hp'), mon.get('maxHp'), 'Monster HP maxed for taking hit');
 
 	    var dist = vector.getDistances(char.getCoords(), [mon.getCoords()])[0];
 	    assert.ok(dist == 0, 'distance is always zero for debugging');
@@ -110,9 +109,18 @@ namespace.module('bot.test', function (exports, require) {
 	    char.attackTarget(mon, skill);
 	    assert.ok(mon.get('hp') < mon.get('maxHp'), "Monster's hp decreased from attack");
 	    assert.ok(skill.get('cooldown') ==  skill.get('cooldownTime'), 'cooldown set to cooldownTime after attack');
-	    
+
+
+	    char.set('hp', char.get('maxHp'));
+	    assert.equal(char.get('hp'), char.get('maxHp'), 'Character HP maxed for taking hit');
+	    var skill = mon.get('skillChain').at(0);
 	    console.log(skill);
-	    
+	    assert.ok(skill, 'mon skill found');
+	    assert.ok(skill.get('name'), 'mon about to try using ' + skill.get('name'));
+
+	    mon.attackTarget(char, skill);
+	    assert.ok(char.get('hp') < char.get('maxHp'), "Character's hp decreased from attack");
+	    assert.ok(skill.get('cooldown') ==  skill.get('cooldownTime'), 'cooldown set to cooldownTime after attack');	    
 	});
 	
 	function validateWeapon(assert, item) {

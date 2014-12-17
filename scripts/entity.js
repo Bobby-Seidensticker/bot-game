@@ -204,8 +204,8 @@ namespace.module('bot.entity', function (exports, require) {
             this.set('nextAction', this.get('nextAction') - dt);
         }
     });
-
-    var CharModel = EntityModel.extend({
+ 
+   var CharModel = EntityModel.extend({
         defaults: _.extend({}, EntityModel.prototype.defaults(), {
             team: TEAM_CHAR,
         }),

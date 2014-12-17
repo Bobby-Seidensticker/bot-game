@@ -10,7 +10,9 @@ namespace.module('bot.test', function (exports, require) {
     var entity = namespace.bot.entity;
     var zone = namespace.bot.zone;
     var main = namespace.bot.main;
-
+    var itemref = namespace.bot.itemref;
+    var vector = namespace.bot.vector;
+    
     function onReady() {
         log.info('LOADED');
 
@@ -21,7 +23,7 @@ namespace.module('bot.test', function (exports, require) {
         log.info('onReady');
 
         var gameModel = new main.GameModel();
-        console.log('gameModel', gameModel);
+        //console.log('gameModel', gameModel);
 
         QUnit.test('gameModel initialized', function(assert) {
             assert.ok(gameModel.char, 'initialized with char');
@@ -31,7 +33,7 @@ namespace.module('bot.test', function (exports, require) {
 
         QUnit.test('Character properly initialized', function(assert) {
             var char = gameModel.char;
-            console.log('char', char);
+            //console.log('char', char);
             assert.ok(char, 'character created');
             assert.equal(char.get('name'), 'bobbeh', 'char name is bobbeh');
             assert.equal(char.get('level'), 1, 'character level intialized to level 1');
@@ -82,12 +84,37 @@ namespace.module('bot.test', function (exports, require) {
 	    assert.ok(inven.armor.length, 'inventory has at least one armor');
 	    assert.ok(inven.skills.length, 'inventory has at least one skill');
 
-	    console.log('wep0', inven.skills.models[0]);
+	    //console.log('wep0', inven.skills.models[0]);
 	    validateWeapon(assert, inven.weapons.models[0]);
 	    validateItem(assert, inven.armor.models[0]);
 	    validateItem(assert, inven.skills.models[0]);
 	});
 
+	QUnit.test('Combat', function(assert) {
+	    var char = gameModel.char;
+
+	    char.set('hp', char.get('maxHp'));
+	    assert.equal(char.get('hp'), char.get('maxHp'), 'Character HP maxed for combat');
+
+	    var mon = new entity.MonsterModel({'name':'skeleton'});
+	    assert.equal(mon.get('hp'), mon.get('maxHp'), 'Monster HP maxed for combat');
+
+	    var dist = vector.getDistances(char.getCoords(), [mon.getCoords()])[0];
+	    assert.ok(dist == 0, 'distance is always zero for debugging');
+	    
+	    var skill = char.get('skillChain').at(0);
+	    console.log(skill);
+	    assert.ok(skill, 'char skill found');
+	    assert.ok(skill.get('name'), 'char about to try using ' + skill.get('name'));
+
+	    char.attackTarget(mon, skill);
+	    assert.ok(mon.get('hp') < mon.get('maxHp'), "Monster's hp decreased from attack");
+	    assert.ok(skill.get('cooldown') ==  skill.get('cooldownTime'), 'cooldown set to cooldownTime after attack');
+	    
+	    console.log(skill);
+	    
+	});
+	
 	function validateWeapon(assert, item) {
 	    validateItem(assert, item);
 	    var name = item.get('name');
@@ -145,7 +172,7 @@ namespace.module('bot.test', function (exports, require) {
 
 	//NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
         function validateSkill(assert, skill) {
-	    console.log('validate skill', skill);
+	    //console.log('validate skill', skill);
             assert.ok(skill.get('cooldownTime') > 0, 'skill has positive cooldown time: ' + skill.get('cooldownTime'));
 
             var skillTypes = ['melee', 'range', 'spell'];

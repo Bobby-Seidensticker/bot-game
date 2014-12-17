@@ -31,17 +31,16 @@
   </div>
 
 
-
   <script id="map-tab-tmpl" type="x-tmpl-mustache">
     <div class="mapcontent">
       Mappy<br><br>
-      <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px;height300px;" />
+      <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px; height:300px;" />
       <input id="mapgo" type="button" value="Go" />
     </div>
   </script>
 
   <script id="inv-menu-item-template" type="text/template">
-    <div class="item collapsed">
+    <div class="item collapsed" id="inv-item-<%= name %>">
       <div class="item-header">
         <%= name %> - level <%= level %>
       </div>
@@ -58,8 +57,8 @@
           <% }); %>
         </div>
         <div class="item-buttonbox">
-          <input class="item-button" value="Level Up" type="button"/>
-          <input class="item-button" value="Equip" type="button"  />
+          <input class="item-button level-up" value="Level Up" type="button"/>
+          <input class="item-button equip" value="Equip" type="button"  />
         </div>
       </div>
     </div>

@@ -27,6 +27,7 @@ namespace.module('bot.inv', function (exports, require) {
         defaults: _.extend({}, GearModel.prototype.defaults(), {
             weight: 0,
             type: 'ERR type',
+            itemType: 'armor'
         }),
 
         initialize: function() {
@@ -45,7 +46,8 @@ namespace.module('bot.inv', function (exports, require) {
             speed: 0,
             type: 'ERR type',
             damage: 0,
-            range: 0
+            range: 0,
+            itemType: 'weapon'
         }),
 
         initialize: function() {
@@ -66,7 +68,7 @@ namespace.module('bot.inv', function (exports, require) {
             cooldownTime: 800,
             types: [],
             level: 1,
-            type: 'skill' // remove this
+            itemType: 'skill'
         }),
 
         initialize: function() {

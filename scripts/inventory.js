@@ -236,26 +236,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    var ItemCollection = Backbone.Collection.extend({
-        itemTypes: function() {
-            return ['weapon', 'armor', 'skill', 'material', 'recipe'];
-        },
-
-        initialize: function() {
-            // no models given, do basics
-            var defaults = [
-                new WeaponModel({name: 'wooden sword'}),
-                new WeaponModel({name: 'shitty bow'}),
-                new WeaponModel({name: 'crappy wand'}),
-                new SkillModel({name: 'basic melee'}),
-                new SkillModel({name: 'basic range'}),
-                new SkillModel({name: 'basic spell'}),
-                new ArmorModel({name: 'cardboard kneepads'})
-            ];
-            this.add(defaults);
-        }
-    });
-
     var RecipeCollection = Backbone.Collection.extend({
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material'];
@@ -274,6 +254,33 @@ namespace.module('bot.inv', function (exports, require) {
             ];
             this.add(defaults);
         }
+    });
+
+    var ItemCollection = Backbone.Collection.extend({
+        itemTypes: function() {
+            return ['weapon', 'armor', 'skill', 'material', 'recipe'];
+        },
+
+        initialize: function() {
+            // no models given, do basics
+            var defaults = [
+                new WeaponModel({name: 'wooden sword'}),
+                new WeaponModel({name: 'shitty bow'}),
+                new WeaponModel({name: 'crappy wand'}),
+                new SkillModel({name: 'basic melee'}),
+                new SkillModel({name: 'basic range'}),
+                new SkillModel({name: 'basic spell'}),
+                new ArmorModel({name: 'cardboard kneepads'})
+            ];
+            this.add(defaults);
+
+            this.recipes = new RecipeCollection();
+            this.listenTo(this.recipes, 'craftClick', this.craft);
+        },
+
+        craft: function(recipeModel) {
+            log.info('ItemCollection.craft called');
+        },
     });
 
     var ItemCollectionView = Backbone.View.extend({
@@ -359,7 +366,7 @@ namespace.module('bot.inv', function (exports, require) {
 	buttons: $('#craft-menu-item-buttons-template').html(),        
 
 	craft: function() {
-	    this.model.trigger('craft', this.model);
+	    this.model.trigger('craftClick', this.model);
 	    console.log(this);
 	}
     });

@@ -51,7 +51,7 @@ namespace.module('bot.test', function (exports, require) {
             validateSkill(assert, skill);
             assert.equal(skill.get('exp'), 0, 'skill created with 0 xp');
             assert.equal(skill.get('level'), 1, 'skill should be initialized at level 1, current level: ' + skill.get('level'));
-            assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
+            //assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
 	});
 
 	QUnit.test('Zone test', function(assert) {

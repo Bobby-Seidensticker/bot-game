@@ -305,7 +305,8 @@ namespace.module('bot.inv', function (exports, require) {
 
         render: function() {
             var type = this.model.get('itemType');
-            this.$el.html(this.template(this.model.toJSON()));
+	    console.log('buttons', this.buttons);
+            this.$el.html(this.template(_.extend({}, this.model.toJSON(), {'buttons': this.buttons})));
             this.$el.attr({
                 'class': 'item collapsed',
                 'id': 'inv-item-' + this.model.get('name')
@@ -325,6 +326,10 @@ namespace.module('bot.inv', function (exports, require) {
             'click .equip': 'equip',
         }),
 
+	buttons: $('#inv-menu-item-buttons-template').html(),
+
+
+	
         equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             var slot;
@@ -341,7 +346,7 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var CraftItemView = ItemView.extend({
-        
+	buttons: $('#craft-menu-item-buttons-template').html(),        
     });
 
     var InvItemCollectionView = ItemCollectionView.extend({

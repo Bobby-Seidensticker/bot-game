@@ -47,6 +47,10 @@ namespace.module('bot.main', function (exports, require) {
             this.inv = new inv.ItemCollection();
             this.invView = new inv.InvItemCollectionView({collection: this.inv});
 
+	    this.recipes = new inv.RecipeCollection();
+	    this.recipesView = new inv.CraftItemCollectionView({collection: this.recipes});
+
+	    
             this.char = new entity.newChar(this.inv);
 
             this.headerView = views.newHeaderView(this.char, this.inv);

@@ -59,12 +59,21 @@
         <% }); %>
       </div>
       <div class="item-buttonbox">
-        <input class="item-button level-up" value="Level Up" type="button"/>
-        <input class="item-button equip" value="Equip" type="button"  />
+	<%= buttons %>
       </div>
     </div>
   </script>
 
+  <script id="inv-menu-item-buttons-template" type="text/template">
+    <input class="item-button level-up" value="Level Up" type="button"/>
+    <input class="item-button equip" value="Equip" type="button"  />
+  </script>
+
+  <script id="craft-menu-item-buttons-template" type="text/template">
+    <input class="item-button craft" value="Craft" type="button"  />
+  </script>
+  
+  
   <script id="inv-menu-template" type="text/template">
     <div class="inv-content">
       <% _.each(groups, function(group) { %>

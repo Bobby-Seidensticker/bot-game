@@ -8,11 +8,12 @@
   <div id="qunit-fixture"></div>
   <script src="scripts/tests/qunit.js"></script>
 
-  <div class="header" style="display: none;"></div>
 
-  <div class="vis" style="display: none;"></div>
+  <div class="header"></div>
 
-  <div class="menu" style="display: none;">
+  <div class="vis"></div>
+
+  <div class="menu">
     <table class="tab-holder">
       <tbody>
         <tr>
@@ -35,66 +36,52 @@
   </div>
 
 
-
   <script id="map-tab-tmpl" type="x-tmpl-mustache">
     <div class="mapcontent">
       Mappy<br><br>
-      <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px;height300px;" />
+      <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px; height:300px;" />
       <input id="mapgo" type="button" value="Go" />
     </div>
   </script>
 
   <script id="inv-menu-item-template" type="text/template">
-    <div class="item collapsed">
-      <div class="item-header">
-        <%= name %> - level <%= level %>
+    <div class="item-header">
+      <%= name %> - level <%= level %>
+    </div>
+    <div class="item-body">
+      <div class="item-mid">
+        <div class="item-img">
+          <img src="assets/<%= name %>.svg" height="90" width="90">
+        </div>
+        <div class="item-mid-text">
+          Type: <%= itemType %><br/><%= exp %> / 2,743 XP
+        </div>
       </div>
-      <div class="item-body">
-        <div class="item-mid">
-	  <div class="item-img"><img src="assets/<%= name %>.svg" height="90" width="90"></div>
-	  <div class="item-mid-text">Type: <%= type %><br/><%= exp %> / 2,743 XP</div>
-        </div>
-        <div class="item-affixes">
-          <% _.each(affixes, function(affix) { %>
-          <p>
-            <%= affix %>
-          </p>
-          <% }); %>
-        </div>
-        <div class="item-buttonbox">
-	  <input class="item-button" value="Level Up" type="button"/>
-	  <input class="item-button" value="Equip" type="button"  />
-        </div>
+      <div class="item-affixes">
+        <% _.each(affixes, function(affix) { %>
+        <p>
+          <%= affix %>
+        </p>
+        <% }); %>
+      </div>
+      <div class="item-buttonbox">
+        <input class="item-button level-up" value="Level Up" type="button"/>
+        <input class="item-button equip" value="Equip" type="button"  />
       </div>
     </div>
   </script>
 
   <script id="inv-menu-template" type="text/template">
-    <div class="invcontent">
-      <div class="item-group armor">
+    <div class="inv-content">
+      <% _.each(groups, function(group) { %>
+      <div class="item-group <%= group %>">
         <div class="item-group-header">
-          Armor
+          <% print(group[0].toUpperCase() + group.slice(1)) %>
         </div>
-        <% _.each(armor, function(item) { %>
-        <%= itemTemplate(item) %>
-        <% }); %>
-      </div>
-      <div class="item-group weapon">
-        <div class="item-group-header">
-          Weapon
+        <div class="item-group-content">
         </div>
-        <% _.each(weapons, function(item) { %>
-        <%= itemTemplate(item) %>
-        <% }); %>
       </div>
-      <div class="item-group skill">
-        <div class="item-group-header">
-          Skill
-        </div>
-        <% _.each(skills, function(item) { %>
-        <%= itemTemplate(item) %>
-        <% }); %>
-      </div>
+      <% }); %>
     </div>
   </script>
 
@@ -103,7 +90,7 @@
       <div class="item-group armor">
         <div class="item-group-header">
           Armor
-	</div>
+        </div>
         {{{armor}}}
       </div>
       <div class="item-group weapon">
@@ -124,18 +111,18 @@
   <script id="lvlup-tab-tmpl" type="x-tmpl-mustache">
     <div class="lvlupcontent">
       <div class="lvlupitemholder">
-	<div class="lvlupitemimg">
-	  <img src="http://img1.wikia.nocookie.net/__cb20080817200550/diablo/images/4/4f/D2-u-Treadsofcthon.gif" />
-	</div>
-	<div class="lvlupitemstats">
+        <div class="lvlupitemimg">
+          <img src="http://img1.wikia.nocookie.net/__cb20080817200550/diablo/images/4/4f/D2-u-Treadsofcthon.gif" />
+        </div>
+        <div class="lvlupitemstats">
           Magic Shoes <br>
-	  + 5 Fire Damage<br>
-	  + 10 Armor<br>
-	</div>
+          + 5 Fire Damage<br>
+          + 10 Armor<br>
+        </div>
       </div>
       <div class="lvluprollbox">
-	Affix on next level: <br><br>
-	+ 3 Fire Damage
+        Affix on next level: <br><br>
+        + 3 Fire Damage
       </div>
       <input type="button" value="Reroll" />
       <input type="button" value="Level Up" />
@@ -150,26 +137,64 @@
   </script>
 
   <script id="header-stats-tmpl" type="x-tmpl-mustache">
-    <div class="headerstats" id="header-{{id}}">
-      <div class="stats">
-        Hero <span class="hero-name"></span> - Level <span class="hero-level"></span><br>
-        Zone: <span class="zone-name">Dark Woods</span> - <span class="zone-roomnum">8</span>/<span class="zone-roomcount">10</span><br>
-        HP - <span class="hero-hp"></span>/<span class="hero-maxHp"></span><br>
-        MP - <span class="hero-mana"></span>/<span class="hero-maxMana"></span><br>
-        XP - <span class="hero-xp"></span>/<span class="hero-nextLvlXp"></span><br>
-        DPS - <span class="hero-dps"></span>
-      </div>
-      <div class="headerskillchain">
-        Fireball<br>
-        Basic Attack<br>
-      </div>
-      <div class="headerinventory">
-        Helmet <br>
-        Armor <br>
-        Gloves <br>
-        Pants <br>
-      </div>
+    <div class="stats">
+      <table>
+        <tr>
+          <td>Name</td>
+          <td id="name"><%= name %></td>
+        </tr>
+        <tr>
+          <td>Level</td>
+          <td id="level"><%= level %></td>
+        </tr>
+        <tr>
+          <td>Hp</td>
+          <td id="hp"><%= hp %> / <%= maxHp %></td>
+        </tr>
+        <tr>
+          <td>Mana</td>
+          <td id="mana"><%= mana %> / <%= maxMana %></td>
+        </tr>
+        <tr>
+          <td>Xp</td>
+          <td id="xp"><%= xp %> / <%= nextLevelXp %></td>
+        </tr>
+      </table>
     </div>
+    <div class="equipped">
+      <% _.each(items, function(item, slot) { %>
+      <div class="<%= slot %>">
+        <img class="slot-background" src="assets/<%= 'empty-' + slot %>.svg" width="60" height="60" />
+        <% if (item) { %>
+        <img class="slot-img" src="assets/<%= item.get('name') %>.svg" width="60" height="60" />
+        <% } else { %>
+        <img class="empty slot-img" width="60" height="60" />
+        <% } %>
+      </div>
+      <% }); %>
+    </div>
+
+    <!--
+        <div class="headerstats" id="header-{{id}}">
+          <div class="stats">
+            Hero <span class="hero-name"></span> - Level <span class="hero-level"></span><br>
+            Zone: <span class="zone-name">Dark Woods</span> - <span class="zone-roomnum">8</span>/<span class="zone-roomcount">10</span><br>
+            HP - <span class="hero-hp"></span>/<span class="hero-maxHp"></span><br>
+            MP - <span class="hero-mana"></span>/<span class="hero-maxMana"></span><br>
+            XP - <span class="hero-xp"></span>/<span class="hero-nextLvlXp"></span><br>
+            DPS - <span class="hero-dps"></span>
+          </div>
+          <div class="headerskillchain">
+            Fireball<br>
+            Basic Attack<br>
+          </div>
+          <div class="headerinventory">
+            Helmet <br>
+            Armor <br>
+            Gloves <br>
+            Pants <br>
+          </div>
+        </div>-->
   </script>
 
 

@@ -243,9 +243,9 @@ namespace.module('bot.entity', function (exports, require) {
     function newChar(inv) {
         // stopgap measures: basic equipped stuff
         var charName = 'bobbeh';
-        var equipped = new inventory.EquippedGearModel({'charName': charName});
-        equipped.equip(inv.weapons.findWhere({name: 'wooden sword'}), 'mainHand');
-        equipped.equip(inv.armor.findWhere({name: 'cardboard kneepads'}), 'legs');
+        var equipped = new inventory.EquippedGearModel({'charName': charName}, inv);
+        equipped.equip(inv.findWhere({name: 'wooden sword'}), 'mainHand');
+        equipped.equip(inv.findWhere({name: 'cardboard kneepads'}), 'legs');
 
         var skillChain = inventory.newSkillChain()
 

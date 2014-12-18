@@ -40,56 +40,43 @@
   </script>
 
   <script id="inv-menu-item-template" type="text/template">
-    <div class="item collapsed" id="inv-item-<%= name %>">
-      <div class="item-header">
-        <%= name %> - level <%= level %>
+    <div class="item-header">
+      <%= name %> - level <%= level %>
+    </div>
+    <div class="item-body">
+      <div class="item-mid">
+        <div class="item-img">
+          <img src="assets/<%= name %>.svg" height="90" width="90">
+        </div>
+        <div class="item-mid-text">
+          Type: <%= itemType %><br/><%= exp %> / 2,743 XP
+        </div>
       </div>
-      <div class="item-body">
-        <div class="item-mid">
-          <div class="item-img"><img src="assets/<%= name %>.svg" height="90" width="90"></div>
-          <div class="item-mid-text">Type: <%= itemType %><br/><%= exp %> / 2,743 XP</div>
-        </div>
-        <div class="item-affixes">
-          <% _.each(affixes, function(affix) { %>
-          <p>
-            <%= affix %>
-          </p>
-          <% }); %>
-        </div>
-        <div class="item-buttonbox">
-          <input class="item-button level-up" value="Level Up" type="button"/>
-          <input class="item-button equip" value="Equip" type="button"  />
-        </div>
+      <div class="item-affixes">
+        <% _.each(affixes, function(affix) { %>
+        <p>
+          <%= affix %>
+        </p>
+        <% }); %>
+      </div>
+      <div class="item-buttonbox">
+        <input class="item-button level-up" value="Level Up" type="button"/>
+        <input class="item-button equip" value="Equip" type="button"  />
       </div>
     </div>
   </script>
 
   <script id="inv-menu-template" type="text/template">
-    <div class="invcontent">
-      <div class="item-group armor">
+    <div class="inv-content">
+      <% _.each(groups, function(group) { %>
+      <div class="item-group <%= group %>">
         <div class="item-group-header">
-          Armor
+          <% print(group[0].toUpperCase() + group.slice(1)) %>
         </div>
-        <% _.each(armor, function(item) { %>
-        <%= itemTemplate(item) %>
-        <% }); %>
-      </div>
-      <div class="item-group weapon">
-        <div class="item-group-header">
-          Weapon
+        <div class="item-group-content">
         </div>
-        <% _.each(weapons, function(item) { %>
-        <%= itemTemplate(item) %>
-        <% }); %>
       </div>
-      <div class="item-group skill">
-        <div class="item-group-header">
-          Skill
-        </div>
-        <% _.each(skills, function(item) { %>
-        <%= itemTemplate(item) %>
-        <% }); %>
-      </div>
+      <% }); %>
     </div>
   </script>
 

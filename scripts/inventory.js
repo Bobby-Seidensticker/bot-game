@@ -22,8 +22,6 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var ArmorModel = GearModel.extend({
-        itemType: 'armor',
-
         defaults: _.extend({}, GearModel.prototype.defaults(), {
             weight: 0,
             type: 'ERR type',
@@ -40,8 +38,6 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var WeaponModel = GearModel.extend({
-        itemType: 'weapon',
-
         defaults: _.extend({}, GearModel.prototype.defaults(), {
             speed: 0,
             type: 'ERR type',
@@ -60,8 +56,6 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var SkillModel = GearModel.extend({
-        itemType: 'skill',
-
         defaults: _.extend({}, GearModel.prototype.defaults(), {
             manaCost: 0,
             cooldown: 0,
@@ -100,9 +94,17 @@ namespace.module('bot.inv', function (exports, require) {
                 "manaCost": this.get('manaCost')
             };
 
-            utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], affixDict);
+            utils.applyAllAffixes(
+                t,
+                ['physDmg', 'range', 'speed', 'fireDmg',
+                 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'],
+                affixDict);
             var skillAffDict = utils.affixesToAffDict(this.get('affixes'));
-            utils.applyAllAffixes(t, ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'], skillAffDict);
+            utils.applyAllAffixes(
+                t,
+                ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg',
+                 'lightDmg', 'poisDmg', 'manaCost'],
+                skillAffDict);
             //console.log("skill computeAttrs", t, this, affixDict);
             this.set(t);
 
@@ -116,7 +118,9 @@ namespace.module('bot.inv', function (exports, require) {
         bestSkill: function(mana, distances) {
             return this.find(function(skill) {
                 if (mana >= skill.get('manaCost') && skill.cool()) {
-                    return _.some(distances, function(dist) { return this.get('range') >= dist; }, skill);
+                    return _.some(distances, function(dist) {
+                        return this.get('range') >= dist;
+                    }, skill);
                 }
                 return false;
             }, this);
@@ -141,38 +145,46 @@ namespace.module('bot.inv', function (exports, require) {
 
         // weapon slots: mainHand, offHand
         // armor slots: head, chest, hands, legs
-        initialize: function() {
-            
+        initialize: function(options, inv) {
+            if (inv) {
+                this.inv = inv;
+                this.listenTo(inv, 'equip', this.equip);
+            }
         },
 
         equip: function(item, slot) {
+            log.info('EquippedGearModel.equip, slot: %s', slot);
             var canEquipItem = true;
 
             if (!canEquipItem) {
-                log.warning('You cannot equip this item name: %s type: %s', item.get('name'), item.itemType);
+                log.warning('You cannot equip this item name: %s type: %s',
+                            item.get('name'), item.get('itemType'));
                 throw('shit');
             }
 
-            if (item.itemType === 'weapon') {
+            if (item.get('itemType') === 'weapon') {
                 if (slot === 'mainHand' || slot === 'offHand') {
                     this.unequip(this.get(slot));
                     this.set(slot, item);
                     item.set('equippedBy', this.get('charName'));
                 } else {
-                    log.info('ya done fucked up equipping a weapon name: %s type: %s', item.get('name'), item.itemType);
+                    log.info('ya done fucked up equipping a weapon name: %s type: %s',
+                             item.get('name'), item.get('itemType'));
                     throw('shit');
                 }
-            } else if (item.itemType === 'armor') {
+            } else if (item.get('itemType') === 'armor') {
                 if (item.get('type') === slot) {
                     this.unequip(this.get(slot));
                     this.set(slot, item);
                     item.set('equippedBy', this.get('charName'));
                 } else {
-                    log.info('ya done fucked up equipped armor name: %s type: %s', item.get('name'), item.itemType);
+                    log.info('ya done fucked up equipped armor name: %s type: %s',
+                             item.get('name'), item.get('itemType'));
                     throw('shit');
                 }
             } else {
-                log.info('ya done fucked up equipped sumpin\' ya don\'t equip name: %s type: %s', item.get('name'), item.itemType);
+                log.info('ya done fucked up equipped sumpin\' ya don\'t equip' +
+                         ' name: %s type: %s', item.get('name'), item.get('itemType'));
                 throw('shit');
             }
             //console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
@@ -187,9 +199,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getAffixes: function() {
-            /*_.each(['mainHand', 'offHand', 'head', 'chest', 'hands', 'legs'], function(name) {
-                console.log('getaffixes: ', name, this.get(name));
-            }, this);*/
 
             var all = _.map(this.slots, function(name) {
                 //console.log(name);
@@ -221,104 +230,98 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    var ArmorCollection = Backbone.Collection.extend({
-        model: ArmorModel,
+    var ItemCollection = Backbone.Collection.extend({
+        model: GearModel,
 
-        localStorage: new Backbone.LocalStorage('armor'),
+        itemTypes: function() {
+            return ['weapon', 'armor', 'skill', 'material'];
+        },
 
         initialize: function() {
-            this.fetch();
-            log.debug('armor collection length: %d', this.length);
-            if (this.length === 0) {
-                log.info('No armor in local storage.');
-                this.create({name: 'cardboard kneepads'});
-            }
+            // no models given, do basics
+            var defaults = [
+                new WeaponModel({name: 'wooden sword'}),
+                new WeaponModel({name: 'shitty bow'}),
+                new WeaponModel({name: 'crappy wand'}),
+                new SkillModel({name: 'basic melee'}),
+                new SkillModel({name: 'basic range'}),
+                new SkillModel({name: 'basic spell'}),
+                new ArmorModel({name: 'cardboard kneepads'})
+            ];
+            this.add(defaults);
         }
     });
 
-    var WeaponCollection = Backbone.Collection.extend({
-        model: WeaponModel,
-
-        localStorage: new Backbone.LocalStorage('weapons'),
-
-        initialize: function() {
-            this.fetch();
-            log.debug('weapon collection length: %d', this.length);
-            if (this.length === 0) {
-                log.info('No weapons in local storage.');
-                this.create({name: 'wooden sword'});
-                this.create({name: 'shitty bow'});
-                this.create({name: 'crappy wand'});
-            }
-        }
-    });
-
-    // this is all for inventory
-    var SkillCollection = Backbone.Collection.extend({
-        model: SkillModel,
-
-        localStorage: new Backbone.LocalStorage('skills'),
-
-        initialize: function() {
-            this.fetch();
-            log.debug('skill collection length: %d', this.length);
-            if (this.length === 0) {
-                log.info('No skills in local storage.');
-                this.create({name: 'basic melee'});
-                this.create({name: 'basic range'});
-                this.create({name: 'basic spell'});
-            }
-        }
-    });
-
-    // inventory
-    var InvModel = Backbone.Model.extend({
-        armor: new ArmorCollection,
-        weapons: new WeaponCollection,
-        skills: new SkillCollection,
-
-        initialize: function() {
-            console.log('inventory initialize');
-        }
-    });
-
-    var InvMenuView = Backbone.View.extend({
+    var ItemCollectionView = Backbone.View.extend({
         el: $('#inv-menu-holder'),
 
         template: _.template($('#inv-menu-template').html()),
 
-        itemTemplate: _.template($('#inv-menu-item-template').html()),
+        initialize: function() {
+            var groups = this.collection.itemTypes();
+            this.$el.html(this.template({groups: groups}));
+
+            var groupContentEls = _.object(groups, _.map(groups, function(group) {
+                return this.$('.' + group + ' .item-group-content');
+            }, this), this);
+
+            //groupContentEls[item.get('type')]
+
+            this.collection.each(function(item) {
+                // This is sitting in the void, I believe that is ok
+                var view = new ItemInvView({model: item});
+                var $container = groupContentEls[item.get('itemType')];
+                $container.append(view.render().el);
+            }, this);
+        }
+    });
+
+    var ItemInvView = Backbone.View.extend({
+        tagName: 'div',
+
+        template: _.template($('#inv-menu-item-template').html()),
 
         events: {
-            'click .item': 'onItemClick'
+            'click .equip': 'equip',
+            'click .item-header': 'expandCollapse'
         },
 
-        initialize: function() {
-            console.log('right here');
-            this.render();
-        },
+        initialize: function() {},
 
         render: function() {
-            var rendered = this.template({
-                itemTemplate: this.itemTemplate,
-                armor: this.model.armor.toJSON(),
-                weapons: this.model.weapons.toJSON(),
-                skills: this.model.skills.toJSON(),
+            var type = this.model.get('itemType');
+            this.$el.html(this.template(this.model.toJSON()));
+            this.$el.attr({
+                'class': 'item collapsed',
+                'id': 'inv-item-' + this.model.get('name')
             });
-            console.log(this.el);
-            console.log(this.$el);
-            this.$el.html(rendered);
             return this;
         },
 
-        onItemClick: function(event) {
-            $(event.currentTarget).toggleClass('collapsed');
+        equip: function() {
+            log.info('equip click on model name %s', this.model.get('name'));
+            var slot;
+            var itemType = this.model.get('itemType');
+            if (itemType === 'armor') {
+                slot = this.model.get('type');
+            } else if (itemType === 'weapon') {
+                slot = 'mainHand';
+            } else {
+                slot = '';
+            }
+            this.model.trigger('equip', this.model, slot);
         },
+
+        expandCollapse: function() {
+            log.info('expand collapse click on model name %s', this.model.get('name'));
+            this.$el.toggleClass('collapsed');
+        },
+
     });
 
     exports.extend({
-        InvModel: InvModel,
-        InvMenuView: InvMenuView,
+        ItemCollection: ItemCollection,
+        ItemCollectionView: ItemCollectionView,
         SkillChain: SkillChain,
         newSkillChain: newSkillChain,
         EquippedGearModel: EquippedGearModel,

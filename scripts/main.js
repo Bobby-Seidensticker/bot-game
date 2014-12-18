@@ -18,7 +18,7 @@ namespace.module('bot.main', function (exports, require) {
         var gameView = new namespace.bot.window.GameView();
         var m = new menu.TabView();
 
-        var invMenuView = new inv.InvMenuView({model: gameModel.inv});
+        //var invMenuView = new inv.InvMenuView({model: gameModel.inv});
 
         // var invModel = new inv.InvModel();
         // var invMenuView = new inv.InvMenuView({model: invModel});
@@ -42,7 +42,10 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         initialize: function() {
-            this.inv = new inv.InvModel();
+            //this.inv = new inv.InvModel();
+            //this.inv = new inv.ItemCollection({}, []);
+            this.inv = new inv.ItemCollection();
+            this.invView = new inv.ItemCollectionView({collection: this.inv});
 
             this.char = new entity.newChar(this.inv);
 

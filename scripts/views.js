@@ -1,5 +1,7 @@
 namespace.module('bot.views', function (exports, require) {
 
+    var log = namespace.bot.log;
+
     var HeaderView = Backbone.View.extend({
         template: _.template($('#header-stats-tmpl').html()),
 
@@ -26,6 +28,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         render: function() {
+            log.info('header view change');
             this.$('#hp').html(Math.ceil(this.char.get('hp')) + ' / ' + this.char.get('maxHp'));
             this.$('#mana').html(Math.floor(this.char.get('mana')) + ' / ' + this.char.get('maxMana'));
             this.$('#xp').html(Math.floor(this.char.get('xp')) + ' / ' + this.char.get('nextLevelXp'));

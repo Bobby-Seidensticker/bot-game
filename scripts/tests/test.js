@@ -76,16 +76,17 @@ namespace.module('bot.test', function (exports, require) {
 
 	QUnit.test('inventory', function(assert) {
 	    //TODO - why dont these inv locations have any attributes?  Inv seems to work on index.html...?
-	    var inven = gameModel.char.get('inv');
+	    var inv = gameModel.char.get('inv');
 
-	    assert.ok(inven.weapons.length, 'inventory has at least one weapon');
-	    assert.ok(inven.armor.length, 'inventory has at least one armor');
-	    assert.ok(inven.skills.length, 'inventory has at least one skill');
+	    assert.ok(inv.where({'itemType': 'weapon'}).length, 'inventory has at least one weapon');
+	    assert.ok(inv.where({'itemType': 'armor'}).length, 'inventory has at least one armor');
+	    assert.ok(inv.where({'itemType': 'skill'}).length, 'inventory has at least one skill');
+	    //assert.ok(inv.armor.length, 'inventory has at least one armor');
+	    //assert.ok(inv.skills.length, 'inventory has at least one skill');
 
-	    console.log('wep0', inven.skills.models[0]);
-	    validateWeapon(assert, inven.weapons.models[0]);
-	    validateItem(assert, inven.armor.models[0]);
-	    validateItem(assert, inven.skills.models[0]);
+	    validateWeapon(assert, inv.findWhere({'itemType': 'weapon'}));
+	    validateItem(assert, inv.findWhere({'itemType': 'armor'}));
+	    validateItem(assert, inv.findWhere({'itemType': 'skill'}));
 	});
 
 	function validateWeapon(assert, item) {

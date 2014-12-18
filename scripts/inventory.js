@@ -371,9 +371,12 @@ namespace.module('bot.inv', function (exports, require) {
 	    'click .craft': 'craft',
 	}),
 
-	buttons: $('#craft-menu-item-buttons-template').html(),        
+	initialize: function() {
+	    this.buttons = this.model.get('craftCost') + $('#craft-menu-item-buttons-template').html();
+	},
 
 	craft: function() {
+	    console.log(this.model);
 	    this.model.trigger('craftClick', this.model);
 	    //console.log(this);
 	}

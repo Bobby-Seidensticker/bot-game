@@ -65,7 +65,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         update: function() {
-            log.warning('header inv view change');
+            log.info('header inv view change');
             var items = this.equipped.toDict();
 
             _.each(items, function(item, slot) {

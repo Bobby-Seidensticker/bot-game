@@ -47,7 +47,7 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options, equipped, slotImages) {
             this.equipped = equipped;
-            this.listenTo(this.equipped, 'change', this.update);
+            this.listenTo(this.equipped, 'equipSuccess', this.update);
         },
 
         render: function() {

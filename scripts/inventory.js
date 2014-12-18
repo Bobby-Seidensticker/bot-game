@@ -346,7 +346,16 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var CraftItemView = ItemView.extend({
+        events: _.extend({}, ItemView.prototype.events, {
+	    'click .craft': 'craft',
+	}),
+
 	buttons: $('#craft-menu-item-buttons-template').html(),        
+
+	craft: function() {
+	    this.model.trigger('craft', this.model);
+	    console.log(this);
+	}
     });
 
     var InvItemCollectionView = ItemCollectionView.extend({

@@ -45,7 +45,7 @@ namespace.module('bot.main', function (exports, require) {
             //this.inv = new inv.InvModel();
             //this.inv = new inv.ItemCollection({}, []);
             this.inv = new inv.ItemCollection();
-            this.invView = new inv.ItemCollectionView({collection: this.inv});
+            this.invView = new inv.InvItemCollectionView({collection: this.inv});
 
             this.char = new entity.newChar(this.inv);
 

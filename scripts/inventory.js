@@ -231,14 +231,32 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var ItemCollection = Backbone.Collection.extend({
-        model: GearModel,
+        itemTypes: function() {
+            return ['weapon', 'armor', 'skill', 'material', 'recipe'];
+        },
 
+        initialize: function() {
+            // no models given, do basics
+            var defaults = [
+                new WeaponModel({name: 'wooden sword'}),
+                new WeaponModel({name: 'shitty bow'}),
+                new WeaponModel({name: 'crappy wand'}),
+                new SkillModel({name: 'basic melee'}),
+                new SkillModel({name: 'basic range'}),
+                new SkillModel({name: 'basic spell'}),
+                new ArmorModel({name: 'cardboard kneepads'})
+            ];
+            this.add(defaults);
+        }
+    });
+
+    var RecipeCollection = Backbone.Collection.extend({
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material'];
         },
 
         initialize: function() {
-            // no models given, do basics
+            // do sumpin' here
             var defaults = [
                 new WeaponModel({name: 'wooden sword'}),
                 new WeaponModel({name: 'shitty bow'}),
@@ -267,20 +285,19 @@ namespace.module('bot.inv', function (exports, require) {
 
             this.collection.each(function(item) {
                 // This is sitting in the void, I believe that is ok
-                var view = new ItemInvView({model: item});
+                var view = new this.SubView({model: item});
                 var $container = groupContentEls[item.get('itemType')];
                 $container.append(view.render().el);
             }, this);
         }
     });
 
-    var ItemInvView = Backbone.View.extend({
+    var ItemView = Backbone.View.extend({
         tagName: 'div',
 
         template: _.template($('#inv-menu-item-template').html()),
 
         events: {
-            'click .equip': 'equip',
             'click .item-header': 'expandCollapse'
         },
 
@@ -296,6 +313,18 @@ namespace.module('bot.inv', function (exports, require) {
             return this;
         },
 
+        expandCollapse: function() {
+            log.info('expand collapse click on model name %s', this.model.get('name'));
+            this.$el.toggleClass('collapsed');
+        },
+
+    });
+
+    var InvItemView = ItemView.extend({
+        events: _.extend({}, ItemView.prototype.events, {
+            'click .equip': 'equip',
+        }),
+
         equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             var slot;
@@ -309,17 +338,31 @@ namespace.module('bot.inv', function (exports, require) {
             }
             this.model.trigger('equip', this.model, slot);
         },
+    });
 
-        expandCollapse: function() {
-            log.info('expand collapse click on model name %s', this.model.get('name'));
-            this.$el.toggleClass('collapsed');
-        },
+    var CraftItemView = ItemView.extend({
+        
+    });
 
+    var InvItemCollectionView = ItemCollectionView.extend({
+        el: $('#inv-menu-holder'),
+        template: _.template($('#inv-menu-template').html()),
+        SubView: InvItemView
+    });
+
+    var CraftItemCollectionView = ItemCollectionView.extend({
+        el: $('#craft-menu-holder'),
+        template: _.template($('#craft-menu-template').html()),
+        SubView: CraftItemView
     });
 
     exports.extend({
         ItemCollection: ItemCollection,
-        ItemCollectionView: ItemCollectionView,
+        InvItemCollectionView: InvItemCollectionView,
+
+        RecipeCollection: RecipeCollection,
+        CraftItemCollectionView: CraftItemCollectionView,
+
         SkillChain: SkillChain,
         newSkillChain: newSkillChain,
         EquippedGearModel: EquippedGearModel,

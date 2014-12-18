@@ -30,7 +30,6 @@
     </div>
   </div>
 
-
   <script id="map-tab-tmpl" type="x-tmpl-mustache">
     <div class="mapcontent">
       Mappy<br><br>
@@ -80,26 +79,17 @@
     </div>
   </script>
 
-  <script id="craft-tab-tmpl" type="x-tmpl-mustache">
-    <div class="craftcontent">
-      <div class="item-group armor">
+  <script id="craft-menu-template" type="text/template">
+    <div class="craft-content">
+      <% _.each(groups, function(group) { %>
+      <div class="item-group <%= group %>">
         <div class="item-group-header">
-          Armor
+          <% print(group[0].toUpperCase() + group.slice(1)) %>
         </div>
-        {{{armor}}}
-      </div>
-      <div class="item-group weapon">
-        <div class="item-group-header">
-          Weapon
+        <div class="item-group-content">
         </div>
-        {{{weapons}}}
       </div>
-      <div class="item-group skill">
-        <div class="item-group-header">
-          Skill
-        </div>
-        {{{skills}}}
-      </div>
+      <% }); %>
     </div>
   </script>
 

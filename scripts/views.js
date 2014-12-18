@@ -3,36 +3,70 @@ namespace.module('bot.views', function (exports, require) {
     var log = namespace.bot.log;
 
     var HeaderView = Backbone.View.extend({
+        tagName: 'div',
+
         template: _.template($('#header-stats-tmpl').html()),
 
         initialize: function(options, char, inv) {
-            this.char = char;
-            this.inv = inv;
+            charView = new HeaderCharView({model: char});
+            this.$el.append(charView.render().el);
 
-            console.log('right here views');
+            invView = new HeaderInvView({model: inv}, char.get('equipped'));
+            this.$el.append(invView.render().el);
 
-            console.log(_.extend({ items: this.char.get('equipped').toDict() }, this.char.toJSON()));
+            $('.header').append(this.$el);
+        }
+    });
 
-            this.$el.html(this.template(_.extend({ items: this.char.get('equipped').toDict() }, this.char.toJSON())));
+    var HeaderCharView = Backbone.View.extend({
+        template: _.template($('#header-stats-tmpl').html()),
 
-            this.listenTo(this.char, 'change', this.render);
-            this.listenTo(this.inv, 'change', this.render);
+        tagName: 'div',
 
-            var slots = this.char.get('equipped').slots;
-            this.slotImages = _.object(slots,
-                                         _.map(slots, function(slot) {
-                                             return this.$('.' + slot + ' .slot-img');
-                                         }, this)
-                                        );
+        initialize: function() {
+            this.listenTo(this.model, 'change', this.update);
         },
 
         render: function() {
-            log.info('header view change');
-            this.$('#hp').html(Math.ceil(this.char.get('hp')) + ' / ' + this.char.get('maxHp'));
-            this.$('#mana').html(Math.floor(this.char.get('mana')) + ' / ' + this.char.get('maxMana'));
-            this.$('#xp').html(Math.floor(this.char.get('xp')) + ' / ' + this.char.get('nextLevelXp'));
+            this.$el.html(this.template(this.model.toJSON()));
+            this.$el.addClass('stats');
+            return this;
+        },
 
-            var items = this.char.get('equipped').toDict();
+        update: function() {
+            this.$('#hp').html(Math.ceil(this.model.get('hp')) + ' / ' + this.model.get('maxHp'));
+            this.$('#mana').html(Math.floor(this.model.get('mana')) + ' / ' + this.model.get('maxMana'));
+            this.$('#xp').html(Math.floor(this.model.get('xp')) + ' / ' + this.model.get('nextLevelXp'));
+        },
+    });
+
+    var HeaderInvView = Backbone.View.extend({
+        template: _.template($('#header-equipped-tmpl').html()),
+
+        tagName: 'div',
+
+        initialize: function(options, equipped, slotImages) {
+            this.equipped = equipped;
+            this.listenTo(this.equipped, 'change', this.update);
+        },
+
+        render: function() {
+            this.$el.html(this.template({items: this.equipped.toDict()}));
+            this.$el.addClass('equipped');
+
+            var slots = this.equipped.slots;
+            this.slotImages = _.object(slots,
+                                       _.map(slots, function(slot) {
+                                           return this.$('.' + slot + ' .slot-img');
+                                       }, this)
+                                      );
+
+            return this;
+        },
+
+        update: function() {
+            log.warning('header inv view change');
+            var items = this.equipped.toDict();
 
             _.each(items, function(item, slot) {
                 var $img = this.slotImages[slot];
@@ -43,8 +77,6 @@ namespace.module('bot.views', function (exports, require) {
                     $img.addClass('empty');
                 }
             }, this);
-
-            return this;
         },
     });
 

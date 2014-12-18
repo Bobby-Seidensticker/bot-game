@@ -244,16 +244,20 @@ namespace.module('bot.inv', function (exports, require) {
         initialize: function() {
             // do sumpin' here
             var defaults = [
-                new WeaponModel({name: 'wooden sword'}),
-                new WeaponModel({name: 'shitty bow'}),
-                new WeaponModel({name: 'crappy wand'}),
-                new SkillModel({name: 'basic melee'}),
-                new SkillModel({name: 'basic range'}),
-                new SkillModel({name: 'basic spell'}),
-                new ArmorModel({name: 'cardboard kneepads'})
+                new WeaponModel({name: 'bowie knife'}),
+                new WeaponModel({name: 'decent wand'}),
+                new SkillModel({name: 'fire slash'}),
+                new SkillModel({name: 'ice arrow'}),		
+                new SkillModel({name: 'poison ball'}),
+                new ArmorModel({name: 'balsa helmet'})
             ];
             this.add(defaults);
-        }
+        },
+
+	removeRecipe: function(recipe) {
+	    this.remove(recipe);
+	    console.log(this);
+	},
     });
 
     var ItemCollection = Backbone.Collection.extend({
@@ -280,6 +284,10 @@ namespace.module('bot.inv', function (exports, require) {
 
         craft: function(recipeModel) {
             log.info('ItemCollection.craft called');
+	    console.log("Itemcollection craft with, " , recipeModel);
+	    this.add(recipeModel);
+	    this.recipes.removeRecipe(recipeModel);
+	    console.log(this);
         },
     });
 
@@ -318,7 +326,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         render: function() {
             var type = this.model.get('itemType');
-	    console.log('buttons', this.buttons);
+	    //console.log('buttons', this.buttons);
             this.$el.html(this.template(_.extend({}, this.model.toJSON(), {'buttons': this.buttons})));
             this.$el.attr({
                 'class': 'item collapsed',
@@ -367,7 +375,7 @@ namespace.module('bot.inv', function (exports, require) {
 
 	craft: function() {
 	    this.model.trigger('craftClick', this.model);
-	    console.log(this);
+	    //console.log(this);
 	}
     });
 

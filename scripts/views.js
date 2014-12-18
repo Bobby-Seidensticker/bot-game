@@ -15,9 +15,8 @@ namespace.module('bot.views', function (exports, require) {
 
             this.$el.html(this.template(_.extend({ items: this.char.get('equipped').toDict() }, this.char.toJSON())));
 
-            //this.setElement(this.$('.stats'));
-
-            this.char.on('change', this.render, this);
+            this.listenTo(this.char, 'change', this.render);
+            this.listenTo(this.inv, 'change', this.render);
 
             var slots = this.char.get('equipped').slots;
             this.slotImages = _.object(slots,
@@ -44,6 +43,8 @@ namespace.module('bot.views', function (exports, require) {
                     $img.addClass('empty');
                 }
             }, this);
+
+            return this;
         },
     });
 

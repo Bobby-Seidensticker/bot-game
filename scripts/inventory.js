@@ -265,8 +265,6 @@ namespace.module('bot.inv', function (exports, require) {
                 return this.$('.' + group + ' .item-group-content');
             }, this), this);
 
-            //groupContentEls[item.get('type')]
-
             this.collection.each(function(item) {
                 // This is sitting in the void, I believe that is ok
                 var view = new ItemInvView({model: item});

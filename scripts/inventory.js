@@ -256,6 +256,7 @@ namespace.module('bot.inv', function (exports, require) {
 
 	removeRecipe: function(recipe) {
 	    this.remove(recipe);
+            recipe.destroy();
 	    console.log(this);
 	},
     });
@@ -283,8 +284,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         craft: function(recipeModel) {
-            log.info('ItemCollection.craft called');
-	    console.log("Itemcollection craft with, " , recipeModel);
+            log.warning('ItemCollection.craft called with recipe model: %s', recipeModel.toJSON());
 	    this.add(recipeModel);
 	    this.recipes.removeRecipe(recipeModel);
 	    console.log(this);
@@ -300,17 +300,26 @@ namespace.module('bot.inv', function (exports, require) {
             var groups = this.collection.itemTypes();
             this.$el.html(this.template({groups: groups}));
 
-            var groupContentEls = _.object(groups, _.map(groups, function(group) {
+            this.groupContentEls = _.object(groups, _.map(groups, function(group) {
                 return this.$('.' + group + ' .item-group-content');
             }, this), this);
 
             this.collection.each(function(item) {
                 // This is sitting in the void, I believe that is ok
                 var view = new this.SubView({model: item});
-                var $container = groupContentEls[item.get('itemType')];
+                var $container = this.groupContentEls[item.get('itemType')];
                 $container.append(view.render().el);
             }, this);
-        }
+
+            this.listenTo(this, 'add', this.onAdd);
+        },
+
+        onAdd: function(item) {
+            log.info('ItemCollectionView onAdd');
+            var view = new this.SubView({model: item});
+            var $container = groupContentEls[item.get('itemType')];
+            $container.append(view.render().el);
+        },
     });
 
     var ItemView = Backbone.View.extend({
@@ -322,7 +331,9 @@ namespace.module('bot.inv', function (exports, require) {
             'click .item-header': 'expandCollapse'
         },
 
-        initialize: function() {},
+        initialize: function() {
+            this.listenTo(this.model, 'destroy', this.destroy);
+        },
 
         render: function() {
             var type = this.model.get('itemType');
@@ -340,6 +351,9 @@ namespace.module('bot.inv', function (exports, require) {
             this.$el.toggleClass('collapsed');
         },
 
+        destroy: function() {
+            this.$el.remove();
+        },
     });
 
     var InvItemView = ItemView.extend({

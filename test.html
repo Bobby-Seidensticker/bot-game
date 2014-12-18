@@ -8,7 +8,6 @@
   <div id="qunit-fixture"></div>
   <script src="scripts/tests/qunit.js"></script>
 
-
   <div class="header"></div>
 
   <div class="vis"></div>
@@ -34,7 +33,6 @@
       <div class="sub-menu closed" id="settings-menu-holder">settings</div>
     </div>
   </div>
-
 
   <script id="map-tab-tmpl" type="x-tmpl-mustache">
     <div class="mapcontent">
@@ -85,26 +83,17 @@
     </div>
   </script>
 
-  <script id="craft-tab-tmpl" type="x-tmpl-mustache">
-    <div class="craftcontent">
-      <div class="item-group armor">
+  <script id="craft-menu-template" type="text/template">
+    <div class="craft-content">
+      <% _.each(groups, function(group) { %>
+      <div class="item-group <%= group %>">
         <div class="item-group-header">
-          Armor
+          <% print(group[0].toUpperCase() + group.slice(1)) %>
         </div>
-        {{{armor}}}
-      </div>
-      <div class="item-group weapon">
-        <div class="item-group-header">
-          Weapon
+        <div class="item-group-content">
         </div>
-        {{{weapons}}}
       </div>
-      <div class="item-group skill">
-        <div class="item-group-header">
-          Skill
-        </div>
-        {{{skills}}}
-      </div>
+      <% }); %>
     </div>
   </script>
 
@@ -137,66 +126,42 @@
   </script>
 
   <script id="header-stats-tmpl" type="x-tmpl-mustache">
-    <div class="stats">
-      <table>
-        <tr>
-          <td>Name</td>
-          <td id="name"><%= name %></td>
-        </tr>
-        <tr>
-          <td>Level</td>
-          <td id="level"><%= level %></td>
-        </tr>
-        <tr>
-          <td>Hp</td>
-          <td id="hp"><%= hp %> / <%= maxHp %></td>
-        </tr>
-        <tr>
-          <td>Mana</td>
-          <td id="mana"><%= mana %> / <%= maxMana %></td>
-        </tr>
-        <tr>
-          <td>Xp</td>
-          <td id="xp"><%= xp %> / <%= nextLevelXp %></td>
-        </tr>
-      </table>
-    </div>
-    <div class="equipped">
-      <% _.each(items, function(item, slot) { %>
-      <div class="<%= slot %>">
-        <img class="slot-background" src="assets/<%= 'empty-' + slot %>.svg" width="60" height="60" />
-        <% if (item) { %>
-        <img class="slot-img" src="assets/<%= item.get('name') %>.svg" width="60" height="60" />
-        <% } else { %>
-        <img class="empty slot-img" width="60" height="60" />
-        <% } %>
-      </div>
-      <% }); %>
-    </div>
-
-    <!--
-        <div class="headerstats" id="header-{{id}}">
-          <div class="stats">
-            Hero <span class="hero-name"></span> - Level <span class="hero-level"></span><br>
-            Zone: <span class="zone-name">Dark Woods</span> - <span class="zone-roomnum">8</span>/<span class="zone-roomcount">10</span><br>
-            HP - <span class="hero-hp"></span>/<span class="hero-maxHp"></span><br>
-            MP - <span class="hero-mana"></span>/<span class="hero-maxMana"></span><br>
-            XP - <span class="hero-xp"></span>/<span class="hero-nextLvlXp"></span><br>
-            DPS - <span class="hero-dps"></span>
-          </div>
-          <div class="headerskillchain">
-            Fireball<br>
-            Basic Attack<br>
-          </div>
-          <div class="headerinventory">
-            Helmet <br>
-            Armor <br>
-            Gloves <br>
-            Pants <br>
-          </div>
-        </div>-->
+    <table>
+      <tr>
+        <td>Name</td>
+        <td id="name"><%= name %></td>
+      </tr>
+      <tr>
+        <td>Level</td>
+        <td id="level"><%= level %></td>
+      </tr>
+      <tr>
+        <td>Hp</td>
+        <td id="hp"><%= hp %> / <%= maxHp %></td>
+      </tr>
+      <tr>
+        <td>Mana</td>
+        <td id="mana"><%= mana %> / <%= maxMana %></td>
+      </tr>
+      <tr>
+        <td>Xp</td>
+        <td id="xp"><%= xp %> / <%= nextLevelXp %></td>
+      </tr>
+    </table>
   </script>
 
+  <script id="header-equipped-tmpl" type="x-tmpl-mustache">
+    <% _.each(items, function(item, slot) { %>
+    <div class="<%= slot %>">
+      <img class="slot-background" src="assets/<%= 'empty-' + slot %>.svg" width="60" height="60" />
+      <% if (item) { %>
+      <img class="slot-img" src="assets/<%= item.get('name') %>.svg" width="60" height="60" />
+      <% } else { %>
+      <img class="empty slot-img" width="60" height="60" />
+      <% } %>
+    </div>
+    <% }); %>
+  </script>
 
   <script type="text/template" id="menu-tab-template">
     <td class="tab" id="<%- name %>"><%- name %></td>

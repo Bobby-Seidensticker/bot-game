@@ -148,13 +148,14 @@ namespace.module('bot.inv', function (exports, require) {
         initialize: function(options, inv) {
             if (inv) {
                 this.inv = inv;
-                this.listenTo(inv, 'equip', this.equip);
+                this.listenTo(inv, 'equipClick', this.equip);
             }
         },
 
         equip: function(item, slot) {
             log.info('EquippedGearModel.equip, slot: %s', slot);
             var canEquipItem = true;
+            var success = false;
 
             if (!canEquipItem) {
                 log.warning('You cannot equip this item name: %s type: %s',
@@ -167,6 +168,7 @@ namespace.module('bot.inv', function (exports, require) {
                     this.unequip(this.get(slot));
                     this.set(slot, item);
                     item.set('equippedBy', this.get('charName'));
+                    success = true;
                 } else {
                     log.info('ya done fucked up equipping a weapon name: %s type: %s',
                              item.get('name'), item.get('itemType'));
@@ -177,6 +179,7 @@ namespace.module('bot.inv', function (exports, require) {
                     this.unequip(this.get(slot));
                     this.set(slot, item);
                     item.set('equippedBy', this.get('charName'));
+                    success = true;
                 } else {
                     log.info('ya done fucked up equipped armor name: %s type: %s',
                              item.get('name'), item.get('itemType'));
@@ -186,6 +189,9 @@ namespace.module('bot.inv', function (exports, require) {
                 log.info('ya done fucked up equipped sumpin\' ya don\'t equip' +
                          ' name: %s type: %s', item.get('name'), item.get('itemType'));
                 throw('shit');
+            }
+            if (success) {
+                this.trigger('equipSuccess');
             }
             //console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
         },
@@ -336,7 +342,7 @@ namespace.module('bot.inv', function (exports, require) {
             } else {
                 slot = '';
             }
-            this.model.trigger('equip', this.model, slot);
+            this.model.trigger('equipClick', this.model, slot);
         },
     });
 

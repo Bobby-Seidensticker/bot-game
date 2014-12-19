@@ -16,13 +16,26 @@ namespace.module('bot.inv', function (exports, require) {
                 'mints': 0,
                 'sparks': 0,
                 'tumors': 0,
+                'nuggets':0,
             }
         },
 
+        enoughToPay: function(craftCost) {
+            var splits = craftCost.split(' ');
+            if (this.get(splits[1]) >= splits[0]) {
+                return true;
+            }
+            return false;
+        },
+
+        
         payCost: function(craftCost) {
             // craft cost is a string formatted "material int" eg "tumors 3"
             var splits = craftCost.split(' ');
-            this.set(splits[0]) = this.get(splits[0]) - splits[1];
+            console.log(craftCost, splits);
+            this.set(splits[1], this.get(splits[1]) - splits[0]);
+            //TODO - trigger an event to update material display in inv
+
         },
     });
 
@@ -294,16 +307,22 @@ namespace.module('bot.inv', function (exports, require) {
             this.add(defaults);
 
             this.recipes = new RecipeCollection();
-            this.materials = new MaterialModel({"poops": 5});
+            this.materials = new MaterialModel({"planks": 50});
             this.listenTo(this.recipes, 'craftClick', this.craft);
         },
 
         craft: function(item) {
             log.warning('ItemCollection.craft called on item: %s', item.toJSON());
-	    this.add(item);
-	    this.recipes.remove(item);
-            item.trigger('craftSuccess');
-	    console.log(this);
+            var cost = item.get('craftCost');
+            if(this.materials.enoughToPay(cost)) {
+                this.materials.payCost(item.get('craftCost'));
+                this.add(item);
+	        this.recipes.remove(item);
+                item.trigger('craftSuccess');
+	    } else {
+                log.warning('insufficient resources, craft failed');
+            }
+
         },
     });
 

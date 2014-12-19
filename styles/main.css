@@ -22,16 +22,16 @@ body {
 }
 
 .headerskillchain {
-   float:left;
-   background-color: #CEC;	   
-   height:100%;
-   padding: 10px 50px;
+    float:left;
+    background-color: #CEC;       
+    height:100%;
+    padding: 10px 50px;
 }
 
 .headerinventory {
-   float:left;
-   height:100%;
-   padding: 10px 50px;
+    float:left;
+    height:100%;
+    padding: 10px 50px;
 }
 
 .vis {
@@ -67,22 +67,22 @@ body {
 
 .contentholder div {
     overflow: hidden;
-    /*background-color: #DDF;*/
+/*background-color: #DDF;*/
 }
 
 /*.tabs .tab {
-    width: 58px;
-    height: 58px;
-    padding: 5px;
-    margin: 5px;
-    text-align: center;
-    float: left;
-    background-color: #DDF;
-}
+  width: 58px;
+  height: 58px;
+  padding: 5px;
+  margin: 5px;
+  text-align: center;
+  float: left;
+  background-color: #DDF;
+  }
 
 .vert-centered {
-    margin-top: 50%;
-    font-size: 16px;
+margin-top: 50%;
+font-size: 16px;
 }*/
 
 .game-main-menu {
@@ -100,7 +100,7 @@ body {
 .contentholder {
     background-color: #DEE;
     height:100%;
-}	   
+}       
 
 .mapcontent {
     display:block;

@@ -18,26 +18,26 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "melee",
                 "damage": 2,
-		"craftCost": "2 planks",
+                "craftCost": "2 planks",
             },
             "bowie knife": {
                 "prototype": ["weapon"],
                 "type": "melee",
                 "damage": 3,
-		"craftCost": "3 nuggets",
+                "craftCost": "3 nuggets",
             },
             "shitty bow": {
                 "prototype": ["weapon"],
                 "type": "range",
                 "damage": 2,
                 "range": 4,
-		"craftCost": "3 poops",
+                "craftCost": "3 poops",
             },
             "crappy wand": {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "range": 6,
-		"craftCost": "3 poops",
+                "craftCost": "3 poops",
             },
 
             "knobby club": {
@@ -45,21 +45,21 @@ namespace.module('bot.itemref', function (exports, require) {
                 "type": "melee",
                 "speed": 1.2,
                 "damage": 4,
-		"craftCost": "2 planks",
+                "craftCost": "2 planks",
             },
             "wooden bow": {
                 "prototype": ["weapon"],
                 "type": "range",
                 "damage": 4,
                 "range": 5,
-		"craftCost": "2 planks",
+                "craftCost": "2 planks",
             },
             "decent wand": {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "damage": 3,
                 "range": 6,
-		"craftCost": "10 planks",
+                "craftCost": "10 planks",
             },
         },
         "armor": {
@@ -70,18 +70,18 @@ namespace.module('bot.itemref', function (exports, require) {
             "balsa helmet": {
                 "prototype": ["armor"],
                 "type": "head",
-		"craftCost": "4 planks",
+                "craftCost": "4 planks",
             },
             "smelly cod piece": {
                 "prototype": ["armor"],
                 "type": "chest",
                 "weight": 2,
-		"craftCost": "4 poops",
+                "craftCost": "4 poops",
             },
             "cardboard kneepads": {
                 "prototype": ["armor"],
                 "type": "legs",
-		"craftCost": "2 poops"
+                "craftCost": "2 poops"
             }
         },
         "skill": {
@@ -106,80 +106,80 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "affixes": ["physDmg more 1.4"],
                 "manaCost": 5,
-		"craftCost": "2 skulls",
+                "craftCost": "2 skulls",
             },        
             "fire slash": {
                 "prototype": ["basic melee"],
                 "affixes": ["fireDmg added 10"],
                 "manaCost": 3,
-		"craftCost": "3 embers",
+                "craftCost": "3 embers",
             },
             "ice slash": {
                 "prototype": ["basic melee"],
                 "affixes": ["coldDmg added 11"],
                 "manaCost": 5,
-		"craftCost": "3 mints",
+                "craftCost": "3 mints",
             },
             "lightning slash": {
                 "prototype": ["basic melee"],
                 "affixes": ["lightDmg added 12"],
                 "manaCost": 6,
-		"craftCost": "3 sparks",
+                "craftCost": "3 sparks",
             },
             "poison slash": {
                 "prototype": ["basic melee"],
                 "affixes": ["poisDmg added 13"],
                 "manaCost": 7,
-		"craftCost": "3 tumors",
+                "craftCost": "3 tumors",
             },
             "fire arrow": {
                 "prototype": ["basic range"],
                 "affixes": ["fireDmg added 8"],
                 "manaCost": 3,
-		"craftCost": "3 embers",
+                "craftCost": "3 embers",
             },
             "ice arrow": {
                 "prototype": ["basic range"],
                 "affixes": ["coldDmg added 9"],
                 "manaCost": 4,
-		"craftCost": "3 mints"
+                "craftCost": "3 mints"
             },
             "lightning arrow": {
                 "prototype": ["basic range"],
                 "affixes": ["lightDmg added 10"],
                 "manaCost": 5,
-		"craftCost": "3 sparks",
+                "craftCost": "3 sparks",
             },
             "poison arrow": {
                 "prototype": ["basic range"],
                 "affixes": ["poisDmg added 11"],
                 "manaCost": 5,
-		"craftCost": "3 tumors",
+                "craftCost": "3 tumors",
             },
             "fire ball": {
                 "prototype": ["basic spell"],
                 "affixes": ["fireDmg added 10"],
                 "manaCost": 5,
-		"craftCost": "3 embers",
+                "craftCost": "3 embers",
             },
             "ice ball": {
                 "prototype": ["basic spell"],
                 "affixes": ["coldDmg added 10"],
                 "manaCost": 5,
-		"craftCost": "3 mints",
+                "craftCost": "3 mints",
             },
             "lightning ball": {
                 "prototype": ["basic spell"],
                 "affixes": ["lightDmg added 10"],
                 "manaCost": 5,
-		"craftCost": "3 sparks",
+                "craftCost": "3 sparks",
             },
             "poison ball": {
                 "prototype": ["basic spell"],
                 "types": ["proj", "DOT"],
                 "affixes": ["poisDmg added 15"],
                 "manaCost": 5,
-		"craftCost": "3 tumors",
+                "craftCost": "3 tumors",
             },
 
         },

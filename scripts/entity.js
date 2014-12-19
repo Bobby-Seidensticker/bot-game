@@ -10,7 +10,8 @@ namespace.module('bot.entity', function (exports, require) {
     var inventory = namespace.bot.inv;
     var utils = namespace.bot.utils;
     var itemref = namespace.bot.itemref;
-
+    var prob = namespace.bot.prob;
+    
     var EntityModel = Backbone.Model.extend({
         defaults: function () { 
             return {
@@ -137,6 +138,9 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         onKill: function(target, skill) {
+            //console.log(target);
+            var drops = target.getDrops();
+            this.get('inv').materials.addDrops(drops);
             this.set('xp', this.get('xp') + target.get('level'));
             while (this.get('xp') >= this.get('nextLevelXp')) {
                 this.set('level', this.get('level') + 1);
@@ -237,7 +241,21 @@ namespace.module('bot.entity', function (exports, require) {
             });
 
             this.computeAttrs();
+        },
+
+        getDrops: function() {
+            //  Monster uses internal model to roll one or more drops, returns array of drops
+            // string items in array are materials, objects are full items
+            var dropRef = this.get('drops');
+            //console.log(dropRef);
+
+            var drop = "1 " + dropRef[prob.pyRand(0, dropRef.length)];
+            //console.log(drop);
+
+            log.info(this.get('name') + ' dropped: ' + drop);
+            return [drop];
         }
+        
     });
 
     function newChar(inv) {

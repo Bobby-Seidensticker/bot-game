@@ -283,7 +283,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillChain": ["basic melee"],
                 "weapon" : ["wooden sword"],
                 "armor": ["smelly cod piece"],
-                "affixes": ["physDmg added 5", "hp added 20", "fireResist added -20"]
+                "affixes": ["physDmg added 5", "hp added 20", "fireResist added -20"],
+                "drops": ['planks', 'poops']
+
             },
             "skeleton archer" : {
                 "prototype" : ["skeleton"],

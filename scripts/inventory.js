@@ -37,6 +37,13 @@ namespace.module('bot.inv', function (exports, require) {
             //TODO - trigger an event to update material display in inv
 
         },
+
+        addDrops: function(drops) {
+            _.each(drops, function(drop){
+                var splits = drop.split(' ');
+                this.set(splits[1], this.get(splits[1]) + parseInt(splits[0]));
+            }, this);
+        }
     });
 
 

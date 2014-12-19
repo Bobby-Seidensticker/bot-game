@@ -52,7 +52,7 @@ namespace.module('bot.log', function (exports, require) {
 
     //  call with "log.line(new Error(), "your text here");
     function line() {
-	e = arguments[0];
-	console.log("%c" + arguments[1] + " %s", "color:purple", e.stack);
+        e = arguments[0];
+        console.log("%c" + arguments[1] + " %s", "color:purple", e.stack);
     }
 });

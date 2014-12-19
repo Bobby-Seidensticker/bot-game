@@ -45,10 +45,10 @@ namespace.module('bot.main', function (exports, require) {
             //this.inv = new inv.InvModel();
             //this.inv = new inv.ItemCollection({}, []);
 
-	    //this.recipes = new inv.RecipeCollection();
+            //this.recipes = new inv.RecipeCollection();
             this.inv = new inv.ItemCollection();
 
-	    this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
+            this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
 
             this.invView = new inv.InvItemCollectionView({collection: this.inv});
 

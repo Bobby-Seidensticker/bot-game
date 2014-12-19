@@ -6,6 +6,27 @@ namespace.module('bot.inv', function (exports, require) {
     var utils = namespace.bot.utils;
     var itemref = namespace.bot.itemref;
 
+    var MaterialModel = Backbone.Model.extend({
+        defaults: function() {
+            return {
+                'poops': 0,
+                'planks': 0,
+                'skulls': 0,
+                'embers': 0,
+                'mints': 0,
+                'sparks': 0,
+                'tumors': 0,
+            }
+        },
+
+        payCost: function(craftCost) {
+            // craft cost is a string formatted "material int" eg "tumors 3"
+            var splits = craftCost.split(' ');
+            this.set(splits[0]) = this.get(splits[0]) - splits[1];
+        },
+    });
+
+
     var GearModel = Backbone.Model.extend({
         defaults: function() {
             return {
@@ -247,18 +268,18 @@ namespace.module('bot.inv', function (exports, require) {
                 new WeaponModel({name: 'bowie knife'}),
                 new WeaponModel({name: 'decent wand'}),
                 new SkillModel({name: 'fire slash'}),
-                new SkillModel({name: 'ice arrow'}),		
+                new SkillModel({name: 'ice arrow'}),
                 new SkillModel({name: 'poison ball'}),
                 new ArmorModel({name: 'balsa helmet'})
             ];
             this.add(defaults);
         },
 
-	removeRecipe: function(recipe) {
-	    this.remove(recipe);
+        removeRecipe: function(recipe) {
+            this.remove(recipe);
             recipe.destroy();
-	    console.log(this);
-	},
+            console.log(this);
+        },
     });
 
     var ItemCollection = Backbone.Collection.extend({
@@ -285,9 +306,9 @@ namespace.module('bot.inv', function (exports, require) {
 
         craft: function(recipeModel) {
             log.warning('ItemCollection.craft called with recipe model: %s', recipeModel.toJSON());
-	    this.add(recipeModel);
-	    this.recipes.removeRecipe(recipeModel);
-	    console.log(this);
+            this.add(recipeModel);
+            this.recipes.removeRecipe(recipeModel);
+            console.log(this);
         },
     });
 
@@ -337,7 +358,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         render: function() {
             var type = this.model.get('itemType');
-	    //console.log('buttons', this.buttons);
+            //console.log('buttons', this.buttons);
             this.$el.html(this.template(_.extend({}, this.model.toJSON(), {'buttons': this.buttons})));
             this.$el.attr({
                 'class': 'item collapsed',
@@ -361,10 +382,10 @@ namespace.module('bot.inv', function (exports, require) {
             'click .equip': 'equip',
         }),
 
-	buttons: $('#inv-menu-item-buttons-template').html(),
+        buttons: $('#inv-menu-item-buttons-template').html(),
 
 
-	
+
         equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             var slot;
@@ -382,18 +403,18 @@ namespace.module('bot.inv', function (exports, require) {
 
     var CraftItemView = ItemView.extend({
         events: _.extend({}, ItemView.prototype.events, {
-	    'click .craft': 'craft',
-	}),
+            'click .craft': 'craft',
+        }),
 
-	initialize: function() {
-	    this.buttons = this.model.get('craftCost') + $('#craft-menu-item-buttons-template').html();
-	},
+        initialize: function() {
+            this.buttons = this.model.get('craftCost') + $('#craft-menu-item-buttons-template').html();
+        },
 
-	craft: function() {
-	    console.log(this.model);
-	    this.model.trigger('craftClick', this.model);
-	    //console.log(this);
-	}
+        craft: function() {
+            console.log(this.model);
+            this.model.trigger('craftClick', this.model);
+            //console.log(this);
+        }
     });
 
     var InvItemCollectionView = ItemCollectionView.extend({

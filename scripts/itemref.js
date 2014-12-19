@@ -211,6 +211,15 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost"
             ]
         },
+        "materials": [
+            "embers",
+            "mints",
+            "planks",
+            "poops",
+            "skulls",
+            "sparks",
+            "tumors"
+        ],
         "recipe": {
             "smelly cod piece" : {
                 "type": "armor",

@@ -294,6 +294,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.add(defaults);
 
             this.recipes = new RecipeCollection();
+            this.materials = new MaterialModel({"poops": 5});
             this.listenTo(this.recipes, 'craftClick', this.craft);
         },
 
@@ -326,6 +327,18 @@ namespace.module('bot.inv', function (exports, require) {
                 $container.append(view.render().el);
             }, this);
 
+            
+            var mats = itemref.ref.materials;
+
+            if(this.collection.materials) {
+                for (var i = 0; i < mats.length; i++) {
+                    var mat = mats[i];
+                    var amount = this.collection.materials.get(mat);
+                    //TODO put in proper template
+                    this.groupContentEls.material.append(mats[i] + ": " + amount + "<br>");
+                }
+            }
+            
             this.listenTo(this.collection, 'add', this.onAdd);
         },
 

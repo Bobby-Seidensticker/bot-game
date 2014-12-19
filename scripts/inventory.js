@@ -242,23 +242,17 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         initialize: function() {
-            // do sumpin' here
             var defaults = [
                 new WeaponModel({name: 'bowie knife'}),
                 new WeaponModel({name: 'decent wand'}),
                 new SkillModel({name: 'fire slash'}),
-                new SkillModel({name: 'ice arrow'}),		
+                new SkillModel({name: 'ice arrow'}),
                 new SkillModel({name: 'poison ball'}),
                 new ArmorModel({name: 'balsa helmet'})
             ];
             this.add(defaults);
         },
 
-	removeRecipe: function(recipe) {
-	    this.remove(recipe);
-            recipe.destroy();
-	    console.log(this);
-	},
     });
 
     var ItemCollection = Backbone.Collection.extend({
@@ -283,10 +277,11 @@ namespace.module('bot.inv', function (exports, require) {
             this.listenTo(this.recipes, 'craftClick', this.craft);
         },
 
-        craft: function(recipeModel) {
-            log.warning('ItemCollection.craft called with recipe model: %s', recipeModel.toJSON());
-	    this.add(recipeModel);
-	    this.recipes.removeRecipe(recipeModel);
+        craft: function(item) {
+            log.warning('ItemCollection.craft called on item: %s', item.toJSON());
+	    this.add(item);
+	    this.recipes.remove(item);
+            item.trigger('craftSuccess');
 	    console.log(this);
         },
     });
@@ -311,14 +306,17 @@ namespace.module('bot.inv', function (exports, require) {
                 $container.append(view.render().el);
             }, this);
 
-            this.listenTo(this, 'add', this.onAdd);
+            this.listenTo(this.collection, 'add', this.onAdd);
         },
 
         onAdd: function(item) {
             log.info('ItemCollectionView onAdd');
+            console.log(item);
             var view = new this.SubView({model: item});
-            var $container = groupContentEls[item.get('itemType')];
-            $container.append(view.render().el);
+            var $container = this.groupContentEls[item.get('itemType')];
+            var el = view.render().el;
+
+            $container.append(el);
         },
     });
 
@@ -352,6 +350,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         destroy: function() {
+            log.error('ItemView destroy, bad');
             this.$el.remove();
         },
     });
@@ -363,8 +362,6 @@ namespace.module('bot.inv', function (exports, require) {
 
 	buttons: $('#inv-menu-item-buttons-template').html(),
 
-
-	
         equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             var slot;
@@ -387,7 +384,12 @@ namespace.module('bot.inv', function (exports, require) {
 
 	initialize: function() {
 	    this.buttons = this.model.get('craftCost') + $('#craft-menu-item-buttons-template').html();
+            this.listenTo(this.model, 'craftSuccess', this.remove);
 	},
+
+        remove: function() {
+            this.$el.remove();
+        },
 
 	craft: function() {
 	    console.log(this.model);

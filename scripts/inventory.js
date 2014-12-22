@@ -125,14 +125,14 @@ namespace.module('bot.inv', function (exports, require) {
         computeAttrs: function(weapon, affixDict) {
             //log.info('Skill compute attrs');
             var t = {
-                "physDmg": weapon.get('damage'),
-                "range": weapon.get('range'),
-                "speed": weapon.get('speed'),
-                "fireDmg": 0,
-                "coldDmg": 0,
-                "lightDmg": 0,
-                "poisDmg": 0,
-                "manaCost": this.get('manaCost')
+                physDmg: weapon.get('damage'),
+                range: weapon.get('range'),
+                speed: weapon.get('speed'),
+                fireDmg: 0,
+                coldDmg: 0,
+                lightDmg: 0,
+                poisDmg: 0,
+                manaCost: this.get('manaCost')
             };
 
             utils.applyAllAffixes(
@@ -146,7 +146,7 @@ namespace.module('bot.inv', function (exports, require) {
                 ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg',
                  'lightDmg', 'poisDmg', 'manaCost'],
                 skillAffDict);
-            //console.log("skill computeAttrs", t, this, affixDict);
+            //console.log('skill computeAttrs', t, this, affixDict);
             this.set(t);
 
             log.debug('Skill compute attrs: %s', JSON.stringify(t));
@@ -176,7 +176,7 @@ namespace.module('bot.inv', function (exports, require) {
     function newSkillChain() {
         var sk;
         sk = new SkillChain();
-        sk.add({"name": "basic melee"});
+        sk.add({name: 'basic melee'});
         return sk;
     }
 
@@ -314,7 +314,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.add(defaults);
 
             this.recipes = new RecipeCollection();
-            this.materials = new MaterialModel({"planks": 50});
+            this.materials = new MaterialModel({planks: 50});
             this.listenTo(this.recipes, 'craftClick', this.craft);
         },
 
@@ -356,12 +356,12 @@ namespace.module('bot.inv', function (exports, require) {
             
             var mats = itemref.ref.materials;
 
-            if(this.collection.materials) {
+            if (this.collection.materials) {
                 for (var i = 0; i < mats.length; i++) {
                     var mat = mats[i];
                     var amount = this.collection.materials.get(mat);
                     //TODO put in proper template
-                    this.groupContentEls.material.append(mats[i] + ": " + amount + "<br>");
+                    this.groupContentEls.material.append(mats[i] + ': ' + amount + '<br>');
                 }
             }
             
@@ -395,7 +395,7 @@ namespace.module('bot.inv', function (exports, require) {
         render: function() {
             var type = this.model.get('itemType');
             //console.log('buttons', this.buttons);
-            this.$el.html(this.template(_.extend({}, this.model.toJSON(), {'buttons': this.buttons})));
+            this.$el.html(this.template(_.extend({}, this.model.toJSON(), {buttons: this.buttons})));
             this.$el.attr({
                 'class': 'item collapsed',
                 'id': 'inv-item-' + this.model.get('name')

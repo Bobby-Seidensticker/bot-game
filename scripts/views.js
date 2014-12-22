@@ -86,6 +86,29 @@ namespace.module('bot.views', function (exports, require) {
         return view;
     }
 
+    var HeaderSkillChainView = Backbone.View.extend({
+        tagName: 'div',
+
+        template: $('#header-skillchain-tmpl'),
+
+        initialize: function(options, collection) {
+            this.collection = collection;
+            this.$el.addClass('skillchain');
+            
+            $('.header').append(this.$el);
+        },
+
+        render: function() {
+            
+
+            return this;
+        },
+    });
+
+    var HeaderSkillView = Backbone.View.extend({
+        
+    });
+
     exports.extend({
         newHeaderView: newHeaderView
     });

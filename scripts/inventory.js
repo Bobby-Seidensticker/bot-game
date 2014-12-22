@@ -353,7 +353,6 @@ namespace.module('bot.inv', function (exports, require) {
                 $container.append(view.render().el);
             }, this);
 
-            
             var mats = itemref.ref.materials;
 
             if (this.collection.materials) {

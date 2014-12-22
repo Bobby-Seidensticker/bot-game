@@ -277,35 +277,9 @@ namespace.module('bot.entity', function (exports, require) {
         return char;
     }
 
-    /*var CharSkillChain = inv.SkillChain.extend({
-      localStorage: new Backbone.LocalStorage('char-skillchain'),
-
-      initialize: function() {
-      this.fetch();
-      log.info('Initialize character skill chain, after fetch has %d elements', this.length);
-      if (this.length === 0) {
-      this.loadDefaults();
-      //this.sync();
-      log.info('Had no skills so added some defaults, now has %d elements', this.length);
-      }
-      },
-
-      loadDefaults: function() {
-      // this needs access to inv model
-      //this.add(invModel.skills.findWhere({'name': 'basic melee'}));
-      }
-      });*/
-
     exports.extend({
         newChar: newChar,
         MonsterModel: MonsterModel,
     });
 
-    // testing
-    /*(function() {
-      var x;
-      x = new EntityModel({ strength: 10, wisdom: 20 });
-      x = newMonster('hurr', 10);
-      x = newChar();
-      })();*/
 });

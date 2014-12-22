@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <script id="map-tab-tmpl" type="x-tmpl-mustache">
+  <script id="map-tab-tmpl" type="text/template">
     <div class="mapcontent">
       Mappy<br><br>
       <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px; height:300px;" />
@@ -102,7 +102,7 @@
     </div>
   </script>
 
-  <script id="lvlup-tab-tmpl" type="x-tmpl-mustache">
+  <script id="lvlup-tab-tmpl" type="text/template">
     <div class="lvlupcontent">
       <div class="lvlupitemholder">
         <div class="lvlupitemimg">
@@ -123,14 +123,14 @@
     </div>
   </script>
 
-  <script id="settings-tab-tmpl" type="x-tmpl-mustache">
+  <script id="settings-tab-tmpl" type="text/template">
     <div class="settingscontent">
       <input type="button" value="Save" />
       <input type="button" value="Mute" />
     </div>
   </script>
 
-  <script id="header-stats-tmpl" type="x-tmpl-mustache">
+  <script id="header-stats-tmpl" type="text/template">
     <table>
       <tr>
         <td>Name</td>
@@ -155,7 +155,7 @@
     </table>
   </script>
 
-  <script id="header-equipped-tmpl" type="x-tmpl-mustache">
+  <script id="header-equipped-tmpl" type="text/template">
     <% _.each(items, function(item, slot) { %>
     <div class="<%= slot %>">
       <img class="slot-background" src="assets/<%= 'empty-' + slot %>.svg" width="60" height="60" />
@@ -165,6 +165,12 @@
       <img class="empty slot-img" width="60" height="60" />
       <% } %>
     </div>
+    <% }); %>
+  </script>
+
+  <script id="header-skillchain-tmpl" type="text/template">
+    <% _.each([0, 1, 2, 3, 4, 5], function(i) { %>
+    <div class="skill-slot <%= i %>"></div>
     <% }); %>
   </script>
 

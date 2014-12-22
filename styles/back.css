@@ -140,34 +140,51 @@ body {
 /* header vis */
 
 .stats {
+    margin: 5px;
     font-size: 16px;
     float: left;
 }
 
-.equipped {
+.header .equipped {
     float: left;
-    width: 200px;
+    width: 210px;
     height: 100%;
+    margin-left: 10px;
 }
 
-.equipped div {
+.header .equipped div {
     width: 60px;
     height: 60px;
     float: left;
     position: relative;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
-.equipped img {
+.header .equipped img {
     position: absolute;
     z-index: 1;
 }
 
-.equipped .slot-background {
+.header .equipped .slot-background {
     z-index: 0;
 }
 
-.equipped .empty {
+.header .equipped .empty {
     display: none;
+}
+
+.header .skillchain {
+    height: 140px;
+}
+
+.header .skillchain .skill-slot {
+    float: left;
+    height: 130px;
+    width: 70px;
+    margin: 5px;
+    border: 3px solid #3B3;
 }
 
 /* / header vis */

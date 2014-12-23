@@ -134,21 +134,16 @@ namespace.module('bot.entity', function (exports, require) {
             log.debug('%s attacking target %s for %s dmg', this.get('name'),  target.get('name'), JSON.stringify(dmg));
             target.takeDamage(dmg);
             if (!target.isAlive()) {
-                this.onKill(target, skill);
+                if (this.get('team') == 0) {
+                    this.onKill(target, skill);
+                } else {
+                    log.info("Character has died!");
+                    target.onDeath();
+                }
             }
         },
 
-        onKill: function(target, skill) {
-            //console.log(target);
-            var drops = target.getDrops();
-            this.get('inv').materials.addDrops(drops);
-            this.set('xp', this.get('xp') + target.get('level'));
-            while (this.get('xp') >= this.get('nextLevelXp')) {
-                this.set('level', this.get('level') + 1);
-                this.set('xp', this.get('xp') - this.get('nextLevelXp'));
-                this.set('nextLevelXp', this.getNextLevelXp());
-            }
-        },
+
 
         getNextLevelXp: function() {
             return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
@@ -233,7 +228,25 @@ namespace.module('bot.entity', function (exports, require) {
             } else if (itemType === 'skill') {
                 this.get('skillchain').add(item);
             }
+       },
+
+        onKill: function(target, skill) {
+            //console.log(target);
+            var drops = target.getDrops();
+            this.get('inv').materials.addDrops(drops);
+            this.set('xp', this.get('xp') + target.get('level'));
+            while (this.get('xp') >= this.get('nextLevelXp')) {
+                this.set('level', this.get('level') + 1);
+                this.set('xp', this.get('xp') - this.get('nextLevelXp'));
+                this.set('nextLevelXp', this.getNextLevelXp());
+            }
+        },
+
+       onDeath: function() {
+           //TODO write this
+           console.log("you dead");
        }
+       
     });
 
     var MonsterModel = EntityModel.extend({
@@ -282,7 +295,7 @@ namespace.module('bot.entity', function (exports, require) {
 
             log.info(this.get('name') + ' dropped: ' + drop);
             return [drop];
-        }
+        },
         
     });
 

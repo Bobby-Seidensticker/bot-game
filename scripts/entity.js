@@ -290,14 +290,24 @@ namespace.module('bot.entity', function (exports, require) {
         getDrops: function() {
             //  Monster uses internal model to roll one or more drops, returns array of drops
             // string items in array are materials, objects are full items
+            var drops = [];
             var dropRef = this.get('drops');
             //console.log(dropRef);
 
-            var drop = "1 " + dropRef[prob.pyRand(0, dropRef.length)];
-            //console.log(drop);
+            var matCount = prob.pProb(1,10);
+            if (matCount > 0) {
+                var drop = matCount + " " + dropRef[prob.pyRand(0, dropRef.length)];
+                drops.push(drop);
+            }
 
-            log.info(this.get('name') + ' dropped: ' + drop);
-            return [drop];
+            var recipeDropChance = 0.05;
+            
+            if(prob.binProb(recipeDropChance)) {
+                drops.push(this.get('weapon')[0]);
+            }
+            
+            log.info(this.get('name') + ' dropped: ' + JSON.stringify(drops));
+            return drops;
         },
         
     });

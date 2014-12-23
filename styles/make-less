@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "/* LESS PREPROCESSOR OUTPUT, EDITS WILL BE OVERWRITTEN */" > main.css
+lessc main.less >> main.css

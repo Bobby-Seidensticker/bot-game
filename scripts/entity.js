@@ -249,11 +249,23 @@ namespace.module('bot.entity', function (exports, require) {
             this.set(itemref.expand('monster', this.get('name')));
 
             var skillchain = new inventory.Skillchain();
-            skillchain.add(new inventory.SkillModel({name: 'basic melee'}));
+            skillchain.add(_.map(this.get('skillchain'), function(name) {
+                return new inventory.SkillModel({name: name});
+            }));
+
+            var equipped = new inventory.EquippedGearModel()
+            _.each(this.get('weapon'), function(name) {
+                equipped.equip(new inventory.WeaponModel({name: name}), 'mainHand');
+            });
+
+            _.each(this.get('armor'), function(name) {
+                var armor = new inventory.ArmorModel({name: name});
+                equipped.equip(armor, armor.get('type'));
+            });
 
             this.set({
                 skillchain: skillchain,
-                equipped: new inventory.EquippedGearModel()
+                equipped: equipped
             });
 
             this.computeAttrs();

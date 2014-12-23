@@ -474,6 +474,8 @@ namespace.module('bot.inv', function (exports, require) {
         RecipeCollection: RecipeCollection,
         CraftItemCollectionView: CraftItemCollectionView,
 
+        WeaponModel: WeaponModel,
+        ArmorModel: ArmorModel,
         SkillModel: SkillModel,
         Skillchain: Skillchain,
         newSkillchain: newSkillchain,

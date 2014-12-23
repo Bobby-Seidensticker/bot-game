@@ -5,7 +5,7 @@ namespace.module('bot.views', function (exports, require) {
     var HeaderView = Backbone.View.extend({
         tagName: 'div',
 
-        template: _.template($('#header-stats-tmpl').html()),
+        template: _.template($('#header-stats-template').html()),
 
         initialize: function(options, char, inv) {
             charView = new HeaderCharView({model: char});
@@ -22,7 +22,7 @@ namespace.module('bot.views', function (exports, require) {
     });
 
     var HeaderCharView = Backbone.View.extend({
-        template: _.template($('#header-stats-tmpl').html()),
+        template: _.template($('#header-stats-template').html()),
 
         tagName: 'div',
 
@@ -44,7 +44,7 @@ namespace.module('bot.views', function (exports, require) {
     });
 
     var HeaderInvView = Backbone.View.extend({
-        template: _.template($('#header-equipped-tmpl').html()),
+        template: _.template($('#header-equipped-template').html()),
 
         tagName: 'div',
 
@@ -92,7 +92,7 @@ namespace.module('bot.views', function (exports, require) {
     var HeaderSkillChainView = Backbone.View.extend({
         tagName: 'div',
 
-        template: _.template($('#header-skillchain-tmpl').html()),
+        template: _.template($('#header-skillchain-template').html()),
 
         initialize: function() {
             this.$el.addClass('skillchain');

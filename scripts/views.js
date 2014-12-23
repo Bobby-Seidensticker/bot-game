@@ -91,26 +91,55 @@ namespace.module('bot.views', function (exports, require) {
 
     var HeaderSkillchainView = Backbone.View.extend({
         tagName: 'div',
+        className: 'skillchain',
 
-        template: _.template($('#header-skillchain-template').html()),
+        //template: _.template($('#header-skillchain-template').html()),
 
         initialize: function() {
-            this.$el.addClass('skillchain');
+            log.debug('New header skillchain view');
 
-            /*log.error('HeaderSkillchainView iteration, find out what the args given to a collection\'s each are');
-            this.collection.each(function(skill, i) {
-                console.log(arguments);
-            });*/
+            this.$el.addClass('skillchain');
+            this._views = [];
+
+            this.listenTo(this.collection, 'add', this.render);
         },
 
         render: function() {
-            this.$el.html(this.template({skills: this.collection}));
+            log.debug('rendering header skillchain view');
+            var frag = document.createDocumentFragment();
+
+            if (this._views) {
+                this.$el.empty();
+            }
+
+            this._views = [];
+
+            this._views = this.collection.map(function(skill) {
+                return new HeaderSkillView({model: skill});
+            });
+
+            _.each(this._views, function(view) {
+                frag.appendChild(view.render().el);
+            });
+
+            this.$el.html(frag);
             return this;
         },
     });
 
     var HeaderSkillView = Backbone.View.extend({
-        
+        tagName: 'div',
+        className: 'skill-slot',
+
+        //template: _.template($('#header-skill-template').html()),
+
+        initialize: function() {
+            
+        },
+
+        render: function() {
+            return this;
+        }
     });
 
     exports.extend({

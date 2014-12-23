@@ -56,10 +56,6 @@ namespace.module('bot.inv', function (exports, require) {
                 equippedBy: '',
             };
         },
-
-        equip: function() {
-            
-        },
     });
 
     var ArmorModel = GearModel.extend({
@@ -246,7 +242,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getAffixes: function() {
-
             var all = _.map(this.slots, function(name) {
                 //console.log(name);
                 var item = this.get(name);
@@ -420,8 +415,12 @@ namespace.module('bot.inv', function (exports, require) {
 
         buttons: $('#inv-menu-item-buttons-template').html(),
 
-
         equip: function() {
+            log.info('equip click on model name %s', this.model.get('name'));
+            this.model.trigger('equipClick', this.model);
+        },
+
+        /*equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             var slot;
             var itemType = this.model.get('itemType');
@@ -429,11 +428,11 @@ namespace.module('bot.inv', function (exports, require) {
                 slot = this.model.get('type');
             } else if (itemType === 'weapon') {
                 slot = 'mainHand';
-            } else {
+            } else if (itemType === 'skill') {
                 slot = '';
             }
             this.model.trigger('equipClick', this.model, slot);
-        },
+        },*/
     });
 
     var CraftItemView = ItemView.extend({

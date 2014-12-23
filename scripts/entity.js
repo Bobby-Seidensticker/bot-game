@@ -220,7 +220,19 @@ namespace.module('bot.entity', function (exports, require) {
             log.info('CharModel initialize');
             this.fetch();
             this.computeAttrs();
-        }
+            this.listenTo(this.get('inv'), 'equipClick', this.equipClick)
+        },
+
+       equipClick: function(item) {
+           var itemType = item.get('itemType');
+            if (itemType === 'armor') {
+                this.get('equipped').equip(item, item.get('type'));
+            } else if (itemType === 'weapon') {
+                this.get('equipped').equip(item, 'mainHand');
+            } else if (itemType === 'skill') {
+                this.get('skillchain').add(item);
+            }
+       }
     });
 
     var MonsterModel = EntityModel.extend({
@@ -261,7 +273,7 @@ namespace.module('bot.entity', function (exports, require) {
     function newChar(inv) {
         // stopgap measures: basic equipped stuff
         var charName = 'bobbeh';
-        var equipped = new inventory.EquippedGearModel({'charName': charName}, inv);
+        var equipped = new inventory.EquippedGearModel({'charName': charName});
         equipped.equip(inv.findWhere({name: 'wooden sword'}), 'mainHand');
         equipped.equip(inv.findWhere({name: 'cardboard kneepads'}), 'legs');
 

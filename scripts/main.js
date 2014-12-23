@@ -52,7 +52,6 @@ namespace.module('bot.main', function (exports, require) {
 
             this.invView = new inv.InvItemCollectionView({collection: this.inv});
 
-
             this.char = new entity.newChar(this.inv);
 
             this.headerView = views.newHeaderView(this.char, this.inv);

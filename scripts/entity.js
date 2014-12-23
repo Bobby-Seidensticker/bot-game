@@ -44,6 +44,9 @@ namespace.module('bot.entity', function (exports, require) {
             
             t.equipped = this.get('equipped');
             t.affixes = t.equipped.getAffixes();
+            if(this.get('team') === 1) {
+                t.affixes = t.affixes.concat(this.get('affixes'));
+            }
 
             t.skillchain = this.get('skillchain');
 

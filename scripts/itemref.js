@@ -80,6 +80,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "cardboard kneepads": {
                 "prototype": ["armor"],
+                "affixes": ["armor added 500"],
                 "type": "legs",
                 "craftCost": "2 poops"
             }
@@ -283,7 +284,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillchain": ["basic melee"],
                 "weapon" : ["wooden sword"],
                 "armor": ["smelly cod piece"],
-                "affixes": ["physDmg added 1", "hp added 1", "fireResist added -20"],
+                "affixes": ["physDmg added 1", "hp added -10", "fireResist added -20"],
                 "drops": ['planks', 'poops']
 
             },

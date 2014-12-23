@@ -131,13 +131,13 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'skill-slot',
 
-        //template: _.template($('#header-skill-template').html()),
+        template: _.template($('#header-skill-template').html()),
 
         initialize: function() {
-            
         },
 
         render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
             return this;
         }
     });

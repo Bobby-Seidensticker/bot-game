@@ -130,8 +130,9 @@ namespace.module('bot.entity', function (exports, require) {
             this.set({
                 mana: this.get('mana') - skill.get('manaCost'),
             });
-            log.debug('Team %s attacking target', this.teamString());
-            target.takeDamage(this.getDamage(skill));
+            var dmg = this.getDamage(skill);
+            log.debug('%s attacking target %s for %s dmg', this.get('name'),  target.get('name'), JSON.stringify(dmg));
+            target.takeDamage(dmg);
             if (!target.isAlive()) {
                 this.onKill(target, skill);
             }

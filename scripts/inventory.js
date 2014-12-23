@@ -153,7 +153,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    var SkillChain = Backbone.Collection.extend({
+    var Skillchain = Backbone.Collection.extend({
         model: SkillModel,
 
         bestSkill: function(mana, distances) {
@@ -173,9 +173,9 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    function newSkillChain() {
+    function newSkillchain() {
         var sk;
-        sk = new SkillChain();
+        sk = new Skillchain();
         sk.add({name: 'basic melee'});
         return sk;
     }
@@ -476,8 +476,8 @@ namespace.module('bot.inv', function (exports, require) {
         RecipeCollection: RecipeCollection,
         CraftItemCollectionView: CraftItemCollectionView,
 
-        SkillChain: SkillChain,
-        newSkillChain: newSkillChain,
+        Skillchain: Skillchain,
+        newSkillchain: newSkillchain,
         EquippedGearModel: EquippedGearModel,
     });
 });

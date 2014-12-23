@@ -45,7 +45,7 @@ namespace.module('bot.entity', function (exports, require) {
             t.equipped = this.get('equipped');
             t.affixes = t.equipped.getAffixes();
 
-            t.skillChain = this.get('skillChain');
+            t.skillchain = this.get('skillchain');
 
             //Add affix bonuses
             //Affix format is 'stat modtype amount'
@@ -74,7 +74,7 @@ namespace.module('bot.entity', function (exports, require) {
 
             utils.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
 
-            t.skillChain.computeAttrs(t.equipped.getWeapon(), affixDict);
+            t.skillchain.computeAttrs(t.equipped.getWeapon(), affixDict);
 
             t.maxHp = t.hp;
             t.maxMana = t.mana;
@@ -182,14 +182,14 @@ namespace.module('bot.entity', function (exports, require) {
                 return;
             }
 
-            var skills = this.get('skillChain');
+            var skills = this.get('skillchain');
 
             var distances = vector.getDistances(
                 this.getCoords(),
                 _.map(enemies, function(e) { return e.getCoords(); })
             );
 
-            var skill = this.get('skillChain').bestSkill(this.get('mana'), distances);
+            var skill = this.get('skillchain').bestSkill(this.get('mana'), distances);
             if (!skill) {
                 log.debug('No best skill, mana: %.2f, distances: %s', this.get('mana'), JSON.stringify(distances));
                 return;
@@ -202,7 +202,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         update: function(dt) {
-            var skills = this.get('skillChain');
+            var skills = this.get('skillchain');
             skills.each(function(skill) { skill.set('cooldown', skill.get('cooldown') - dt); });
 
             this.set('nextAction', this.get('nextAction') - dt);
@@ -236,7 +236,7 @@ namespace.module('bot.entity', function (exports, require) {
             this.set(itemref.expand('monster', this.get('name')));
 
             this.set({
-                skillChain: inventory.newSkillChain(),
+                skillchain: inventory.newSkillchain(),
                 equipped: new inventory.EquippedGearModel()
             });
 
@@ -265,11 +265,11 @@ namespace.module('bot.entity', function (exports, require) {
         equipped.equip(inv.findWhere({name: 'wooden sword'}), 'mainHand');
         equipped.equip(inv.findWhere({name: 'cardboard kneepads'}), 'legs');
 
-        var skillChain = inventory.newSkillChain()
+        var skillchain = inventory.newSkillchain()
 
         var char = new CharModel({
             name: charName,
-            skillChain: skillChain,
+            skillchain: skillchain,
             inv: inv,
             equipped: equipped
         });

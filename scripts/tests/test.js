@@ -44,9 +44,9 @@ namespace.module('bot.test', function (exports, require) {
             validateAttributes(assert, char);
 
             // Skills
-            var skillChain = char.get('skillChain');
-            assert.equal(skillChain.length, 1, 'initialized skill chain with one skill');
-            var skill = skillChain.at(0);
+            var skillchain = char.get('skillchain');
+            assert.equal(skillchain.length, 1, 'initialized skill chain with one skill');
+            var skill = skillchain.at(0);
             assert.equal(skill.get('name'), 'basic melee', 'initialized with "basic melee"');
             validateSkill(assert, skill);
             assert.equal(skill.get('exp'), 0, 'skill created with 0 xp');
@@ -73,7 +73,7 @@ namespace.module('bot.test', function (exports, require) {
 	    var mon = monsters.at(0);
 	    assert.equal(mon.get('team'), 1, 'First monster in room 0 is on correct team');
 	    validateAttributes(assert, mon);
-	    validateSkill(assert, mon.get('skillChain').models[0]);
+	    validateSkill(assert, mon.get('skillchain').models[0]);
 	});
 
 	QUnit.test('inventory', function(assert) {
@@ -102,7 +102,7 @@ namespace.module('bot.test', function (exports, require) {
 	    var dist = vector.getDistances(char.getCoords(), [mon.getCoords()])[0];
 	    assert.ok(dist == 0, 'distance is always zero for debugging');
 	    
-	    var skill = char.get('skillChain').at(0);
+	    var skill = char.get('skillchain').at(0);
 	    console.log(skill);
 	    assert.ok(skill, 'char skill found');
 	    assert.ok(skill.get('name'), 'char about to try using ' + skill.get('name'));
@@ -114,7 +114,7 @@ namespace.module('bot.test', function (exports, require) {
 
 	    char.set('hp', char.get('maxHp'));
 	    assert.equal(char.get('hp'), char.get('maxHp'), 'Character HP maxed for taking hit');
-	    var skill = mon.get('skillChain').at(0);
+	    var skill = mon.get('skillchain').at(0);
 	    console.log(skill);
 	    assert.ok(skill, 'mon skill found');
 	    assert.ok(skill.get('name'), 'mon about to try using ' + skill.get('name'));

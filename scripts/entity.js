@@ -278,6 +278,7 @@ namespace.module('bot.entity', function (exports, require) {
         equipped.equip(inv.findWhere({name: 'cardboard kneepads'}), 'legs');
 
         var skillchain = inventory.newSkillchain()
+        skillchain.add(inv.findWhere({name: 'basic melee'}));
 
         var char = new CharModel({
             name: charName,

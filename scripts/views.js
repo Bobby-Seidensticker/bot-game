@@ -14,6 +14,9 @@ namespace.module('bot.views', function (exports, require) {
             invView = new HeaderInvView({model: inv}, char.get('equipped'));
             this.$el.append(invView.render().el);
 
+            skillChainView = new HeaderSkillChainView({collection: char.get('skillChain')});
+            this.$el.append(skillChainView.render().el);
+
             $('.header').append(this.$el);
         }
     });
@@ -45,7 +48,7 @@ namespace.module('bot.views', function (exports, require) {
 
         tagName: 'div',
 
-        initialize: function(options, equipped, slotImages) {
+        initialize: function(options, equipped) {
             this.equipped = equipped;
             this.listenTo(this.equipped, 'equipSuccess', this.update);
         },
@@ -89,18 +92,19 @@ namespace.module('bot.views', function (exports, require) {
     var HeaderSkillChainView = Backbone.View.extend({
         tagName: 'div',
 
-        template: $('#header-skillchain-tmpl'),
+        template: _.template($('#header-skillchain-tmpl').html()),
 
-        initialize: function(options, collection) {
-            this.collection = collection;
+        initialize: function() {
             this.$el.addClass('skillchain');
-            
-            $('.header').append(this.$el);
+
+            /*log.error('HeaderSkillChainView iteration, find out what the args given to a collection\'s each are');
+            this.collection.each(function(skill, i) {
+                console.log(arguments);
+            });*/
         },
 
         render: function() {
-            
-
+            this.$el.html(this.template({skills: this.collection}));
             return this;
         },
     });
@@ -112,4 +116,5 @@ namespace.module('bot.views', function (exports, require) {
     exports.extend({
         newHeaderView: newHeaderView
     });
+
 });

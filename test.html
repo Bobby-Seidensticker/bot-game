@@ -8,6 +8,8 @@
   <div id="qunit-fixture"></div>
   <script src="scripts/tests/qunit.js"></script>
 
+  <!-- COPY BELOW HERE -->
+
   <div class="header"></div>
 
   <div class="vis"></div>
@@ -34,7 +36,7 @@
     </div>
   </div>
 
-  <script id="map-tab-tmpl" type="x-tmpl-mustache">
+  <script id="map-tab-tmpl" type="text/template">
     <div class="mapcontent">
       Mappy<br><br>
       <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px; height:300px;" />
@@ -63,12 +65,21 @@
         <% }); %>
       </div>
       <div class="item-buttonbox">
-        <input class="item-button level-up" value="Level Up" type="button"/>
-        <input class="item-button equip" value="Equip" type="button"  />
+        <%= buttons %>
       </div>
     </div>
   </script>
 
+  <script id="inv-menu-item-buttons-template" type="text/template">
+    <input class="item-button level-up" value="Level Up" type="button"/>
+    <input class="item-button equip" value="Equip" type="button"  />
+  </script>
+
+  <script id="craft-menu-item-buttons-template" type="text/template">
+    <input class="item-button craft" value="Craft" type="button"  />
+  </script>
+  
+  
   <script id="inv-menu-template" type="text/template">
     <div class="inv-content">
       <% _.each(groups, function(group) { %>
@@ -97,7 +108,7 @@
     </div>
   </script>
 
-  <script id="lvlup-tab-tmpl" type="x-tmpl-mustache">
+  <script id="lvlup-tab-tmpl" type="text/template">
     <div class="lvlupcontent">
       <div class="lvlupitemholder">
         <div class="lvlupitemimg">
@@ -118,14 +129,14 @@
     </div>
   </script>
 
-  <script id="settings-tab-tmpl" type="x-tmpl-mustache">
+  <script id="settings-tab-tmpl" type="text/template">
     <div class="settingscontent">
       <input type="button" value="Save" />
       <input type="button" value="Mute" />
     </div>
   </script>
 
-  <script id="header-stats-tmpl" type="x-tmpl-mustache">
+  <script id="header-stats-tmpl" type="text/template">
     <table>
       <tr>
         <td>Name</td>
@@ -150,7 +161,7 @@
     </table>
   </script>
 
-  <script id="header-equipped-tmpl" type="x-tmpl-mustache">
+  <script id="header-equipped-tmpl" type="text/template">
     <% _.each(items, function(item, slot) { %>
     <div class="<%= slot %>">
       <img class="slot-background" src="assets/<%= 'empty-' + slot %>.svg" width="60" height="60" />
@@ -160,6 +171,12 @@
       <img class="empty slot-img" width="60" height="60" />
       <% } %>
     </div>
+    <% }); %>
+  </script>
+
+  <script id="header-skillchain-tmpl" type="text/template">
+    <% _.each([0, 1, 2, 3, 4, 5], function(i) { %>
+    <div class="skill-slot <%= i %>"></div>
     <% }); %>
   </script>
 
@@ -190,6 +207,9 @@
   <script type="text/javascript" src="scripts/menu.js"></script>
   <script type="text/javascript" src="scripts/views.js"></script>
   <script type="text/javascript" src="scripts/main.js"></script>
+
+  <!-- COPY ABOVE HERE -->
+
 
   <script type="text/javascript" src="scripts/tests/test.js"></script>
 

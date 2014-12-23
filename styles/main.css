@@ -12,26 +12,7 @@ body {
     padding: 5px;
 
     background-color: #FEE;
-}
-
-.headerstats {
-    float:left;
-    width:150px;
-    height:100%;
-    padding: 10px 50px;
-}
-
-.headerskillchain {
-    float:left;
-    background-color: #CEC;       
-    height:100%;
-    padding: 10px 50px;
-}
-
-.headerinventory {
-    float:left;
-    height:100%;
-    padding: 10px 50px;
+    overflow: hidden;
 }
 
 .vis {
@@ -39,16 +20,18 @@ body {
     padding: 5px;
 
     background-color: #EFE;
+    overflow: hidden;
 }
 
-.tabs {
+.menu {
     position: absolute;
     padding: 5px;
 
     background-color: #EEF;
+    overflow: hidden;
 }
 
-.tabs .tabholder {
+.tab-holder {
     display: table;
     width: 400px;
     margin-left: -5px;
@@ -57,7 +40,7 @@ body {
     border-collapse: collapse;
 }
 
-.tabs .tabholder td {
+.tab-holder td {
     border: 5px solid #EEF;
     text-align: center;
     vertical-align: middle;
@@ -65,51 +48,17 @@ body {
     width: 74px;
 }
 
-.contentholder div {
-    overflow: hidden;
-/*background-color: #DDF;*/
+.menu-holder {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+/* within menu holder */
+.sub-menu {
+
 }
 
-/*.tabs .tab {
-  width: 58px;
-  height: 58px;
-  padding: 5px;
-  margin: 5px;
-  text-align: center;
-  float: left;
-  background-color: #DDF;
-  }
-
-.vert-centered {
-margin-top: 50%;
-font-size: 16px;
-}*/
-
-.game-main-menu {
-    height: 50px;
-    background-color: #EFF;
-}
-
-.game-main-menu .tab {
-    background-color: #DFF;
-    float: left;
-    padding: 15px;
-    border: 1px solid white;
-}
-
-.contentholder {
-    background-color: #DEE;
-    height:100%;
-}       
-
-.mapcontent {
-    display:block;
-    padding:30px;
-}
-
-.invcontent {
-    padding: 10px;
-}
+.inv-content { padding: 10px; }
 
 .item-group-header {
     width: 100%;
@@ -119,7 +68,6 @@ font-size: 16px;
     margin: 1px;
     background-color: #CFC;
 }
-
 .item-header {
     width:100%;
     text-align: center;
@@ -142,14 +90,6 @@ font-size: 16px;
 .item.collapsed .item-body {
     display: none;
 }
-
-.item-focused-header {
-    width:100%;
-    padding: 3px;
-    border-bottom: 1px solid white;
-    text-align: center;
-}
-
 .item-body {
     background-color:#FFD;
 }
@@ -193,56 +133,65 @@ font-size: 16px;
     text-align:center;
 }
 
-.craft-content {
-    padding:30px;
-}
-
-.lvlup-content {
-    display:none;
-    padding:30px;
-}
-
-.lvlupitemholder {
-    width:100%;
-    background-color: #DDF;
-    height: 70px;
-    padding: 10px;
-}
-
-.lvlupitemimg {
-    float:left;
-    margin 5px;
-}
-
-.lvlupitemstats {
-    float:left;
-    margin: 5px;
-}
-
-.lvluprollbox {
-    height: 70px;
-    background-color: #DCF;
-    padding:10px;
-    width:100%;
-}
-
-
-.settings-content {
-    display:none;
-    padding:30px;
-}
-
-
-canvas {
-    width: 800px;
-    height: 600px;
-    float: left;
-
-    /*margin: 5px;*/
-    margin: 4px;
-    border: 1px solid black;
-}
-
 .closed {
     display: none;
 }
+
+/* header vis */
+
+.stats {
+    margin: 5px;
+    font-size: 16px;
+    float: left;
+}
+
+.header .equipped {
+    float: left;
+    width: 210px;
+    height: 100%;
+    margin-left: 10px;
+}
+
+.header .equipped div {
+    width: 60px;
+    height: 60px;
+    float: left;
+    position: relative;
+    border: 3px solid black;
+    border-radius: 3px;
+    margin: 2px 0 2px 4px;
+
+    /*margin-right: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;*/
+}
+
+.header .equipped img {
+    position: absolute;
+    z-index: 1;
+}
+
+.header .equipped .slot-background {
+    z-index: 0;
+}
+
+.header .equipped .empty {
+    display: none;
+}
+
+.header .skillchain {
+    float: left;
+    height: 140px;
+    margin-left: 10px;
+}
+
+.header .skillchain .skill-slot {
+    float: left;
+    height: 130px;
+    width: 70px;
+    margin: 2px;
+    border: 3px solid #6A2;
+    border-radius: 3px;
+}
+
+/* / header vis */

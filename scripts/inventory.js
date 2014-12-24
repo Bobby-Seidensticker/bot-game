@@ -38,11 +38,9 @@ namespace.module('bot.inv', function (exports, require) {
 
         },
 
-        addDrops: function(drops) {
-            _.each(drops, function(drop){
-                var splits = drop.split(' ');
-                this.set(splits[1], this.get(splits[1]) + parseInt(splits[0]));
-            }, this);
+        addDrop: function(drop) {
+            var splits = drop.split(' ');
+            this.set(splits[1], this.get(splits[1]) + parseInt(splits[0]));
         }
     });
 
@@ -325,6 +323,16 @@ namespace.module('bot.inv', function (exports, require) {
             }
 
         },
+
+        addDrops: function(drops) {
+            _.each(drops, function(drop){
+                if (typeof(drop)== "object") {
+                    this.recipes.add(drop);
+                } else {
+                    this.materials.addDrop(drop);
+                }
+            }, this);
+        },
     });
 
     var ItemCollectionView = Backbone.View.extend({
@@ -363,7 +371,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         onAdd: function(item) {
             log.info('ItemCollectionView onAdd');
-            console.log(item);
+            //console.log(item);
             var view = new this.SubView({model: item});
             var $container = this.groupContentEls[item.get('itemType')];
             var el = view.render().el;

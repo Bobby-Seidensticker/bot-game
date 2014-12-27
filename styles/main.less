@@ -1,3 +1,24 @@
+/* http://paletton.com/#uid=50F0x0klllllmrhmnfHqXpBqrjx */
+
+@color-primary-0: #AA7739;	/* Main Primary color */
+@color-primary-1: #D99848;
+@color-primary-2: #7D5626;
+@color-primary-3: #CC7F20;
+@color-primary-4: #9C621B;
+
+@color-secondary-1-0: #AA8E39;	/* Main Secondary color (1) */
+@color-secondary-1-1: #D9B548;
+@color-secondary-1-2: #7D6726;
+@color-secondary-1-3: #CCA120;
+@color-secondary-1-4: #9C7B1B;
+
+@color-secondary-2-0: #AA4E39;	/* Main Secondary color (2) */
+@color-secondary-2-1: #D96448;
+@color-secondary-2-2: #7D3626;
+@color-secondary-2-3: #CC4120;
+@color-secondary-2-4: #9C341B;
+
+
 body {
     height: 100%;
     width: 100%;
@@ -5,13 +26,14 @@ body {
     overflow: hidden;
     position: relative;
     font-family: sans-serif;
+    background-color: @color-primary-0;
 }
 
 .header {
     position: absolute;
     padding: 5px;
 
-    background-color: #FEE;
+    background-color: @color-primary-3;
     overflow: hidden;
 }
 
@@ -19,7 +41,6 @@ body {
     position: absolute;
     padding: 5px;
 
-    background-color: #EFE;
     overflow: hidden;
 }
 
@@ -27,37 +48,41 @@ body {
     position: absolute;
     padding: 5px;
 
-    background-color: #EEF;
+    background-color: @color-primary-2;
     overflow: hidden;
 }
 
 .tab-holder {
-    display: table;
-    width: 400px;
-    margin-left: -5px;
-    margin-top: -5px;
-    height: 65px;
-    border-collapse: collapse;
-}
-
-.tab-holder td {
-    border: 5px solid #EEF;
-    text-align: center;
-    vertical-align: middle;
-    background-color: #DDF;
-    width: 74px;
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 390px;
+    height: 46px;
+    li {
+        width: 68px;
+        height: 40px;
+        margin-right: 5px;
+        border: 3px solid @color-secondary-1-4;
+        display: block;
+        float: left;
+        border-radius: 3px;
+        font-size: 16px;
+        line-height: 40px;
+        text-align: center;
+        background-color: @color-secondary-1-4;
+    }
+    li:last-of-type {
+        margin-right: 0;
+    }
 }
 
 .menu-holder {
     position: relative;
+    margin-top: 3px;
     overflow-x: hidden;
     overflow-y: scroll;
     padding-right: 30px;
     width: 405px;
-}
-/* within menu holder */
-.sub-menu {
-
 }
 
 /*
@@ -75,91 +100,96 @@ item
     item-buttonbox
 */
 
-
-.inv-content {
-    padding: 10px;
-    font-size: 14px;
+.sub-menu {
+    .inv-content
+    .craft-content {
+        padding: 10px;
+        font-size: 14px;
+    }
 }
 
 .item-group {
-    
-}
+    .item-group-header {
+        height: 24px;
+        font-size: 16px;
+        line-height: 24px;
+        text-align: center;
+        background-color: @color-secondary-1-0;
+        border: 3px solid @color-secondary-1-0;
+        border-radius: 3px;
+        margin: 2px 0;
+    }
 
-.item-group .item-group-header {
-    height: 24px;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    background-color: #CFC;
-    margin: 2px 0;
-}
+    .item-group-content {
+        width: 98%;
+        margin: 0 1%;
+        font-size: 14px;
 
-.item-group .item-group-content {
-    width: 98%;
-    margin: 0 1%;
-}
+        .item {
+            width: 100%;
+            background-color: @color-secondary-1-1;
+            border: 3px solid @color-secondary-1-1;
+            margin: 2px -3px;
+            border-radius: 3px;
 
-.item-group .item-group-content .item {
-    width: 100%;
-    border: 2px solid #CCB;
-    margin: -2px;
-    border-radius: 3px;
-}
+            .item-header {
+                text-align: center;
+                height: 20px;
+                line-height: 20px;
+                background-color: @color-secondary-1-1;
+            }
+            .item-body {
+                background-color: @color-secondary-1-0;
+                border: 3px solid @color-secondary-1-0;
+                border-radius: 3px;
+            }
+            .item-mid {
+                width: 100%;
+                overflow: hidden;
 
-.item .item-header {
-    text-align: center;
-    height: 22px;
-    line-height: 22px;
-    background-color: #FFE;
-}
-
-.item.collapsed .item-header {
-    background-color: #EED;
-}
-
-.item.collapsed .item-body {
-    display: none;
-}
-.item-body {
-    background-color:#FFD;
-}
-
-.item-mid {
-    width:100%;
-    height:110px;
-}
-
-.item-img {
-    width:90px;
-    height:90px;
-    padding: 10px;
-    float: left;
-}
-
-.item-mid-text {
-    width:60%;
-    text-align:center;
-    line-height: 150%;
-    float: left;
-    padding-top:20px;
-    padding-bottom: 20px;
-    font-family:sans-serif;
-}
-
-.item-affixes {
-    text-align:center;
-}
-
-.item-buttonbox {
-    width: 100%;
-}
-
-.item-button {
-    background-color:#FED;
-    margin: 10px 50px 10px 70px;
-    width:60px;
-    height:30px;
-    text-align:center;
+                img {
+                    display: block;
+                    float: left;
+                    width: 90px;
+                    height: 90px;
+                    border: 3px solid black;
+                    border-radius: 3px;
+                    margin: 10px;
+                }
+                .item-mid-text {
+                    float: left;
+                    line-height: 150%;
+                    padding: 20px 30px;
+                }
+            }
+            .item-affixes {
+                text-align: center;
+            }
+            .item-buttonbox {
+                position: relative;
+                left: 50%;
+                margin-left: -50%;
+            }
+            .item-button {
+                background-color: @color-secondary-1-3;
+                margin: 10px 52px;
+                width: 80px;
+                height: 28px;
+                border-width: 3px;
+                border-radius: 3px;
+                /*border: 5px solid @color-secondary-1-3;
+                border-radius: 5px;*/
+                text-align: center;
+            }
+        }
+        .item.collapsed {
+            border-color: @color-secondary-1-3;
+            .item-header {
+                background-color: @color-secondary-1-3;
+            }
+            .item-body { display: none; }
+        }
+    }
 }
 
 .closed {
@@ -189,10 +219,6 @@ item
     border: 3px solid black;
     border-radius: 3px;
     margin: 2px 0 2px 4px;
-
-    /*margin-right: 10px;
-    margin-bottom: 5px;
-    margin-top: 5px;*/
 }
 
 .header .equipped img {

@@ -47,7 +47,7 @@ namespace.module('bot.window', function (exports, require) {
                 top: 0
             });
             this.$('.menu-holder').css({
-                height: ss[1] - 10 - 60
+                height: ss[1] - 55
             });
         }
     });

@@ -9,18 +9,13 @@
   <div class="vis"></div>
 
   <div class="menu">
-    <table class="tab-holder">
-      <tbody>
-        <tr>
-          <td class="tab" id="map">Map</td>
-          <td class="tab" id="inv">Inv</td>
-          <td class="tab" id="craft">Craft</td>
-          <td class="tab" id="lvlup">Lvlup</td>
-          <td class="tab" id="settings">Settings</td>
-        </tr>
-      </tbody>
-    </table>
-
+    <ul class="tab-holder">
+      <li class="tab" id="map">Map</li>
+      <li class="tab" id="inv">Inv</li>
+      <li class="tab" id="craft">Craft</li>
+      <li class="tab" id="lvlup">Lvlup</li>
+      <li class="tab" id="settings">Settings</li>
+    </ul>
     <div class="menu-holder">
       <div class="sub-menu closed" id="map-menu-holder">map</div>
       <div class="sub-menu closed" id="inv-menu-holder">inv</div>
@@ -44,9 +39,7 @@
     </div>
     <div class="item-body">
       <div class="item-mid">
-        <div class="item-img">
-          <img src="assets/<%= name %>.svg" height="90" width="90">
-        </div>
+        <img src="assets/<%= name %>.svg" height="90" width="90">
         <div class="item-mid-text">
           Type: <%= itemType %><br/><%= exp %> / 2,743 XP
         </div>

@@ -51,7 +51,7 @@ namespace.module('bot.inv', function (exports, require) {
         defaults: function() {
             return {
                 exp: 0,
-                level: 0,
+                level: 1,
                 affixes: [],
                 equippedBy: '',
             };

@@ -236,7 +236,7 @@ namespace.module('bot.entity', function (exports, require) {
         onKill: function(target, skill) {
             //console.log(target);
             var drops = target.getDrops();
-            this.get('inv').materials.addDrops(drops);
+            this.get('inv').addDrops(drops);
             this.set('xp', this.get('xp') + target.get('level'));
             while (this.get('xp') >= this.get('nextLevelXp')) {
                 this.set('level', this.get('level') + 1);
@@ -303,13 +303,39 @@ namespace.module('bot.entity', function (exports, require) {
             var recipeDropChance = 0.05;
             
             if(prob.binProb(recipeDropChance)) {
-                drops.push(this.get('weapon')[0]);
+                drops.push(this.getRandItem());
             }
-            
+
             log.info(this.get('name') + ' dropped: ' + JSON.stringify(drops));
             return drops;
         },
-        
+
+        getRandItem: function() {
+            // helper function for getDrops
+            //selects a random weapon, armor or skill
+            //console.log('HERERERE');
+            var ref = namespace.bot.itemref.ref;
+            var weapcount = Object.keys(ref.weapon).length;
+            var armorcount = Object.keys(ref.armor).length;
+            var skillcount = Object.keys(ref.skill).length;
+            var allcount = weapcount + armorcount + skillcount;
+
+            //console.log(prob);
+            var roll = prob.pyRand(0, allcount);
+
+            if (roll < weapcount) {
+                return new inventory.WeaponModel({'name': Object.keys(ref.weapon)[roll]});
+            } else if (roll < weapcount + armorcount) {
+                return new inventory.ArmorModel({'name': Object.keys(ref.armor)[roll - weapcount]});
+            } else if (roll < weapcount + armorcount + skillcount) {
+                return new inventory.SkillModel({'name': Object.keys(ref.skill)[roll - weapcount - armorcount]});
+            } else {
+                log.warning("wtf: dropRand rolled higher number than it should have");
+            }
+
+            //console.log(ref, weapcount);
+            
+        }
     });
 
     function newChar(inv) {

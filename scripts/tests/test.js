@@ -173,10 +173,10 @@ namespace.module('bot.test', function (exports, require) {
             // TODO - cast resist floats (and probably all stats) to 2-decimal places only (currently long and ugly floats)
             // We should have a discussion about this -Bobby
             // assert.equal(parseFloat(entity.get('fireResist').toFixed(4)), entity.get('fireResist'), 'stats should have max of four  decimal places - XX.XX%');
-            assert.ok(entity.get('fireResist') > 0, 'fireResist initialized with positive value: ' + entity.get('fireResist'));
-            assert.ok(entity.get('coldResist') > 0, 'coldResist initialized with positive value: ' + entity.get('coldResist'));
-            assert.ok(entity.get('lightResist') > 0, 'lightResist initialized with positive value: ' + entity.get('lightResist'));
-            assert.ok(entity.get('poisResist') > 0, 'poisResist initialized with positive value: ' + entity.get('poisResist'));
+            assert.ok(entity.get('fireResist'), 'fireResist initialized with value: ' + entity.get('fireResist'));
+            assert.ok(entity.get('coldResist'), 'coldResist initialized with value: ' + entity.get('coldResist'));
+            assert.ok(entity.get('lightResist'), 'lightResist initialized with value: ' + entity.get('lightResist'));
+            assert.ok(entity.get('poisResist'), 'poisResist initialized with value: ' + entity.get('poisResist'));
         }
 
 	//NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info

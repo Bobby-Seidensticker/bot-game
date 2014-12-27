@@ -1,5 +1,6 @@
 namespace.module('bot.itemref', function (exports, require) {
     var log = namespace.bot.log;
+    var prob = namespace.bot.prob;
 
     var ref = {
         "weapon": {
@@ -378,7 +379,8 @@ namespace.module('bot.itemref', function (exports, require) {
 
         return item;
     }
-
+    
+    
     exports.extend({
         'ref': ref,
         'expand': expand

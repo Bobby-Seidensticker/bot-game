@@ -106,7 +106,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "super smash": {
                 "prototype": ["basic melee"],
-                "affixes": ["physDmg more 1.4"],
+                "affixes": ["physDmg more 40"],
                 "manaCost": 5,
                 "craftCost": "2 skulls",
             },        

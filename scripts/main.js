@@ -15,7 +15,7 @@ namespace.module('bot.main', function (exports, require) {
         log.info('onReady');
         var gameModel = new GameModel();
 
-        var gameView = new namespace.bot.window.GameView();
+        var gameView = new namespace.bot.window.GameView({}, gameModel);// find out initialization args, pick who gets what
         var m = new menu.TabView();
 
         //var invMenuView = new inv.InvMenuView({model: gameModel.inv});

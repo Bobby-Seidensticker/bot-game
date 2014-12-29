@@ -32,7 +32,7 @@ namespace.module('bot.utils', function (exports, require) {
             if (modtype === 'added') {
                 adds += amt
             } else if (modtype === 'more') {
-                mores *= amt;
+                mores *= (1 + 0.01*amt);
             } else {
                 log.error('Improperly formatted affix %s', mod);
                 throw('up');

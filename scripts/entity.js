@@ -22,7 +22,7 @@ namespace.module('bot.entity', function (exports, require) {
                 level: 1,
                 //weapon: {'damage': 1, 'range':1, 'speed': 1, 'affixes': ['strength more 1.1']}, //'fists' weapon auto equipped when unarmed.
                 //armor: [],
-                affixes: ['strength more 1.5', 'strength more 2', 'strength added 10'],
+                affixes: [],
                 xp: 0,
                 team: 1
             };

@@ -211,7 +211,178 @@ namespace.module('bot.itemref', function (exports, require) {
                 "attSpd",
                 "range",
                 "manaCost"
-            ]
+            ],
+            "basicStat": {
+                "weight": 10,
+                "validTypes": ["armor", "weapon"],
+                "stats": {
+                    "added": {
+                        "weight": 70,
+                        "min": 5,
+                        "max": 50
+                    },
+                    "more": {
+                        "weight":30,
+                        "min": 1,
+                        "max": 5
+                    }
+                }
+            },
+            "strength": {
+                "prototype": ["basicstat"]
+            },
+            "dexterity": {
+                "prototype": ["basicstat"]
+            },
+            "wisdom": {
+                "prototype": ["basicstat"]
+            },
+            "vitality": {
+                "prototype": ["basicstat"]
+            },
+            "hp": {
+                "weight": 10,
+                "validTypes": ["armor", "weapon"],
+                "stats": {
+                    "added": {
+                        "weight": 90,
+                        "min": 10,
+                        "max": 100
+                    },
+                    "more": {
+                        "weight": 10,
+                        "min": 1,
+                        "max": 10
+                    }
+                }
+            },
+            "mana": {
+                "weight": 10,
+                "validTypes": ["armor", "weapon"],
+                "stats": {
+                    "added": {
+                        "weight": 90,
+                        "min": 10,
+                        "max": 100
+                    },
+                    "more": {
+                        "weight": 10,
+                        "min": 3,
+                        "max": 15
+                    }
+                }
+            },
+            "armor": {
+                "weight": 8,
+                "validTypes": ["armor"],
+                "stats": {
+                    "added": {
+                        "weight": 90,
+                        "min": 10,
+                        "max": 100
+                    },
+                    "more": {
+                        "weight": 10,
+                        "min": 3,
+                        "max": 15
+                    }
+                }
+            },
+            "dodge": {
+                "weight": 8,
+                "validTypes": ["armor"],
+                "stats": {
+                    "added": {
+                        "weight": 90,
+                        "min": 10,
+                        "max": 100
+                    },
+                    "more": {
+                        "weight": 10,
+                        "min": 3,
+                        "max": 15
+                    }
+                }
+            },
+            "eleResistAll": {
+                "weight": 5,
+                "validTypes": ["weapon", "armor"],
+                "stats": {
+                    "added": {
+                        "weight": 1,
+                        "min": 3,
+                        "max": 20
+                    },
+                }
+            },
+            "basicResist" : {
+                "weight": 10,
+                "stats": {
+                    "added": {
+                        "weight": 90,
+                        "min": 5,
+                        "max": 25
+                    },
+                }
+            },
+            "fireResist": {
+                "prototype": ["basicResist"]
+            },
+            "coldResist": {
+                "prototype": ["basicResist"]
+            },
+            "lightResist": {
+                "prototype": ["basicResist"]
+            },
+            "poisResist": {
+                "prototype": ["basicResist"]
+            },
+            "meleeDmg": {
+                "weight": 20,
+                "stats": {
+                    "added": {
+                        "weight": 50,
+                        "min": 1,
+                        "max": 100
+                    },
+                    "more": {
+                        "weight": 50,
+                        "min": 3,
+                        "max": 10
+                    }
+                }
+            },
+            "rangeDmg": {
+                "weight": 15,
+                "stats": {
+                    "added": {
+                        "weight": 60,
+                        "min": 1,
+                        "max": 100
+                    },
+                    "more": {
+                        "weight": 40,
+                        "min": 3,
+                        "max": 15
+                    }
+                }
+            },
+            "spellDmg": {
+                "weight": 15,
+                "stats": {
+                    "added": {
+                        "weight": 10,
+                        "min": 1,
+                        "max": 100
+                    },
+                    "more": {
+                        "weight": 90,
+                        "min": 2,
+                        "max": 20
+                    }
+                }
+            },
+                
         },
         "materials": [
             "embers",

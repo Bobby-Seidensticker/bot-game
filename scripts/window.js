@@ -48,6 +48,8 @@ namespace.module('bot.window', function (exports, require) {
     var VisView = Backbone.View.extend({
         el: $('.vis'),
 
+        SIZE: 200,
+
         // this needs to get all zones, when game model changes, probably shoudl get all of gameModel
         initialize: function(options, gameModel) {
             log.warning('visview init');
@@ -58,6 +60,12 @@ namespace.module('bot.window', function (exports, require) {
 
             $(window).on('resize', this.resize.bind(this));
             this.resize();
+
+            this.listenTo(this.m, 'change:dirty', function() {
+                if (this.m.get('dirty')) {
+                    this.redraw();
+                }
+            });
         },
 
         resize: function() {
@@ -69,29 +77,59 @@ namespace.module('bot.window', function (exports, require) {
                 top: 150
             });
             this.clear();
-            this.redraw();
+            if (this.m.get('running')) {
+                this.redraw();
+            }
         },
 
         clear: function() {
             this.$canvas.attr({
-                width: 300,
-                height: 300
+                width: this.SIZE,
+                height: this.SIZE
             });
             this.$canvas.css({
-                top: this.$el.height() / 2 - 300 / 2 - 1,
-                left: this.$el.width() / 2 - 300 / 2 - 1
+                top: this.$el.height() / 2 - this.SIZE / 2 - 1,
+                left: this.$el.width() / 2 - this.SIZE / 2 - 1
             });
         },
 
         redraw: function() {
-            
+            this.clear();
+            var ctx = this.$canvas[0].getContext('2d');
+
+            var cpos = this.m.char.getCoords();
+
+            circle(ctx, [cpos[0] * 10, cpos[1] * 10], 'red');
+
+            var zone = this.m.zone;
+            if (zone && zone.getCurrentRoom) {
+                var monsters = zone.getCurrentRoom().monsters;
+                monsters.each(function(mon, i) {
+                    if (mon.isAlive()) {
+                        var pos = mon.getCoords();
+                        circle(ctx, [pos[0] * 10 + 20 + 20 * i, pos[1] * 10 + 20 + 20 * i], 'green');
+                    }
+                });
+            }
+            this.m.set('dirty', false);
         },
     });
+
+    function circle(ctx, pos, color) {
+        ctx.beginPath();
+        ctx.arc(pos[0], pos[1], 10, 0, 2 * Math.PI, false);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    // could make a library that wraps a canvas context.
+    // Need to probably get drawing into non-dom canvases for speedup.  At very least for projectiles
 
     var GameView = Backbone.View.extend({
         el: $('body'),
 
-        initialize: function(gameModel) {
+        initialize: function(options, gameModel) {
             console.log('GameView initialize');
 
             this.headerView = new HeaderView();

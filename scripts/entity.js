@@ -247,7 +247,7 @@ namespace.module('bot.entity', function (exports, require) {
 
        onDeath: function() {
            //TODO write this
-           console.log("you dead");
+           console.log('you dead');
        }
        
     });

@@ -124,6 +124,8 @@ namespace.module('bot.main', function (exports, require) {
 
             this.lastTime = thisTime;
 
+            this.set('dirty', true);
+
             if (this.get('running')) {
                 requestAnimFrame(this.tick.bind(this));
             }

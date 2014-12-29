@@ -1,10 +1,12 @@
 namespace.module('bot.prob', function (exports, require) {
     exports.extend({
-        'rand': rand,
-        'pyRand': pyRand,
-        'binProb': binProb,
-        'pProb': pProb,
-        'test': test
+        rand: rand,
+        pyRand: pyRand,
+        binProb: binProb,
+        pProb: pProb,
+        test: test,
+        pick: pick,
+        sum: sum
     });
 
     var fact;
@@ -60,6 +62,29 @@ namespace.module('bot.prob', function (exports, require) {
             x++;
         }
         return x;
+    }
+
+    function sum(arr) {
+        var s = 0;
+        for (var i = arr.length; i--;) {
+            s += arr[i];
+        }
+        return s;
+    }
+
+    // given an array of weights, of arbitrary sum, randomly selects an index and returns it
+    function pick(weights) {
+        var len = weights.length;
+        var rand = Math.random() * sum(weights);
+        var s = 0;
+        var index = 0;
+
+        while (index < len && rand > 0) {
+            rand -= weights[index];
+            index++;
+        }
+        index -= 1;
+        return index;
     }
 
     // memo or cache count factorials

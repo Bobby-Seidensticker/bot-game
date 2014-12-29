@@ -44,7 +44,6 @@ namespace.module('bot.inv', function (exports, require) {
         }
     });
 
-
     var GearModel = Backbone.Model.extend({
         defaults: function() {
             return {
@@ -53,6 +52,18 @@ namespace.module('bot.inv', function (exports, require) {
                 affixes: [],
                 equippedBy: '',
             };
+        },
+
+        levelUp: function() {
+            var type = this.get('itemType');
+
+            if (type == 'armor') {
+                log.info('leveling up armor');
+            } else if (type == 'weapon') {
+                log.info('leveling up weapon');
+            } else if (type == 'skill') {
+                log.info('leveling up skill');
+            }
         },
     });
 
@@ -391,6 +402,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         initialize: function() {
             this.listenTo(this.model, 'destroy', this.destroy);
+            this.listenTo(this.model, 'change', this.onChange);
         },
 
         render: function() {
@@ -409,6 +421,10 @@ namespace.module('bot.inv', function (exports, require) {
             this.$el.toggleClass('collapsed');
         },
 
+        onChange: function() {
+            this.$el.html(this.template(_.extend({}, this.model.toJSON(), {buttons: this.buttons})));
+        },
+
         destroy: function() {
             log.error('ItemView destroy, bad');
             this.$el.remove();
@@ -418,6 +434,7 @@ namespace.module('bot.inv', function (exports, require) {
     var InvItemView = ItemView.extend({
         events: _.extend({}, ItemView.prototype.events, {
             'click .equip': 'equip',
+            'click .level-up': 'levelUp',
         }),
 
         buttons: $('#inv-menu-item-buttons-template').html(),
@@ -425,6 +442,10 @@ namespace.module('bot.inv', function (exports, require) {
         equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             this.model.trigger('equipClick', this.model);
+        },
+
+        levelUp: function() {
+            this.model.levelUp();
         },
 
         /*equip: function() {

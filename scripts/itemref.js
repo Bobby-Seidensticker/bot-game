@@ -317,6 +317,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "basicResist" : {
                 "weight": 10,
+                "validTypes": ["weapon", "armor"],
                 "stats": {
                     "added": {
                         "weight": 90,
@@ -339,6 +340,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "meleeDmg": {
                 "weight": 20,
+                "validTypes": ["weapon", "skill"],
                 "stats": {
                     "added": {
                         "weight": 50,
@@ -354,6 +356,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "rangeDmg": {
                 "weight": 15,
+                "validTypes": ["weapon", "skill"],                
                 "stats": {
                     "added": {
                         "weight": 60,
@@ -369,6 +372,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "spellDmg": {
                 "weight": 15,
+                "validTypes": ["weapon", "skill"],                
                 "stats": {
                     "added": {
                         "weight": 10,
@@ -382,7 +386,100 @@ namespace.module('bot.itemref', function (exports, require) {
                     }
                 }
             },
-                
+            "fireDmg" : {
+                "weight": 15,
+                "validTypes": ["weapon", "skill"],                
+                "stats": {
+                    "added": {
+                        "weight": 90,
+                        "min": 5,
+                        "max": 100
+                    },
+                    "more": {
+                        "weight": 10,
+                        "min": 2,
+                        "max": 10
+                    }
+                }
+            },
+            "coldDmg" : {
+                "weight": 15,
+                "validTypes": ["weapon", "skill"],                
+                "stats": {
+                    "added": {
+                        "weight": 20,
+                        "min": 3,
+                        "max": 60
+                    },
+                    "more": {
+                        "weight": 80,
+                        "min": 3,
+                        "max": 15
+                    }
+                }
+            },
+            "lightDmg": {
+                "weight": 15,
+                "validTypes": ["weapon", "skill"],                
+                "stats": {
+                    "added": {
+                        "weight": 50,
+                        "min": 1,
+                        "max": 300
+                    },
+                    "more": {
+                        "weight": 50,
+                        "min": 3,
+                        "max": 10
+                    }
+                }
+            },
+            "poisDmg": {
+                "weight": 5,
+                "validTypes": ["weapon", "skill"],
+                "stats": {
+                    "added": {
+                        "weight": 87,
+                        "min": 5,
+                        "max": 50
+                    },
+                    "more": {
+                        "weight": 13,
+                        "min": 1,
+                        "max": 13
+                    }
+                }
+            },
+            //TODO - add attSpd and range once we know how they'll work
+            "manaCost": {
+                "weight": 5,
+                "validTypes": ["skill"],
+                "stats": {
+                    "reduced": {
+                        "weight": 10,
+                        "min": 1,
+                        "max": 10
+                    },
+                    "less": {
+                        "weight": 90,
+                        "min": 3,
+                        "max": 25
+                    }
+                }
+            },
+            "bloodthirst": {
+                "weight": 1,
+                "unique": true,
+                "validTypes": ["weapon", "skill"],
+                "affixes": ["manaCost more 100", "physDmg more 100"],
+            },
+            "waterlogged": {
+                "weight": 1,
+                "unique": true,
+                "validTypes": ["armor"],
+                "affixes": ["fireRes added 30", "coldRes reduced 20"],
+            }
+                  
         },
         "materials": [
             "embers",

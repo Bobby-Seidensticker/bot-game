@@ -91,20 +91,27 @@ namespace.module('bot.inv', function (exports, require) {
 
             var pickedAff = possibleAffs[pick];
 
-            var modWeights = [];
-            var modKeys = Object.keys(pickedAff.modifier);
-            for(var i = 0; i < modKeys.length; i++) {
-                modWeights[i] = pickedAff.modifier[modKeys[i]].weight;
+            
+            if (pickedAff.unique) {
+                console.log("unique affix!");
+                return pickedAff.name;
+            } else {
+            
+                var modWeights = [];
+                var modKeys = Object.keys(pickedAff.modifier);
+                for(var i = 0; i < modKeys.length; i++) {
+                    modWeights[i] = pickedAff.modifier[modKeys[i]].weight;
+                }
+                
+                var pickedMod = modKeys[prob.pick(modWeights)];
+                
+                var min = pickedAff.modifier[pickedMod].min;
+                var max = pickedAff.modifier[pickedMod].max;
+                
+                var pickedAmt = prob.rootRand(min, max);
+            
+                return [pickedAff.name, pickedMod, pickedAmt].join(' ');
             }
-
-            var pickedMod = modKeys[prob.pick(modWeights)];
-
-            var min = pickedAff.modifier[pickedMod].min;
-            var max = pickedAff.modifier[pickedMod].max;
-            
-            var pickedAmt = prob.rootRand(min, max);
-            
-            return [pickedAff.name, pickedMod, pickedAmt].join(' ');
         }
     });
 

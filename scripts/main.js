@@ -62,6 +62,7 @@ namespace.module('bot.main', function (exports, require) {
 
         start: function() {
             log.info('start');
+            this.lastTime = new Date().getTime();
             this.set({running: true});
             requestAnimFrame(this.tick.bind(this));
         },

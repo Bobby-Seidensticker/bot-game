@@ -40,6 +40,7 @@ namespace.module('bot.zone', function (exports, require) {
                     monsters: monsters
                 };
             }
+            this.get('char').initPos();
             this.set({
                 rooms: rooms,
                 curMonsters: rooms[this.get('charPos')]

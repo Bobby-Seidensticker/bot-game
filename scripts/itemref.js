@@ -416,7 +416,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 }
             },
             "fireDmg" : {
-                "weight": 15,
+                "weight": 150,
                 "validTypes": ["weapon", "skill"],                
                 "modifier": {
                     "added": {

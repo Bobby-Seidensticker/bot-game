@@ -7,8 +7,6 @@ namespace.module('bot.main', function (exports, require) {
     var zone = namespace.bot.zone;
     var views = namespace.bot.views;
 
-    window.STOP_AFTER = new Date().getTime() + 100 * 1000;
-
     function onReady() {
         localStorage.clear();
 
@@ -90,12 +88,6 @@ namespace.module('bot.main', function (exports, require) {
 
         tick: function() {
             log.debug('begin tick');
-            if (new Date().getTime() > window.STOP_AFTER) {
-                console.log('done');
-                this.stop();
-                return;
-            }
-
             if (!this.get('inZone') || !this.char.get('hp') || this.char.get('hp') <= 0 || this.zone.done()) {
                 log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();

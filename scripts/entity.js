@@ -112,11 +112,14 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         takeDamage: function(damage) {
+            console.log("takedmg called with", damage, this.get('name'), this);
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;
-
+            
             // TODO: apply elemental damage and mitigation
+
+            
             this.set('hp', this.get('hp') - physDmg);
 
             if (this.get('hp') < 0) {
@@ -157,7 +160,13 @@ namespace.module('bot.entity', function (exports, require) {
 
         getDamage: function(skill) {
             skill.use();
-            return {'physDmg': skill.get('physDmg')};
+            return {
+                'physDmg': skill.get('physDmg'),
+                'fireDmg': skill.get('fireDmg'),
+                'coldDmg': skill.get('coldDmg'),
+                'lightDmg': skill.get('lightDmg'),
+                'poisDmg': skill.get('poisDmg')
+            };
         },
 
         inRange: function(target) {

@@ -92,7 +92,7 @@ namespace.module('bot.inv', function (exports, require) {
             var pickedAff = possibleAffs[pick];
 
             var modWeights = [];
-            var modKeys = Object.keys(pickedAff.modifier);
+            var modKeys = Object.keys(pickedAff.modifier); // TODO: solve this issue caused by clicking level-up: Object.keys called on non-object
             for(var i = 0; i < modKeys.length; i++) {
                 modWeights[i] = pickedAff.modifier[modKeys[i]].weight;
             }
@@ -236,10 +236,13 @@ namespace.module('bot.inv', function (exports, require) {
                 this.inv = inv;
                 this.listenTo(inv, 'equipClick', this.equip);
             }
+            this.listenTo(this, 'change', function() {
+                log.warning('equipped gear model on change');
+            });
         },
 
         equip: function(item, slot) {
-            log.info('EquippedGearModel.equip, slot: %s', slot);
+            log.debug('EquippedGearModel.equip, slot: %s', slot);
             var canEquipItem = true;
             var success = false;
 
@@ -278,6 +281,7 @@ namespace.module('bot.inv', function (exports, require) {
             }
             if (success) {
                 this.trigger('equipSuccess');
+                this.listenTo(item, 'change', this.trigger.curry('change'));
             }
             //console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
         },
@@ -307,6 +311,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         unequip: function(item) {
             if (item !== undefined) {
+                this.stopListening(item, 'change');
                 item.set({
                     'equipped': false,
                     'equippedBy': ''
@@ -422,7 +427,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         onAdd: function(item) {
-            log.info('ItemCollectionView onAdd');
+            log.debug('ItemCollectionView onAdd');
             //console.log(item);
             var view = new this.SubView({model: item});
             var $container = this.groupContentEls[item.get('itemType')];
@@ -458,7 +463,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         expandCollapse: function() {
-            log.info('expand collapse click on model name %s', this.model.get('name'));
+            log.debug('expand collapse click on model name %s', this.model.get('name'));
             this.$el.toggleClass('collapsed');
         },
 
@@ -481,7 +486,7 @@ namespace.module('bot.inv', function (exports, require) {
         buttons: $('#inv-menu-item-buttons-template').html(),
 
         equip: function() {
-            log.info('equip click on model name %s', this.model.get('name'));
+            log.debug('equip click on model name %s', this.model.get('name'));
             this.model.trigger('equipClick', this.model);
         },
 

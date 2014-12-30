@@ -29,8 +29,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         initialize: function() {
-            log.debug('EntityModel initialize');
-            this.computeAttrs();
+            throw('Entity is an abstract class');
         },
 
         computeAttrs: function() {
@@ -44,7 +43,7 @@ namespace.module('bot.entity', function (exports, require) {
             
             t.equipped = this.get('equipped');
             t.affixes = t.equipped.getAffixes();
-            if(this.get('team') === 1) {
+            if (this.get('team') === 1) {
                 t.affixes = t.affixes.concat(this.get('affixes'));
             }
 
@@ -62,8 +61,8 @@ namespace.module('bot.entity', function (exports, require) {
             // HP_PER_LVL = 10;
             // HP_PER_VIT = 2;
 
-            t.hp = t.level * 10 + t.vitality * 2;
-            t.mana = t.level * 5 + t.wisdom * 2;
+            t.maxHp = t.level * 10 + t.vitality * 2;
+            t.maxMana = t.level * 5 + t.wisdom * 2;
             t.armor = t.strength * 0.5;
             t.dodge = t.dexterity * 0.5;
             t.eleResistAll = 1 - Math.pow(0.997, t.wisdom); //temp var only
@@ -79,12 +78,17 @@ namespace.module('bot.entity', function (exports, require) {
 
             t.skillchain.computeAttrs(t.equipped.getWeapon(), affixDict);
 
-            t.maxHp = t.hp;
-            t.maxMana = t.mana;
             delete t.eleResistAll;
             this.set(t);
 
             this.set('nextLevelXp', this.getNextLevelXp());
+        },
+
+        revive: function() {
+            this.set({
+                hp: this.get('maxHp'),
+                mana: this.get('maxMana')
+            });
         },
 
         isMonster: function() {
@@ -145,8 +149,6 @@ namespace.module('bot.entity', function (exports, require) {
                 }
             }
         },
-
-
 
         getNextLevelXp: function() {
             return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
@@ -219,7 +221,9 @@ namespace.module('bot.entity', function (exports, require) {
             log.info('CharModel initialize');
             this.fetch();
             this.computeAttrs();
-            this.listenTo(this.get('inv'), 'equipClick', this.equipClick)
+            this.revive();
+            this.listenTo(this.get('inv'), 'equipClick', this.equipClick);
+            this.listenTo(this.get('equipped'), 'change', this.computeAttrs);
         },
 
        equipClick: function(item) {
@@ -285,6 +289,7 @@ namespace.module('bot.entity', function (exports, require) {
             });
 
             this.computeAttrs();
+            this.revive();
         },
 
         getDrops: function() {

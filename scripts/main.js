@@ -68,6 +68,9 @@ namespace.module('bot.main', function (exports, require) {
 
         stop: function() {
             this.set({running: false});
+            this.char.revive();
+            this.zone = undefined;  // this.zone.destroy();
+            this.set('inZone', false);
         },
 
         tick: function() {
@@ -86,6 +89,7 @@ namespace.module('bot.main', function (exports, require) {
             if (!this.char.get('hp') || this.char.get('hp') <= 0 || this.zone.done()) {
                 log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();
+                this.char.revive();
                 this.zone = zone.newZoneModel(this.char);
             }
 
@@ -103,11 +107,8 @@ namespace.module('bot.main', function (exports, require) {
                 // Check if cleared / done, if so get out
                 if (monsters.cleared()) {
                     if (this.zone.done()) {
-                        if (this.zonesCleared > 0) {
-                            log.warning('Cleared a zone, done!');
-                            return;
-                        }
                         this.zonesCleared++;
+                        this.set('inZone', false);
                         break;
                     }
                     this.zone.nextRoom();
@@ -118,6 +119,7 @@ namespace.module('bot.main', function (exports, require) {
                 monsters.tryDoStuff([this.char]);
 
                 if (!this.char.isAlive()) {
+                    this.set('inZone', false);
                     break;
                 }
             }

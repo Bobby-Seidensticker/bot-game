@@ -11,7 +11,7 @@ namespace.module('bot.zone', function (exports, require) {
         defaults: {
             rooms: [],
             charPos: 0,
-            roomCount: 3, // 20,
+            roomCount: 20,
             monsterChoices: ['skeleton'],
 
             monsterQuantity: 2,

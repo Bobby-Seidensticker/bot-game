@@ -84,6 +84,17 @@ namespace.module('bot.itemref', function (exports, require) {
                 "affixes": ["armor added 500"],
                 "type": "legs",
                 "craftCost": "2 poops"
+            },
+            "latex gloves": {
+                "prototype": ["armor"],
+                "affixes": ["poisDmg added 2"],
+                "type": "hands",
+                "craftCost": "2 poops"
+            },
+            "wood shield": {
+                "prototype": ["armor"],
+                "type": "offHand",
+                "craftCost": "4 planks"
             }
         },
         "skill": {

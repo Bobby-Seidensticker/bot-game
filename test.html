@@ -9,24 +9,18 @@
   <script src="scripts/tests/qunit.js"></script>
 
   <!-- COPY BELOW HERE -->
-
   <div class="header"></div>
 
   <div class="vis"></div>
 
   <div class="menu">
-    <table class="tab-holder">
-      <tbody>
-        <tr>
-          <td class="tab" id="map">Map</td>
-          <td class="tab" id="inv">Inv</td>
-          <td class="tab" id="craft">Craft</td>
-          <td class="tab" id="lvlup">Lvlup</td>
-          <td class="tab" id="settings">Settings</td>
-        </tr>
-      </tbody>
-    </table>
-
+    <ul class="tab-holder">
+      <li class="tab" id="map">Map</li>
+      <li class="tab" id="inv">Inv</li>
+      <li class="tab" id="craft">Craft</li>
+      <li class="tab" id="lvlup">Lvlup</li>
+      <li class="tab" id="settings">Settings</li>
+    </ul>
     <div class="menu-holder">
       <div class="sub-menu closed" id="map-menu-holder">map</div>
       <div class="sub-menu closed" id="inv-menu-holder">inv</div>
@@ -50,9 +44,7 @@
     </div>
     <div class="item-body">
       <div class="item-mid">
-        <div class="item-img">
-          <img src="assets/<%= name %>.svg" height="90" width="90">
-        </div>
+        <img src="assets/<%= name %>.svg" height="90" width="90">
         <div class="item-mid-text">
           Type: <%= itemType %><br/><%= exp %> / 2,743 XP
         </div>
@@ -71,12 +63,12 @@
   </script>
 
   <script id="inv-menu-item-buttons-template" type="text/template">
-    <input class="item-button level-up" value="Level Up" type="button"/>
-    <input class="item-button equip" value="Equip" type="button"  />
+    <input class="item-button level-up" value="Level Up" type="button" />
+    <input class="item-button equip" value="Equip" type="button" />
   </script>
 
   <script id="craft-menu-item-buttons-template" type="text/template">
-    <input class="item-button craft" value="Craft" type="button"  />
+    <input class="item-button craft" value="Craft" type="button" />
   </script>
   
   
@@ -184,11 +176,12 @@
     <img src="assets/<%= name %>.svg" />
   </script>
 
-  <script id="menu-tab-template" type="text/template">
+  <script type="text/template" id="menu-tab-template">
     <td class="tab" id="<%- name %>"><%- name %></td>
   </script>
 
   <!-- Libs -->
+  <script type="text/javascript" src="scripts/sugar.js"></script>
   <script type="text/javascript" src="scripts/raf-shim.js"></script>
   <script type="text/javascript" src="scripts/jquery.min.js"></script>
   <script type="text/javascript" src="scripts/namespace-plus.js"></script>
@@ -199,8 +192,9 @@
 
   <!-- Our files -->
   <script type="text/javascript" src="scripts/log.js"></script>
-  <script type="text/javascript" src="scripts/itemref.js"></script>
   <script type="text/javascript" src="scripts/prob.js"></script>
+  <script type="text/javascript" src="scripts/itemref.js"></script>
+
   <script type="text/javascript" src="scripts/utils.js"></script>
 
   <script type="text/javascript" src="scripts/window.js"></script>

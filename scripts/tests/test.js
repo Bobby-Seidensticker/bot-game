@@ -99,9 +99,6 @@ namespace.module('bot.test', function (exports, require) {
 	    var mon = new entity.MonsterModel({'name':'skeleton'});
 	    assert.equal(mon.get('hp'), mon.get('maxHp'), 'Monster HP maxed for taking hit');
 
-	    var dist = vector.getDistances(char.getCoords(), [mon.getCoords()])[0];
-	    assert.ok(dist == 0, 'distance is always zero for debugging');
-	    
 	    var skill = char.get('skillchain').at(0);
 	    console.log(skill);
 	    assert.ok(skill, 'char skill found');

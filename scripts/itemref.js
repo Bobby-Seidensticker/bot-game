@@ -346,7 +346,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "modifier": {
                     "added": {
                         "weight": 50,
-                        "min": 1,
+                        "min": 3,
                         "max": 100
                     },
                     "more": {
@@ -362,7 +362,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "modifier": {
                     "added": {
                         "weight": 60,
-                        "min": 1,
+                        "min": 3,
                         "max": 100
                     },
                     "more": {
@@ -378,7 +378,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "modifier": {
                     "added": {
                         "weight": 10,
-                        "min": 1,
+                        "min": 3,
                         "max": 100
                     },
                     "more": {

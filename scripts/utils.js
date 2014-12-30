@@ -22,6 +22,7 @@ namespace.module('bot.utils', function (exports, require) {
     var log = namespace.bot.log;
 
     function applyAffixes(startVal, mods) {
+        console.log("applyAffixes", startVal, mods);
         var mores, adds, splits, modtype, amt;
         mores = 1;
         adds = startVal;
@@ -30,7 +31,7 @@ namespace.module('bot.utils', function (exports, require) {
             modtype = splits[0];
             amt = parseFloat(splits[1]);
             if (modtype === 'added') {
-                adds += amt
+                adds += amt;
             } else if (modtype === 'more') {
                 mores *= (1 + 0.01*amt);
             } else {
@@ -39,6 +40,7 @@ namespace.module('bot.utils', function (exports, require) {
                 console.log(mods, startVal, mores, adds);
             }
         });
+        console.log("returning", adds*mores, adds, mores);
         return adds * mores;
     }
 

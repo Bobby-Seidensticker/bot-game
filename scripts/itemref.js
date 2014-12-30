@@ -191,8 +191,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "dexterity",
                 "wisdom",
                 "vitality",
-                "hp",
-                "mana",
+                "maxHp",
+                "maxMana",
                 "armor",
                 "dodge",
                 "eleResistAll",
@@ -242,12 +242,12 @@ namespace.module('bot.itemref', function (exports, require) {
             "vitality": {
                 "prototype": ["basicStat"]
             },
-            "hp": {
-                "weight": 10,
+            "maxHp": {
+                "weight": 100,
                 "validTypes": ["armor", "weapon"],
                 "modifier": {
                     "added": {
-                        "weight": 90,
+                        "weight": 10,
                         "min": 10,
                         "max": 100
                     },
@@ -258,7 +258,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     }
                 }
             },
-            "mana": {
+            "maxMana": {
                 "weight": 10,
                 "validTypes": ["armor", "weapon"],
                 "modifier": {
@@ -571,7 +571,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillchain": ["basic melee"],
                 "weapon" : ["wooden sword"],
                 "armor": ["smelly cod piece"],
-                "affixes": ["physDmg added 1", "hp added -10", "fireResist added -20"],
+                "affixes": ["physDmg added 1", "maxHp added 1", "fireResist added -20"],
                 "drops": ['planks', 'poops']
 
             },
@@ -580,7 +580,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillchain": ["basic range"],
                 "armor": ["smelly cod piece"],
                 "weapon": "shitty bow",
-                "affixes": ["physDmg added 2", "hp added 10", "fireResist added -20"]
+                "affixes": ["physDmg added 2", "maxHp added 10", "fireResist added -20"]
             },
             "skeleton mage" : {
                 "prototype" : ["skeleton"],
@@ -592,7 +592,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "skeleton king" : {
                 "prototype" : ["skeleton"],
                 "skillchain": ["fire slash", "basic melee"],
-                "affixes": ["physDmg added 10", "hp added 50", "fireResist added -20"]
+                "affixes": ["physDmg added 10", "maxHp added 50", "fireResist added -20"]
             },
         },
         "test": {

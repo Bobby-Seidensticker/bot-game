@@ -67,7 +67,7 @@ namespace.module('bot.entity', function (exports, require) {
             t.dodge = t.dexterity * 0.5;
             t.eleResistAll = 1 - Math.pow(0.997, t.wisdom); //temp var only
 
-            utils.applyAllAffixes(t, ['hp', 'mana', 'armor', 'dodge', 'eleResistAll'], affixDict);
+            utils.applyAllAffixes(t, ['maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll'], affixDict);
 
             t.fireResist = t.eleResistAll;
             t.coldResist = t.eleResistAll;

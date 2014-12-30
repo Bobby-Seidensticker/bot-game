@@ -243,7 +243,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basicStat"]
             },
             "maxHp": {
-                "weight": 100,
+                "weight": 50,
                 "validTypes": ["armor", "weapon"],
                 "modifier": {
                     "added": {

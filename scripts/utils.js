@@ -22,7 +22,7 @@ namespace.module('bot.utils', function (exports, require) {
     var log = namespace.bot.log;
 
     function applyAffixes(startVal, mods) {
-        console.log("applyAffixes", startVal, mods);
+        //console.log("applyAffixes", startVal, mods);
         var mores, adds, splits, modtype, amt;
         mores = 1;
         adds = startVal;
@@ -40,7 +40,7 @@ namespace.module('bot.utils', function (exports, require) {
                 console.log(mods, startVal, mores, adds);
             }
         });
-        console.log("returning", adds*mores, adds, mores);
+        //console.log("returning", adds*mores, adds, mores);
         return adds * mores;
     }
 

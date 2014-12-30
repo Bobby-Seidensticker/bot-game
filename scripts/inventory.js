@@ -208,6 +208,18 @@ namespace.module('bot.inv', function (exports, require) {
     var Skillchain = Backbone.Collection.extend({
         model: SkillModel,
 
+        initialize: function() {
+            this.on('add remove', this.countChange, this);
+        },
+
+        countChange: function(item) {
+            log.info('Skillchain countChange');
+            var ranges = this.pluck('range');
+            this.shortest = ranges.min();
+            this.furthest = ranges.max();
+            console.log(item.get('range'));
+        },
+
         bestSkill: function(mana, distances) {
             return this.find(function(skill) {
                 if (mana >= skill.get('manaCost') && skill.cool()) {

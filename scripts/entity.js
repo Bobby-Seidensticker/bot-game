@@ -159,31 +159,18 @@ namespace.module('bot.entity', function (exports, require) {
             return {'physDmg': skill.get('physDmg')};
         },
 
-        ready: function() {
-            // STUB
-            // TODO: 
-            // check skill chain to see when next cooldown done
-            // check mana
-            // if have mana and cool skill, return true, else false
-            // check if in range
-            return true;
-        },
-
         inRange: function(target) {
             return true;
         },
 
         getCoords: function() {
-            //return [this.get('x'), this.get('y')];
-            return [0, 0];
+            return [this.get('x'), this.get('y')];
         },
 
         tryDoStuff: function(enemies) {
-            if (!this.ready() || !this.isAlive()) {
+            if (!this.isAlive() || this.get('nextAction') > 0) {
                 return;
             }
-
-            var skills = this.get('skillchain');
 
             var distances = vector.getDistances(
                 this.getCoords(),
@@ -191,15 +178,34 @@ namespace.module('bot.entity', function (exports, require) {
             );
 
             var skill = this.get('skillchain').bestSkill(this.get('mana'), distances);
-            if (!skill) {
-                log.debug('No best skill, mana: %.2f, distances: %s', this.get('mana'), JSON.stringify(distances));
-                return;
+            if (skill) {
+                var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.get('range') >= distances[i]; });
+                var target = enemies[targetIndex];
+                this.attackTarget(target, skill);
+            } else {
+                log.info('No best skill, mana: %.2f, distances: %s', this.get('mana'), JSON.stringify(distances));
+
+                var skills = this.get('skillchain');
+
+                var minDist = distances.min();
+                var closestEnemy = enemies[distances.minIndex()];
+                var closestPos = closestEnemy.getCoords();
+
+                console.log(skills.shortest, minDist);
+                //if (skills.shortest < minDist) {
+                if (1 < minDist) {
+                    log.info('moving closer');
+                    // shortest range skill is out of range of the closest enemy entity, move closer to it
+                    var pos = this.getCoords();
+                    var diff = [closestPos[0] - pos[0], closestPos[1] - pos[1]];
+                    var moveSpeed = 0.4;
+                    var ratio = (minDist - moveSpeed) / minDist;
+                    this.set('x', this.get('x') + diff[0] * ratio);
+                    this.set('y', this.get('y') + diff[1] * ratio);
+                }
+
+                //this.move
             }
-
-            var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.get('range') >= distances[i]; });
-            var target = enemies[targetIndex];
-
-            this.attackTarget(target, skill);
         },
 
         update: function(dt) {
@@ -209,8 +215,8 @@ namespace.module('bot.entity', function (exports, require) {
             this.set('nextAction', this.get('nextAction') - dt);
         }
     });
- 
-   var CharModel = EntityModel.extend({
+    
+    var CharModel = EntityModel.extend({
         defaults: _.extend({}, EntityModel.prototype.defaults(), {
             team: TEAM_CHAR,
         }),
@@ -221,13 +227,19 @@ namespace.module('bot.entity', function (exports, require) {
             log.info('CharModel initialize');
             this.fetch();
             this.computeAttrs();
+
             this.revive();
             this.listenTo(this.get('inv'), 'equipClick', this.equipClick);
             this.listenTo(this.get('equipped'), 'change', this.computeAttrs);
+
+            this.set({
+                x: 1,
+                y: 10
+            });
         },
 
-       equipClick: function(item) {
-           var itemType = item.get('itemType');
+        equipClick: function(item) {
+            var itemType = item.get('itemType');
             if (itemType === 'armor') {
                 this.get('equipped').equip(item, item.get('type'));
             } else if (itemType === 'weapon') {
@@ -235,7 +247,7 @@ namespace.module('bot.entity', function (exports, require) {
             } else if (itemType === 'skill') {
                 this.get('skillchain').add(item);
             }
-       },
+        },
 
         onKill: function(target, skill) {
             //console.log(target);
@@ -249,11 +261,11 @@ namespace.module('bot.entity', function (exports, require) {
             }
         },
 
-       onDeath: function() {
-           //TODO write this
-           console.log('you dead');
-       }
-       
+        onDeath: function() {
+            //TODO write this
+            console.log('you dead');
+        }
+        
     });
 
     var MonsterModel = EntityModel.extend({
@@ -285,7 +297,9 @@ namespace.module('bot.entity', function (exports, require) {
 
             this.set({
                 skillchain: skillchain,
-                equipped: equipped
+                equipped: equipped,
+                x: 14 + prob.pyRand(0, 5),
+                y: 14 + prob.pyRand(0, 5)
             });
 
             this.computeAttrs();

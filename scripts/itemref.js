@@ -106,7 +106,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "super smash": {
                 "prototype": ["basic melee"],
-                "affixes": ["physDmg more 1.4"],
+                "affixes": ["physDmg more 40"],
                 "manaCost": 5,
                 "craftCost": "2 skulls",
             },        
@@ -186,10 +186,10 @@ namespace.module('bot.itemref', function (exports, require) {
 
         },
         "affix": {
-            "list of all valid affixes": [
+            "rollable": [
                 "strength",
                 "dexterity",
-                "widsom",
+                "wisdom",
                 "vitality",
                 "hp",
                 "mana",
@@ -208,14 +208,16 @@ namespace.module('bot.itemref', function (exports, require) {
                 "coldDmg",
                 "lightDmg",
                 "poisDmg",
-                "attSpd",
-                "range",
-                "manaCost"
+                //"attSpd",
+                //"range",
+                "manaCost",
+                "bloodthirst",
+                "waterlogged",
             ],
             "basicStat": {
                 "weight": 10,
                 "validTypes": ["armor", "weapon"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 70,
                         "min": 5,
@@ -229,21 +231,21 @@ namespace.module('bot.itemref', function (exports, require) {
                 }
             },
             "strength": {
-                "prototype": ["basicstat"]
+                "prototype": ["basicStat"]
             },
             "dexterity": {
-                "prototype": ["basicstat"]
+                "prototype": ["basicStat"]
             },
             "wisdom": {
-                "prototype": ["basicstat"]
+                "prototype": ["basicStat"]
             },
             "vitality": {
-                "prototype": ["basicstat"]
+                "prototype": ["basicStat"]
             },
             "hp": {
                 "weight": 10,
                 "validTypes": ["armor", "weapon"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 90,
                         "min": 10,
@@ -259,7 +261,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "mana": {
                 "weight": 10,
                 "validTypes": ["armor", "weapon"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 90,
                         "min": 10,
@@ -275,7 +277,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "armor": {
                 "weight": 8,
                 "validTypes": ["armor"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 90,
                         "min": 10,
@@ -291,7 +293,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "dodge": {
                 "weight": 8,
                 "validTypes": ["armor"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 90,
                         "min": 10,
@@ -307,7 +309,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "eleResistAll": {
                 "weight": 5,
                 "validTypes": ["weapon", "armor"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 1,
                         "min": 3,
@@ -318,7 +320,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "basicResist" : {
                 "weight": 10,
                 "validTypes": ["weapon", "armor"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 90,
                         "min": 5,
@@ -341,10 +343,10 @@ namespace.module('bot.itemref', function (exports, require) {
             "meleeDmg": {
                 "weight": 20,
                 "validTypes": ["weapon", "skill"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 50,
-                        "min": 1,
+                        "min": 3,
                         "max": 100
                     },
                     "more": {
@@ -357,10 +359,10 @@ namespace.module('bot.itemref', function (exports, require) {
             "rangeDmg": {
                 "weight": 15,
                 "validTypes": ["weapon", "skill"],                
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 60,
-                        "min": 1,
+                        "min": 3,
                         "max": 100
                     },
                     "more": {
@@ -373,10 +375,10 @@ namespace.module('bot.itemref', function (exports, require) {
             "spellDmg": {
                 "weight": 15,
                 "validTypes": ["weapon", "skill"],                
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 10,
-                        "min": 1,
+                        "min": 3,
                         "max": 100
                     },
                     "more": {
@@ -386,10 +388,26 @@ namespace.module('bot.itemref', function (exports, require) {
                     }
                 }
             },
+            "physDmg": {
+                "weight": 25,
+                "validTypes": ["weapon", "skill"],
+                "modifier": {
+                    "added": {
+                        "weight": 70,
+                        "min": 3,
+                        "max": 100,
+                    },
+                    "more": {
+                        "weight": 30,
+                        "min": 3,
+                        "max": 15
+                    }
+                }
+            },
             "fireDmg" : {
                 "weight": 15,
                 "validTypes": ["weapon", "skill"],                
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 90,
                         "min": 5,
@@ -405,7 +423,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "coldDmg" : {
                 "weight": 15,
                 "validTypes": ["weapon", "skill"],                
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 20,
                         "min": 3,
@@ -421,7 +439,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "lightDmg": {
                 "weight": 15,
                 "validTypes": ["weapon", "skill"],                
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 50,
                         "min": 1,
@@ -437,7 +455,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "poisDmg": {
                 "weight": 5,
                 "validTypes": ["weapon", "skill"],
-                "stats": {
+                "modifier": {
                     "added": {
                         "weight": 87,
                         "min": 5,
@@ -454,7 +472,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "manaCost": {
                 "weight": 5,
                 "validTypes": ["skill"],
-                "stats": {
+                "modifier": {
                     "reduced": {
                         "weight": 10,
                         "min": 1,

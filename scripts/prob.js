@@ -2,6 +2,7 @@ namespace.module('bot.prob', function (exports, require) {
     exports.extend({
         rand: rand,
         pyRand: pyRand,
+        rootRand: rootRand,
         binProb: binProb,
         pProb: pProb,
         test: test,
@@ -26,6 +27,15 @@ namespace.module('bot.prob', function (exports, require) {
         return Math.floor(Math.random() * (max - min) + min);
     }
 
+    function rootRand(min, max) { // call
+        //var root = 5;
+        //var range = Math.pow(max, root);
+        //var result = Math.max(min, Math.floor(Math.pow(pyRand(0, range), 1/root)));
+        var result = pProb(min*2, max);
+
+        return Math.max(min, result);
+    }
+    
     // Binary probability, returns true or false based off a p
     // p >= 1 always returns 1
     // p = 0.01 returns 1 on average once per 100 tries, 0 other times

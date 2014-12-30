@@ -5,7 +5,9 @@ namespace.module('bot.inv', function (exports, require) {
     var log = namespace.bot.log;
     var utils = namespace.bot.utils;
     var itemref = namespace.bot.itemref;
+    var prob = namespace.bot.prob;
 
+    
     var MaterialModel = Backbone.Model.extend({
         defaults: function() {
             return {
@@ -57,6 +59,12 @@ namespace.module('bot.inv', function (exports, require) {
         levelUp: function() {
             var type = this.get('itemType');
 
+
+            var affs = this.get('affixes');
+            var newAff = this.rollAffix();
+            affs.push(newAff);
+            this.set('affixes', affs);
+            
             if (type == 'armor') {
                 log.info('leveling up armor');
             } else if (type == 'weapon') {
@@ -64,7 +72,40 @@ namespace.module('bot.inv', function (exports, require) {
             } else if (type == 'skill') {
                 log.info('leveling up skill');
             }
+
+            this.set('level', this.get('level') + 1);
         },
+
+        rollAffix: function() {
+            var type = this.get('itemType');
+
+            var rollable = itemref.ref.affix.rollable;
+            var possibleAffs = [];
+            for(var i = 0; i < rollable.length; i++){
+                var aff = itemref.expand('affix', rollable[i]);
+                if(aff.validTypes.indexOf(type) != -1) {
+                    possibleAffs.push(aff);
+                }
+            }
+            var pick = prob.pick(_.map(possibleAffs, function(aff) { return aff.weight }));
+
+            var pickedAff = possibleAffs[pick];
+
+            var modWeights = [];
+            var modKeys = Object.keys(pickedAff.modifier);
+            for(var i = 0; i < modKeys.length; i++) {
+                modWeights[i] = pickedAff.modifier[modKeys[i]].weight;
+            }
+
+            var pickedMod = modKeys[prob.pick(modWeights)];
+
+            var min = pickedAff.modifier[pickedMod].min;
+            var max = pickedAff.modifier[pickedMod].max;
+            
+            var pickedAmt = prob.rootRand(min, max);
+            
+            return [pickedAff.name, pickedMod, pickedAmt].join(' ');
+        }
     });
 
     var ArmorModel = GearModel.extend({

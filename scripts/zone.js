@@ -105,8 +105,4 @@ namespace.module('bot.zone', function (exports, require) {
     exports.extend({
         newZoneModel: newZoneModel
     });
-
-    (function() {
-        var currentZone = new ZoneModel();
-    })();
 });

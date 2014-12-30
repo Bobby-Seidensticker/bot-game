@@ -12,7 +12,8 @@ namespace.module('bot.vector', function (exports, require) {
     }
 
     exports.extend({
-        getDistances: getDistances
+        getDistances: getDistances,
+        dist: dist
     });
 });
 

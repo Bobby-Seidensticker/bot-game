@@ -208,18 +208,27 @@ namespace.module('bot.entity', function (exports, require) {
                 console.log(skills.shortest, minDist);
                 //if (skills.shortest < minDist) {
                 if (1 < minDist) {
-                    log.info('moving closer');
-                    // shortest range skill is out of range of the closest enemy entity, move closer to it
-                    var pos = this.getCoords();
-                    var diff = [closestPos[0] - pos[0], closestPos[1] - pos[1]];
-                    var moveSpeed = 0.4;
-                    var ratio = 1 - (minDist - moveSpeed) / minDist;
-                    this.set('x', pos[0] + diff[0] * ratio);
-                    this.set('y', pos[1] + diff[1] * ratio);
+                    this.tryMoveTo(closestPos, minDist);
                 }
-
-                //this.move
             }
+        },
+
+        tryMoveTo: function(dest, distance) {
+            if (!this.busy()) {
+                var pos = this.getCoords();
+                var distance = vector.dist(pos, dest);
+                var diff = [dest[0] - pos[0], dest[1] - pos[1]];
+                var moveSpeed = 0.1;
+                var ratio = 1 - (distance - moveSpeed) / distance;
+                this.set('x', pos[0] + diff[0] * ratio);
+                this.set('y', pos[1] + diff[1] * ratio);
+                log.info('moving closer');
+                this.set('nextAction', 30);
+            }
+        },
+
+        busy: function() {
+            return this.get('nextAction') > 0;
         },
 
         update: function(dt) {

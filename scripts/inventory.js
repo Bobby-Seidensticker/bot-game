@@ -88,7 +88,7 @@ namespace.module('bot.inv', function (exports, require) {
                 }
             }
             var pick = prob.pick(_.map(possibleAffs, function(aff) { return aff.weight }));
-            console.log(possibleAffs[pick].name);
+
             var pickedAff = possibleAffs[pick];
 
             var modWeights = [];
@@ -98,8 +98,7 @@ namespace.module('bot.inv', function (exports, require) {
             }
 
             var pickedMod = modKeys[prob.pick(modWeights)];
-            console.log(modKeys)
-            console.log(modWeights);
+
             var min = pickedAff.modifier[pickedMod].min;
             var max = pickedAff.modifier[pickedMod].max;
             

@@ -28,8 +28,8 @@ namespace.module('bot.prob', function (exports, require) {
     }
 
     function rootRand(min, max) { // call
-        var range = Math.pow(max - min, 2);
-        return min + Math.floor(Math.sqrt(pyRand(0, range)));
+        var range = Math.pow(max - min, 3);
+        return min + Math.floor(Math.pow(pyRand(0, range), 1/3));
     }
     
     // Binary probability, returns true or false based off a p

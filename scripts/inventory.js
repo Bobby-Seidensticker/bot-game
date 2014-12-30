@@ -91,7 +91,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             var pickedAff = possibleAffs[pick];
 
-            
+            //TODO - update entity.computeAttrs to expand unique affixes
             if (pickedAff.unique) {
                 console.log("unique affix!");
                 return pickedAff.name;

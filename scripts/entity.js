@@ -35,10 +35,11 @@ namespace.module('bot.entity', function (exports, require) {
         computeAttrs: function() {
             log.info('Computing Attrs for Entity on team %s', this.teamString());
             var t = {};  // temp values
-            t.strength = this.get('strength');
-            t.dexterity = this.get('dexterity');
-            t.wisdom = this.get('wisdom');
-            t.vitality = this.get('vitality');
+
+            t.strength = this.defaults.strength;
+            t.dexterity = this.defaults.dexterity;
+            t.wisdom = this.defaults.wisdom;
+            t.vitality = this.defaults.vitality;
             t.level = this.get('level');
             
             t.equipped = this.get('equipped');

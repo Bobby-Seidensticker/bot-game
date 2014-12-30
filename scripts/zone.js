@@ -60,6 +60,7 @@ namespace.module('bot.zone', function (exports, require) {
                 this.set({
                     'charPos': this.get('charPos') + 1
                 });
+                this.get('char').initPos();
                 log.info('Zone.nextRoom() success, now on room: %d of %d', this.get('charPos'), this.get('rooms').length);
                 return true;
             }

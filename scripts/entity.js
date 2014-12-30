@@ -167,6 +167,20 @@ namespace.module('bot.entity', function (exports, require) {
             return [this.get('x'), this.get('y')];
         },
 
+        initPos: function() {
+            if (this.isChar()) {
+                this.set({
+                    x: 1,
+                    y: 10
+                });
+            } else if (this.isMonster()) {
+                this.set({
+                    x: 17 + prob.rand(-2, 3),
+                    y: 10 + prob.pyRand(-3, 3)
+                });
+            }
+        },
+
         tryDoStuff: function(enemies) {
             if (!this.isAlive() || this.get('nextAction') > 0) {
                 return;
@@ -199,9 +213,9 @@ namespace.module('bot.entity', function (exports, require) {
                     var pos = this.getCoords();
                     var diff = [closestPos[0] - pos[0], closestPos[1] - pos[1]];
                     var moveSpeed = 0.4;
-                    var ratio = (minDist - moveSpeed) / minDist;
-                    this.set('x', this.get('x') + diff[0] * ratio);
-                    this.set('y', this.get('y') + diff[1] * ratio);
+                    var ratio = 1 - (minDist - moveSpeed) / minDist;
+                    this.set('x', pos[0] + diff[0] * ratio);
+                    this.set('y', pos[1] + diff[1] * ratio);
                 }
 
                 //this.move
@@ -297,10 +311,9 @@ namespace.module('bot.entity', function (exports, require) {
 
             this.set({
                 skillchain: skillchain,
-                equipped: equipped,
-                x: 14 + prob.pyRand(0, 5),
-                y: 14 + prob.pyRand(0, 5)
+                equipped: equipped
             });
+            this.initPos();
 
             this.computeAttrs();
             this.revive();

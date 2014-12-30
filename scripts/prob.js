@@ -7,7 +7,8 @@ namespace.module('bot.prob', function (exports, require) {
         pProb: pProb,
         test: test,
         pick: pick,
-        sum: sum
+        sum: sum,
+        randColor: randColor
     });
 
     var fact;
@@ -104,6 +105,29 @@ namespace.module('bot.prob', function (exports, require) {
             arr[i + 1] = arr[i] * (i + 1);
         }
         return arr;
+    }
+
+    function randColor(base, range) {
+        var original = base;
+        if (typeof(base) === 'string') {
+            base = base.replace('#', '');
+            if (base.length === 3) {
+                base = base[0] + base[0] + base[1] + base[1] + base[2] + base[2];
+            }
+            if (base.length !== 6) {
+                throw('fuck, randcolor base != 6');
+            }
+            base = [parseInt(base.slice(0, 2), 16), parseInt(base.slice(2,4), 16), parseInt(base.slice(4,6), 16)];
+        }
+
+        color = _.map(base, function(c) {
+            c += rand(-range, range);
+            c = c > 255 ? 255 : c;
+            c = c < 0 ? 0 : c;
+            return c;
+        });
+        var res = sprintf('#%02X%02X%02X', color[0], color[1], color[2]);
+        return res;
     }
 
     function test() {

@@ -1,6 +1,7 @@
 namespace.module('bot.window', function (exports, require) {
 
     var log = namespace.bot.log;
+    var prob = namespace.bot.prob;
 
     var HeaderView = Backbone.View.extend({
         el: $('.header'),
@@ -99,7 +100,7 @@ namespace.module('bot.window', function (exports, require) {
 
             var cpos = this.m.char.getCoords();
 
-            circle(ctx, [cpos[0] * 10, cpos[1] * 10], 'red');
+            circle(ctx, [cpos[0] * 10, cpos[1] * 10], '#32E');
 
             var zone = this.m.zone;
             if (zone && zone.getCurrentRoom) {
@@ -107,7 +108,10 @@ namespace.module('bot.window', function (exports, require) {
                 monsters.each(function(mon, i) {
                     if (mon.isAlive()) {
                         var pos = mon.getCoords();
-                        circle(ctx, [pos[0] * 10 + 20 + 20 * i, pos[1] * 10 + 20 + 20 * i], 'green');
+                        if (mon.get('color') === undefined) {
+                            mon.set('color', prob.randColor('#E12', 60));
+                        }
+                        circle(ctx, [pos[0] * 10, pos[1] * 10], mon.get('color'));
                     }
                 });
             }

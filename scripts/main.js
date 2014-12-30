@@ -28,7 +28,7 @@ namespace.module('bot.main', function (exports, require) {
         $(window).on('keypress', function(event) {
             var SPACE = 32;
             if (event.keyCode == SPACE) {
-                gameModel.start();
+                gameModel.toggle();
             }
         });
     }
@@ -66,6 +66,20 @@ namespace.module('bot.main', function (exports, require) {
             requestAnimFrame(this.tick.bind(this));
         },
 
+        pause: function() {
+            log.info('pause');
+            this.set({running: false});
+        },
+
+        toggle: function() {
+            log.info('toggle');
+            if (this.get('running')) {
+                this.pause();
+            } else {
+                this.start();
+            }
+        },
+
         stop: function() {
             this.set({running: false});
             this.char.revive();
@@ -81,22 +95,18 @@ namespace.module('bot.main', function (exports, require) {
                 return;
             }
 
-            if (!this.get('inZone')) {
-
-                this.zone = zone.newZoneModel(this.char);
-                this.set('inZone', true);
-            }
-            if (!this.char.get('hp') || this.char.get('hp') <= 0 || this.zone.done()) {
+            if (!this.get('inZone') || !this.char.get('hp') || this.char.get('hp') <= 0 || this.zone.done()) {
                 log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();
                 this.char.revive();
                 this.zone = zone.newZoneModel(this.char);
+                this.set('inZone', true);
             }
 
             var thisTime = new Date().getTime();
             var monsters = this.zone.getCurrentRoom().monsters;  // type MonsterCollection
-            //for (var t = this.lastTime; t < thisTime; t += 2) {
-            for (var t = this.lastTime; t < thisTime; t += thisTime - this.lastTime) {
+            for (var t = this.lastTime; t < thisTime; t += 10) {
+            //for (var t = this.lastTime; t < thisTime; t += thisTime - this.lastTime) {
                 log.debug('tick calling update functions');
                 // pass new time to char and all monsters
                 this.char.update(t);

@@ -215,7 +215,7 @@ namespace.module('bot.entity', function (exports, require) {
                 var closestEnemy = enemies[distances.minIndex()];
                 var closestPos = closestEnemy.getCoords();
 
-                console.log(skills.shortest, minDist);
+                //console.log(skills.shortest, minDist);
                 //if (skills.shortest < minDist) {
                 if (1 < minDist) {
                     this.tryMoveTo(closestPos, minDist);

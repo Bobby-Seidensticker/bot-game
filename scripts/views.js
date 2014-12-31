@@ -37,9 +37,10 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         update: function() {
-            this.$('#hp').html(Math.ceil(this.model.get('hp')) + ' / ' + this.model.get('maxHp'));
-            this.$('#mana').html(Math.floor(this.model.get('mana')) + ' / ' + this.model.get('maxMana'));
-            this.$('#xp').html(Math.floor(this.model.get('xp')) + ' / ' + this.model.get('nextLevelXp'));
+            this.$('#hp').html(Math.ceil(this.model.get('hp')) + ' / ' + Math.ceil(this.model.get('maxHp')));
+            this.$('#mana').html(Math.floor(this.model.get('mana')) + ' / ' + Math.floor(this.model.get('maxMana')));
+            this.$('#xp').html(Math.floor(this.model.get('xp')) + ' / ' + Math.ceil(this.model.get('nextLevelXp')));
+            this.$('#level').html(this.model.get('level'));
         },
     });
 

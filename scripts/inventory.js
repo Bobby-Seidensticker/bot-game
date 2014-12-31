@@ -52,19 +52,18 @@ namespace.module('bot.inv', function (exports, require) {
                 exp: 0,
                 level: 1,
                 affixes: [],
-                equippedBy: '',
+                equippedBy: ''
             };
         },
 
         levelUp: function() {
             var type = this.get('itemType');
 
-
             var affs = this.get('affixes');
             var newAff = this.rollAffix();
             affs.push(newAff);
             this.set('affixes', affs);
-            
+
             if (type == 'armor') {
                 log.info('leveling up armor');
             } else if (type == 'weapon') {
@@ -81,7 +80,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             var rollable = itemref.ref.affix.rollable;
             var possibleAffs = [];
-            for(var i = 0; i < rollable.length; i++){
+            for (var i = 0; i < rollable.length; i++){
                 var aff = itemref.expand('affix', rollable[i]);
                 if(aff.validTypes.indexOf(type) != -1) {
                     possibleAffs.push(aff);
@@ -115,55 +114,53 @@ namespace.module('bot.inv', function (exports, require) {
     });
 
     var ArmorModel = GearModel.extend({
-        defaults: _.extend({}, GearModel.prototype.defaults(), {
-            weight: 0,
-            type: 'ERR type',
-            itemType: 'armor'
-        }),
+        defaults: function() {
+            return _.extend({
+                weight: 0,
+                type: 'ERR type',
+                itemType: 'armor'
+            }, GearModel.prototype.defaults());
+        },
 
         initialize: function() {
-            // log.debug('Armor Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
-            if (!('id' in this)) {
-                log.debug('loading armor %s from file', this.get('name'));
-                this.set(itemref.expand('armor', this.get('name')));
-            }
+            log.debug('loading armor %s from file', this.get('name'));
+            this.set(itemref.expand('armor', this.get('name')));
         },
     });
 
+    //var WeaponModel = GearModel.extend({
     var WeaponModel = GearModel.extend({
-        defaults: _.extend({}, GearModel.prototype.defaults(), {
-            speed: 0,
-            type: 'ERR type',
-            damage: 0,
-            range: 0,
-            itemType: 'weapon'
-        }),
+        defaults: function() {
+            return _.extend({
+                speed: 0,
+                type: 'ERR type',
+                damage: 0,
+                range: 0,
+                itemType: 'weapon'
+            }, GearModel.prototype.defaults());
+        },
 
         initialize: function() {
-            // log.debug('Weapon Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
-            if (!('id' in this)) {
-                log.debug('loading weapon %s from file', this.get('name'));
-                this.set(itemref.expand('weapon', this.get('name')));
-            }
+            log.debug('loading weapon %s from file %s', this.get('name'), JSON.stringify(this.get('affixes')));
+            this.set(itemref.expand('weapon', this.get('name')));
         },
     });
 
     var SkillModel = GearModel.extend({
-        defaults: _.extend({}, GearModel.prototype.defaults(), {
-            manaCost: 0,
-            cooldown: 0,
-            cooldownTime: 800,
-            types: [],
-            level: 1,
-            itemType: 'skill'
-        }),
+        defaults: function() {
+            return _.extend({
+                manaCost: 0,
+                cooldown: 0,
+                cooldownTime: 800,
+                types: [],
+                level: 1,
+                itemType: 'skill'
+            }, GearModel.prototype.defaults());
+        },
 
         initialize: function() {
-            // log.debug('Skill Model attributes at initialize: %s', JSON.stringify(this.toJSON()));
-            if (!('id' in this)) {
-                log.debug('loading skill %s from file', this.get('name'));
-                this.set(itemref.expand('skill', this.get('name')));
-            }
+            log.debug('loading skill %s from file', this.get('name'));
+            this.set(itemref.expand('skill', this.get('name')));
         },
 
         cool: function() {

@@ -676,8 +676,7 @@ namespace.module('bot.itemref', function (exports, require) {
 
         return item;
     }
-    
-    
+
     exports.extend({
         'ref': ref,
         'expand': expand

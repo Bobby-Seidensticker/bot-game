@@ -58,14 +58,14 @@ namespace.module('bot.inv', function (exports, require) {
 
         applyXp: function(xp) {
             this.set('xp', this.get('xp') + xp);
-            this.checkCanLevel();
+            this.canLevel(); //put in if, then preplevelup if true
         },
 
-        checkCanLevel: function() {
+        canLevel: function() {
             if (this.get('xp') >= this.getNextLevelXp()) {
-                console.log("ITEM CAN LEVEL");
-                //this.prepLevelUp();
+                return true;
             }
+            return false;
         },
         
         getNextLevelXp: function() {
@@ -527,6 +527,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         onChange: function() {
             this.render(true);
+
         },
 
         destroy: function() {
@@ -560,6 +561,17 @@ namespace.module('bot.inv', function (exports, require) {
             this.model.levelUp();
         },
 
+        onChange: function() {
+            this.render(true)
+            //Trying to un-disable butons here
+            //console.log("oh yeah", this.$('.level-up'));
+            if(this.model.canLevel()) {
+                this.$('.level-up').prop('disabled', false);
+            } else {
+                this.$('.level-up').prop('disabled', true);
+            }
+
+        }
         /*equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             var slot;

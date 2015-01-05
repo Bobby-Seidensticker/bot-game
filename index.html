@@ -41,7 +41,7 @@
       <div class="item-mid">
         <img src="assets/<%= name %>.svg" height="90" width="90">
         <div class="item-mid-text">
-          Type: <%= itemType %><br/><%= xp %> / 2,743 XP
+          Type: <%= itemType %><br/><%= midExtra %> 
         </div>
       </div>
       <div class="item-affixes">
@@ -57,6 +57,10 @@
     </div>
   </script>
 
+  <script id="inv-menu-item-xp" type="text/template">
+    <%= xp %> / <%= nextLevelXp %> XP
+  </script>
+
   <script id="inv-menu-item-buttons-template" type="text/template">
     <input class="item-button level-up" value="Level Up" type="button" />
     <input class="item-button equip" value="Equip" type="button" />
@@ -64,6 +68,7 @@
 
   <script id="craft-menu-item-buttons-template" type="text/template">
     <input class="item-button craft" value="Craft" type="button" />
+    <input class="item-button scrap" value="Scrap" type="button" />
   </script>
   
   

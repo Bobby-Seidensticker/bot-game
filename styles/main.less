@@ -139,6 +139,7 @@ item
 
             .item-header {
                 text-align: center;
+                text-transform:capitalize;
                 height: 20px;
                 line-height: 20px;
                 background-color: @color-secondary-1-1;
@@ -169,6 +170,7 @@ item
             }
             .item-affixes {
                 text-align: center;
+                text-transform:capitalize;
             }
             .item-buttonbox {
                 position: relative;
@@ -196,6 +198,19 @@ item
         }
     }
 }
+
+.item-group.material {
+    background-color:@color-secondary-1-3;
+    text-align: center;    
+    p {
+      margin: 5px 0px;
+    }
+    p:first-letter {
+      text-transform:capitalize;
+    }
+}  
+                 
+
 
 .closed {
     display: none;

@@ -58,7 +58,15 @@ namespace.module('bot.inv', function (exports, require) {
 
         applyXp: function(xp) {
             this.set('xp', this.get('xp') + xp);
-            this.canLevel(); //put in if, then preplevelup if true
+            if(this.canLevel()) {
+                this.prepLevelUp();
+            }
+        },
+
+        prepLevelUp: function() {
+            // purpose of function is to roll 'nextAffix' and activate level up button
+            // item does not actually level (even if xp reached) until player clicks
+            
         },
 
         canLevel: function() {
@@ -408,6 +416,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         craft: function(item) {
             log.warning('ItemCollection.craft called on item: %s', item.toJSON());
+            //TODO check canCraft
             var cost = item.get('craftCost');
             if(this.materials.enoughToPay(cost)) {
                 this.materials.payCost(item.get('craftCost'));
@@ -418,6 +427,13 @@ namespace.module('bot.inv', function (exports, require) {
                 log.warning('insufficient resources, craft failed');
             }
 
+        },
+
+        canCraft: function(item) {
+            if(this.materials.enoughToPay(item.get('craftCost'))){
+                return true;
+            }
+            return false;
         },
 
         addDrops: function(drops) {
@@ -572,7 +588,7 @@ namespace.module('bot.inv', function (exports, require) {
                 this.$('.level-up').prop('disabled', true);
             }
 
-        }
+        },
         /*equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             var slot;
@@ -611,6 +627,19 @@ namespace.module('bot.inv', function (exports, require) {
         midExtra: function() {
             return "Craft Cost: " + this.model.get('craftCost') +
                 "<br>Scrap Value: 2 Poops";
+        },
+
+        onChange: function() {
+            this.render(true)
+            // TODO - this currently doesn't work because onChange isn't being called on
+            // materials changes.  Needs to get updates from event queue once implemented. 
+            if(this.model.canCraft()) {
+                console.log('craftable');
+                this.$('.craft').prop('disabled', false);
+            } else {
+                this.$('.craft').prop('disabled', true);
+            }
+
         },
     });
 

@@ -7,9 +7,12 @@ namespace.module('bot.views', function (exports, require) {
 
         template: _.template($('#header-stats-template').html()),
 
-        initialize: function(options, char, inv) {
+        initialize: function(options, char, inv, zoneManager) {
             charView = new HeaderCharView({model: char});
             this.$el.append(charView.render().el);
+
+            zoneView = new HeaderZoneView({model: zoneManager});
+            this.$el.append(zoneView.render().el);
 
             invView = new HeaderInvView({model: inv}, char.get('equipped'));
             this.$el.append(invView.render().el);
@@ -45,22 +48,27 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
-    /*
     var HeaderZoneView = Backbone.View.extend({
         template: _.template($('#header-zone-stats-template').html()),
         className: 'stats',
         tagName: 'div',
 
         initialize: function() {
-            this.listenTo(this.model, 'change', this.update);
+            this.listenTo(window.gevents, 'monsters:death zone:newZone zone:nextRoom', this.render);
+
+            /*this.listenTo(this.model, 'change', this.update);
+            this.listenTo(this.model, 'newZone', this.update);
+            this.listenTo(this.model, 'nextRoom', this.update);
+            this.listenTo(this.model, 'death', this.update);*/
         },
 
         render: function() {
-            this.listenTo(this.model, 'newZone', onNewZone);
-            this.listenTo(this.model, 'nextRoom', onNextRoom);
-            this.listenTo(this.model, '', );
-
-            this.$el.html(this.template(this.model.toJSON()));
+            var curRoom = this.model.getCurrentRoom().monsters;
+            var data = _.extend({}, this.model.toJSON(), {
+                livingCount: curRoom.livingCount,
+                totalCount: curRoom.length
+            });
+            this.$el.html(this.template(data));
             return this;
         },
 
@@ -70,14 +78,7 @@ namespace.module('bot.views', function (exports, require) {
 
         // this header zone view most likely needs the entire gameModel so it can monitor for when the char goes into a new zone
         // having events about zone changes, next room, fire from the zoneModel to the gameModel so this view can update changes is a good idea
-
-        update: function() {
-            this.$('#hp').html(Math.ceil(this.model.get('hp')) + ' / ' + Math.ceil(this.model.get('maxHp')));
-            this.$('#mana').html(Math.floor(this.model.get('mana')) + ' / ' + Math.floor(this.model.get('maxMana')));
-            this.$('#xp').html(Math.floor(this.model.get('xp')) + ' / ' + Math.ceil(this.model.get('nextLevelXp')));
-            this.$('#level').html(this.model.get('level'));
-        },
-    });*/
+    });
 
     var HeaderInvView = Backbone.View.extend({
         template: _.template($('#header-equipped-template').html()),
@@ -119,8 +120,8 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
-    function newHeaderView(char, inv) {
-        var view = new HeaderView({el: $('.header')}, char, inv);
+    function newHeaderView(char, inv, zoneManager) {
+        var view = new HeaderView({el: $('.header')}, char, inv, zoneManager);
 
         return view;
     }

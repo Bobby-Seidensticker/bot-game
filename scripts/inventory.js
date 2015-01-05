@@ -73,6 +73,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
         
         levelUp: function() {
+            
             var type = this.get('itemType');
 
             var affs = this.get('affixes');
@@ -87,7 +88,7 @@ namespace.module('bot.inv', function (exports, require) {
             } else if (type == 'skill') {
                 log.info('leveling up skill');
             }
-
+            this.set('xp', this.get('xp') - this.getNextLevelXp());
             this.set('level', this.get('level') + 1);
         },
         

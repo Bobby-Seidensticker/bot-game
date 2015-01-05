@@ -169,6 +169,10 @@ namespace.module('bot.entity', function (exports, require) {
             return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
         },
 
+        xpOnKill: function() {
+            return Math.ceil(10 * Math.pow(1.15, this.get('level')-1));
+        },
+
         getDamage: function(skill) {
             skill.use();
             return {
@@ -298,7 +302,9 @@ namespace.module('bot.entity', function (exports, require) {
             //console.log(target);
             var drops = target.getDrops();
             this.get('inv').addDrops(drops);
-            this.set('xp', this.get('xp') + target.get('level'));
+            var xp = target.xpOnKill();
+            this.get('equipped').applyXp(xp);
+            this.set('xp', this.get('xp') + xp);
             while (this.get('xp') >= this.get('nextLevelXp')) {
                 this.set('level', this.get('level') + 1);
                 this.set('xp', this.get('xp') - this.get('nextLevelXp'));

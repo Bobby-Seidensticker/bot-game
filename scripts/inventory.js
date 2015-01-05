@@ -49,13 +49,29 @@ namespace.module('bot.inv', function (exports, require) {
     var GearModel = Backbone.Model.extend({
         defaults: function() {
             return {
-                exp: 0,
+                xp: 0,
                 level: 1,
                 affixes: [],
                 equippedBy: ''
             };
         },
 
+        applyXp: function(xp) {
+            this.set('xp', this.get('xp') + xp);
+            this.canLevel(); //put in if, then preplevelup if true
+        },
+
+        canLevel: function() {
+            if (this.get('xp') >= this.getNextLevelXp()) {
+                return true;
+            }
+            return false;
+        },
+        
+        getNextLevelXp: function() {
+            return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
+        },
+        
         levelUp: function() {
             var type = this.get('itemType');
 
@@ -74,7 +90,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             this.set('level', this.get('level') + 1);
         },
-
+        
         rollAffix: function() {
             var type = this.get('itemType');
 
@@ -337,6 +353,15 @@ namespace.module('bot.inv', function (exports, require) {
                 this.slots,
                 _.map(this.slots, this.get, this));
         },
+
+        applyXp: function(xp) {
+            _.each(this.slots, function(slot) {
+                if (this.get(slot)) {
+                    this.get(slot).applyXp(xp);
+                }
+            }, this);
+            
+        },
     });
 
     var RecipeCollection = Backbone.Collection.extend({
@@ -412,7 +437,6 @@ namespace.module('bot.inv', function (exports, require) {
 
         initialize: function() {
             var groups = this.collection.itemTypes().slice(0,4);// slice is hack to keep recipe from appearing in inv
-            console.log("GROUPS!", groups);
             this.$el.html(this.template({groups: groups}));
 
             this.groupContentEls = _.object(groups, _.map(groups, function(group) {
@@ -468,16 +492,31 @@ namespace.module('bot.inv', function (exports, require) {
         prettyAffixes: function(affix) {
             return affix;
         },
+
+        getNextLevelXp: function(xp) {
+            return this.model.getNextLevelXp(xp);
+        },
         
-        render: function() {
+        render: function(notFirst) {
             var type = this.model.get('itemType');
+
+
             //console.log('buttons', this.buttons);
-            var obj = _.extend({}, this.model.toJSON(), {buttons: this.buttons, prettyAffixes: this.prettyAffixes});
+            var ext = {
+                'buttons': this.buttons,
+                'prettyAffixes': this.prettyAffixes,
+                'midExtra': this.midExtra()
+            };
+            //console.log("itemview", this.midExtra());
+            
+            var obj = _.extend({}, this.model.toJSON(), ext);
             this.$el.html(this.template(obj));
-            this.$el.attr({
-                'class': 'item collapsed',
-                'id': 'inv-item-' + this.model.get('name')
-            });
+            if( !notFirst ) {
+                this.$el.attr({
+                    'class': 'item collapsed',
+                    'id': 'inv-item-' + this.model.get('name')
+                });
+            }
             return this;
         },
 
@@ -487,8 +526,8 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         onChange: function() {
-            var obj = _.extend({}, this.model.toJSON(), {buttons: this.buttons, prettyAffixes: this.prettyAffixes});
-            this.$el.html(this.template(obj));
+            this.render(true);
+
         },
 
         destroy: function() {
@@ -510,10 +549,29 @@ namespace.module('bot.inv', function (exports, require) {
             this.model.trigger('equipClick', this.model);
         },
 
+        midExtra: function() {
+////            console.log("midext", this.model);
+            return _.template($('#inv-menu-item-xp').html(), {
+                xp: this.model.get('xp'),
+                nextLevelXp: this.model.getNextLevelXp()
+            }, this);
+        },
+
         levelUp: function() {
             this.model.levelUp();
         },
 
+        onChange: function() {
+            this.render(true)
+            //Trying to un-disable butons here
+            //console.log("oh yeah", this.$('.level-up'));
+            if(this.model.canLevel()) {
+                this.$('.level-up').prop('disabled', false);
+            } else {
+                this.$('.level-up').prop('disabled', true);
+            }
+
+        }
         /*equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
             var slot;
@@ -535,7 +593,7 @@ namespace.module('bot.inv', function (exports, require) {
 	}),
 
 	initialize: function() {
-	    this.buttons = this.model.get('craftCost') + $('#craft-menu-item-buttons-template').html();
+	    this.buttons = $('#craft-menu-item-buttons-template').html();
             this.listenTo(this.model, 'craftSuccess', this.remove);
 	},
 
@@ -547,7 +605,12 @@ namespace.module('bot.inv', function (exports, require) {
 	    console.log(this.model);
 	    this.model.trigger('craftClick', this.model);
 	    //console.log(this);
-	}
+	},
+
+        midExtra: function() {
+            return "Craft Cost: " + this.model.get('craftCost') +
+                "<br>Scrap Value: 2 Poops";
+        },
     });
 
     var InvItemCollectionView = ItemCollectionView.extend({

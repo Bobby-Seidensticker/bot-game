@@ -49,7 +49,7 @@ namespace.module('bot.test', function (exports, require) {
             var skill = skillchain.at(0);
             assert.equal(skill.get('name'), 'basic melee', 'initialized with "basic melee"');
             validateSkill(assert, skill);
-            assert.equal(skill.get('exp'), 0, 'skill created with 0 xp');
+            assert.equal(skill.get('xp'), 0, 'skill created with 0 xp');
             assert.equal(skill.get('level'), 1, 'skill should be initialized at level 1, current level: ' + skill.get('level'));
             //assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
 	});
@@ -135,7 +135,7 @@ namespace.module('bot.test', function (exports, require) {
 	    var name = item.get('name');
 	    assert.ok(name, name + ' has valid name');
 
-	    assert.ok(item.get('exp') >= 0, name + ' has non-negative exp value: ' + item.get('exp'));
+	    assert.ok(item.get('xp') >= 0, name + ' has non-negative xp value: ' + item.get('xp'));
 	    var affs = item.get('affixes');
 	    assert.ok(jQuery.isArray(affs), name + ' has affix array');
 

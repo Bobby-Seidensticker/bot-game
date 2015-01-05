@@ -132,6 +132,7 @@ namespace.module('bot.entity', function (exports, require) {
             this.set('hp', this.get('hp') - totalDmg);
 
             if (this.get('hp') <= 0) {
+                window.gevents.trigger('monsters:death', this);
                 this.trigger('death');
                 log.info('An entity from team %s DEAD, hit for %s', this.teamString(), JSON.stringify(damage));
             } else {

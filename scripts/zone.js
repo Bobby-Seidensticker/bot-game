@@ -10,7 +10,8 @@ namespace.module('bot.zone', function (exports, require) {
 
     var ZoneManager = Backbone.Model.extend({
         defaults: {
-            initialized: false
+            initialized: false,
+            level: 1
         },
 
         initialize: function() {
@@ -43,6 +44,7 @@ namespace.module('bot.zone', function (exports, require) {
             data.rooms = rooms;
             data.initialized = true;
             this.set(data);
+            window.gevents.trigger('zone:newZone');
         },
 
         getCurrentRoom: function() {
@@ -51,7 +53,7 @@ namespace.module('bot.zone', function (exports, require) {
 
         roomCleared: function() {
             var room = this.getCurrentRoom()
-            
+
             return room.monsters.livingCount === 0;
         },
 
@@ -60,7 +62,8 @@ namespace.module('bot.zone', function (exports, require) {
                 this.set({
                     'charPos': this.get('charPos') + 1
                 });
-                log.info('Zone.nextRoom() success, now on room: %d of %d', this.get('charPos'), this.get('rooms').length);
+                window.gevents.trigger('zone:nextRoom');
+
                 return true;
             }
             log.debug('Zone.nextRoom() fail');

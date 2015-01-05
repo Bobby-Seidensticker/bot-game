@@ -44,13 +44,15 @@ namespace.module('bot.main', function (exports, require) {
             //this.inv = new inv.ItemCollection({}, []);
 
             //this.recipes = new inv.RecipeCollection();
+            window.gevents = _.extend({}, Backbone.Events);
+
             this.inv = new inv.ItemCollection();
             this.char = new entity.newChar(this.inv);
             this.zone = new zone.ZoneManager();
 
             this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
             this.invView = new inv.InvItemCollectionView({collection: this.inv});
-            this.headerView = views.newHeaderView(this.char, this.inv);
+            this.headerView = views.newHeaderView(this.char, this.inv, this.zone);
 
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;

@@ -411,7 +411,8 @@ namespace.module('bot.inv', function (exports, require) {
         template: _.template($('#inv-menu-template').html()),
 
         initialize: function() {
-            var groups = this.collection.itemTypes();
+            var groups = this.collection.itemTypes().slice(0,4);// slice is hack to keep recipe from appearing in inv
+            console.log("GROUPS!", groups);
             this.$el.html(this.template({groups: groups}));
 
             this.groupContentEls = _.object(groups, _.map(groups, function(group) {
@@ -432,7 +433,7 @@ namespace.module('bot.inv', function (exports, require) {
                     var mat = mats[i];
                     var amount = this.collection.materials.get(mat);
                     //TODO put in proper template
-                    this.groupContentEls.material.append(mats[i] + ': ' + amount + '<br>');
+                    this.groupContentEls.material.append('<p>' + mats[i] + ': ' + amount + '</p>');
                 }
             }
             
@@ -464,10 +465,15 @@ namespace.module('bot.inv', function (exports, require) {
             this.listenTo(this.model, 'change', this.onChange);
         },
 
+        prettyAffixes: function(affix) {
+            return affix;
+        },
+        
         render: function() {
             var type = this.model.get('itemType');
             //console.log('buttons', this.buttons);
-            this.$el.html(this.template(_.extend({}, this.model.toJSON(), {buttons: this.buttons})));
+            var obj = _.extend({}, this.model.toJSON(), {buttons: this.buttons, prettyAffixes: this.prettyAffixes});
+            this.$el.html(this.template(obj));
             this.$el.attr({
                 'class': 'item collapsed',
                 'id': 'inv-item-' + this.model.get('name')
@@ -481,7 +487,8 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         onChange: function() {
-            this.$el.html(this.template(_.extend({}, this.model.toJSON(), {buttons: this.buttons})));
+            var obj = _.extend({}, this.model.toJSON(), {buttons: this.buttons, prettyAffixes: this.prettyAffixes});
+            this.$el.html(this.template(obj));
         },
 
         destroy: function() {

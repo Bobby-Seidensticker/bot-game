@@ -117,11 +117,19 @@ namespace.module('bot.entity', function (exports, require) {
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;
-            
-            // TODO: apply elemental damage and mitigation
 
+            var fireResist = this.get('fireResist');
+            var coldResist = this.get('coldResist');
+            var lightResist = this.get('lightResist');
+            var poisResist = this.get('poisResist');            
+
+            var fireDmg = damage.fireDmg * (1 - fireResist * 0.01);
+            var coldDmg = damage.coldDmg * (1 - coldResist * 0.01);
+            var lightDmg = damage.lightDmg * (1 - lightResist * 0.01);
+            var poisDmg = damage.poisDmg * (1 - poisResist * 0.01);            
             
-            this.set('hp', this.get('hp') - physDmg);
+            var totalDmg = physDmg + fireDmg + coldDmg + lightDmg + poisDmg;
+            this.set('hp', this.get('hp') - totalDmg);
 
             if (this.get('hp') <= 0) {
                 this.trigger('death');
@@ -209,7 +217,7 @@ namespace.module('bot.entity', function (exports, require) {
                 var target = enemies[targetIndex];
                 this.attackTarget(target, skill);
             } else {
-                log.debug('No best skill, mana: %.2f, distances: %s', this.get('mana'), JSON.stringify(distances));
+                log.debug('No best skill for %s, mana: %.2f, distances: %s', this.get('name'), this.get('mana'), JSON.stringify(distances));
 
                 var skills = this.get('skillchain');
 
@@ -234,7 +242,8 @@ namespace.module('bot.entity', function (exports, require) {
                 var ratio = 1 - (distance - moveSpeed) / distance;
                 this.set('x', pos[0] + diff[0] * ratio);
                 this.set('y', pos[1] + diff[1] * ratio);
-                log.debug('moving closer');
+
+                log.debug('%s moving closer', this.get('name'));
                 this.set('nextAction', 30);
             }
         },

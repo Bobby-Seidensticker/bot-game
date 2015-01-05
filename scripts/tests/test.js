@@ -64,7 +64,7 @@ namespace.module('bot.test', function (exports, require) {
 	    assert.ok(gameModel.zone, 'Zone created on tick');
 	    assert.ok(gameModel.zone.get('roomCount') >= 0, 'has roomcount of at least 1');
 	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), 'roomcount matches number of rooms created');
-	    assert.ok(gameModel.zone.get('char'), 'has a char');
+	    assert.ok(gameModel.zone.get('initialized'), 'has a char');
 
             assert.equal(gameModel.zone.get('charPos'), 0, 'Character is in room 0');
 	    var monsters = gameModel.zone.getCurrentRoom().monsters;

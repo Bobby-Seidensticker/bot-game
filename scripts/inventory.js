@@ -210,11 +210,12 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         countChange: function(item) {
-            log.info('Skillchain countChange');
+            log.debug('Skillchain countChange');
             var ranges = this.pluck('range');
             this.shortest = ranges.min();
             this.furthest = ranges.max();
-            console.log(item.get('range'));
+            // TODO: figure out range
+            //console.log(item.get('range'));
         },
 
         bestSkill: function(mana, distances) {
@@ -251,9 +252,6 @@ namespace.module('bot.inv', function (exports, require) {
                 this.inv = inv;
                 this.listenTo(inv, 'equipClick', this.equip);
             }
-            this.listenTo(this, 'change', function() {
-                log.warning('equipped gear model on change');
-            });
         },
 
         equip: function(item, slot) {

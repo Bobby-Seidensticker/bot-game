@@ -33,7 +33,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         computeAttrs: function() {
-            log.info('Computing Attrs for Entity on team %s', this.teamString());
+            log.debug('Computing Attrs for Entity on team %s', this.teamString());
             var t = {};  // temp values
 
             t.strength = this.defaults.strength;
@@ -90,6 +90,7 @@ namespace.module('bot.entity', function (exports, require) {
                 hp: this.get('maxHp'),
                 mana: this.get('maxMana')
             });
+            this.initPos();
         },
 
         isMonster: function() {
@@ -112,7 +113,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         takeDamage: function(damage) {
-            console.log("takedmg called with", damage, this.get('name'), this);
+            //console.log("takedmg called with", damage, this.get('name'), this);
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;
@@ -122,7 +123,8 @@ namespace.module('bot.entity', function (exports, require) {
             
             this.set('hp', this.get('hp') - physDmg);
 
-            if (this.get('hp') < 0) {
+            if (this.get('hp') <= 0) {
+                this.trigger('death');
                 log.info('An entity from team %s DEAD, hit for %s', this.teamString(), JSON.stringify(damage));
             } else {
                 log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.get('hp'));
@@ -145,10 +147,10 @@ namespace.module('bot.entity', function (exports, require) {
             log.debug('%s attacking target %s for %s dmg', this.get('name'),  target.get('name'), JSON.stringify(dmg));
             target.takeDamage(dmg);
             if (!target.isAlive()) {
-                if (this.get('team') == 0) {
+                if (this.isChar()) {
                     this.onKill(target, skill);
                 } else {
-                    log.info("Character has died!");
+                    log.info('Character has died!');
                     target.onDeath();
                 }
             }
@@ -207,7 +209,7 @@ namespace.module('bot.entity', function (exports, require) {
                 var target = enemies[targetIndex];
                 this.attackTarget(target, skill);
             } else {
-                log.info('No best skill, mana: %.2f, distances: %s', this.get('mana'), JSON.stringify(distances));
+                log.debug('No best skill, mana: %.2f, distances: %s', this.get('mana'), JSON.stringify(distances));
 
                 var skills = this.get('skillchain');
 
@@ -232,7 +234,7 @@ namespace.module('bot.entity', function (exports, require) {
                 var ratio = 1 - (distance - moveSpeed) / distance;
                 this.set('x', pos[0] + diff[0] * ratio);
                 this.set('y', pos[1] + diff[1] * ratio);
-                log.info('moving closer');
+                log.debug('moving closer');
                 this.set('nextAction', 30);
             }
         },
@@ -296,7 +298,7 @@ namespace.module('bot.entity', function (exports, require) {
 
         onDeath: function() {
             //TODO write this
-            console.log('you dead');
+            log.warning('you dead');
         }
         
     });
@@ -309,7 +311,7 @@ namespace.module('bot.entity', function (exports, require) {
         initialize: function() {
             //fetchMonsterConstants(name, level);
             // lookup given name and level
-            log.debug('MonsterModel initialize');
+            log.debug('MonsterModel initialize, attrs: %s', JSON.stringify(this.toJSON()));
 
             this.set(itemref.expand('monster', this.get('name')));
 
@@ -319,9 +321,7 @@ namespace.module('bot.entity', function (exports, require) {
             }));
 
             var equipped = new inventory.EquippedGearModel()
-            _.each(this.get('weapon'), function(name) {
-                equipped.equip(new inventory.WeaponModel({name: name}), 'mainHand');
-            });
+            equipped.equip(new inventory.WeaponModel({name: this.get('weapon')}), 'mainHand');
 
             _.each(this.get('armor'), function(name) {
                 var armor = new inventory.ArmorModel({name: name});

@@ -606,6 +606,14 @@ namespace.module('bot.itemref', function (exports, require) {
                 "affixes": ["physDmg added 10", "maxHp added 50", "fireResist added -20"]
             },
         },
+        "zone": {
+            "spooky dungeon": {
+                "choices": ["skeleton", "skeleton archer", "skeleton mage", "skeleton king"],
+                "weights": [10, 3, 3, 1],
+                "roomCount": 20,
+                "quantity": 3
+            }
+        },
         "test": {
             "hngg": {"a": 10},
             "fwah": {"b": 10},

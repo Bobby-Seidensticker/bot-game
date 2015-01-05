@@ -45,13 +45,11 @@ namespace.module('bot.main', function (exports, require) {
 
             //this.recipes = new inv.RecipeCollection();
             this.inv = new inv.ItemCollection();
+            this.char = new entity.newChar(this.inv);
+            this.zone = new zone.ZoneManager();
 
             this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
-
             this.invView = new inv.InvItemCollectionView({collection: this.inv});
-
-            this.char = new entity.newChar(this.inv);
-
             this.headerView = views.newHeaderView(this.char, this.inv);
 
             this.lastTime = new Date().getTime();
@@ -82,7 +80,7 @@ namespace.module('bot.main', function (exports, require) {
         stop: function() {
             this.set({running: false});
             this.char.revive();
-            this.zone = undefined;  // this.zone.destroy();
+            //this.zone = undefined;  // this.zone.destroy();
             this.set('inZone', false);
         },
 
@@ -92,7 +90,7 @@ namespace.module('bot.main', function (exports, require) {
                 log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();
                 this.char.revive();
-                this.zone = zone.newZoneModel(this.char);
+                this.zone.newZone('spooky dungeon', this.char.get('level'));
                 this.set('inZone', true);
             }
 
@@ -105,10 +103,15 @@ namespace.module('bot.main', function (exports, require) {
                 this.char.update(t);
                 monsters.update(t);
 
+                if (monsters.living().length === 0) {
+                    console.log('shit');
+                }
+
                 this.char.tryDoStuff(monsters.living());
 
                 // Check if cleared / done, if so get out
                 if (monsters.cleared()) {
+                    this.char.initPos();
                     if (this.zone.done()) {
                         this.zonesCleared++;
                         this.set('inZone', false);
@@ -119,10 +122,11 @@ namespace.module('bot.main', function (exports, require) {
                     continue;
                 }
 
+                // TODO: trydostuff is called once per monster regardless of if char is alive
+                //   not really a bug, but imperfect behavior
                 monsters.tryDoStuff([this.char]);
 
                 if (!this.char.isAlive()) {
-                    this.set('inZone', false);
                     break;
                 }
             }

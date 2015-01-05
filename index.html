@@ -148,6 +148,27 @@
     </table>
   </script>
 
+  <script id="header-zone-stats-template" type="text/template">
+    <table>
+      <tr>
+        <td>Zone</td>
+        <td id="name"><%= name %></td>
+      </tr>
+      <tr>
+        <td>Level</td>
+        <td id="level"><%= level %></td>
+      </tr>
+      <tr>
+        <td>Room</td>
+        <td id="room"><%= room %> / <%= roomCount %></td>
+      </tr>
+      <tr>
+        <td>Monsters</td>
+        <td id="monsters"><%= liveCount %> / <%= totalCount %></td>
+      </tr>
+    </table>
+  </script>
+
   <script id="header-equipped-template" type="text/template">
     <% _.each(items, function(item, slot) { %>
     <div class="<%= slot %>">

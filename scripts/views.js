@@ -24,6 +24,8 @@ namespace.module('bot.views', function (exports, require) {
     var HeaderCharView = Backbone.View.extend({
         template: _.template($('#header-stats-template').html()),
 
+        className: 'stats',
+
         tagName: 'div',
 
         initialize: function() {
@@ -32,7 +34,6 @@ namespace.module('bot.views', function (exports, require) {
 
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
-            this.$el.addClass('stats');
             return this;
         },
 
@@ -43,6 +44,40 @@ namespace.module('bot.views', function (exports, require) {
             this.$('#level').html(this.model.get('level'));
         },
     });
+
+    /*
+    var HeaderZoneView = Backbone.View.extend({
+        template: _.template($('#header-zone-stats-template').html()),
+        className: 'stats',
+        tagName: 'div',
+
+        initialize: function() {
+            this.listenTo(this.model, 'change', this.update);
+        },
+
+        render: function() {
+            this.listenTo(this.model, 'newZone', onNewZone);
+            this.listenTo(this.model, 'nextRoom', onNextRoom);
+            this.listenTo(this.model, '', );
+
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        },
+
+        // right here, you are working towards getting the header-zone-stats-template rendering and updating on zone changes
+        // Basically, all you need is to get an object that has all of the appropriate variables. name comes from the zone, but the liveCount
+        //   and totalCount both come from the current room's mosnters collection
+
+        // this header zone view most likely needs the entire gameModel so it can monitor for when the char goes into a new zone
+        // having events about zone changes, next room, fire from the zoneModel to the gameModel so this view can update changes is a good idea
+
+        update: function() {
+            this.$('#hp').html(Math.ceil(this.model.get('hp')) + ' / ' + Math.ceil(this.model.get('maxHp')));
+            this.$('#mana').html(Math.floor(this.model.get('mana')) + ' / ' + Math.floor(this.model.get('maxMana')));
+            this.$('#xp').html(Math.floor(this.model.get('xp')) + ' / ' + Math.ceil(this.model.get('nextLevelXp')));
+            this.$('#level').html(this.model.get('level'));
+        },
+    });*/
 
     var HeaderInvView = Backbone.View.extend({
         template: _.template($('#header-equipped-template').html()),

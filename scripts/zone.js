@@ -6,32 +6,31 @@ namespace.module('bot.zone', function (exports, require) {
 
     var entity = namespace.bot.entity;
     var prob = namespace.bot.prob;
+    var itemref = namespace.bot.itemref;
 
-    var ZoneModel = Backbone.Model.extend({
+    var ZoneManager = Backbone.Model.extend({
         defaults: {
-            rooms: [],
-            charPos: 0,
-            roomCount: 20,
-            monsterChoices: ['skeleton'],
-
-            monsterQuantity: 2,
-            level: 1,
+            initialized: false
         },
 
         initialize: function() {
-            var i, j, rooms, monsters, count, names, choices, level;
-            log.debug('ZoneModel initialize');
+            this.newZone('spooky dungeon', 1);
+        },
 
+        newZone: function(name, level) {
+            var i, j, rooms, monsters, count, data;
+
+            log.info('ZoneManager newZone');
+
+            data = itemref.expand('zone', name);
             rooms = [];
 
-            for (i = 0; i < this.get('roomCount'); i++) {
-                count = 1 + prob.pProb(this.get('monsterQuantity'));
-                choices = this.get('monsterChoices');
-                level = this.get('level');
+            for (i = 0; i < data.roomCount; i++) {
+                count = 1 + prob.pProb(data.quantity);
 
                 monsters = new MonsterCollection(_.map(_.range(count), function() {
                     return {
-                        name: choices[prob.pyRand(0, choices.length)],
+                        name: data.choices[prob.pick(data.weights)],
                         level: level
                     };
                 }));
@@ -40,11 +39,10 @@ namespace.module('bot.zone', function (exports, require) {
                     monsters: monsters
                 };
             }
-            this.get('char').initPos();
-            this.set({
-                rooms: rooms,
-                curMonsters: rooms[this.get('charPos')]
-            });
+            data.charPos = 0;
+            data.rooms = rooms;
+            data.initialized = true;
+            this.set(data);
         },
 
         getCurrentRoom: function() {
@@ -53,7 +51,8 @@ namespace.module('bot.zone', function (exports, require) {
 
         roomCleared: function() {
             var room = this.getCurrentRoom()
-            return room.monsters.cleared();
+            
+            return room.monsters.livingCount === 0;
         },
 
         nextRoom: function() {
@@ -61,7 +60,6 @@ namespace.module('bot.zone', function (exports, require) {
                 this.set({
                     'charPos': this.get('charPos') + 1
                 });
-                this.get('char').initPos();
                 log.info('Zone.nextRoom() success, now on room: %d of %d', this.get('charPos'), this.get('rooms').length);
                 return true;
             }
@@ -81,6 +79,15 @@ namespace.module('bot.zone', function (exports, require) {
     var MonsterCollection = Backbone.Collection.extend({
         model: entity.MonsterModel,
 
+        initialize: function(models) {
+            this.livingCount = models.length;
+            this.on('death', this.onDeath);
+        },
+
+        onDeath: function() {
+            this.livingCount--;
+        },
+
         update: function(t) {
             this.each(function(monster) { monster.update(t) });
         },
@@ -98,11 +105,7 @@ namespace.module('bot.zone', function (exports, require) {
         }
     });
 
-    function newZoneModel(char) {
-        return new ZoneModel({char: char});
-    }
-
     exports.extend({
-        newZoneModel: newZoneModel
+        ZoneManager: ZoneManager
     });
 });

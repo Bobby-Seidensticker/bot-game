@@ -112,16 +112,26 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         takeDamage: function(damage) {
-            console.log("takedmg called with", damage, this.get('name'), this);
+            //console.log("takedmg called with", damage, this.get('name'), this);
             var physDmg = damage.physDmg;
             var armorReductionMult = physDmg / (physDmg + this.get('armor'));
             physDmg = physDmg * armorReductionMult;
-            
-            // TODO: apply elemental damage and mitigation
 
-            
-            this.set('hp', this.get('hp') - physDmg);
+            var fireResist = this.get('fireResist');
+            var coldResist = this.get('coldResist');
+            var lightResist = this.get('lightResist');
+            var poisResist = this.get('poisResist');            
 
+            var fireDmg = damage.fireDmg * (1 - fireResist * 0.01);
+            var coldDmg = damage.coldDmg * (1 - coldResist * 0.01);
+            var lightDmg = damage.lightDmg * (1 - lightResist * 0.01);
+            var poisDmg = damage.poisDmg * (1 - poisResist * 0.01);            
+            
+            var totalDmg = physDmg + fireDmg + coldDmg + lightDmg + poisDmg;
+            this.set('hp', this.get('hp') - totalDmg);
+
+            //console.log("totalDmg", totalDmg, physDmg, fireDmg);
+            
             if (this.get('hp') < 0) {
                 log.info('An entity from team %s DEAD, hit for %s', this.teamString(), JSON.stringify(damage));
             } else {

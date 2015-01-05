@@ -634,7 +634,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.render(true);
             // TODO - this currently doesn't work because onChange isn't being called on
             // materials changes.  Needs to get updates from event queue once implemented. 
-            if (this.model.canCraft()) {
+            if (this.model) {
                 console.log('craftable');
                 this.$('.craft').prop('disabled', false);
             } else {

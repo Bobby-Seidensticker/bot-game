@@ -30,7 +30,6 @@ namespace.module('bot.inv', function (exports, require) {
             return false;
         },
 
-        
         payCost: function(craftCost) {
             // craft cost is a string formatted "material int" eg "tumors 3"
             var splits = craftCost.split(' ');
@@ -43,6 +42,7 @@ namespace.module('bot.inv', function (exports, require) {
         addDrop: function(drop) {
             var splits = drop.split(' ');
             this.set(splits[1], this.get(splits[1]) + parseInt(splits[0]));
+            window.gevents.trigger('materials:' + splits[1]);
         }
     });
 
@@ -517,7 +517,6 @@ namespace.module('bot.inv', function (exports, require) {
         render: function(notFirst) {
             var type = this.model.get('itemType');
 
-
             //console.log('buttons', this.buttons);
             var ext = {
                 'buttons': this.buttons,
@@ -579,10 +578,10 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         onChange: function() {
-            this.render(true)
+            this.render(true);
             //Trying to un-disable butons here
             //console.log("oh yeah", this.$('.level-up'));
-            if(this.model.canLevel()) {
+            if (this.model.canLevel()) {
                 this.$('.level-up').prop('disabled', false);
             } else {
                 this.$('.level-up').prop('disabled', true);
@@ -612,6 +611,8 @@ namespace.module('bot.inv', function (exports, require) {
 	initialize: function() {
 	    this.buttons = $('#craft-menu-item-buttons-template').html();
             this.listenTo(this.model, 'craftSuccess', this.remove);
+
+            this.listenTo(window.gevents, 'materials:planks', this.onChange);
 	},
 
         remove: function() {
@@ -630,10 +631,10 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         onChange: function() {
-            this.render(true)
+            this.render(true);
             // TODO - this currently doesn't work because onChange isn't being called on
             // materials changes.  Needs to get updates from event queue once implemented. 
-            if(this.model.canCraft()) {
+            if (this.model.canCraft()) {
                 console.log('craftable');
                 this.$('.craft').prop('disabled', false);
             } else {

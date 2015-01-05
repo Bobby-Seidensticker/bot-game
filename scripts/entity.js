@@ -217,7 +217,7 @@ namespace.module('bot.entity', function (exports, require) {
                 var target = enemies[targetIndex];
                 this.attackTarget(target, skill);
             } else {
-                log.info('No best skill, mana: %.2f, distances: %s', this.get('mana'), JSON.stringify(distances));
+                log.info('No best skill for %s, mana: %.2f, distances: %s', this.get('name'), this.get('mana'), JSON.stringify(distances));
 
                 var skills = this.get('skillchain');
 
@@ -242,7 +242,7 @@ namespace.module('bot.entity', function (exports, require) {
                 var ratio = 1 - (distance - moveSpeed) / distance;
                 this.set('x', pos[0] + diff[0] * ratio);
                 this.set('y', pos[1] + diff[1] * ratio);
-                log.info('moving closer');
+                log.info('%s moving closer', this.get('name'));
                 this.set('nextAction', 30);
             }
         },

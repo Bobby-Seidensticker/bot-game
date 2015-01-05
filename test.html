@@ -9,6 +9,7 @@
   <script src="scripts/tests/qunit.js"></script>
 
   <!-- COPY BELOW HERE -->
+
   <div class="header"></div>
 
   <div class="vis"></div>
@@ -46,13 +47,13 @@
       <div class="item-mid">
         <img src="assets/<%= name %>.svg" height="90" width="90">
         <div class="item-mid-text">
-          Type: <%= itemType %><br/><%= xp %> / 2,743 XP
+          Type: <%= itemType %><br/><%= midExtra %> 
         </div>
       </div>
       <div class="item-affixes">
         <% _.each(affixes, function(affix) { %>
         <p>
-          <%= affix %>
+          <%= prettyAffixes(affix) %>
         </p>
         <% }); %>
       </div>
@@ -62,13 +63,18 @@
     </div>
   </script>
 
+  <script id="inv-menu-item-xp" type="text/template">
+    <%= xp %> / <%= nextLevelXp %> XP
+  </script>
+
   <script id="inv-menu-item-buttons-template" type="text/template">
-    <input class="item-button level-up" value="Level Up" type="button" />
+    <input class="item-button level-up" value="Level Up" type="button" disabled/>
     <input class="item-button equip" value="Equip" type="button" />
   </script>
 
   <script id="craft-menu-item-buttons-template" type="text/template">
-    <input class="item-button craft" value="Craft" type="button" />
+    <input class="item-button craft" value="Craft" type="button" disabled />
+    <input class="item-button scrap" value="Scrap" type="button" />
   </script>
   
   
@@ -153,6 +159,27 @@
     </table>
   </script>
 
+  <script id="header-zone-stats-template" type="text/template">
+    <table>
+      <tr>
+        <td>Zone</td>
+        <td id="name"><%= name %></td>
+      </tr>
+      <tr>
+        <td>Level</td>
+        <td id="level"><%= level %></td>
+      </tr>
+      <tr>
+        <td>Room</td>
+        <td id="room"><%= charPos + 1 %> / <%= roomCount %></td>
+      </tr>
+      <tr>
+        <td>Monsters</td>
+        <td id="monsters"><%= livingCount %> / <%= totalCount %></td>
+      </tr>
+    </table>
+  </script>
+
   <script id="header-equipped-template" type="text/template">
     <% _.each(items, function(item, slot) { %>
     <div class="<%= slot %>">
@@ -205,6 +232,7 @@
   <script type="text/javascript" src="scripts/menu.js"></script>
   <script type="text/javascript" src="scripts/views.js"></script>
   <script type="text/javascript" src="scripts/main.js"></script>
+
 
   <!-- COPY ABOVE HERE -->
 

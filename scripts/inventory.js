@@ -49,11 +49,15 @@ namespace.module('bot.inv', function (exports, require) {
     var GearModel = Backbone.Model.extend({
         defaults: function() {
             return {
-                exp: 0,
+                xp: 0,
                 level: 1,
                 affixes: [],
                 equippedBy: ''
             };
+        },
+
+        applyXp: function(xp) {
+            this.set('xp', this.get('xp') + xp);
         },
 
         levelUp: function() {
@@ -74,7 +78,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             this.set('level', this.get('level') + 1);
         },
-
+        
         rollAffix: function() {
             var type = this.get('itemType');
 
@@ -336,6 +340,13 @@ namespace.module('bot.inv', function (exports, require) {
             return _.object(
                 this.slots,
                 _.map(this.slots, this.get, this));
+        },
+
+        applyXp: function(xp) {
+            console.log("APPLYING XP", this);
+            if(this.get('legs')) {
+                this.get('legs').applyXp(xp);
+            }
         },
     });
 

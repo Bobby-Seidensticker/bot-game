@@ -13,7 +13,7 @@ namespace.module('bot.vector', function (exports, require) {
 
     // a and b must be array-like and they must be the same length
     function equal(a, b) {
-        for (var i = a.length; len--;) {
+        for (var i = a.length; i--;) {
             if (a[i] !== b[i]) {
                 return false;
             }
@@ -21,10 +21,21 @@ namespace.module('bot.vector', function (exports, require) {
         return true;
     }
 
+    function closer(cur, dest, rate, stopDist) {
+        var diff = [dest[0] - cur[0], dest[1] - cur[1]];
+        var distance = dist(cur, dest);
+        if (distance - rate < stopDist) {
+            rate = distance - stopDist;
+        }
+        var ratio = 1 - (distance - rate) / distance;
+        return [cur[0] + diff[0] * ratio, cur[1] + diff[1] * ratio];
+    }
+
     exports.extend({
         getDistances: getDistances,
         dist: dist,
-        equal: equal
+        equal: equal,
+        closer: closer
     });
 });
 

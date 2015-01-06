@@ -120,7 +120,32 @@ namespace.module('bot.test', function (exports, require) {
 	    assert.ok(char.get('hp') < char.get('maxHp'), "Character's hp decreased from attack");
 	    assert.ok(skill.get('cooldown') ==  skill.get('cooldownTime'), 'cooldown set to cooldownTime after attack');	    
 	});
-	
+
+	QUnit.test('Vector', function(assert) {
+            var vector = namespace.bot.vector;
+
+            assert.ok(vector.equal([1,2], [1,2]));
+            assert.ok(!vector.equal([1,2], [2,1]));
+            assert.ok(!vector.equal([2,2], [2,1]));
+            assert.ok(vector.equal([1,2,3], [1,2,3]));
+
+            assert.equal(vector.dist([0, 0], [3, 4]), 5);
+            assert.notEqual(vector.dist([0, 0], [3, 3]), 5);
+
+            assert.ok(vector.equal(vector.closer([0, 0], [0, 4], 1, 0), [0, 1]));
+
+            var pos = vector.closer([0, 0], [0, 11], 10, 10);
+            var dist = vector.dist(pos, [0, 1]);
+            assert.ok(dist < 0.0000001);
+
+            var pos = vector.closer([0, 0], [1, 1], 1, 0);
+            var dist = vector.dist(pos, [Math.sqrt(2) / 2, Math.sqrt(2) / 2]);
+
+            var pos = vector.closer([0, 0], [0, 11], 10, 10);
+            var dist = vector.dist(pos, [0, 1]);
+            assert.ok(dist < 0.0000001);
+        });
+
 	function validateWeapon(assert, item) {
 	    validateItem(assert, item);
 	    var name = item.get('name');

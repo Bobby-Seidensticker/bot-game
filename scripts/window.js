@@ -46,10 +46,12 @@ namespace.module('bot.window', function (exports, require) {
         }
     });
 
+    var REAL_SIZE = 200;
+    var SIZE = 1000 * 1000;
+    var RATIO = REAL_SIZE / SIZE;
+
     var VisView = Backbone.View.extend({
         el: $('.vis'),
-
-        SIZE: 200,
 
         // this needs to get all zones, when game model changes, probably shoudl get all of gameModel
         initialize: function(options, gameModel) {
@@ -85,35 +87,39 @@ namespace.module('bot.window', function (exports, require) {
 
         clear: function() {
             this.$canvas.attr({
-                width: this.SIZE,
-                height: this.SIZE
+                width: REAL_SIZE,
+                height: REAL_SIZE
             });
             this.$canvas.css({
-                top: this.$el.height() / 2 - this.SIZE / 2 - 1,
-                left: this.$el.width() / 2 - this.SIZE / 2 - 1
+                top: this.$el.height() / 2 - REAL_SIZE / 2 - 1,
+                left: this.$el.width() / 2 - REAL_SIZE / 2 - 1
             });
+        },
+
+        transpose: function(coords) {
+            return [coords[0] * RATIO, coords[1] * RATIO];
         },
 
         redraw: function() {
             this.clear();
             var ctx = this.$canvas[0].getContext('2d');
 
-            var cpos = this.m.char.getCoords();
+            var cpos = this.transpose(this.m.char.getCoords());
 
-            circle(ctx, [cpos[0] * 10, cpos[1] * 10], '#32E');
+            circle(ctx, cpos, '#32E');
 
             var zone = this.m.zone;
             if (zone && zone.getCurrentRoom) {
                 var monsters = zone.getCurrentRoom().monsters;
                 monsters.each(function(mon, i) {
                     if (mon.isAlive()) {
-                        var pos = mon.getCoords();
+                        var pos = this.transpose(mon.getCoords());
                         if (mon.get('color') === undefined) {
                             mon.set('color', prob.randColor('#E12', 60));
                         }
-                        circle(ctx, [pos[0] * 10, pos[1] * 10], mon.get('color'));
+                        circle(ctx, pos, mon.get('color'));
                     }
-                });
+                }, this);
             }
             this.m.set('dirty', false);
         },

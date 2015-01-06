@@ -7,18 +7,15 @@ namespace.module('bot.itemref', function (exports, require) {
             "weapon": {
                 "speed": 1,
                 "damage": 1,
-                "range": 1
+                "range": 100000
             },
             "fists" : {
-                'damage': 0.1, 
-                'range':1, 
-                'speed': 1, 
-                'affixes': []
+                "prototype": ["weapon"]
             },
             "wooden sword": {
                 "prototype": ["weapon"],
                 "type": "melee",
-                "damage": 2,
+                "damage": 20,
                 "craftCost": "2 planks",
             },
             "bowie knife": {
@@ -31,13 +28,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "range",
                 "damage": 2,
-                "range": 4,
+                "range": 400000,
                 "craftCost": "3 poops",
             },
             "crappy wand": {
                 "prototype": ["weapon"],
                 "type": "spell",
-                "range": 6,
+                "range": 600000,
                 "craftCost": "3 poops",
             },
 
@@ -52,14 +49,14 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "range",
                 "damage": 4,
-                "range": 5,
+                "range": 500000,
                 "craftCost": "2 planks",
             },
             "decent wand": {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "damage": 3,
-                "range": 6,
+                "range": 600000,
                 "craftCost": "10 planks",
             },
         },
@@ -603,7 +600,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "skeleton king" : {
                 "prototype" : ["skeleton"],
                 "skillchain": ["fire slash", "basic melee"],
-                "affixes": ["physDmg added 10", "maxHp added 50", "fireResist added -20"]
+                "affixes": ["physDmg added 10", "maxHp added 5", "fireResist added -20"]
             },
         },
         "zone": {
@@ -611,7 +608,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "choices": ["skeleton", "skeleton archer", "skeleton mage", "skeleton king"],
                 "weights": [10, 3, 3, 1],
                 "roomCount": 20,
-                "quantity": 3
+                "quantity": 1
             }
         },
         "test": {

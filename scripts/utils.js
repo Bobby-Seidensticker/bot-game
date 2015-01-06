@@ -3,7 +3,7 @@ namespace.module('bot.vector', function (exports, require) {
     var log = namespace.bot.log;
 
     function dist(a, b) {
-        return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+        return Math.round(Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2)));
     }
 
     function getDistances(base, targets) {
@@ -28,7 +28,7 @@ namespace.module('bot.vector', function (exports, require) {
             rate = distance - stopDist;
         }
         var ratio = 1 - (distance - rate) / distance;
-        return [cur[0] + diff[0] * ratio, cur[1] + diff[1] * ratio];
+        return [Math.round(cur[0] + diff[0] * ratio), Math.round(cur[1] + diff[1] * ratio)];
     }
 
     exports.extend({
@@ -56,7 +56,7 @@ namespace.module('bot.utils', function (exports, require) {
             if (modtype === 'added') {
                 adds += amt;
             } else if (modtype === 'more') {
-                mores *= (1 + 0.01*amt);
+                mores *= (1 + 0.01 * amt);
             } else {
                 log.error('Improperly formatted affix %s', mod);
                 throw('up');

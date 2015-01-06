@@ -48,7 +48,7 @@ namespace.module('bot.main', function (exports, require) {
 
             this.inv = new inv.ItemCollection();
             this.char = new entity.newChar(this.inv);
-            this.zone = new zone.ZoneManager();
+            this.zone = new zone.ZoneManager({char: this.char});
 
             this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
             this.invView = new inv.InvItemCollectionView({collection: this.inv});
@@ -56,6 +56,7 @@ namespace.module('bot.main', function (exports, require) {
 
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;
+            this.deaths = 0;
         },
 
         start: function() {
@@ -97,38 +98,33 @@ namespace.module('bot.main', function (exports, require) {
             }
 
             var thisTime = new Date().getTime();
-            var monsters = this.zone.getCurrentRoom().monsters;  // type MonsterCollection
-            for (var t = this.lastTime; t < thisTime; t += 10) {
+            var room = this.zone.getCurrentRoom();
+            var dt = 10;
+            for (var t = this.lastTime; t < thisTime; t += dt) {
             //for (var t = this.lastTime; t < thisTime; t += thisTime - this.lastTime) {
                 log.debug('tick calling update functions');
                 // pass new time to char and all monsters
-                this.char.update(t);
-                monsters.update(t);
+                this.char.update(dt);
+                room.monsters.update(dt);
 
-                if (monsters.living().length === 0) {
-                    console.log('shit');
+                this.char.tryDoStuff(room);
+
+                if (this.zone.done()) {
+                    this.zonesCleared++;
+                    this.set('inZone', false);
+                    break;
                 }
 
-                this.char.tryDoStuff(monsters.living());
-
-                // Check if cleared / done, if so get out
-                if (monsters.cleared()) {
-                    this.char.initPos();
-                    if (this.zone.done()) {
-                        this.zonesCleared++;
-                        this.set('inZone', false);
-                        break;
-                    }
-                    this.zone.nextRoom();
-                    monsters = this.zone.getCurrentRoom().monsters;
-                    continue;
+                if (this.zone.nextRoom()) {
+                    room = this.zone.getCurrentRoom();
                 }
 
                 // TODO: trydostuff is called once per monster regardless of if char is alive
                 //   not really a bug, but imperfect behavior
-                monsters.tryDoStuff([this.char]);
+                room.monsters.tryDoStuff(room);
 
                 if (!this.char.isAlive()) {
+                    this.deaths++;
                     break;
                 }
             }

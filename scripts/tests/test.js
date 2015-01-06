@@ -136,14 +136,20 @@ namespace.module('bot.test', function (exports, require) {
 
             var pos = vector.closer([0, 0], [0, 11], 10, 10);
             var dist = vector.dist(pos, [0, 1]);
-            assert.ok(dist < 0.0000001);
+            assert.equal(pos[0], 0);
+            assert.equal(pos[1], 1);
 
-            var pos = vector.closer([0, 0], [1, 1], 1, 0);
-            var dist = vector.dist(pos, [Math.sqrt(2) / 2, Math.sqrt(2) / 2]);
+            var pos = vector.closer([0, 0], [1, 1], 0.5, 0);
+            assert.equal(pos[0], 0);
+            assert.equal(pos[1], 0);
+
+            var pos = vector.closer([0, 0], [2, 2], 2, 0);
+            assert.equal(pos[0], 1);
+            assert.equal(pos[1], 1);
 
             var pos = vector.closer([0, 0], [0, 11], 10, 10);
             var dist = vector.dist(pos, [0, 1]);
-            assert.ok(dist < 0.0000001);
+            assert.equal(dist, 0);
         });
 
 	function validateWeapon(assert, item) {

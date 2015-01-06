@@ -132,8 +132,6 @@ namespace.module('bot.entity', function (exports, require) {
             this.set('hp', this.get('hp') - totalDmg);
 
             if (this.get('hp') <= 0) {
-                window.gevents.trigger('monsters:death', this);
-                this.trigger('death');
                 log.info('An entity from team %s DEAD, hit for %s', this.teamString(), JSON.stringify(damage));
             } else {
                 log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.get('hp'));
@@ -157,6 +155,7 @@ namespace.module('bot.entity', function (exports, require) {
             target.takeDamage(dmg);
             if (!target.isAlive()) {
                 if (this.isChar()) {
+                    window.gevents.trigger('monsters:death', this);
                     this.onKill(target, skill);
                 } else {
                     log.info('Character has died!');
@@ -195,20 +194,31 @@ namespace.module('bot.entity', function (exports, require) {
         initPos: function() {
             if (this.isChar()) {
                 this.set({
-                    x: 1,
-                    y: 10
+                    x: 0,
+                    y: 500000
                 });
             } else if (this.isMonster()) {
                 this.set({
-                    x: 17 + prob.rand(-2, 3),
-                    y: 10 + prob.pyRand(-3, 3)
+                    x: 800000 + prob.rand(0, 100000),
+                    y: 500000 + prob.rand(-100000, 100000)
                 });
             }
         },
 
-        tryDoStuff: function(enemies) {
-            if (!this.isAlive() || this.get('nextAction') > 0) {
+        tryDoStuff: function(room) {
+            if (!this.isAlive() || this.busy()) {
                 return;
+            }
+            var enemies;
+
+            if (this.isMonster()) {
+                if (!room.char.isAlive()) {
+                    return;
+                }
+                enemies = [room.char];
+            } else {
+                enemies = room.monsters.living();
+                log.info('Char gonna do stuff to %d monsters', enemies.length);
             }
 
             var distances = vector.getDistances(
@@ -216,38 +226,41 @@ namespace.module('bot.entity', function (exports, require) {
                 _.map(enemies, function(e) { return e.getCoords(); })
             );
 
+            this.tryAttack(enemies, distances);
+            this.tryMove(enemies, distances, room.door);
+        },
+
+        tryAttack: function(enemies, distances) {
             var skill = this.get('skillchain').bestSkill(this.get('mana'), distances);
             if (skill) {
+                if (this.isChar()) {
+                    log.info('Char using skill %s', JSON.stringify(skill.toJSON()));
+                }
                 var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.get('range') >= distances[i]; });
                 var target = enemies[targetIndex];
                 this.attackTarget(target, skill);
-            } else {
-                log.debug('No best skill for %s, mana: %.2f, distances: %s', this.get('name'), this.get('mana'), JSON.stringify(distances));
-
-                var skills = this.get('skillchain');
-
-                var minDist = distances.min();
-                var closestEnemy = enemies[distances.minIndex()];
-                var closestPos = closestEnemy.getCoords();
-
-                //console.log(skills.shortest, minDist);
-                //if (skills.shortest < minDist) {
-                if (1 < minDist) {
-                    this.tryMoveTo(closestPos, minDist);
-                }
             }
         },
 
-        tryMoveTo: function(dest, distance) {
-            if (!this.busy()) {
-                var pos = this.getCoords();
-                var distance = vector.dist(pos, dest);
-                var diff = [dest[0] - pos[0], dest[1] - pos[1]];
-                var moveSpeed = 0.1;
-                var ratio = 1 - (distance - moveSpeed) / distance;
-                this.set('x', pos[0] + diff[0] * ratio);
-                this.set('y', pos[1] + diff[1] * ratio);
+        tryMove: function(enemies, distances, door) {
+            if (this.busy()) { return; }
+            var newPos;
+            var curPos = this.getCoords();
+            var rate = 10000;
+            var range = 100000;
+            
 
+            if (enemies.length === 0) {
+                newPos = vector.closer(curPos, door, rate, 0);
+            } else {
+                var minDist = distances.min();
+                var closestPos = enemies[distances.minIndex()].getCoords();
+                newPos = vector.closer(curPos, closestPos, rate, range);
+            }
+
+            if (!vector.equal(curPos, newPos)) {
+                this.set('x', newPos[0]);
+                this.set('y', newPos[1]);
                 log.debug('%s moving closer', this.get('name'));
                 this.set('nextAction', 30);
             }

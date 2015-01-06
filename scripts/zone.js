@@ -7,6 +7,7 @@ namespace.module('bot.zone', function (exports, require) {
     var entity = namespace.bot.entity;
     var prob = namespace.bot.prob;
     var itemref = namespace.bot.itemref;
+    var vector = namespace.bot.vector;
 
     var ZoneManager = Backbone.Model.extend({
         defaults: {
@@ -14,7 +15,12 @@ namespace.module('bot.zone', function (exports, require) {
             level: 1
         },
 
-        initialize: function() {
+        initialize: function(options) {
+            options = options || {};
+            if (!options.char) {
+                throw('no char given to zone manager');
+            }
+            this.char = options.char;
             this.newZone('spooky dungeon', 1);
         },
 
@@ -37,11 +43,14 @@ namespace.module('bot.zone', function (exports, require) {
                 }));
 
                 rooms[i] = {
-                    monsters: monsters
+                    monsters: monsters,
+                    door: [1000000, 500000],
+                    char: undefined
                 };
             }
             data.charPos = 0;
             data.rooms = rooms;
+            data.rooms[0].char = this.char;
             data.initialized = true;
             this.set(data);
             window.gevents.trigger('zone:newZone');
@@ -52,27 +61,31 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         roomCleared: function() {
-            var room = this.getCurrentRoom()
-
-            return room.monsters.livingCount === 0;
+            return this.getCurrentRoom().monsters.cleared();
         },
 
         nextRoom: function() {
-            if (this.roomCleared() && !this.done()) {
+            var rval = false;
+            if (this.done()) {
+                rval = true;
+            } else if (this.roomCleared() &&
+                       vector.equal(this.char.getCoords(), this.getCurrentRoom().door)) {
+                this.getCurrentRoom().char = undefined;
                 this.set({
                     'charPos': this.get('charPos') + 1
                 });
-                window.gevents.trigger('zone:nextRoom');
-
-                return true;
+                var curRoom = this.getCurrentRoom();
+                curRoom.char = this.char;
+                this.char.initPos();
+                window.gevents.trigger('zone:nextRoom', curRoom);
+                rval = true;
             }
-            log.debug('Zone.nextRoom() fail');
-            return false;
+            return rval;
         },
 
         done: function() {
-            if (this.get('charPos') === this.get('rooms').length - 1 &&
-                this.roomCleared()) {
+            if (this.roomCleared() &&
+                this.get('charPos') === this.get('rooms').length - 1) {
                 return true;
             }
             return false;
@@ -83,20 +96,20 @@ namespace.module('bot.zone', function (exports, require) {
         model: entity.MonsterModel,
 
         initialize: function(models) {
-            this.livingCount = models.length;
-            this.on('death', this.onDeath);
+            //this.livingCount = models.length;
+            this.listenTo(window.gevents, 'monsters:death', this.onDeath);
         },
 
         onDeath: function() {
-            this.livingCount--;
+            //this.livingCount--;
         },
 
         update: function(t) {
             this.each(function(monster) { monster.update(t) });
         },
 
-        tryDoStuff: function(enemies) {
-            this.invoke('tryDoStuff', enemies);
+        tryDoStuff: function(room) {
+            this.invoke('tryDoStuff', room);
         },
 
         living: function() {

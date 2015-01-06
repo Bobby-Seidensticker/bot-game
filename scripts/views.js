@@ -55,29 +55,17 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function() {
             this.listenTo(window.gevents, 'monsters:death zone:newZone zone:nextRoom', this.render);
-
-            /*this.listenTo(this.model, 'change', this.update);
-            this.listenTo(this.model, 'newZone', this.update);
-            this.listenTo(this.model, 'nextRoom', this.update);
-            this.listenTo(this.model, 'death', this.update);*/
         },
 
         render: function() {
-            var curRoom = this.model.getCurrentRoom().monsters;
+            var monsters = this.model.getCurrentRoom().monsters;
             var data = _.extend({}, this.model.toJSON(), {
-                livingCount: curRoom.livingCount,
-                totalCount: curRoom.length
+                livingCount: monsters.living().length,
+                totalCount: monsters.length
             });
             this.$el.html(this.template(data));
             return this;
-        },
-
-        // right here, you are working towards getting the header-zone-stats-template rendering and updating on zone changes
-        // Basically, all you need is to get an object that has all of the appropriate variables. name comes from the zone, but the liveCount
-        //   and totalCount both come from the current room's mosnters collection
-
-        // this header zone view most likely needs the entire gameModel so it can monitor for when the char goes into a new zone
-        // having events about zone changes, next room, fire from the zoneModel to the gameModel so this view can update changes is a good idea
+        }
     });
 
     var HeaderInvView = Backbone.View.extend({
@@ -87,42 +75,42 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options, equipped) {
             this.equipped = equipped;
-            this.listenTo(this.equipped, 'equipSuccess', this.update);
+            this.listenTo(this.equipped, 'equipSuccess', this.render);
+            this.rendered = false;
         },
 
         render: function() {
-            this.$el.html(this.template({items: this.equipped.toDict()}));
-            this.$el.addClass('equipped');
-
-            var slots = this.equipped.slots;
-            this.slotImages = _.object(slots,
-                                       _.map(slots, function(slot) {
-                                           return this.$('.' + slot + ' .slot-img');
-                                       }, this)
-                                      );
-
-            return this;
-        },
-
-        update: function() {
-            log.info('header inv view change');
             var items = this.equipped.toDict();
 
-            _.each(items, function(item, slot) {
-                var $img = this.slotImages[slot];
-                if (item) {
-                    $img.removeClass('empty');
-                    $img.attr('src', 'assets/' + item.get('name') + '.svg');
-                } else {
-                    $img.addClass('empty');
-                }
-            }, this);
-        },
+            if (this.rendered) {
+                _.each(items, function(item, slot) {
+                    var $img = this.slotImages[slot];
+                    if (item) {
+                        $img.removeClass('empty');
+                        $img.attr('src', 'assets/' + item.get('name') + '.svg');
+                    } else {
+                        $img.addClass('empty');
+                    }
+                }, this);
+
+            } else {
+                this.$el.html(this.template({items: items}));
+                this.$el.addClass('equipped');
+
+                var slots = this.equipped.slots;
+                this.slotImages = _.object(slots,
+                                           _.map(slots, function(slot) {
+                                               return this.$('.' + slot + ' .slot-img');
+                                           }, this)
+                                          );
+            }
+            this.rendered = true;
+            return this;
+        }
     });
 
     function newHeaderView(char, inv, zoneManager) {
         var view = new HeaderView({el: $('.header')}, char, inv, zoneManager);
-
         return view;
     }
 
@@ -131,7 +119,7 @@ namespace.module('bot.views', function (exports, require) {
         className: 'skillchain',
 
         //template: _.template($('#header-skillchain-template').html()),
-
+        
         initialize: function() {
             log.debug('New header skillchain view');
 
@@ -169,9 +157,6 @@ namespace.module('bot.views', function (exports, require) {
         className: 'skill-slot',
 
         template: _.template($('#header-skill-template').html()),
-
-        initialize: function() {
-        },
 
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));

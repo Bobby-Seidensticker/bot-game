@@ -11,9 +11,20 @@ namespace.module('bot.vector', function (exports, require) {
         return _.map(targets, function(target) { return dist(base, target); });
     }
 
+    // a and b must be array-like and they must be the same length
+    function equal(a, b) {
+        for (var i = a.length; len--;) {
+            if (a[i] !== b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     exports.extend({
         getDistances: getDistances,
-        dist: dist
+        dist: dist,
+        equal: equal
     });
 });
 

@@ -25,7 +25,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "melee",
                 "damage": 3,
-                "craftCost": "3 nuggets",
+                "craftCost": "3 poops",
             },
             "shitty bow": {
                 "prototype": ["weapon"],

@@ -390,16 +390,24 @@ namespace.module('bot.entity', function (exports, require) {
             //console.log(prob);
             var roll = prob.pyRand(0, allcount);
 
+            var newItem;
+            
             if (roll < weapcount) {
-                return new inventory.WeaponModel({'name': Object.keys(ref.weapon)[roll]});
+                newItem =  new inventory.WeaponModel({'name': Object.keys(ref.weapon)[roll]});
             } else if (roll < weapcount + armorcount) {
-                return new inventory.ArmorModel({'name': Object.keys(ref.armor)[roll - weapcount]});
+                newItem =  new inventory.ArmorModel({'name': Object.keys(ref.armor)[roll - weapcount]});
             } else if (roll < weapcount + armorcount + skillcount) {
-                return new inventory.SkillModel({'name': Object.keys(ref.skill)[roll - weapcount - armorcount]});
+                newItem = new inventory.SkillModel({'name': Object.keys(ref.skill)[roll - weapcount - armorcount]});
             } else {
                 log.warning("wtf: dropRand rolled higher number than it should have");
             }
 
+            //janky recursive way of escaping invalid items - potentially infinite
+            if (newItem.get('craftCost')) {
+                return newItem;
+            } else {
+                return getRandItem();
+            }
             //console.log(ref, weapcount);
             
         }

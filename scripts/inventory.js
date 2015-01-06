@@ -377,7 +377,7 @@ namespace.module('bot.inv', function (exports, require) {
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material'];
         },
-
+        
         initialize: function() {
             var defaults = [
                 new WeaponModel({name: 'bowie knife'}),
@@ -389,13 +389,14 @@ namespace.module('bot.inv', function (exports, require) {
             ];
             this.add(defaults);
         },
+
     });
 
     var ItemCollection = Backbone.Collection.extend({
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material', 'recipe'];
         },
-
+        
         initialize: function() {
             // no models given, do basics
             var defaults = [
@@ -408,9 +409,9 @@ namespace.module('bot.inv', function (exports, require) {
                 new ArmorModel({name: 'cardboard kneepads'})
             ];
             this.add(defaults);
-
-            this.recipes = new RecipeCollection();
             this.materials = new MaterialModel({planks: 50});
+            this.recipes = new RecipeCollection();
+            this.recipes.materials = this.materials;
             this.listenTo(this.recipes, 'craftClick', this.craft);
         },
 
@@ -440,8 +441,11 @@ namespace.module('bot.inv', function (exports, require) {
             _.each(drops, function(drop){
                 if (typeof(drop)== "object") {
                     this.recipes.add(drop);
-                } else {
+                } else if (typeof(drop) == "string"){
+                    console.log(drop);
                     this.materials.addDrop(drop);
+                } else {
+                    log.warning("invalid drop %s", typeof(drop));
                 }
             }, this);
         },
@@ -566,7 +570,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         midExtra: function() {
-////            console.log("midext", this.model);
             return _.template($('#inv-menu-item-xp').html(), {
                 xp: this.model.get('xp'),
                 nextLevelXp: this.model.getNextLevelXp()
@@ -611,8 +614,12 @@ namespace.module('bot.inv', function (exports, require) {
 	initialize: function() {
 	    this.buttons = $('#craft-menu-item-buttons-template').html();
             this.listenTo(this.model, 'craftSuccess', this.remove);
-
-            this.listenTo(window.gevents, 'materials:planks', this.onChange);
+            if(this.model.get('craftCost')) {
+                this.matType = this.model.get('craftCost').split(' ')[1];
+                this.listenTo(window.gevents, 'materials:' + this.matType, this.onChange);
+            } else {
+                console.log(this);
+            }
 	},
 
         remove: function() {
@@ -622,7 +629,8 @@ namespace.module('bot.inv', function (exports, require) {
 	craft: function() {
 	    console.log(this.model);
 	    this.model.trigger('craftClick', this.model);
-	    //console.log(this);
+            this.stopListening(window.gevents, 'materials:' + this.matType);
+            //console.log(this);
 	},
 
         midExtra: function() {
@@ -632,10 +640,11 @@ namespace.module('bot.inv', function (exports, require) {
 
         onChange: function() {
             this.render(true);
-            // TODO - this currently doesn't work because onChange isn't being called on
-            // materials changes.  Needs to get updates from event queue once implemented. 
-            if (this.model) {
-                console.log('craftable');
+
+            if(!this.model.collection) {
+                log.error("CraftItemView failure: model does not have a collection");
+            }
+            if (this.model.collection.materials.enoughToPay(this.model.get('craftCost'))) {
                 this.$('.craft').prop('disabled', false);
             } else {
                 this.$('.craft').prop('disabled', true);

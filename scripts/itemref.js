@@ -31,7 +31,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "range",
                 "damage": 2,
-                "range": 20,
+                "range": 15,
                 "craftCost": "3 poops",
             },
             "crappy wand": {
@@ -71,6 +71,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "balsa helmet": {
                 "prototype": ["armor"],
                 "type": "head",
+                "affixes":["armor added 500"],
                 "craftCost": "4 planks",
             },
             "smelly cod piece": {
@@ -81,7 +82,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "cardboard kneepads": {
                 "prototype": ["armor"],
-                "affixes": ["armor added 500"],
+                "affixes": ["armor added 100"],
                 "type": "legs",
                 "craftCost": "2 poops"
             },

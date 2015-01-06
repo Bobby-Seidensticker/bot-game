@@ -406,7 +406,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (newItem.get('craftCost')) {
                 return newItem;
             } else {
-                return getRandItem();
+                return this.getRandItem();
             }
             //console.log(ref, weapcount);
             

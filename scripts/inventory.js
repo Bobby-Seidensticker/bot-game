@@ -442,7 +442,6 @@ namespace.module('bot.inv', function (exports, require) {
                 if (typeof(drop)== "object") {
                     this.recipes.add(drop);
                 } else if (typeof(drop) == "string"){
-                    console.log(drop);
                     this.materials.addDrop(drop);
                 } else {
                     log.warning("invalid drop %s", typeof(drop));

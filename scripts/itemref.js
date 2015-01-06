@@ -31,13 +31,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "range",
                 "damage": 2,
-                "range": 4,
+                "range": 20,
                 "craftCost": "3 poops",
             },
             "crappy wand": {
                 "prototype": ["weapon"],
                 "type": "spell",
-                "range": 6,
+                "range": 10,
                 "craftCost": "3 poops",
             },
 
@@ -582,7 +582,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillchain": ["basic melee"],
                 "weapon" : ["wooden sword"],
                 "armor": ["smelly cod piece"],
-                "affixes": ["physDmg added 1", "maxHp added 1", "fireResist added -20"],
+                "affixes": ["physDmg added 1", "maxHp added 10", "fireResist added -20"],
                 "drops": ['planks', 'poops']
 
             },
@@ -598,18 +598,18 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillchain": ["basic spell"],
                 "armor": ["smelly cod piece"],
                 "weapon": "crappy wand",
-                "affixes": ["spellDmg more 2", "fireResist added -20"]
+                "affixes": ["fireDmg added 10", "fireResist added -20"]
             },
             "skeleton king" : {
                 "prototype" : ["skeleton"],
                 "skillchain": ["fire slash", "basic melee"],
-                "affixes": ["physDmg added 10", "maxHp added 50", "fireResist added -20"]
+                "affixes": ["physDmg added 50", "maxHp added 2000", "fireResist added -20"]
             },
         },
         "zone": {
             "spooky dungeon": {
                 "choices": ["skeleton", "skeleton archer", "skeleton mage", "skeleton king"],
-                "weights": [10, 3, 3, 1],
+                "weights": [20, 10, 5, 1],
                 "roomCount": 20,
                 "quantity": 3
             }

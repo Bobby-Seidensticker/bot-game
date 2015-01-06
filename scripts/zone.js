@@ -21,14 +21,13 @@ namespace.module('bot.zone', function (exports, require) {
         newZone: function(name, level) {
             var i, j, rooms, monsters, count, data;
 
-            log.info('ZoneManager newZone');
+
 
             data = itemref.expand('zone', name);
             rooms = [];
-
             for (i = 0; i < data.roomCount; i++) {
                 count = 1 + prob.pProb(data.quantity);
-
+                
                 monsters = new MonsterCollection(_.map(_.range(count), function() {
                     return {
                         name: data.choices[prob.pick(data.weights)],
@@ -40,6 +39,9 @@ namespace.module('bot.zone', function (exports, require) {
                     monsters: monsters
                 };
             }
+            log.info('ZoneManager newZone%s', monsters.reduce(function(m, n) {
+                return m + n.get('name') + ", "}, ""));
+            
             data.charPos = 0;
             data.rooms = rooms;
             data.initialized = true;

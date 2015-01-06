@@ -52,6 +52,7 @@ namespace.module('bot.inv', function (exports, require) {
                 xp: 0,
                 level: 1,
                 affixes: [],
+                nextAffix: '',
                 equippedBy: ''
             };
         },
@@ -504,13 +505,34 @@ namespace.module('bot.inv', function (exports, require) {
             'click .item-header': 'expandCollapse'
         },
 
+        renderInitted: false,
+
         initialize: function() {
             this.listenTo(this.model, 'destroy', this.destroy);
             this.listenTo(this.model, 'change', this.onChange);
         },
 
-        prettyAffixes: function(affix) {
+        prettyAffix: function(affix) {
+            //Working here now
+            var splits = affix.split(" ");
+            if(splits[1] == "added") {
+                return "+" + splits[2] + " Added " + splits[0][0].toUpperCase() + splits[0].slice(1);
+            } else if (splits[1] == "more") {
+                return splits[2] + "% More " + splits[0][0].toUpperCase() + splits[0].slice(1);
+            } else {
+                log.warning('ItemView.prettyAffix returning unstyled affix, no modifier def');
+            }
             return affix;
+        },
+
+        renderAffixes: function() {
+            var affixes = this.model.get('affixes');
+            var rendered = '';
+            _.each(affixes, function(affix) {
+                rendered += "<p>" + this.prettyAffix(affix) + "</p>"
+            }, this);
+            //TODO - put nextAffix here
+            return rendered;
         },
 
         getNextLevelXp: function(xp) {
@@ -518,25 +540,38 @@ namespace.module('bot.inv', function (exports, require) {
         },
         
         render: function(notFirst) {
+            //console.log('rendering this', this);
+            if(!this.renderInitted) {
+                this.initRender();
+                this.renderInitted = true;
+            } 
+            this.$('.xp').html(this.model.get('xp'));
+            this.$('.nextLevelXp').html(this.model.getNextLevelXp());
+            this.$('.item-affixes').html(this.renderAffixes());
+
+            return this;
+        },
+
+        initRender: function(notFirst) {
             var type = this.model.get('itemType');
 
             //console.log('buttons', this.buttons);
             var ext = {
                 'buttons': this.buttons,
-                'prettyAffixes': this.prettyAffixes,
+                'prettyAffix': this.prettyAffix,
                 'midExtra': this.midExtra()
             };
             //console.log("itemview", this.midExtra());
             
             var obj = _.extend({}, this.model.toJSON(), ext);
             this.$el.html(this.template(obj));
-            if( !notFirst ) {
-                this.$el.attr({
-                    'class': 'item collapsed',
-                    'id': 'inv-item-' + this.model.get('name')
-                });
-            }
-            return this;
+            this.$el.attr({
+                'class': 'item collapsed '+ this.model.get('name').split(' ').join('-')
+            });
+
+            
+            
+            
         },
 
         expandCollapse: function() {
@@ -580,7 +615,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         onChange: function() {
-            this.render(true);
+            this.render();
             //Trying to un-disable butons here
             //console.log("oh yeah", this.$('.level-up'));
             if (this.model.canLevel()) {

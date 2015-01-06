@@ -82,7 +82,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "cardboard kneepads": {
                 "prototype": ["armor"],
-                "affixes": ["armor added 100"],
+                "affixes": ["armor added 500"],
                 "type": "legs",
                 "craftCost": "2 poops"
             },

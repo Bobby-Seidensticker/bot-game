@@ -52,6 +52,7 @@ namespace.module('bot.inv', function (exports, require) {
                 xp: 0,
                 level: 1,
                 affixes: [],
+                nextAffix: '',
                 equippedBy: ''
             };
         },
@@ -66,7 +67,9 @@ namespace.module('bot.inv', function (exports, require) {
         prepLevelUp: function() {
             // purpose of function is to roll 'nextAffix' and activate level up button
             // item does not actually level (even if xp reached) until player clicks
-            
+            if(this.get('nextAffix') == '') {
+                this.set('nextAffix', this.rollAffix());
+            }
         },
 
         canLevel: function() {
@@ -80,15 +83,22 @@ namespace.module('bot.inv', function (exports, require) {
             return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
         },
         
+        reroll: function() {
+            log.error('gearmdel reroll called');
+            this.set('nextAffix', this.rollAffix());
+        },
+
         levelUp: function() {
-            
+            if(this.get('nextAffix') == '') {
+                log.error('item levelUp called without nextAffix properly initted');
+            }
+
             var type = this.get('itemType');
+            var affixes = this.get('affixes');
+            this.set('affixes', affixes.concat(this.get('nextAffix')));
+            this.set('nextAffix', '');
 
-            var affs = this.get('affixes');
-            var newAff = this.rollAffix();
-            affs.push(newAff);
-            this.set('affixes', affs);
-
+            
             if (type == 'armor') {
                 log.info('leveling up armor');
             } else if (type == 'weapon') {
@@ -98,6 +108,9 @@ namespace.module('bot.inv', function (exports, require) {
             }
             this.set('xp', this.get('xp') - this.getNextLevelXp());
             this.set('level', this.get('level') + 1);
+            if(this.canLevel()) {
+                this.prepLevelUp();
+            }
         },
         
         rollAffix: function() {
@@ -377,7 +390,7 @@ namespace.module('bot.inv', function (exports, require) {
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material'];
         },
-
+        
         initialize: function() {
             var defaults = [
                 new WeaponModel({name: 'bowie knife'}),
@@ -389,13 +402,14 @@ namespace.module('bot.inv', function (exports, require) {
             ];
             this.add(defaults);
         },
+
     });
 
     var ItemCollection = Backbone.Collection.extend({
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material', 'recipe'];
         },
-
+        
         initialize: function() {
             // no models given, do basics
             var defaults = [
@@ -408,9 +422,9 @@ namespace.module('bot.inv', function (exports, require) {
                 new ArmorModel({name: 'cardboard kneepads'})
             ];
             this.add(defaults);
-
-            this.recipes = new RecipeCollection();
             this.materials = new MaterialModel({planks: 50});
+            this.recipes = new RecipeCollection();
+            this.recipes.materials = this.materials;
             this.listenTo(this.recipes, 'craftClick', this.craft);
         },
 
@@ -440,8 +454,10 @@ namespace.module('bot.inv', function (exports, require) {
             _.each(drops, function(drop){
                 if (typeof(drop)== "object") {
                     this.recipes.add(drop);
-                } else {
+                } else if (typeof(drop) == "string"){
                     this.materials.addDrop(drop);
+                } else {
+                    log.warning("invalid drop %s", typeof(drop));
                 }
             }, this);
         },
@@ -501,13 +517,38 @@ namespace.module('bot.inv', function (exports, require) {
             'click .item-header': 'expandCollapse'
         },
 
+        renderInitted: false,
+
         initialize: function() {
             this.listenTo(this.model, 'destroy', this.destroy);
             this.listenTo(this.model, 'change', this.onChange);
         },
 
-        prettyAffixes: function(affix) {
+        prettyAffix: function(affix) {
+            //Working here now
+            var splits = affix.split(" ");
+            if(splits[1] == "added") {
+                return "+" + splits[2] + " Added " + splits[0][0].toUpperCase() + splits[0].slice(1);
+            } else if (splits[1] == "more") {
+                return splits[2] + "% More " + splits[0][0].toUpperCase() + splits[0].slice(1);
+            } else {
+                log.warning('ItemView.prettyAffix returning unstyled affix, no modifier def');
+            }
             return affix;
+        },
+
+        renderAffixes: function() {
+            var affixes = this.model.get('affixes');
+            var rendered = '';
+            _.each(affixes, function(affix) {
+                rendered += "<p>" + this.prettyAffix(affix) + "</p>"
+            }, this);
+            if(this.model.get('nextAffix') != '') {
+                rendered += '<p class="nextAffix">' + this.prettyAffix(this.model.get('nextAffix')) +
+                    '<input type="button" value="Reroll (1 poop)" class="reroll"></p>';
+            }
+            //TODO - put nextAffix here
+            return rendered;
         },
 
         getNextLevelXp: function(xp) {
@@ -515,25 +556,37 @@ namespace.module('bot.inv', function (exports, require) {
         },
         
         render: function(notFirst) {
+            //console.log('rendering this', this);
+            if(!this.renderInitted) {
+                this.initRender();
+                this.renderInitted = true;
+            } 
+            this.$('.xp').html(this.model.get('xp'));
+            this.$('.nextLevelXp').html(this.model.getNextLevelXp());
+            this.$('.item-affixes').html(this.renderAffixes());
+
+            return this;
+        },
+
+        initRender: function(notFirst) {
             var type = this.model.get('itemType');
 
             //console.log('buttons', this.buttons);
             var ext = {
                 'buttons': this.buttons,
-                'prettyAffixes': this.prettyAffixes,
                 'midExtra': this.midExtra()
             };
             //console.log("itemview", this.midExtra());
             
             var obj = _.extend({}, this.model.toJSON(), ext);
             this.$el.html(this.template(obj));
-            if( !notFirst ) {
-                this.$el.attr({
-                    'class': 'item collapsed',
-                    'id': 'inv-item-' + this.model.get('name')
-                });
-            }
-            return this;
+            this.$el.attr({
+                'class': 'item collapsed '+ this.model.get('name').split(' ').join('-')
+            });
+
+            
+            
+            
         },
 
         expandCollapse: function() {
@@ -556,6 +609,7 @@ namespace.module('bot.inv', function (exports, require) {
         events: _.extend({}, ItemView.prototype.events, {
             'click .equip': 'equip',
             'click .level-up': 'levelUp',
+            'click .reroll': 'reroll'
         }),
 
         buttons: $('#inv-menu-item-buttons-template').html(),
@@ -566,11 +620,16 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         midExtra: function() {
-////            console.log("midext", this.model);
             return _.template($('#inv-menu-item-xp').html(), {
                 xp: this.model.get('xp'),
                 nextLevelXp: this.model.getNextLevelXp()
             }, this);
+        },
+
+        reroll: function() {
+            log.error('craftitemview reroll called');
+            this.model.reroll();
+            this.render();
         },
 
         levelUp: function() {
@@ -578,7 +637,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         onChange: function() {
-            this.render(true);
+            this.render();
             //Trying to un-disable butons here
             //console.log("oh yeah", this.$('.level-up'));
             if (this.model.canLevel()) {
@@ -611,8 +670,12 @@ namespace.module('bot.inv', function (exports, require) {
 	initialize: function() {
 	    this.buttons = $('#craft-menu-item-buttons-template').html();
             this.listenTo(this.model, 'craftSuccess', this.remove);
-
-            this.listenTo(window.gevents, 'materials:planks', this.onChange);
+            if(this.model.get('craftCost')) {
+                this.matType = this.model.get('craftCost').split(' ')[1];
+                this.listenTo(window.gevents, 'materials:' + this.matType, this.onChange);
+            } else {
+                console.log(this);
+            }
 	},
 
         remove: function() {
@@ -622,7 +685,8 @@ namespace.module('bot.inv', function (exports, require) {
 	craft: function() {
 	    console.log(this.model);
 	    this.model.trigger('craftClick', this.model);
-	    //console.log(this);
+            this.stopListening(window.gevents, 'materials:' + this.matType);
+            //console.log(this);
 	},
 
         midExtra: function() {
@@ -632,10 +696,11 @@ namespace.module('bot.inv', function (exports, require) {
 
         onChange: function() {
             this.render(true);
-            // TODO - this currently doesn't work because onChange isn't being called on
-            // materials changes.  Needs to get updates from event queue once implemented. 
-            if (this.model) {
-                console.log('craftable');
+
+            if(!this.model.collection) {
+                log.error("CraftItemView failure: model does not have a collection");
+            }
+            if (this.model.collection.materials.enoughToPay(this.model.get('craftCost'))) {
                 this.$('.craft').prop('disabled', false);
             } else {
                 this.$('.craft').prop('disabled', true);

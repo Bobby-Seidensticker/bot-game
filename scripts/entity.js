@@ -132,7 +132,8 @@ namespace.module('bot.entity', function (exports, require) {
             this.set('hp', this.get('hp') - totalDmg);
 
             if (this.get('hp') <= 0) {
-                log.info('An entity from team %s DEAD, hit for %s', this.teamString(), JSON.stringify(damage));
+                window.gevents.trigger('monsters:death', this);
+                log.info('Lvl %d - %s from team %s DEAD, hit for %s', this.get('level'), this.get('name'), this.teamString(), JSON.stringify(damage));
             } else {
                 log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.get('hp'));
             }
@@ -151,7 +152,8 @@ namespace.module('bot.entity', function (exports, require) {
                 mana: this.get('mana') - skill.get('manaCost'),
             });
             var dmg = this.getDamage(skill);
-            log.debug('%s attacking target %s for %s dmg', this.get('name'),  target.get('name'), JSON.stringify(dmg));
+            log.debug('%s attacking target %s for %s dmg with %s', this.get('name'),
+                      target.get('name'), JSON.stringify(dmg), skill.get('name'));
             target.takeDamage(dmg);
             if (!target.isAlive()) {
                 if (this.isChar()) {
@@ -403,16 +405,24 @@ namespace.module('bot.entity', function (exports, require) {
             //console.log(prob);
             var roll = prob.pyRand(0, allcount);
 
+            var newItem;
+            
             if (roll < weapcount) {
-                return new inventory.WeaponModel({'name': Object.keys(ref.weapon)[roll]});
+                newItem =  new inventory.WeaponModel({'name': Object.keys(ref.weapon)[roll]});
             } else if (roll < weapcount + armorcount) {
-                return new inventory.ArmorModel({'name': Object.keys(ref.armor)[roll - weapcount]});
+                newItem =  new inventory.ArmorModel({'name': Object.keys(ref.armor)[roll - weapcount]});
             } else if (roll < weapcount + armorcount + skillcount) {
-                return new inventory.SkillModel({'name': Object.keys(ref.skill)[roll - weapcount - armorcount]});
+                newItem = new inventory.SkillModel({'name': Object.keys(ref.skill)[roll - weapcount - armorcount]});
             } else {
                 log.warning("wtf: dropRand rolled higher number than it should have");
             }
 
+            //janky recursive way of escaping invalid items - potentially infinite
+            if (newItem.get('craftCost')) {
+                return newItem;
+            } else {
+                return this.getRandItem();
+            }
             //console.log(ref, weapcount);
             
         }

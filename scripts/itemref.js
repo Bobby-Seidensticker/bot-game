@@ -22,7 +22,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "melee",
                 "damage": 3,
-                "craftCost": "3 nuggets",
+                "craftCost": "3 poops",
             },
             "shitty bow": {
                 "prototype": ["weapon"],
@@ -35,6 +35,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "range": 600000,
+                "damage":5,
                 "craftCost": "3 poops",
             },
 
@@ -68,6 +69,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "balsa helmet": {
                 "prototype": ["armor"],
                 "type": "head",
+                "affixes":["armor added 500"],
                 "craftCost": "4 planks",
             },
             "smelly cod piece": {
@@ -579,7 +581,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillchain": ["basic melee"],
                 "weapon" : ["wooden sword"],
                 "armor": ["smelly cod piece"],
-                "affixes": ["physDmg added 1", "maxHp added 1", "fireResist added -20"],
+                "affixes": ["physDmg added 1", "maxHp added 10", "fireResist added -20"],
                 "drops": ['planks', 'poops']
 
             },
@@ -595,7 +597,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillchain": ["basic spell"],
                 "armor": ["smelly cod piece"],
                 "weapon": "crappy wand",
-                "affixes": ["spellDmg more 2", "fireResist added -20"]
+                "affixes": ["fireDmg added 10", "fireResist added -20"]
             },
             "skeleton king" : {
                 "prototype" : ["skeleton"],
@@ -606,7 +608,7 @@ namespace.module('bot.itemref', function (exports, require) {
         "zone": {
             "spooky dungeon": {
                 "choices": ["skeleton", "skeleton archer", "skeleton mage", "skeleton king"],
-                "weights": [10, 3, 3, 1],
+                "weights": [20, 10, 5, 1],
                 "roomCount": 20,
                 "quantity": 1
             }

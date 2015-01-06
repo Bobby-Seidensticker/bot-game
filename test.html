@@ -51,11 +51,6 @@
         </div>
       </div>
       <div class="item-affixes">
-        <% _.each(affixes, function(affix) { %>
-        <p>
-          <%= prettyAffixes(affix) %>
-        </p>
-        <% }); %>
       </div>
       <div class="item-buttonbox">
         <%= buttons %>
@@ -64,7 +59,7 @@
   </script>
 
   <script id="inv-menu-item-xp" type="text/template">
-    <%= xp %> / <%= nextLevelXp %> XP
+    <span class="xp">0</span> / <span class="nextLevelXp">?</span> XP
   </script>
 
   <script id="inv-menu-item-buttons-template" type="text/template">
@@ -232,7 +227,6 @@
   <script type="text/javascript" src="scripts/menu.js"></script>
   <script type="text/javascript" src="scripts/views.js"></script>
   <script type="text/javascript" src="scripts/main.js"></script>
-
 
   <!-- COPY ABOVE HERE -->
 

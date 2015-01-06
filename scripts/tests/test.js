@@ -139,9 +139,9 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(pos[0], 0);
             assert.equal(pos[1], 1);
 
-            var pos = vector.closer([0, 0], [1, 1], 0.5, 0);
-            assert.equal(pos[0], 0);
-            assert.equal(pos[1], 0);
+            var pos = vector.closer([0, 0], [1, 1], 1, 0);
+            assert.equal(pos[0], 1);
+            assert.equal(pos[1], 1);
 
             var pos = vector.closer([0, 0], [2, 2], 2, 0);
             assert.equal(pos[0], 1);

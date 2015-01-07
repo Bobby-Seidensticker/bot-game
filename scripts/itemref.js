@@ -18,7 +18,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "wooden sword": {
                 "prototype": ["weapon"],
                 "type": "melee",
-                "damage": 2,
+                "damage": 20,
                 "craftCost": "2 planks",
             },
             "bowie knife": {
@@ -38,6 +38,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "range": 10,
+                "damage":5,
                 "craftCost": "3 poops",
             },
 

@@ -67,7 +67,9 @@ namespace.module('bot.inv', function (exports, require) {
         prepLevelUp: function() {
             // purpose of function is to roll 'nextAffix' and activate level up button
             // item does not actually level (even if xp reached) until player clicks
-            
+            if(this.get('nextAffix') == '') {
+                this.set('nextAffix', this.rollAffix());
+            }
         },
 
         canLevel: function() {
@@ -81,15 +83,22 @@ namespace.module('bot.inv', function (exports, require) {
             return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
         },
         
+        reroll: function() {
+            log.error('gearmdel reroll called');
+            this.set('nextAffix', this.rollAffix());
+        },
+
         levelUp: function() {
-            
+            if(this.get('nextAffix') == '') {
+                log.error('item levelUp called without nextAffix properly initted');
+            }
+
             var type = this.get('itemType');
+            var affixes = this.get('affixes');
+            this.set('affixes', affixes.concat(this.get('nextAffix')));
+            this.set('nextAffix', '');
 
-            var affs = this.get('affixes');
-            var newAff = this.rollAffix();
-            affs.push(newAff);
-            this.set('affixes', affs);
-
+            
             if (type == 'armor') {
                 log.info('leveling up armor');
             } else if (type == 'weapon') {
@@ -99,6 +108,9 @@ namespace.module('bot.inv', function (exports, require) {
             }
             this.set('xp', this.get('xp') - this.getNextLevelXp());
             this.set('level', this.get('level') + 1);
+            if(this.canLevel()) {
+                this.prepLevelUp();
+            }
         },
         
         rollAffix: function() {
@@ -531,6 +543,10 @@ namespace.module('bot.inv', function (exports, require) {
             _.each(affixes, function(affix) {
                 rendered += "<p>" + this.prettyAffix(affix) + "</p>"
             }, this);
+            if(this.model.get('nextAffix') != '') {
+                rendered += '<p class="nextAffix">' + this.prettyAffix(this.model.get('nextAffix')) +
+                    '<input type="button" value="Reroll (1 poop)" class="reroll"></p>';
+            }
             //TODO - put nextAffix here
             return rendered;
         },
@@ -558,7 +574,6 @@ namespace.module('bot.inv', function (exports, require) {
             //console.log('buttons', this.buttons);
             var ext = {
                 'buttons': this.buttons,
-                'prettyAffix': this.prettyAffix,
                 'midExtra': this.midExtra()
             };
             //console.log("itemview", this.midExtra());
@@ -594,6 +609,7 @@ namespace.module('bot.inv', function (exports, require) {
         events: _.extend({}, ItemView.prototype.events, {
             'click .equip': 'equip',
             'click .level-up': 'levelUp',
+            'click .reroll': 'reroll'
         }),
 
         buttons: $('#inv-menu-item-buttons-template').html(),
@@ -608,6 +624,12 @@ namespace.module('bot.inv', function (exports, require) {
                 xp: this.model.get('xp'),
                 nextLevelXp: this.model.getNextLevelXp()
             }, this);
+        },
+
+        reroll: function() {
+            log.error('craftitemview reroll called');
+            this.model.reroll();
+            this.render();
         },
 
         levelUp: function() {

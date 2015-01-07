@@ -35,8 +35,8 @@ namespace.module('bot.inv', function (exports, require) {
             var splits = craftCost.split(' ');
             console.log(craftCost, splits);
             this.set(splits[1], this.get(splits[1]) - splits[0]);
-            //TODO - trigger an event to update material display in inv
-
+            console.log(this.get(splits[1]));
+            window.Events.mark('materials:' + splits[1]);
         },
 
         addDrop: function(drop) {
@@ -512,7 +512,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         updateMat: function(matName) {
-            console.log(matName);
             this.$('.' + matName).html(this.collection.materials.get(matName));
         },
     });

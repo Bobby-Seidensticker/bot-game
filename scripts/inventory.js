@@ -7,7 +7,7 @@ namespace.module('bot.inv', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
 
-    
+
     var MaterialModel = Backbone.Model.extend({
         defaults: function() {
             return {
@@ -76,11 +76,11 @@ namespace.module('bot.inv', function (exports, require) {
             }
             return false;
         },
-        
+
         getNextLevelXp: function() {
             return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
         },
-        
+
         reroll: function() {
             log.debug('gearmdel reroll called');
             //console.log(this);
@@ -115,7 +115,7 @@ namespace.module('bot.inv', function (exports, require) {
                 this.prepLevelUp();
             }
         },
-        
+
         rollAffix: function() {
             var type = this.get('itemType');
 
@@ -283,7 +283,7 @@ namespace.module('bot.inv', function (exports, require) {
 
     var EquippedGearModel = Backbone.Model.extend({
 
-        slots: ['mainHand',  'head', 'offHand', 'hands', 'chest', 'legs'],
+        slots: ['mainHand','head', 'offHand', 'hands', 'chest', 'legs'],
 
         // weapon slots: mainHand, offHand
         // armor slots: head, chest, hands, legs
@@ -384,7 +384,7 @@ namespace.module('bot.inv', function (exports, require) {
                     this.get(slot).applyXp(xp);
                 }
             }, this);
-            
+
         },
     });
 
@@ -392,7 +392,7 @@ namespace.module('bot.inv', function (exports, require) {
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material'];
         },
-        
+
         initialize: function() {
             var defaults = [
                 new WeaponModel({name: 'bowie knife'}),
@@ -411,7 +411,7 @@ namespace.module('bot.inv', function (exports, require) {
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material', 'recipe'];
         },
-        
+
         initialize: function() {
             // no models given, do basics
             var defaults = [
@@ -498,7 +498,7 @@ namespace.module('bot.inv', function (exports, require) {
                     this.listenTo(window.gevents, 'materials:' + mats[i], this.updateMat.curry(mats[i]));
                 }
             }
-            
+
             this.listenTo(this.collection, 'add', this.onAdd);
         },
 
@@ -563,7 +563,7 @@ namespace.module('bot.inv', function (exports, require) {
         getNextLevelXp: function(xp) {
             return this.model.getNextLevelXp(xp);
         },
-        
+
         render: function(notFirst) {
             //console.log('rendering this', this);
             if (!this.renderInitted) {
@@ -586,16 +586,12 @@ namespace.module('bot.inv', function (exports, require) {
                 'midExtra': this.midExtra()
             };
             //console.log('itemview', this.midExtra());
-            
+
             var obj = _.extend({}, this.model.toJSON(), ext);
             this.$el.html(this.template(obj));
             this.$el.attr({
                 'class': 'item collapsed '+ this.model.get('name').split(' ').join('-')
             });
-
-            
-            
-            
         },
 
         expandCollapse: function() {

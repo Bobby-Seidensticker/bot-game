@@ -512,7 +512,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         updateMat: function(matName) {
-            console.log(matName);
             this.$('.' + matName).html(this.collection.materials.get(matName));
         },
     });

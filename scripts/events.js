@@ -16,9 +16,11 @@ namespace.module('bot.events', function (exports, require) {
         _.each(
             this.obj,
             function(value, key, list) {
-                log.debug('triggering %s from key %s', value, key);
-                eventObject.trigger(key);
-                list[key] = false;
+                if (value) {
+                    log.debug('triggering %s from key %s', value, key);
+                    eventObject.trigger(key);
+                    list[key] = false;
+                }
             },
             this
         );

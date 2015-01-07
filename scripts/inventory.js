@@ -492,7 +492,7 @@ namespace.module('bot.inv', function (exports, require) {
                     //TODO put in proper template
                     this.groupContentEls.material.append('<p>' + mats[i] + ': <span class="' + mats[i] + '"></span></p>');
                     this.updateMat(mats[i]);
-                    this.listenTo(window.gevents, 'materials:'+ mats[i], this.updateMat.curry(mats[i]));
+                    this.listenTo(window.gevents, 'materials:' + mats[i], this.updateMat.curry(mats[i]));
                 }
             }
             

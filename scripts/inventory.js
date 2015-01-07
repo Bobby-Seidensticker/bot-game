@@ -71,10 +71,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         canLevel: function() {
-            if (this.get('xp') >= this.getNextLevelXp()) {
-                return true;
-            }
-            return false;
+            return this.get('xp') >= this.getNextLevelXp();
         },
 
         getNextLevelXp: function() {
@@ -82,8 +79,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         reroll: function() {
-            log.debug('gearmdel reroll called');
-            //console.log(this);
+            log.debug('gearmodel reroll called');
             var rerollCost = this.get('level') + ' poops';
 
             if (this.collection.materials.enoughToPay(rerollCost)) {
@@ -102,13 +98,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.set('affixes', affixes.concat(this.get('nextAffix')));
             this.set('nextAffix', '');
 
-            if (type === 'armor') {
-                log.info('leveling up armor');
-            } else if (type === 'weapon') {
-                log.info('leveling up weapon');
-            } else if (type === 'skill') {
-                log.info('leveling up skill');
-            }
+            log.info('leveling up %s', type);
             this.set('xp', this.get('xp') - this.getNextLevelXp());
             this.set('level', this.get('level') + 1);
             if (this.canLevel()) {
@@ -601,7 +591,6 @@ namespace.module('bot.inv', function (exports, require) {
 
         onChange: function() {
             this.render(true);
-
         },
 
         destroy: function() {

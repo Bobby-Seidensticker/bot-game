@@ -500,8 +500,6 @@ namespace.module('bot.inv', function (exports, require) {
             }
             
             this.listenTo(this.collection, 'add', this.onAdd);
-
-           
         },
 
         onAdd: function(item) {

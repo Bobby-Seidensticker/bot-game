@@ -132,7 +132,11 @@ namespace.module('bot.entity', function (exports, require) {
             this.set('hp', this.get('hp') - totalDmg);
 
             if (this.get('hp') <= 0) {
-                window.Events.mark('monsters:death');
+                if (this.isMonster()) {
+                    window.Events.mark('monsters:death');
+                } else {
+                    window.Events.mark('char:death');
+                }
                 log.info('Lvl %d - %s from team %s DEAD, hit for %s', this.get('level'), this.get('name'), this.teamString(), JSON.stringify(damage));
             } else {
                 log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.get('hp'));
@@ -160,7 +164,6 @@ namespace.module('bot.entity', function (exports, require) {
                     window.Events.mark('monsters:death');
                     this.onKill(target, skill);
                 } else {
-                    log.info('Character has died!');
                     target.onDeath();
                 }
             }
@@ -220,7 +223,6 @@ namespace.module('bot.entity', function (exports, require) {
                 enemies = [room.char];
             } else {
                 enemies = room.monsters.living();
-                log.info('Char gonna do stuff to %d monsters', enemies.length);
             }
 
             var distances = vector.getDistances(
@@ -235,9 +237,6 @@ namespace.module('bot.entity', function (exports, require) {
         tryAttack: function(enemies, distances) {
             var skill = this.get('skillchain').bestSkill(this.get('mana'), distances);
             if (skill) {
-                if (this.isChar()) {
-                    log.info('Char using skill %s', JSON.stringify(skill.toJSON()));
-                }
                 var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.get('range') >= distances[i]; });
                 var target = enemies[targetIndex];
                 this.attackTarget(target, skill);
@@ -329,7 +328,7 @@ namespace.module('bot.entity', function (exports, require) {
 
         onDeath: function() {
             //TODO write this
-            log.warning('you dead');
+            log.warning('Character has died');
         }
         
     });

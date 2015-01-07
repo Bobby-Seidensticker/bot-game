@@ -35,7 +35,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["weapon"],
                 "type": "spell",
                 "range": 600000,
-                "damage":5,
+                "damage": 5,
                 "craftCost": "3 poops",
             },
 

@@ -7,7 +7,7 @@ namespace.module('bot.inv', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
 
-    
+
     var MaterialModel = Backbone.Model.extend({
         defaults: function() {
             return {
@@ -18,7 +18,7 @@ namespace.module('bot.inv', function (exports, require) {
                 'mints': 0,
                 'sparks': 0,
                 'tumors': 0,
-                'nuggets':0,
+                'nuggets': 0,
             }
         },
 
@@ -31,11 +31,9 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         payCost: function(craftCost) {
-            // craft cost is a string formatted "material int" eg "tumors 3"
+            // craft cost is a string formatted 'material int' eg 'tumors 3'
             var splits = craftCost.split(' ');
-            //console.log(craftCost, splits);
             this.set(splits[1], this.get(splits[1]) - splits[0]);
-            //console.log(this.get(splits[1]));
             window.Events.mark('materials:' + splits[1]);
         },
 
@@ -59,7 +57,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         applyXp: function(xp) {
             this.set('xp', this.get('xp') + xp);
-            if(this.canLevel()) {
+            if (this.canLevel()) {
                 this.prepLevelUp();
             }
         },
@@ -67,7 +65,7 @@ namespace.module('bot.inv', function (exports, require) {
         prepLevelUp: function() {
             // purpose of function is to roll 'nextAffix' and activate level up button
             // item does not actually level (even if xp reached) until player clicks
-            if(this.get('nextAffix') == '') {
+            if (this.get('nextAffix') === '') {
                 this.set('nextAffix', this.rollAffix());
             }
         },
@@ -78,24 +76,24 @@ namespace.module('bot.inv', function (exports, require) {
             }
             return false;
         },
-        
+
         getNextLevelXp: function() {
             return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
         },
-        
+
         reroll: function() {
             log.debug('gearmdel reroll called');
             //console.log(this);
             var rerollCost = this.get('level') + ' poops';
-            
-            if(this.collection.materials.enoughToPay(rerollCost)) {
+
+            if (this.collection.materials.enoughToPay(rerollCost)) {
                 this.collection.materials.payCost(rerollCost);
                 this.set('nextAffix', this.rollAffix());
             }
         },
 
         levelUp: function() {
-            if(this.get('nextAffix') == '') {
+            if (this.get('nextAffix') === '') {
                 log.error('item levelUp called without nextAffix properly initted');
             }
 
@@ -104,21 +102,20 @@ namespace.module('bot.inv', function (exports, require) {
             this.set('affixes', affixes.concat(this.get('nextAffix')));
             this.set('nextAffix', '');
 
-            
-            if (type == 'armor') {
+            if (type === 'armor') {
                 log.info('leveling up armor');
-            } else if (type == 'weapon') {
+            } else if (type === 'weapon') {
                 log.info('leveling up weapon');
-            } else if (type == 'skill') {
+            } else if (type === 'skill') {
                 log.info('leveling up skill');
             }
             this.set('xp', this.get('xp') - this.getNextLevelXp());
             this.set('level', this.get('level') + 1);
-            if(this.canLevel()) {
+            if (this.canLevel()) {
                 this.prepLevelUp();
             }
         },
-        
+
         rollAffix: function() {
             var type = this.get('itemType');
 
@@ -126,7 +123,7 @@ namespace.module('bot.inv', function (exports, require) {
             var possibleAffs = [];
             for (var i = 0; i < rollable.length; i++){
                 var aff = itemref.expand('affix', rollable[i]);
-                if(aff.validTypes.indexOf(type) != -1) {
+                if (aff.validTypes.indexOf(type) !== -1) {
                     possibleAffs.push(aff);
                 }
             }
@@ -134,24 +131,23 @@ namespace.module('bot.inv', function (exports, require) {
 
             var pickedAff = possibleAffs[pick];
 
-            //TODO - update entity.computeAttrs to expand unique affixes
+            // TODO - update entity.computeAttrs to expand unique affixes
             if (pickedAff.unique) {
-                console.log("unique affix!");
+                log.warning('Unique affix!');
                 return pickedAff.name;
             } else {
                 var modWeights = [];
-                var modKeys = Object.keys(pickedAff.modifier);  // TODO: solve this issue caused by clicking level-up: Object.keys called on non-object
-                for(var i = 0; i < modKeys.length; i++) {
+                // TODO: solve this issue caused by clicking level-up: Object.keys called on non-object
+                var modKeys = Object.keys(pickedAff.modifier);
+                for (var i = 0; i < modKeys.length; i++) {
                     modWeights[i] = pickedAff.modifier[modKeys[i]].weight;
                 }
-                
+
                 var pickedMod = modKeys[prob.pick(modWeights)];
-                
                 var min = pickedAff.modifier[pickedMod].min;
                 var max = pickedAff.modifier[pickedMod].max;
-                
                 var pickedAmt = prob.rootRand(min, max);
-            
+
                 return [pickedAff.name, pickedMod, pickedAmt].join(' ');
             }
         }
@@ -287,7 +283,7 @@ namespace.module('bot.inv', function (exports, require) {
 
     var EquippedGearModel = Backbone.Model.extend({
 
-        slots: ['mainHand',  'head', 'offHand', 'hands', 'chest', 'legs'],
+        slots: ['mainHand','head', 'offHand', 'hands', 'chest', 'legs'],
 
         // weapon slots: mainHand, offHand
         // armor slots: head, chest, hands, legs
@@ -388,7 +384,7 @@ namespace.module('bot.inv', function (exports, require) {
                     this.get(slot).applyXp(xp);
                 }
             }, this);
-            
+
         },
     });
 
@@ -396,7 +392,7 @@ namespace.module('bot.inv', function (exports, require) {
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material'];
         },
-        
+
         initialize: function() {
             var defaults = [
                 new WeaponModel({name: 'bowie knife'}),
@@ -415,7 +411,7 @@ namespace.module('bot.inv', function (exports, require) {
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material', 'recipe'];
         },
-        
+
         initialize: function() {
             // no models given, do basics
             var defaults = [
@@ -438,7 +434,7 @@ namespace.module('bot.inv', function (exports, require) {
             log.warning('ItemCollection.craft called on item: %s', item.toJSON());
             //TODO check canCraft
             var cost = item.get('craftCost');
-            if(this.materials.enoughToPay(cost)) {
+            if (this.materials.enoughToPay(cost)) {
                 this.materials.payCost(item.get('craftCost'));
                 this.add(item);
 	        this.recipes.remove(item);
@@ -451,7 +447,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         canCraft: function(item) {
-            if(this.materials.enoughToPay(item.get('craftCost'))){
+            if (this.materials.enoughToPay(item.get('craftCost'))) {
                 return true;
             }
             return false;
@@ -459,12 +455,12 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             _.each(drops, function(drop){
-                if (typeof(drop)== "object") {
+                if (typeof(drop)== 'object') {
                     this.recipes.add(drop);
-                } else if (typeof(drop) == "string"){
+                } else if (typeof(drop) == 'string'){
                     this.materials.addDrop(drop);
                 } else {
-                    log.warning("invalid drop %s", typeof(drop));
+                    log.warning('invalid drop %s', typeof(drop));
                 }
             }, this);
         },
@@ -502,10 +498,8 @@ namespace.module('bot.inv', function (exports, require) {
                     this.listenTo(window.gevents, 'materials:' + mats[i], this.updateMat.curry(mats[i]));
                 }
             }
-            
-            this.listenTo(this.collection, 'add', this.onAdd);
 
-           
+            this.listenTo(this.collection, 'add', this.onAdd);
         },
 
         onAdd: function(item) {
@@ -541,11 +535,11 @@ namespace.module('bot.inv', function (exports, require) {
 
         prettyAffix: function(affix) {
             //Working here now
-            var splits = affix.split(" ");
-            if(splits[1] == "added") {
-                return "+" + splits[2] + " Added " + splits[0][0].toUpperCase() + splits[0].slice(1);
-            } else if (splits[1] == "more") {
-                return splits[2] + "% More " + splits[0][0].toUpperCase() + splits[0].slice(1);
+            var splits = affix.split(' ');
+            if (splits[1] == 'added') {
+                return '+' + splits[2] + ' Added ' + splits[0][0].toUpperCase() + splits[0].slice(1);
+            } else if (splits[1] == 'more') {
+                return splits[2] + '% More ' + splits[0][0].toUpperCase() + splits[0].slice(1);
             } else {
                 log.warning('ItemView.prettyAffix returning unstyled affix, no modifier def');
             }
@@ -556,9 +550,9 @@ namespace.module('bot.inv', function (exports, require) {
             var affixes = this.model.get('affixes');
             var rendered = '';
             _.each(affixes, function(affix) {
-                rendered += "<p>" + this.prettyAffix(affix) + "</p>"
+                rendered += '<p>' + this.prettyAffix(affix) + '</p>'
             }, this);
-            if(this.model.get('nextAffix') != '') {
+            if (this.model.get('nextAffix') != '') {
                 rendered += '<p class="nextAffix">' + this.prettyAffix(this.model.get('nextAffix')) +
                     '<input type="button" value="Reroll (' + this.model.get('level') + ' poops)" class="reroll"></p>';
             }
@@ -569,10 +563,10 @@ namespace.module('bot.inv', function (exports, require) {
         getNextLevelXp: function(xp) {
             return this.model.getNextLevelXp(xp);
         },
-        
+
         render: function(notFirst) {
             //console.log('rendering this', this);
-            if(!this.renderInitted) {
+            if (!this.renderInitted) {
                 this.initRender();
                 this.renderInitted = true;
             } 
@@ -591,17 +585,13 @@ namespace.module('bot.inv', function (exports, require) {
                 'buttons': this.buttons,
                 'midExtra': this.midExtra()
             };
-            //console.log("itemview", this.midExtra());
-            
+            //console.log('itemview', this.midExtra());
+
             var obj = _.extend({}, this.model.toJSON(), ext);
             this.$el.html(this.template(obj));
             this.$el.attr({
                 'class': 'item collapsed '+ this.model.get('name').split(' ').join('-')
             });
-
-            
-            
-            
         },
 
         expandCollapse: function() {
@@ -654,27 +644,14 @@ namespace.module('bot.inv', function (exports, require) {
         onChange: function() {
             this.render();
             //Trying to un-disable butons here
-            //console.log("oh yeah", this.$('.level-up'));
+            //console.log('oh yeah', this.$('.level-up'));
             if (this.model.canLevel()) {
                 this.$('.level-up').prop('disabled', false);
             } else {
                 this.$('.level-up').prop('disabled', true);
             }
 
-        },
-        /*equip: function() {
-            log.info('equip click on model name %s', this.model.get('name'));
-            var slot;
-            var itemType = this.model.get('itemType');
-            if (itemType === 'armor') {
-                slot = this.model.get('type');
-            } else if (itemType === 'weapon') {
-                slot = 'mainHand';
-            } else if (itemType === 'skill') {
-                slot = '';
-            }
-            this.model.trigger('equipClick', this.model, slot);
-        },*/
+        }
     });
 
     var CraftItemView = ItemView.extend({
@@ -685,7 +662,7 @@ namespace.module('bot.inv', function (exports, require) {
 	initialize: function() {
 	    this.buttons = $('#craft-menu-item-buttons-template').html();
             this.listenTo(this.model, 'craftSuccess', this.remove);
-            if(this.model.get('craftCost')) {
+            if (this.model.get('craftCost')) {
                 this.matType = this.model.get('craftCost').split(' ')[1];
                 this.listenTo(window.gevents, 'materials:' + this.matType, this.onChange);
             } else {
@@ -705,15 +682,15 @@ namespace.module('bot.inv', function (exports, require) {
 	},
 
         midExtra: function() {
-            return "Craft Cost: " + this.model.get('craftCost') +
-                "<br>Scrap Value: 2 Poops";
+            return 'Craft Cost: ' + this.model.get('craftCost') +
+                '<br>Scrap Value: 2 Poops';
         },
 
         onChange: function() {
             this.render(true);
 
-            if(!this.model.collection) {
-                log.error("CraftItemView failure: model does not have a collection");
+            if (!this.model.collection) {
+                log.error('CraftItemView failure: model does not have a collection');
             }
             if (this.model.collection.materials.enoughToPay(this.model.get('craftCost'))) {
                 this.$('.craft').prop('disabled', false);

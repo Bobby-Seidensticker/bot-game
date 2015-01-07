@@ -428,7 +428,7 @@ namespace.module('bot.inv', function (exports, require) {
                 new ArmorModel({name: 'cardboard kneepads'})
             ];
             this.add(defaults);
-            this.materials = new MaterialModel({planks: 50});
+            this.materials = new MaterialModel({});
             this.recipes = new RecipeCollection();
             this.recipes.materials = this.materials;
             this.listenTo(this.recipes, 'craftClick', this.craft);

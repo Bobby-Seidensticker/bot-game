@@ -28,11 +28,20 @@ namespace.module('bot.main', function (exports, require) {
         $(window).on('keypress', function(event) {
             var SPACE = 32;
             var EKEY = 101;
+            var DKEY = 100;
             if (event.keyCode == SPACE) {
                 gameModel.toggle();
             } else if (event.keyCode == EKEY) {
                 //Cheat for adding 1000xp (for easier testing)
+                log.warning("XP Cheat!");                
                 gameModel.char.applyXp(1000);
+            } else if (event.keyCode == DKEY) {
+                //Cheat for dropping 50 of each currency
+                log.warning("Currency Cheat!");
+                var matTypes = ["embers", "mints", "planks", "poops", "skulls", "sparks", "tumors"];
+                _.each(matTypes, function(mat) {
+                    gameModel.char.get('inv').addDrops(['50 ' + mat]);
+                });
             }
         });
     }

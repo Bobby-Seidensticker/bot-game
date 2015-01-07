@@ -108,7 +108,7 @@ namespace.module('bot.test', function (exports, require) {
 
 	    char.attackTarget(mon, skill);
 	    assert.ok(mon.get('hp') < mon.get('maxHp'), "Monster's hp decreased from attack");
-	    assert.ok(skill.get('cooldown') ==  skill.get('cooldownTime'), 'cooldown set to cooldownTime after attack');
+	    assert.ok(skill.cooldown ==  skill.get('cooldownTime'), 'cooldown set to cooldownTime after attack');
 
 
 	    char.set('hp', char.get('maxHp'));
@@ -120,7 +120,7 @@ namespace.module('bot.test', function (exports, require) {
 
 	    mon.attackTarget(char, skill);
 	    assert.ok(char.get('hp') < char.get('maxHp'), "Character's hp decreased from attack");
-	    assert.ok(skill.get('cooldown') ==  skill.get('cooldownTime'), 'cooldown set to cooldownTime after attack');	    
+	    assert.ok(skill.cooldown ==  skill.get('cooldownTime'), 'cooldown set to cooldownTime after attack');	    
 	});
 
 	QUnit.test('Vector', function(assert) {

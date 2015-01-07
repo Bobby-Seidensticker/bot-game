@@ -8,6 +8,8 @@ namespace.module('bot.main', function (exports, require) {
     var views = namespace.bot.views;
 
     function onReady() {
+        window.gevents = _.extend({}, Backbone.Events);
+
         localStorage.clear();
 
         log.info('onReady');
@@ -44,7 +46,6 @@ namespace.module('bot.main', function (exports, require) {
             //this.inv = new inv.ItemCollection({}, []);
 
             //this.recipes = new inv.RecipeCollection();
-            window.gevents = _.extend({}, Backbone.Events);
 
             this.inv = new inv.ItemCollection();
             this.char = new entity.newChar(this.inv);
@@ -131,7 +132,9 @@ namespace.module('bot.main', function (exports, require) {
 
             this.lastTime = thisTime;
 
-            this.set('dirty', true);
+            Events.mark('vis');
+
+            Events.triggerAll(window.gevents);
 
             if (this.get('running')) {
                 requestAnimFrame(this.tick.bind(this));

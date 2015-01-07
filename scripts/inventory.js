@@ -18,7 +18,7 @@ namespace.module('bot.inv', function (exports, require) {
                 'mints': 0,
                 'sparks': 0,
                 'tumors': 0,
-                'nuggets':0,
+                'nuggets': 0,
             }
         },
 
@@ -33,9 +33,7 @@ namespace.module('bot.inv', function (exports, require) {
         payCost: function(craftCost) {
             // craft cost is a string formatted 'material int' eg 'tumors 3'
             var splits = craftCost.split(' ');
-            //console.log(craftCost, splits);
             this.set(splits[1], this.get(splits[1]) - splits[0]);
-            //console.log(this.get(splits[1]));
             window.Events.mark('materials:' + splits[1]);
         },
 
@@ -449,7 +447,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         canCraft: function(item) {
-            if (this.materials.enoughToPay(item.get('craftCost'))){
+            if (this.materials.enoughToPay(item.get('craftCost'))) {
                 return true;
             }
             return false;
@@ -659,20 +657,7 @@ namespace.module('bot.inv', function (exports, require) {
                 this.$('.level-up').prop('disabled', true);
             }
 
-        },
-        /*equip: function() {
-            log.info('equip click on model name %s', this.model.get('name'));
-            var slot;
-            var itemType = this.model.get('itemType');
-            if (itemType === 'armor') {
-                slot = this.model.get('type');
-            } else if (itemType === 'weapon') {
-                slot = 'mainHand';
-            } else if (itemType === 'skill') {
-                slot = '';
-            }
-            this.model.trigger('equipClick', this.model, slot);
-        },*/
+        }
     });
 
     var CraftItemView = ItemView.extend({

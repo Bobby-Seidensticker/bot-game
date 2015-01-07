@@ -490,11 +490,15 @@ namespace.module('bot.inv', function (exports, require) {
                     var mat = mats[i];
                     var amount = this.collection.materials.get(mat);
                     //TODO put in proper template
-                    this.groupContentEls.material.append('<p>' + mats[i] + ': ' + amount + '</p>');
+                    this.groupContentEls.material.append('<p>' + mats[i] + ': <span class="' + mats[i] + '"></span></p>');
+                    this.updateMat(mats[i]);
+                    this.listenTo(window.gevents, 'materials:'+ mats[i], this.updateMat.curry(mats[i]));
                 }
             }
             
             this.listenTo(this.collection, 'add', this.onAdd);
+
+           
         },
 
         onAdd: function(item) {
@@ -505,6 +509,11 @@ namespace.module('bot.inv', function (exports, require) {
             var el = view.render().el;
 
             $container.append(el);
+        },
+
+        updateMat: function(matName) {
+            console.log(matName);
+            this.$('.' + matName).html(this.collection.materials.get(matName));
         },
     });
 

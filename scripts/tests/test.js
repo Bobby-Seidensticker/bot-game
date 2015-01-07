@@ -22,6 +22,8 @@ namespace.module('bot.test', function (exports, require) {
 
         log.info('onReady');
 
+        window.gevents = _.extend({}, Backbone.Events);
+
         var gameModel = new main.GameModel();
         //console.log('gameModel', gameModel);
 

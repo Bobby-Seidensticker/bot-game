@@ -132,7 +132,7 @@ namespace.module('bot.entity', function (exports, require) {
             this.set('hp', this.get('hp') - totalDmg);
 
             if (this.get('hp') <= 0) {
-                window.gevents.trigger('monsters:death', this);
+                window.Events.mark('monsters:death');
                 log.info('Lvl %d - %s from team %s DEAD, hit for %s', this.get('level'), this.get('name'), this.teamString(), JSON.stringify(damage));
             } else {
                 log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.get('hp'));
@@ -157,7 +157,7 @@ namespace.module('bot.entity', function (exports, require) {
             target.takeDamage(dmg);
             if (!target.isAlive()) {
                 if (this.isChar()) {
-                    window.gevents.trigger('monsters:death', this);
+                    window.Events.mark('monsters:death');
                     this.onKill(target, skill);
                 } else {
                     log.info('Character has died!');

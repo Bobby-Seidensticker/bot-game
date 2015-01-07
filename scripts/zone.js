@@ -55,7 +55,7 @@ namespace.module('bot.zone', function (exports, require) {
             data.rooms[0].char = this.char;
             data.initialized = true;
             this.set(data);
-            window.gevents.trigger('zone:newZone');
+            window.Events.mark('zone:newZone');
         },
 
         getCurrentRoom: function() {
@@ -79,7 +79,7 @@ namespace.module('bot.zone', function (exports, require) {
                 var curRoom = this.getCurrentRoom();
                 curRoom.char = this.char;
                 this.char.initPos();
-                window.gevents.trigger('zone:nextRoom', curRoom);
+                window.Events.mark('zone:nextRoom');
                 rval = true;
             }
             return rval;
@@ -98,12 +98,6 @@ namespace.module('bot.zone', function (exports, require) {
         model: entity.MonsterModel,
 
         initialize: function(models) {
-            //this.livingCount = models.length;
-            this.listenTo(window.gevents, 'monsters:death', this.onDeath);
-        },
-
-        onDeath: function() {
-            //this.livingCount--;
         },
 
         update: function(t) {

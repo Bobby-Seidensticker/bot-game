@@ -42,7 +42,7 @@ namespace.module('bot.inv', function (exports, require) {
         addDrop: function(drop) {
             var splits = drop.split(' ');
             this.set(splits[1], this.get(splits[1]) + parseInt(splits[0]));
-            window.gevents.trigger('materials:' + splits[1]);
+            window.Events.mark('materials:' + splits[1]);
         }
     });
 

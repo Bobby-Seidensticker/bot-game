@@ -188,7 +188,6 @@ namespace.module('bot.inv', function (exports, require) {
         defaults: function() {
             return _.extend({
                 manaCost: 0,
-                cooldown: 0,
                 cooldownTime: 800,
                 types: [],
                 level: 1,
@@ -197,16 +196,17 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         initialize: function() {
+            this.cooldown = 0;
             log.debug('loading skill %s from file', this.get('name'));
             this.set(itemref.expand('skill', this.get('name')));
         },
 
         cool: function() {
-            return this.get('cooldown') <= 0;
+            return this.cooldown <= 0;
         },
 
         use: function() {
-            this.set('cooldown', this.get('cooldownTime'));
+            this.cooldown = this.get('cooldownTime');
         },
 
         computeAttrs: function(weapon, affixDict) {

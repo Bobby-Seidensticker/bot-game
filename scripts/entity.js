@@ -193,20 +193,16 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         getCoords: function() {
-            return [this.get('x'), this.get('y')];
+            return [this.x, this.y];
         },
 
         initPos: function() {
             if (this.isChar()) {
-                this.set({
-                    x: 0,
-                    y: 500000
-                });
+                this.x = 0;
+                this.y = 500000;
             } else if (this.isMonster()) {
-                this.set({
-                    x: 800000 + prob.rand(0, 100000),
-                    y: 500000 + prob.rand(-100000, 100000)
-                });
+                this.x = 800000 + prob.rand(0, 100000);
+                this.y = 500000 + prob.rand(-100000, 100000);
             }
         },
 
@@ -260,22 +256,21 @@ namespace.module('bot.entity', function (exports, require) {
             }
 
             if (!vector.equal(curPos, newPos)) {
-                this.set('x', newPos[0]);
-                this.set('y', newPos[1]);
+                this.x = newPos[0];
+                this.y = newPos[1];
                 log.debug('%s moving closer', this.get('name'));
-                this.set('nextAction', 30);
+                this.nextAction = 30;
             }
         },
 
         busy: function() {
-            return this.get('nextAction') > 0;
+            return this.nextAction > 0;
         },
 
         update: function(dt) {
             var skills = this.get('skillchain');
-            skills.each(function(skill) { skill.set('cooldown', skill.get('cooldown') - dt); });
-
-            this.set('nextAction', this.get('nextAction') - dt);
+            skills.each(function(skill) { skill.cooldown -= dt; });
+            this.nextAction -= dt;
         }
     });
     
@@ -288,6 +283,7 @@ namespace.module('bot.entity', function (exports, require) {
 
         initialize: function() {
             log.info('CharModel initialize');
+            this.nextAction = 0;
             this.fetch();
             this.computeAttrs();
 

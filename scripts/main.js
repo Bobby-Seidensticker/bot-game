@@ -7,6 +7,8 @@ namespace.module('bot.main', function (exports, require) {
     var zone = namespace.bot.zone;
     var views = namespace.bot.views;
 
+    var DT = 10;
+
     function onReady() {
         window.gevents = _.extend({}, Backbone.Events);
 
@@ -56,6 +58,12 @@ namespace.module('bot.main', function (exports, require) {
             this.headerView = views.newHeaderView(this.char, this.inv, this.zone);
 
             this.lastTime = new Date().getTime();
+            $(window).on('keypress', function(event) {
+                var S = 115;
+                if (event.keyCode == S) {
+                    this.lastTime -= 100000;
+                }
+            }.bind(this));
             this.zonesCleared = 0;
             this.deaths = 0;
         },
@@ -88,8 +96,7 @@ namespace.module('bot.main', function (exports, require) {
             this.set('inZone', false);
         },
 
-        tick: function() {
-            log.debug('begin tick');
+        ensureRoom: function() {
             if (!this.get('inZone') || !this.char.get('hp') || this.char.get('hp') <= 0 || this.zone.done()) {
                 log.info('Getting new zone, recomputing char attrs');
                 this.char.computeAttrs();
@@ -97,23 +104,26 @@ namespace.module('bot.main', function (exports, require) {
                 this.zone.newZone('spooky dungeon', this.char.get('level'));
                 this.set('inZone', true);
             }
+            return this.zone.getCurrentRoom();
+        },
+
+        updateModels: function() {
+            var room = this.ensureRoom();
 
             var thisTime = new Date().getTime();
-            var room = this.zone.getCurrentRoom();
-            var dt = 10;
-            for (var t = this.lastTime; t < thisTime; t += dt) {
-            //for (var t = this.lastTime; t < thisTime; t += thisTime - this.lastTime) {
-                log.debug('tick calling update functions');
-                // pass new time to char and all monsters
-                this.char.update(dt);
-                room.monsters.update(dt);
+            var steps = Math.floor((thisTime - this.lastTime) / DT);
+
+            for (var i = steps; i--;) {
+                this.char.update(DT);
+                room.monsters.update(DT);
 
                 this.char.tryDoStuff(room);
 
                 if (this.zone.done()) {
                     this.zonesCleared++;
                     this.set('inZone', false);
-                    break;
+                    room = this.ensureRoom();
+                    continue;
                 }
 
                 if (this.zone.nextRoom()) {
@@ -126,11 +136,27 @@ namespace.module('bot.main', function (exports, require) {
 
                 if (!this.char.isAlive()) {
                     this.deaths++;
-                    break;
+                    this.set('inZone', false);
+                    room = this.ensureRoom();
+                    continue;
                 }
             }
 
-            this.lastTime = thisTime;
+            this.lastTime += (steps - i) * DT;
+
+            if ((steps - i) > 1000) {
+                var dt = (new Date().getTime() - thisTime) / 1000;
+                log.warning('Took a big jump forward, ran %d loops in %.3f seconds, %.2f X real time',
+                            steps - i,
+                            dt,
+                            ((steps - i) / (1000 / DT)) / dt);
+            }
+        },
+
+        tick: function() {
+            log.debug('begin tick');
+
+            this.updateModels();
 
             Events.mark('vis');
 

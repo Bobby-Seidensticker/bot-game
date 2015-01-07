@@ -27,7 +27,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "shitty bow": {
                 "prototype": ["weapon"],
                 "type": "range",
-                "damage": 2,
+                "damage": 5,
                 "range": 400000,
                 "craftCost": "3 poops",
             },

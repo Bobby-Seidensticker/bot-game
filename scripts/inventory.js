@@ -33,10 +33,10 @@ namespace.module('bot.inv', function (exports, require) {
         payCost: function(craftCost) {
             // craft cost is a string formatted "material int" eg "tumors 3"
             var splits = craftCost.split(' ');
-            console.log(craftCost, splits);
+            //console.log(craftCost, splits);
             this.set(splits[1], this.get(splits[1]) - splits[0]);
-            //TODO - trigger an event to update material display in inv
-
+            //console.log(this.get(splits[1]));
+            window.Events.mark('materials:' + splits[1]);
         },
 
         addDrop: function(drop) {
@@ -84,8 +84,14 @@ namespace.module('bot.inv', function (exports, require) {
         },
         
         reroll: function() {
-            log.error('gearmdel reroll called');
-            this.set('nextAffix', this.rollAffix());
+            log.debug('gearmdel reroll called');
+            //console.log(this);
+            var rerollCost = this.get('level') + ' poops';
+            
+            if(this.collection.materials.enoughToPay(rerollCost)) {
+                this.collection.materials.payCost(rerollCost);
+                this.set('nextAffix', this.rollAffix());
+            }
         },
 
         levelUp: function() {
@@ -422,7 +428,7 @@ namespace.module('bot.inv', function (exports, require) {
                 new ArmorModel({name: 'cardboard kneepads'})
             ];
             this.add(defaults);
-            this.materials = new MaterialModel({planks: 50});
+            this.materials = new MaterialModel({});
             this.recipes = new RecipeCollection();
             this.recipes.materials = this.materials;
             this.listenTo(this.recipes, 'craftClick', this.craft);
@@ -436,6 +442,7 @@ namespace.module('bot.inv', function (exports, require) {
                 this.materials.payCost(item.get('craftCost'));
                 this.add(item);
 	        this.recipes.remove(item);
+                item.collection = this;
                 item.trigger('craftSuccess');
 	    } else {
                 log.warning('insufficient resources, craft failed');
@@ -553,7 +560,7 @@ namespace.module('bot.inv', function (exports, require) {
             }, this);
             if(this.model.get('nextAffix') != '') {
                 rendered += '<p class="nextAffix">' + this.prettyAffix(this.model.get('nextAffix')) +
-                    '<input type="button" value="Reroll (1 poop)" class="reroll"></p>';
+                    '<input type="button" value="Reroll (' + this.model.get('level') + ' poops)" class="reroll"></p>';
             }
             //TODO - put nextAffix here
             return rendered;
@@ -635,7 +642,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         reroll: function() {
-            log.error('craftitemview reroll called');
+            log.debug('invitemview reroll called');
             this.model.reroll();
             this.render();
         },

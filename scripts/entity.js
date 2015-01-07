@@ -297,6 +297,16 @@ namespace.module('bot.entity', function (exports, require) {
             });
         },
 
+        applyXp: function(xp) {
+            this.get('equipped').applyXp(xp);
+            this.set('xp', this.get('xp') + xp);
+            while (this.get('xp') >= this.get('nextLevelXp')) {
+                this.set('level', this.get('level') + 1);
+                this.set('xp', this.get('xp') - this.get('nextLevelXp'));
+                this.set('nextLevelXp', this.getNextLevelXp());
+            }            
+        },
+        
         equipClick: function(item) {
             var itemType = item.get('itemType');
             if (itemType === 'armor') {
@@ -313,13 +323,8 @@ namespace.module('bot.entity', function (exports, require) {
             var drops = target.getDrops();
             this.get('inv').addDrops(drops);
             var xp = target.xpOnKill();
-            this.get('equipped').applyXp(xp);
-            this.set('xp', this.get('xp') + xp);
-            while (this.get('xp') >= this.get('nextLevelXp')) {
-                this.set('level', this.get('level') + 1);
-                this.set('xp', this.get('xp') - this.get('nextLevelXp'));
-                this.set('nextLevelXp', this.getNextLevelXp());
-            }
+            this.applyXp(xp);
+
         },
 
         onDeath: function() {

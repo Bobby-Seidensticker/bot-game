@@ -27,8 +27,12 @@ namespace.module('bot.main', function (exports, require) {
 
         $(window).on('keypress', function(event) {
             var SPACE = 32;
+            var EKEY = 101;
             if (event.keyCode == SPACE) {
                 gameModel.toggle();
+            } else if (event.keyCode == EKEY) {
+                //Cheat for adding 1000xp (for easier testing)
+                gameModel.char.applyXp(1000);
             }
         });
     }

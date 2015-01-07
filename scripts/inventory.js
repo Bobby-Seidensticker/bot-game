@@ -85,6 +85,7 @@ namespace.module('bot.inv', function (exports, require) {
         
         reroll: function() {
             log.error('gearmdel reroll called');
+            console.log(this);
             this.set('nextAffix', this.rollAffix());
         },
 

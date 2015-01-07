@@ -155,14 +155,14 @@ namespace.module('bot.main', function (exports, require) {
                 }
             }
 
-            this.lastTime += (steps - i) * DT;
+            this.lastTime += steps * DT;
 
-            if ((steps - i) > 1000) {
+            if (steps > 1000) {
                 var dt = (new Date().getTime() - thisTime) / 1000;
                 log.warning('Took a big jump forward, ran %d loops in %.3f seconds, %.2f X real time',
-                            steps - i,
+                            steps,
                             dt,
-                            ((steps - i) / (1000 / DT)) / dt);
+                            (steps / (1000 / DT)) / dt);
             }
         },
 

@@ -278,10 +278,6 @@ namespace.module('bot.inv', function (exports, require) {
         // weapon slots: mainHand, offHand
         // armor slots: head, chest, hands, legs
         initialize: function(options, inv) {
-            if (inv) {
-                this.inv = inv;
-                this.listenTo(inv, 'equipClick', this.equip);
-            }
         },
 
         equip: function(item, slot) {
@@ -609,7 +605,7 @@ namespace.module('bot.inv', function (exports, require) {
         buttons: $('#inv-menu-item-buttons-template').html(),
 
         equip: function() {
-            log.debug('equip click on model name %s', this.model.get('name'));
+            log.info('equip click on model name %s', this.model.get('name'));
             this.model.trigger('equipClick', this.model);
         },
 

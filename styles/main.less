@@ -267,12 +267,35 @@ item
 }
 
 .header .skillchain .skill-slot {
+    position: relative;
     float: left;
-    height: 80px;
-    width: 80px;
+    height: 90px;
+    width: 90px;
     margin: 25px 2px;
-    border: 5px solid black;
-    border-radius: 5px;
+    overflow: hidden;
+
+    .veil {
+        width: 80px;
+        height: 80px;
+        border: 5px solid;
+        border-radius: 5px;
+
+        position: absolute;
+        z-index: 1;
+        opacity: 0.5;
+    }
+
+    .img-holder {
+        width: 80px;
+        height: 80px;
+        border: 5px solid black;
+        border-radius: 5px;
+
+        position: absolute;
+        z-index: 0;
+    }
 }
+
+
 
 /* / header vis */

@@ -130,7 +130,8 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         render: function() {
-            log.debug('rendering header skillchain view');
+            log.info('rendering header skillchain view');
+            console.log(arguments);
             var frag = document.createDocumentFragment();
 
             if (this._views) {
@@ -149,7 +150,7 @@ namespace.module('bot.views', function (exports, require) {
 
             this.$el.html(frag);
             return this;
-        },
+        }
     });
 
     var HeaderSkillView = Backbone.View.extend({
@@ -158,9 +159,56 @@ namespace.module('bot.views', function (exports, require) {
 
         template: _.template($('#header-skill-template').html()),
 
+        initialize: function() {
+            this.HEIGHT = 80;
+            this.lastCd = 0;
+        },
+
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
+            this.$veil = this.$('.veil');
+
+            this.lastCd = -1;
+            this.renderState();
+            this.listenTo(window.gevents, 'skill:change', this.renderState);
             return this;
+        },
+
+        renderState: function() {
+            console.log('skill render state');
+            var cd, css;
+
+            cd = Math.floor(this.model.cooldown / this.model.get('cooldownTime') * this.HEIGHT);
+            if (cd > this.HEIGHT) {
+                cd = 1;
+            } else if (cd < 0) {
+                cd = 0;
+            }
+
+            if (cd === this.lastCd) {
+                return;
+            }
+
+            if (cd === 0) {
+                css = {top: 0, 'opacity': 0};
+            } else if (cd === 1) {
+                css = {
+                    top: 0,
+                    opacity: 0.5,
+                    'background-color': 'green',
+                    'border-color': 'green',
+                    height: this.HEIGHT
+                };
+            } else {
+                css = {
+                    top: cd,
+                    opacity: 0.5,
+                    'background-color': 'red',
+                    'border-color': 'red',
+                    height: this.HEIGHT - cd
+                };
+            }
+            this.$veil.css(css);
         }
     });
 

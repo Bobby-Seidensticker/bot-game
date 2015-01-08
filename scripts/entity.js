@@ -245,7 +245,6 @@ namespace.module('bot.entity', function (exports, require) {
             var curPos = this.getCoords();
             var rate = 10000;
             var range = 100000;
-            
 
             if (enemies.length === 0) {
                 newPos = vector.closer(curPos, door, rate, 0);
@@ -271,6 +270,9 @@ namespace.module('bot.entity', function (exports, require) {
             var skills = this.get('skillchain');
             skills.each(function(skill) { skill.cooldown -= dt; });
             this.nextAction -= dt;
+            if (this.isChar()) {
+                window.Events.mark('skill:change');
+            }
         }
     });
     

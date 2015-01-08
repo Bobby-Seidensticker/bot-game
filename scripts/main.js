@@ -31,6 +31,7 @@ namespace.module('bot.main', function (exports, require) {
             var SPACE = 32;
             var EKEY = 101;
             var DKEY = 100;
+            var SKEY = 115;
             if (event.keyCode == SPACE) {
                 gameModel.toggle();
             } else if (event.keyCode == EKEY) {
@@ -44,6 +45,8 @@ namespace.module('bot.main', function (exports, require) {
                 _.each(matTypes, function(mat) {
                     gameModel.char.get('inv').addDrops(['50 ' + mat]);
                 });
+            } else if (event.keyCode == SKEY) {
+                gameModel.lastTime -= 100000;
             }
         });
     }
@@ -71,12 +74,6 @@ namespace.module('bot.main', function (exports, require) {
             this.headerView = views.newHeaderView(this.char, this.inv, this.zone);
 
             this.lastTime = new Date().getTime();
-            $(window).on('keypress', function(event) {
-                var S = 115;
-                if (event.keyCode == S) {
-                    this.lastTime -= 100000;
-                }
-            }.bind(this));
             this.zonesCleared = 0;
             this.deaths = 0;
         },

@@ -175,7 +175,6 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         renderState: function() {
-            console.log('skill render state');
             var cd, css;
 
             cd = Math.floor(this.model.cooldown / this.model.get('cooldownTime') * this.HEIGHT);
@@ -190,22 +189,22 @@ namespace.module('bot.views', function (exports, require) {
             }
 
             if (cd === 0) {
-                css = {top: 0, 'opacity': 0};
+                css = {top: 0, 'opacity': 0, height: this.HEIGHT};
             } else if (cd === 1) {
                 css = {
                     top: 0,
-                    opacity: 0.5,
-                    'background-color': 'green',
-                    'border-color': 'green',
+                    opacity: 0.4,
+                    'background-color': 'red',
+                    'border-color': 'red',
                     height: this.HEIGHT
                 };
             } else {
                 css = {
-                    top: cd,
-                    opacity: 0.5,
+                    top: this.HEIGHT - cd,
+                    opacity: 0.4,
                     'background-color': 'red',
                     'border-color': 'red',
-                    height: this.HEIGHT - cd
+                    height: cd
                 };
             }
             this.$veil.css(css);

@@ -152,10 +152,8 @@ namespace.module('bot.entity', function (exports, require) {
               return;
               }*/
             // TODO: use duration value on skillToUse to set nextAction value on entity
-            this.set({
-                mana: this.get('mana') - skill.get('manaCost'),
-            });
-            var dmg = this.getDamage(skill);
+            this.nextAction = 500;
+            var dmg = skill.getDamage(500);
             log.debug('%s attacking target %s for %s dmg with %s', this.get('name'),
                       target.get('name'), JSON.stringify(dmg), skill.get('name'));
             target.takeDamage(dmg);
@@ -167,6 +165,10 @@ namespace.module('bot.entity', function (exports, require) {
                     target.onDeath();
                 }
             }
+            this.set({
+                mana: this.get('mana') - skill.get('manaCost'),
+            });
+
         },
 
         getNextLevelXp: function() {

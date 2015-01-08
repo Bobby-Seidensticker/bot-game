@@ -197,8 +197,19 @@ namespace.module('bot.inv', function (exports, require) {
             return this.cooldown <= 0;
         },
 
-        use: function() {
-            this.cooldown = this.get('cooldownTime');
+        getDamage: function(castTime) {
+            this.use(castTime);
+            return {
+                'physDmg': this.get('physDmg'),
+                'fireDmg': this.get('fireDmg'),
+                'coldDmg': this.get('coldDmg'),
+                'lightDmg': this.get('lightDmg'),
+                'poisDmg': this.get('poisDmg')
+            };
+        },
+
+        use: function(castTime) {
+            this.cooldown = this.get('cooldownTime') + castTime;
         },
 
         computeAttrs: function(weapon, affixDict) {

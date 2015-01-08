@@ -18,7 +18,7 @@ namespace.module('bot.events', function (exports, require) {
             function(value, key, list) {
                 if (value) {
                     if (key !== 'vis') {
-                        log.info('triggering event %s', key);
+                        log.debug('triggering event %s', key);
                     }
                     eventObject.trigger(key);
                     list[key] = false;

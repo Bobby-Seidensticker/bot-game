@@ -129,24 +129,32 @@ namespace.module('bot.window', function (exports, require) {
         ctx.closePath();
     }
 
-
-    var MsgView = Backbone.View.extend({
-        el: $('.msg'),
+    var MessagesView = Backbone.View.extend({
+        el: $('.messages'),
 
         initialize: function() {
-            log.warning('msgview init');
+            log.error('MessagesView init, this.collection === undefined = %s', (this.collection === undefined).toString());
             $(window).on('resize', this.resize.bind(this));
             this.resize();
+            this.listenTo(this.collection, 'pruned', this.render);
         },
 
         resize: function() {
             var ss = [window.innerWidth, window.innerHeight];
             this.$el.css({
-                width: 400,
-                height: ss[1] - 10,
-                left: ss[0] - 400,
-                top: 160
+                width: 300,
+                height: ss[1] - 150 - 10,
+                left: ss[0] - 400 - 10 - 300,
+                top: 150,
+                'z-index': 10
             });
+            this.render();
+        },
+
+        render: function() {
+            var html = '<p>' + this.collection.pluck('message').join('</p>\n<p>') + '</p>'
+            log.info('messagesView html: %s', html);
+            this.$el.html(html);
         }
     });
 
@@ -157,13 +165,13 @@ namespace.module('bot.window', function (exports, require) {
     var GameView = Backbone.View.extend({
         el: $('body'),
 
-        initialize: function(options, gameModel) {
+        initialize: function(options) {
             console.log('GameView initialize');
 
             this.headerView = new HeaderView();
             this.menuView = new MenuView();
-            this.visView = new VisView({}, gameModel);
-            this.msgView = new MsgView();
+            this.visView = new VisView({}, options.gameModel);
+            this.messagesView = new MessagesView({collection: options.messageCollection});
         },
     });
 

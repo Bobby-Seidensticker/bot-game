@@ -94,7 +94,6 @@ namespace.module('bot.utils', function (exports, require) {
 
 });
 
-
 namespace.module('bot.messages', function (exports, require) {
 
     var log = namespace.bot.log;
@@ -102,7 +101,7 @@ namespace.module('bot.messages', function (exports, require) {
     var MessageModel = Backbone.Model.extend({
         defaults: function() {
             return {
-                expires: new Date().getTime() + 10000,
+                expires: new Date().getTime() + 20000,
                 message: ''
             };
         },
@@ -116,23 +115,28 @@ namespace.module('bot.messages', function (exports, require) {
             var now = new Date().getTime();
             this.remove(this.filter(function(model) { return model.get('expires') < now; }));
             log.info('message collection prune, data: %s', JSON.stringify(this.pluck('message')));
+            this.trigger('pruned');
         },
+
+        send: function(message, expiresIn) {
+            var obj = {message: message};
+            if (expiresIn !== undefined) {
+                obj.expires = new Date().getTime() + expiresIn;
+            }
+            this.add(new MessageModel(obj));
+            this.prune();
+        }
     });
 
+    /*
     function Messages() {
         this.msgs = new MessageCollection();
     }
 
     Messages.prototype.send = function(message, expiresIn) {
-        var obj = {message: message};
-        if (expiresIn !== undefined) {
-            obj.expires = new Date().getTime() + expiresIn;
-        }
-        this.msgs.add(new MessageModel(obj));
-        log.error(this.msgs.length);
-        this.msgs.prune();
-        log.error(this.msgs.length);
-    }
+    }*/
 
-    window.msgs = new Messages();
+    exports.extend({
+        MessageCollection: MessageCollection
+    });
 });

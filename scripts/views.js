@@ -214,5 +214,4 @@ namespace.module('bot.views', function (exports, require) {
     exports.extend({
         newHeaderView: newHeaderView
     });
-
 });

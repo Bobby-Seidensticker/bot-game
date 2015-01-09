@@ -11,6 +11,7 @@ namespace.module('bot.main', function (exports, require) {
 
     function onReady() {
         window.gevents = _.extend({}, Backbone.Events);
+        window.msgs = new namespace.bot.messages.MessageCollection();
 
         localStorage.clear();
 
@@ -18,15 +19,8 @@ namespace.module('bot.main', function (exports, require) {
 
         var gameModel = new GameModel();
 
-        var gameView = new namespace.bot.window.GameView({}, gameModel);// find out initialization args, pick who gets what
+        var gameView = new namespace.bot.window.GameView({gameModel: gameModel, messageCollection: window.msgs});
         var m = new menu.TabView();
-
-        //var invMenuView = new inv.InvMenuView({model: gameModel.inv});
-
-        // var invModel = new inv.InvModel();
-        // var invMenuView = new inv.InvMenuView({model: invModel});
-        // var craftMenuView = new inv.CraftMenuView({model: invModel});
-        // var lvlupMenuView = new inv.LvlupMenuView({model: invModel});
 
         $(window).on('keypress', function(event) {
             var SPACE = 32;

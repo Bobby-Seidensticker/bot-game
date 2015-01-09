@@ -129,6 +129,28 @@ namespace.module('bot.window', function (exports, require) {
         ctx.closePath();
     }
 
+
+    var MsgView = Backbone.View.extend({
+        el: $('.msg'),
+
+        initialize: function() {
+            log.warning('msgview init');
+            $(window).on('resize', this.resize.bind(this));
+            this.resize();
+        },
+
+        resize: function() {
+            var ss = [window.innerWidth, window.innerHeight];
+            this.$el.css({
+                width: 400,
+                height: ss[1] - 10,
+                left: ss[0] - 400,
+                top: 160
+            });
+        }
+    });
+
+
     // could make a library that wraps a canvas context.
     // Need to probably get drawing into non-dom canvases for speedup.  At very least for projectiles
 
@@ -141,6 +163,7 @@ namespace.module('bot.window', function (exports, require) {
             this.headerView = new HeaderView();
             this.menuView = new MenuView();
             this.visView = new VisView({}, gameModel);
+            this.msgView = new MsgView();
         },
     });
 

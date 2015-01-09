@@ -15,6 +15,7 @@ namespace.module('bot.main', function (exports, require) {
         localStorage.clear();
 
         log.info('onReady');
+
         var gameModel = new GameModel();
 
         var gameView = new namespace.bot.window.GameView({}, gameModel);// find out initialization args, pick who gets what
@@ -46,6 +47,7 @@ namespace.module('bot.main', function (exports, require) {
                     gameModel.char.get('inv').addDrops(['50 ' + mat]);
                 });
             } else if (event.keyCode == SKEY) {
+                log.warning("Time Cheat!");
                 gameModel.lastTime -= 100000;
             }
         });

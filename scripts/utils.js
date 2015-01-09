@@ -72,7 +72,7 @@ namespace.module('bot.utils', function (exports, require) {
         _.each(stats, function(stat) { t[stat] = applyAffixes(t[stat], affixDict[stat]); });
     }
 
-    function affixesToAffDict (affixes) {
+    function affixesToAffDict(affixes) {
         var affixDict = {};
         for (var i = 0; i < affixes.length; i++) {
             var affix = affixes[i].split(' ');
@@ -92,4 +92,47 @@ namespace.module('bot.utils', function (exports, require) {
         affixesToAffDict: affixesToAffDict
     });
 
+});
+
+
+namespace.module('bot.messages', function (exports, require) {
+
+    var log = namespace.bot.log;
+
+    var MessageModel = Backbone.Model.extend({
+        defaults: function() {
+            return {
+                expires: new Date().getTime() + 10000,
+                message: ''
+            };
+        },
+    });
+
+    var MessageCollection = Backbone.Collection.extend({
+        model: MessageModel,
+        comparator: 'expires',
+
+        prune: function() {
+            var now = new Date().getTime();
+            this.remove(this.filter(function(model) { return model.get('expires') < now; }));
+            log.info('message collection prune, data: %s', JSON.stringify(this.pluck('message')));
+        },
+    });
+
+    function Messages() {
+        this.msgs = new MessageCollection();
+    }
+
+    Messages.prototype.send = function(message, expiresIn) {
+        var obj = {message: message};
+        if (expiresIn !== undefined) {
+            obj.expires = new Date().getTime() + expiresIn;
+        }
+        this.msgs.add(new MessageModel(obj));
+        log.error(this.msgs.length);
+        this.msgs.prune();
+        log.error(this.msgs.length);
+    }
+
+    window.msgs = new Messages();
 });

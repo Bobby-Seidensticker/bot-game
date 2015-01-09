@@ -328,7 +328,7 @@ namespace.module('bot.entity', function (exports, require) {
             this.get('inv').addDrops(drops);
             var xp = target.xpOnKill();
             this.applyXp(xp);
-
+            window.msgs.send('Killed ' + (Math.floor(new Date().getTime() % 100000)));
         },
 
         onDeath: function() {

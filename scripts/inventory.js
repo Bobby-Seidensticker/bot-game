@@ -293,6 +293,13 @@ namespace.module('bot.inv', function (exports, require) {
 
         equip: function(item, slot) {
             log.debug('EquippedGearModel.equip, slot: %s', slot);
+            if(this.get(slot) == item) {
+                //If already equipped, unequip
+                this.unset(slot);
+                item.set('equippedBy', '');
+                this.trigger('equipSuccess');
+                return;
+            }
             var canEquipItem = true;
             var success = false;
 
@@ -570,6 +577,14 @@ namespace.module('bot.inv', function (exports, require) {
             this.$('.xp').html(this.model.get('xp'));
             this.$('.nextLevelXp').html(this.model.getNextLevelXp());
             this.$('.item-affixes').html(this.renderAffixes());
+            this.$('.level').html(this.model.get('level'));
+
+            if (this.model.get('equippedBy') == '') {
+                this.$('.equip').attr('value', 'Equip');
+            } else {
+                this.$('.equip').attr('value', 'Unequip');
+            }
+                                                     
 
             return this;
         },

@@ -17,10 +17,10 @@ namespace.module('bot.zone', function (exports, require) {
 
         initialize: function(options) {
             options = options || {};
-            if (!options.char) {
-                throw('no char given to zone manager');
+            if (!options.hero) {
+                throw('no hero given to zone manager');
             }
-            this.char = options.char;
+            this.hero = options.hero;
             this.newZone('spooky dungeon', 1);
         },
 
@@ -44,22 +44,22 @@ namespace.module('bot.zone', function (exports, require) {
                 rooms[i] = {
                     monsters: monsters,
                     door: [1000000, 500000],
-                    char: undefined
+                    hero: undefined
                 };
             }
             log.info('ZoneManager newZone%s', monsters.reduce(function(m, n) {
                 return m + n.get('name') + ", "}, ""));
             
-            data.charPos = 0;
+            data.heroPos = 0;
             data.rooms = rooms;
-            data.rooms[0].char = this.char;
+            data.rooms[0].hero = this.hero;
             data.initialized = true;
             this.set(data);
             window.DirtyQueue.mark('zone:newZone');
         },
 
         getCurrentRoom: function() {
-            return this.get('rooms')[this.get('charPos')];
+            return this.get('rooms')[this.get('heroPos')];
         },
 
         roomCleared: function() {
@@ -71,14 +71,14 @@ namespace.module('bot.zone', function (exports, require) {
             if (this.done()) {
                 rval = true;
             } else if (this.roomCleared() &&
-                       vector.equal(this.char.getCoords(), this.getCurrentRoom().door)) {
-                this.getCurrentRoom().char = undefined;
+                       vector.equal(this.hero.getCoords(), this.getCurrentRoom().door)) {
+                this.getCurrentRoom().hero = undefined;
                 this.set({
-                    'charPos': this.get('charPos') + 1
+                    'heroPos': this.get('heroPos') + 1
                 });
                 var curRoom = this.getCurrentRoom();
-                curRoom.char = this.char;
-                this.char.initPos();
+                curRoom.hero = this.hero;
+                this.hero.initPos();
                 window.DirtyQueue.mark('zone:nextRoom');
                 rval = true;
             }
@@ -87,7 +87,7 @@ namespace.module('bot.zone', function (exports, require) {
 
         done: function() {
             if (this.roomCleared() &&
-                this.get('charPos') === this.get('rooms').length - 1) {
+                this.get('heroPos') === this.get('rooms').length - 1) {
                 return true;
             }
             return false;

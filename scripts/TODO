@@ -11,14 +11,14 @@ Equip event, triggered by user through UI (some view somewhere):
   on equip success, trigger 'equipSuccess'
        window.ItemEvents.trigger('equipSuccess', item, slot);
 
-  listening char, recomputes attrs
+  listening hero, recomputes attrs
        this.listenTo(window.ItemEvents, 'equipSuccess', this.computeAttrs);
        window.DirtyQueue.mark('equipSuccess');
 
   After models are done doing stuff:
     window.DirtyQueue.triggerAll()
 
-  listening charView, headerView, statsView, inventoryView, equippedGearView, etc.... all update
+  listening heroView, headerView, statsView, inventoryView, equippedGearView, etc.... all update
     this.listenTo(window.DirtyListener, 'equipSuccess', this.something);
       (rewrite absolutely everything, infrequent)
 

@@ -1,6 +1,6 @@
 namespace.module('bot.entity', function (exports, require) {
 
-    var TEAM_CHAR = 0;
+    var TEAM_HERO = 0;
     var TEAM_MONSTER = 1;
 
     var funcs = require('org.startpad.funcs').patch();
@@ -97,13 +97,13 @@ namespace.module('bot.entity', function (exports, require) {
             return this.get('team') === TEAM_MONSTER;
         },
 
-        isChar: function() {
-            return this.get('team') === TEAM_CHAR;
+        isHero: function() {
+            return this.get('team') === TEAM_HERO;
         },
 
         teamString: function() {
-            if (this.get('team') === TEAM_CHAR) {
-                return 'Character';
+            if (this.get('team') === TEAM_HERO) {
+                return 'Hero';
             }
             return 'Monster';
         },
@@ -135,7 +135,7 @@ namespace.module('bot.entity', function (exports, require) {
                 if (this.isMonster()) {
                     window.DirtyQueue.mark('monsters:death');
                 } else {
-                    window.DirtyQueue.mark('char:death');
+                    window.DirtyQueue.mark('hero:death');
                 }
                 log.info('Lvl %d - %s from team %s DEAD, hit for %s', this.get('level'), this.get('name'), this.teamString(), JSON.stringify(damage));
             } else {
@@ -158,7 +158,7 @@ namespace.module('bot.entity', function (exports, require) {
                       target.get('name'), JSON.stringify(dmg), skill.get('name'));
             target.takeDamage(dmg);
             if (!target.isAlive()) {
-                if (this.isChar()) {
+                if (this.isHero()) {
                     window.DirtyQueue.mark('monsters:death');
                     this.onKill(target, skill);
                 } else {
@@ -188,7 +188,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         initPos: function() {
-            if (this.isChar()) {
+            if (this.isHero()) {
                 this.x = 0;
                 this.y = 500000;
             } else if (this.isMonster()) {
@@ -204,10 +204,10 @@ namespace.module('bot.entity', function (exports, require) {
             var enemies;
 
             if (this.isMonster()) {
-                if (!room.char.isAlive()) {
+                if (!room.hero.isAlive()) {
                     return;
                 }
-                enemies = [room.char];
+                enemies = [room.hero];
             } else {
                 enemies = room.monsters.living();
             }
@@ -261,21 +261,21 @@ namespace.module('bot.entity', function (exports, require) {
             var skills = this.get('skillchain');
             skills.each(function(skill) { skill.cooldown -= dt; });
             this.nextAction -= dt;
-            if (this.isChar()) {
+            if (this.isHero()) {
                 window.DirtyQueue.mark('skill:change');
             }
         }
     });
     
-    var CharModel = EntityModel.extend({
+    var HeroModel = EntityModel.extend({
         defaults: _.extend({}, EntityModel.prototype.defaults(), {
-            team: TEAM_CHAR,
+            team: TEAM_HERO,
         }),
 
-        localStorage: new Backbone.LocalStorage('char'),
+        localStorage: new Backbone.LocalStorage('hero'),
 
         initialize: function() {
-            log.info('CharModel initialize');
+            log.info('HeroModel initialize');
             this.nextAction = 0;
             this.fetch();
             this.computeAttrs();
@@ -324,7 +324,7 @@ namespace.module('bot.entity', function (exports, require) {
 
         onDeath: function() {
             //TODO write this
-            log.warning('Character has died');
+            log.warning('Hero has died');
         }
         
     });
@@ -423,28 +423,28 @@ namespace.module('bot.entity', function (exports, require) {
         }
     });
 
-    function newChar(inv) {
+    function newHero(inv) {
         // stopgap measures: basic equipped stuff
-        var charName = 'bobbeh';
-        var equipped = new inventory.EquippedGearModel({'charName': charName});
+        var heroName = 'bobbeh';
+        var equipped = new inventory.EquippedGearModel({'heroName': heroName});
         equipped.equip(inv.findWhere({name: 'wooden sword'}), 'mainHand');
         equipped.equip(inv.findWhere({name: 'cardboard kneepads'}), 'legs');
 
         var skillchain = inventory.newSkillchain()
         skillchain.add(inv.findWhere({name: 'basic melee'}));
 
-        var char = new CharModel({
-            name: charName,
+        var hero = new HeroModel({
+            name: heroName,
             skillchain: skillchain,
             inv: inv,
             equipped: equipped
         });
 
-        return char;
+        return hero;
     }
 
     exports.extend({
-        newChar: newChar,
+        newHero: newHero,
         MonsterModel: MonsterModel,
     });
 

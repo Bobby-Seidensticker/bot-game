@@ -100,7 +100,7 @@ namespace.module('bot.window', function (exports, require) {
             this.clear();
             var ctx = this.$canvas[0].getContext('2d');
 
-            var cpos = this.transpose(this.m.char.getCoords());
+            var cpos = this.transpose(this.m.hero.getCoords());
 
             circle(ctx, cpos, '#32E');
 

@@ -7,24 +7,24 @@ namespace.module('bot.views', function (exports, require) {
 
         template: _.template($('#header-stats-template').html()),
 
-        initialize: function(options, char, inv, zoneManager) {
-            charView = new HeaderCharView({model: char});
-            this.$el.append(charView.render().el);
+        initialize: function(options, hero, inv, zoneManager) {
+            heroView = new HeaderHeroView({model: hero});
+            this.$el.append(heroView.render().el);
 
             zoneView = new HeaderZoneView({model: zoneManager});
             this.$el.append(zoneView.render().el);
 
-            invView = new HeaderInvView({model: inv}, char.get('equipped'));
+            invView = new HeaderInvView({model: inv}, hero.get('equipped'));
             this.$el.append(invView.render().el);
 
-            skillchainView = new HeaderSkillchainView({collection: char.get('skillchain')});
+            skillchainView = new HeaderSkillchainView({collection: hero.get('skillchain')});
             this.$el.append(skillchainView.render().el);
 
             $('.header').append(this.$el);
         }
     });
 
-    var HeaderCharView = Backbone.View.extend({
+    var HeaderHeroView = Backbone.View.extend({
         template: _.template($('#header-stats-template').html()),
 
         className: 'stats',
@@ -109,8 +109,8 @@ namespace.module('bot.views', function (exports, require) {
         }
     });
 
-    function newHeaderView(char, inv, zoneManager) {
-        var view = new HeaderView({el: $('.header')}, char, inv, zoneManager);
+    function newHeaderView(hero, inv, zoneManager) {
+        var view = new HeaderView({el: $('.header')}, hero, inv, zoneManager);
         return view;
     }
 

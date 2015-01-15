@@ -28,25 +28,25 @@ namespace.module('bot.test', function (exports, require) {
         //console.log('gameModel', gameModel);
 
         QUnit.test('gameModel initialized', function(assert) {
-            assert.ok(gameModel.char, 'initialized with char');
+            assert.ok(gameModel.hero, 'initialized with hero');
             assert.ok(gameModel.inv, 'initialized with inv');
             assert.ok(gameModel.lastTime, 'able to get time');
         });
 
-        QUnit.test('Character properly initialized', function(assert) {
-            var char = gameModel.char;
-            //console.log('char', char);
-            assert.ok(char, 'character created');
-            assert.equal(char.get('name'), 'bobbeh', 'char name is bobbeh');
-            assert.equal(char.get('level'), 1, 'character level intialized to level 1');
-            assert.equal(char.get('team'), 0, 'character on correct team');
-            assert.equal(char.get('xp'), 0, 'Character xp initialize to 0');
-            assert.equal(char.get('nextLevelXp'), char.getNextLevelXp(), 'nextLevelXp initialized');
+        QUnit.test('Hero properly initialized', function(assert) {
+            var hero = gameModel.hero;
+            //console.log('hero', hero);
+            assert.ok(hero, 'hero created');
+            assert.equal(hero.get('name'), 'bobbeh', 'hero name is bobbeh');
+            assert.equal(hero.get('level'), 1, 'hero level intialized to level 1');
+            assert.equal(hero.get('team'), 0, 'hero on correct team');
+            assert.equal(hero.get('xp'), 0, 'Hero xp initialize to 0');
+            assert.equal(hero.get('nextLevelXp'), hero.getNextLevelXp(), 'nextLevelXp initialized');
 
-            validateAttributes(assert, char);
+            validateAttributes(assert, hero);
 
             // Skills
-            var skillchain = char.get('skillchain');
+            var skillchain = hero.get('skillchain');
             assert.equal(skillchain.length, 1, 'initialized skill chain with one skill');
             var skill = skillchain.at(0);
             assert.equal(skill.get('name'), 'basic melee', 'initialized with "basic melee"');
@@ -66,9 +66,9 @@ namespace.module('bot.test', function (exports, require) {
 	    assert.ok(gameModel.zone, 'Zone created on tick');
 	    assert.ok(gameModel.zone.get('roomCount') >= 0, 'has roomcount of at least 1');
 	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), 'roomcount matches number of rooms created');
-	    assert.ok(gameModel.zone.get('initialized'), 'has a char');
+	    assert.ok(gameModel.zone.get('initialized'), 'has a hero');
 
-            assert.equal(gameModel.zone.get('charPos'), 0, 'Character is in room 0');
+            assert.equal(gameModel.zone.get('heroPos'), 0, 'Hero is in room 0');
 	    var monsters = gameModel.zone.getCurrentRoom().monsters;
 	    // console.log(monsters);
 	    assert.ok(monsters.length, 'room 0 monsters have truthy length');
@@ -80,7 +80,7 @@ namespace.module('bot.test', function (exports, require) {
 
 	QUnit.test('inventory', function(assert) {
 	    //TODO - why dont these inv locations have any attributes?  Inv seems to work on index.html...?
-	    var inv = gameModel.char.get('inv');
+	    var inv = gameModel.hero.get('inv');
 
 	    assert.ok(inv.where({'itemType': 'weapon'}).length, 'inventory has at least one weapon');
 	    assert.ok(inv.where({'itemType': 'armor'}).length, 'inventory has at least one armor');
@@ -94,35 +94,32 @@ namespace.module('bot.test', function (exports, require) {
 	});
 
 	QUnit.test('Combat', function(assert) {
-	    var char = gameModel.char;
-
-
+	    var hero = gameModel.hero;
 
 	    var mon = new entity.MonsterModel({'name':'skeleton'});
 	    assert.equal(mon.get('hp'), mon.get('maxHp'), 'Monster HP maxed for taking hit');
 
-	    var skill = char.get('skillchain').at(0);
+	    var skill = hero.get('skillchain').at(0);
 	    console.log(skill);
-	    assert.ok(skill, 'char skill found');
-	    assert.ok(skill.get('name'), 'char about to try using ' + skill.get('name'));
+	    assert.ok(skill, 'hero skill found');
+	    assert.ok(skill.get('name'), 'hero about to try using ' + skill.get('name'));
 
-	    char.attackTarget(mon, skill);
+	    hero.attackTarget(mon, skill);
 	    assert.ok(mon.get('hp') < mon.get('maxHp'), "Monster's hp decreased from attack");
 	    assert.ok(skill.cooldown == skill.get('cooldownTime') + 500, 'cooldown set to cooldownTime after attack');
 
-
-	    char.set('hp', char.get('maxHp'));
-	    assert.equal(char.get('hp'), char.get('maxHp'), 'Character HP maxed for taking hit');
+	    hero.set('hp', hero.get('maxHp'));
+	    assert.equal(hero.get('hp'), hero.get('maxHp'), 'Hero HP maxed for taking hit');
 	    var skill = mon.get('skillchain').at(0);
 	    console.log(skill);
 	    assert.ok(skill, 'mon skill found');
 	    assert.ok(skill.get('name'), 'mon about to try using ' + skill.get('name'));
 
-	    mon.attackTarget(char, skill);
-	    assert.ok(char.get('hp') < char.get('maxHp'), "Character's hp decreased from attack");
+	    mon.attackTarget(hero, skill);
+	    assert.ok(hero.get('hp') < hero.get('maxHp'), "Hero's hp decreased from attack");
 	    assert.ok(skill.cooldown == skill.get('cooldownTime') + 500, 'cooldown set to cooldownTime after attack');	    
 
-            assert.equal(char.nextAction, 500, 'Char nextAction equal to 500');
+            assert.equal(hero.nextAction, 500, 'Hero nextAction equal to 500');
 	});
 
 	QUnit.test('Vector', function(assert) {
@@ -190,7 +187,7 @@ namespace.module('bot.test', function (exports, require) {
         function validateAttributes(assert, entity) {
             assert.ok(entity.get('maxHp') > 0, 'entity has  positive maxHp: ' + entity.get('maxHp'));
             assert.ok(entity.get('hp') <= entity.get('maxHp'), 'hp is <=  maxHp: ' + entity.get('hp'));
-            assert.ok(entity.get('maxMana') > 0, 'character initialized with positive maxMana: ' + entity.get('maxMana'));
+            assert.ok(entity.get('maxMana') > 0, 'hero initialized with positive maxMana: ' + entity.get('maxMana'));
             assert.equal(entity.get('mana'), entity.get('maxMana'), 'mana initialized to maxMana');
 
             //Base Stats

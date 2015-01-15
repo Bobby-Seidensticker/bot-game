@@ -31,7 +31,7 @@ namespace.module('bot.main', function (exports, require) {
             } else if (event.keyCode == EKEY) {
                 //Cheat for adding 1000xp (for easier testing)
                 log.warning("XP Cheat!");                
-                gameModel.char.applyXp(1000);
+                gameModel.hero.applyXp(1000);
             } else if (event.keyCode == SKEY) {
                 log.warning("Time Cheat!");
                 gameModel.lastTime -= 100000;
@@ -55,14 +55,14 @@ namespace.module('bot.main', function (exports, require) {
             //this.recipes = new inv.RecipeCollection();
 
             this.inv = new inv.ItemCollection();
-            this.char = new entity.newChar(this.inv);
-            this.zone = new zone.ZoneManager({char: this.char});
+            this.hero = new entity.newHero(this.inv);
+            this.zone = new zone.ZoneManager({hero: this.hero});
 
             // TODO remove recipes
             //this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
 
             //this.invView = new inv.InvItemCollectionView({collection: this.inv});
-            //this.headerView = views.newHeaderView(this.char, this.inv, this.zone);
+            //this.headerView = views.newHeaderView(this.hero, this.inv, this.zone);
 
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;
@@ -92,17 +92,17 @@ namespace.module('bot.main', function (exports, require) {
 
         stop: function() {
             this.set({running: false});
-            this.char.revive();
+            this.hero.revive();
             //this.zone = undefined;  // this.zone.destroy();
             this.set('inZone', false);
         },
 
         ensureRoom: function() {
-            if (!this.get('inZone') || !this.char.get('hp') || this.char.get('hp') <= 0 || this.zone.done()) {
-                log.info('Getting new zone, recomputing char attrs');
-                this.char.computeAttrs();
-                this.char.revive();
-                this.zone.newZone('spooky dungeon', this.char.get('level'));
+            if (!this.get('inZone') || !this.hero.get('hp') || this.hero.get('hp') <= 0 || this.zone.done()) {
+                log.info('Getting new zone, recomputing hero attrs');
+                this.hero.computeAttrs();
+                this.hero.revive();
+                this.zone.newZone('spooky dungeon', this.hero.get('level'));
                 this.set('inZone', true);
             }
             return this.zone.getCurrentRoom();
@@ -118,10 +118,10 @@ namespace.module('bot.main', function (exports, require) {
             for (var i = steps; i--;) {
                 // TODO: Change update to "check if you have anything to do"
                 window.msgs.update(DT);
-                this.char.update(DT);
+                this.hero.update(DT);
                 room.monsters.update(DT);
 
-                this.char.tryDoStuff(room);
+                this.hero.tryDoStuff(room);
 
                 if (this.zone.done()) {
                     this.zonesCleared++;
@@ -134,11 +134,11 @@ namespace.module('bot.main', function (exports, require) {
                     room = this.zone.getCurrentRoom();
                 }
 
-                // TODO: trydostuff is called once per monster regardless of if char is alive
+                // TODO: trydostuff is called once per monster regardless of if hero is alive
                 //   not really a bug, but imperfect behavior
                 room.monsters.tryDoStuff(room);
 
-                if (!this.char.isAlive()) {
+                if (!this.hero.isAlive()) {
                     this.deaths++;
                     this.set('inZone', false);
                     room = this.ensureRoom();

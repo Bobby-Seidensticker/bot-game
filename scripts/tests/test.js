@@ -57,11 +57,11 @@ namespace.module('bot.test', function (exports, require) {
 	});
 
 	QUnit.test('Zone test', function(assert) {
-            assert.equal(false, gameModel.get('inZone'), 'not inZone');
-            assert.equal(false, gameModel.get('running'), 'not running');
+            assert.equal(false, gameModel.inZone, 'not inZone');
+            assert.equal(false, gameModel.running, 'not running');
 	    gameModel.tick();
 	    assert.ok(1, 'gameModel.tick didn\'t crash it');
-            assert.equal(true, gameModel.get('inZone'), 'inZone');
+            assert.equal(true, gameModel.inZone, 'inZone');
 	    // console.log('zone', gameModel.zone);
 	    assert.ok(gameModel.zone, 'Zone created on tick');
 	    assert.ok(gameModel.zone.get('roomCount') >= 0, 'has roomcount of at least 1');

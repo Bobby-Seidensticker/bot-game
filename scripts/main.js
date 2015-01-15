@@ -39,15 +39,12 @@ namespace.module('bot.main', function (exports, require) {
         });
     }
 
-    var GameModel = Backbone.Model.extend({
-        defaults: function() {
-            return {
-                running: false,
-                inZone: false
-            }
-        },
+    var GameModel = window.Model.extend({
 
         initialize: function() {
+            this.running = false;
+            this.inZone = false;
+
             window.msgs = new namespace.bot.messages.MessageCollection();
             //this.inv = new inv.InvModel();
             //this.inv = new inv.ItemCollection({}, []);
@@ -72,18 +69,18 @@ namespace.module('bot.main', function (exports, require) {
         start: function() {
             log.info('start');
             this.lastTime = new Date().getTime();
-            this.set({running: true});
+            this.running = true;
             requestAnimFrame(this.tick.bind(this));
         },
 
         pause: function() {
             log.info('pause');
-            this.set({running: false});
+            this.running = false;
         },
 
         toggle: function() {
             log.info('toggle');
-            if (this.get('running')) {
+            if (this.running) {
                 this.pause();
             } else {
                 this.start();
@@ -91,19 +88,19 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         stop: function() {
-            this.set({running: false});
+            this.running = false;
             this.hero.revive();
             //this.zone = undefined;  // this.zone.destroy();
-            this.set('inZone', false);
+            this.inZone = false;
         },
 
         ensureRoom: function() {
-            if (!this.get('inZone') || !this.hero.get('hp') || this.hero.get('hp') <= 0 || this.zone.done()) {
+            if (!this.inZone || !this.hero.hp || this.hero.hp <= 0 || this.zone.done()) {
                 log.info('Getting new zone, recomputing hero attrs');
                 this.hero.computeAttrs();
                 this.hero.revive();
-                this.zone.newZone('spooky dungeon', this.hero.get('level'));
-                this.set('inZone', true);
+                this.zone.newZone('spooky dungeon', this.hero.level);
+                this.inZone = true;
             }
             return this.zone.getCurrentRoom();
         },
@@ -125,7 +122,7 @@ namespace.module('bot.main', function (exports, require) {
 
                 if (this.zone.done()) {
                     this.zonesCleared++;
-                    this.set('inZone', false);
+                    this.inZone = false;
                     room = this.ensureRoom();
                     continue;
                 }
@@ -140,7 +137,7 @@ namespace.module('bot.main', function (exports, require) {
 
                 if (!this.hero.isAlive()) {
                     this.deaths++;
-                    this.set('inZone', false);
+                    this.inZone = false;
                     room = this.ensureRoom();
                     continue;
                 }
@@ -166,7 +163,7 @@ namespace.module('bot.main', function (exports, require) {
 
             window.DirtyQueue.triggerAll(window.DirtyListener);
 
-            if (this.get('running')) {
+            if (this.running) {
                 requestAnimFrame(this.tick.bind(this));
             }
         },

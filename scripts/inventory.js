@@ -21,15 +21,7 @@ namespace.module('bot.inv', function (exports, require) {
         applyXp: function(xp) {
             this.set('xp', this.get('xp') + xp);
             if (this.canLevel()) {
-                this.prepLevelUp();
-            }
-        },
-
-        prepLevelUp: function() {
-            // purpose of function is to roll 'nextAffix' and activate level up button
-            // item does not actually level (even if xp reached) until player clicks
-            if (this.get('nextAffix') === '') {
-                this.set('nextAffix', this.rollAffix());
+                // this.prepLevelUp();
             }
         },
 

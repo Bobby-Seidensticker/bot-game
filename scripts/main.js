@@ -10,6 +10,7 @@ namespace.module('bot.main', function (exports, require) {
     var DT = 10;
 
     function onReady() {
+        // TODO: put this in events.js and name it properly
         window.gevents = _.extend({}, Backbone.Events);
         window.msgs = new namespace.bot.messages.MessageCollection();
 
@@ -65,7 +66,9 @@ namespace.module('bot.main', function (exports, require) {
             this.char = new entity.newChar(this.inv);
             this.zone = new zone.ZoneManager({char: this.char});
 
+            // TODO remove recipes
             this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
+
             this.invView = new inv.InvItemCollectionView({collection: this.inv});
             this.headerView = views.newHeaderView(this.char, this.inv, this.zone);
 
@@ -116,10 +119,12 @@ namespace.module('bot.main', function (exports, require) {
         updateModels: function() {
             var room = this.ensureRoom();
 
+            // TODO No more 'actual' time, only fake time that is incremented whenever seen fit, should be a global
             var thisTime = new Date().getTime();
             var steps = Math.floor((thisTime - this.lastTime) / DT);
 
             for (var i = steps; i--;) {
+                // TODO: Change update to "check if you have anything to do"
                 window.msgs.update(DT);
                 this.char.update(DT);
                 room.monsters.update(DT);
@@ -165,9 +170,9 @@ namespace.module('bot.main', function (exports, require) {
 
             this.updateModels();
 
-            Events.mark('vis');
+            window.Events.mark('vis');
 
-            Events.triggerAll(window.gevents);
+            window.Events.triggerAll(window.gevents);
 
             if (this.get('running')) {
                 requestAnimFrame(this.tick.bind(this));

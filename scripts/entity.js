@@ -292,6 +292,8 @@ namespace.module('bot.entity', function (exports, require) {
             this.computeAttrs();
 
             this.revive();
+            // TODO, should be listening to window.ItemEvents
+            // this.listenTo(window.ItemEvents, 'equipSuccess', this.computeAttrs);
             this.listenTo(this.get('inv'), 'equipClick', this.equipClick);
             this.listenTo(this.get('equipped'), 'change', this.computeAttrs);
 

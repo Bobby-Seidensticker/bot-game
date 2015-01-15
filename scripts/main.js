@@ -12,6 +12,7 @@ namespace.module('bot.main', function (exports, require) {
     function onReady() {
         // TODO: put this in events.js and name it properly
         window.gevents = _.extend({}, Backbone.Events);
+
         window.msgs = new namespace.bot.messages.MessageCollection();
 
         localStorage.clear();

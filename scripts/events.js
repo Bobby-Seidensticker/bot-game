@@ -1,5 +1,9 @@
 namespace.module('bot.events', function (exports, require) {
 
+    // TODO rename window.Events to DirtyQueue  DirtyQueue.mark
+    // TODO rename window.gevents to            DirtyListener
+    // TODO initialize DirtyListener in this file, not in main.js
+
     var log = namespace.bot.log;
 
     function EventHolder() {

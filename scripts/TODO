@@ -1,0 +1,42 @@
+entity has actual weapons, armor
+
+
+Equip event, triggered by user through UI (some view somewhere):
+  equip event triggered on window.ItemEvents
+      window.ItemEvents.trigger('equipAttempt', item, slot)
+
+  listening equipped gear model calls equip with those args
+      this.listenTo(window.ItemEvents, 'equipAttempt', this.equip);
+
+  on equip success, trigger 'equipSuccess'
+       window.ItemEvents.trigger('equipSuccess', item, slot);
+
+  listening char, recomputes attrs
+       this.listenTo(window.ItemEvents, 'equipSuccess', this.computeAttrs);
+       window.DirtyQueue.mark('equipSuccess');
+
+  After models are done doing stuff:
+    window.DirtyQueue.triggerAll()
+
+  listening charView, headerView, statsView, inventoryView, equippedGearView, etc.... all update
+    this.listenTo(window.DirtyListener, 'equipSuccess', this.something);
+      (rewrite absolutely everything, infrequent)
+
+
+    this.listenTo(window.DirtyListener, 'hpChange', this.updateHp);
+      (just rewrite hp)
+
+
+
+Get rid of recipes and materials
+Don't do anything to views, don't create them so no errors
+All models look like this:
+  var HerpModel = Backbone.Events.extend({
+    // stuff
+  });
+
+Any time something needs to listen, use an eventQueue
+Make event queues in events.js
+All global references must explicitly use window.[blank] for clarity
+Change all gets and sets to top level attribute references
+Remove this collection model difference

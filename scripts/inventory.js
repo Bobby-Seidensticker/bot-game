@@ -338,6 +338,7 @@ namespace.module('bot.inv', function (exports, require) {
             }
             if (success) {
                 this.trigger('equipSuccess');
+                // TODO, this is a dumb passthrough, will be removed when we are using the global event queue
                 this.listenTo(item, 'change', this.trigger.curry('change'));
             }
             //console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
@@ -392,6 +393,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
+    // TODO eliminate this
     var RecipeCollection = Backbone.Collection.extend({
         itemTypes: function() {
             return ['weapon', 'armor', 'skill', 'material'];
@@ -431,6 +433,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.materials = new MaterialModel({});
             this.recipes = new RecipeCollection();
             this.recipes.materials = this.materials;
+            // TODO getting rid of recipes anyway
             this.listenTo(this.recipes, 'craftClick', this.craft);
         },
 
@@ -499,10 +502,12 @@ namespace.module('bot.inv', function (exports, require) {
                     //TODO put in proper template
                     this.groupContentEls.material.append('<p>' + mats[i] + ': <span class="' + mats[i] + '"></span></p>');
                     this.updateMat(mats[i]);
+                    // TODO removed anyway
                     this.listenTo(window.gevents, 'materials:' + mats[i], this.updateMat.curry(mats[i]));
                 }
             }
 
+            // TODO done
             this.listenTo(this.collection, 'add', this.onAdd);
         },
 
@@ -632,6 +637,8 @@ namespace.module('bot.inv', function (exports, require) {
 
         equip: function() {
             log.info('equip click on model name %s', this.model.get('name'));
+            // TODO this is dumb, this should trigger a global event like this:
+            // window.ItemEvents.trigger('equipAttempt', this.model);
             this.model.trigger('equipClick', this.model);
         },
 

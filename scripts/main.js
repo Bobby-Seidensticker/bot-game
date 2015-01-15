@@ -120,6 +120,7 @@ namespace.module('bot.main', function (exports, require) {
             var steps = Math.floor((thisTime - this.lastTime) / DT);
 
             for (var i = steps; i--;) {
+                window.msgs.update(DT);
                 this.char.update(DT);
                 room.monsters.update(DT);
 

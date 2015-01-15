@@ -101,28 +101,41 @@ namespace.module('bot.messages', function (exports, require) {
     var MessageModel = Backbone.Model.extend({
         defaults: function() {
             return {
-                expires: new Date().getTime() + 20000,
+                expiresIn: 20000,
                 message: ''
             };
-        },
+        }
     });
 
     var MessageCollection = Backbone.Collection.extend({
         model: MessageModel,
         comparator: 'expires',
 
+        initialize: function() {
+            this.storedTime = 0;
+        },
+
+        update: function(dt) {
+            this.storedTime += dt;
+        },
+        applyTime: function() {
+            this.each(function(model) {
+                model.set('expiresIn', model.get('expiresIn') - this.storedTime);
+            });
+        },
+
         prune: function() {
             var now = new Date().getTime();
-            this.remove(this.filter(function(model) { return model.get('expires') < now; }));
+            this.remove(this.filter(function(model) {
+                return model.get('expires') < now;
+            }));
             log.info('message collection prune, data: %s', JSON.stringify(this.pluck('message')));
             this.trigger('pruned');
         },
 
         send: function(message, expiresIn) {
-            var obj = {message: message};
-            if (expiresIn !== undefined) {
-                obj.expires = new Date().getTime() + expiresIn;
-            }
+            this.applyTime();
+            var obj = {message: message, expiresIn: expiresIn};
             this.add(new MessageModel(obj));
             this.prune();
         }
@@ -139,4 +152,34 @@ namespace.module('bot.messages', function (exports, require) {
     exports.extend({
         MessageCollection: MessageCollection
     });
+});
+
+
+var MessageModel = Backbone.Model.extend({
+    initialize: function() {
+        this.unloaded = 0;
+    },
+
+    update: function(dt) {
+        this.unloaded += dt;
+        if (condition) {
+            this.prune();
+        }
+    },
+
+    prune: function() {
+        var now = new Date().getTime();
+        this.remove(this.filter(function(model) { return model.get('expires') < now; }));
+        log.info('message collection prune, data: %s', JSON.stringify(this.pluck('message')));
+        this.trigger('pruned');
+    },
+
+    send: function(message, expiresIn) {
+        var obj = {message: message};
+        if (expiresIn !== undefined) {
+            obj.expires = new Date().getTime() + expiresIn;
+        }
+        this.add(new MessageModel(obj));
+        this.prune();
+    }
 });

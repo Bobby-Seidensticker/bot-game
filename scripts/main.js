@@ -5,7 +5,7 @@ namespace.module('bot.main', function (exports, require) {
     var menu = namespace.bot.menu;
     var entity = namespace.bot.entity;
     var zone = namespace.bot.zone;
-    var views = namespace.bot.views;
+    //var views = namespace.bot.views;
 
     var DT = 10;
 
@@ -18,8 +18,8 @@ namespace.module('bot.main', function (exports, require) {
 
         var gameModel = new GameModel();
 
-        var gameView = new namespace.bot.window.GameView({gameModel: gameModel, messageCollection: window.msgs});
-        var m = new menu.TabView();
+        // var gameView = new namespace.bot.window.GameView({gameModel: gameModel, messageCollection: window.msgs});
+        //var m = new menu.TabView();
 
         $(window).on('keypress', function(event) {
             var SPACE = 32;
@@ -65,10 +65,10 @@ namespace.module('bot.main', function (exports, require) {
             this.zone = new zone.ZoneManager({char: this.char});
 
             // TODO remove recipes
-            this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
+            //this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
 
-            this.invView = new inv.InvItemCollectionView({collection: this.inv});
-            this.headerView = views.newHeaderView(this.char, this.inv, this.zone);
+            //this.invView = new inv.InvItemCollectionView({collection: this.inv});
+            //this.headerView = views.newHeaderView(this.char, this.inv, this.zone);
 
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;

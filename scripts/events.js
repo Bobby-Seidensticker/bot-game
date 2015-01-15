@@ -1,20 +1,16 @@
 namespace.module('bot.events', function (exports, require) {
 
-    // TODO rename window.Events to DirtyQueue  DirtyQueue.mark
-    // TODO rename window.gevents to            DirtyListener
-    // TODO initialize DirtyListener in this file, not in main.js
-
     var log = namespace.bot.log;
 
-    function EventHolder() {
+    function DirtyQueueClass() {
         this.obj = {};
     }
 
-    EventHolder.prototype.mark = function(name) {
+    DirtyQueueClass.prototype.mark = function(name) {
         this.obj[name] = true;
     }
 
-    EventHolder.prototype.triggerAll = function(eventObject) {
+    DirtyQueueClass.prototype.triggerAll = function(eventObject) {
         log.debug('Triggering All Events');
 
         _.each(
@@ -32,5 +28,7 @@ namespace.module('bot.events', function (exports, require) {
         );
     }
 
-    window.Events = new EventHolder();
+    window.DirtyQueue = new DirtyQueueClass();
+
+    window.DirtyListener = _.extend({}, Backbone.Events);
 });

@@ -55,7 +55,7 @@ namespace.module('bot.zone', function (exports, require) {
             data.rooms[0].char = this.char;
             data.initialized = true;
             this.set(data);
-            window.Events.mark('zone:newZone');
+            window.DirtyQueue.mark('zone:newZone');
         },
 
         getCurrentRoom: function() {
@@ -79,7 +79,7 @@ namespace.module('bot.zone', function (exports, require) {
                 var curRoom = this.getCurrentRoom();
                 curRoom.char = this.char;
                 this.char.initPos();
-                window.Events.mark('zone:nextRoom');
+                window.DirtyQueue.mark('zone:nextRoom');
                 rval = true;
             }
             return rval;

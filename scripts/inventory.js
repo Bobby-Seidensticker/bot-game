@@ -34,13 +34,13 @@ namespace.module('bot.inv', function (exports, require) {
             // craft cost is a string formatted 'material int' eg 'tumors 3'
             var splits = craftCost.split(' ');
             this.set(splits[1], this.get(splits[1]) - splits[0]);
-            window.Events.mark('materials:' + splits[1]);
+            window.DirtyQueue.mark('materials:' + splits[1]);
         },
 
         addDrop: function(drop) {
             var splits = drop.split(' ');
             this.set(splits[1], this.get(splits[1]) + parseInt(splits[0]));
-            window.Events.mark('materials:' + splits[1]);
+            window.DirtyQueue.mark('materials:' + splits[1]);
         }
     });
 
@@ -503,7 +503,7 @@ namespace.module('bot.inv', function (exports, require) {
                     this.groupContentEls.material.append('<p>' + mats[i] + ': <span class="' + mats[i] + '"></span></p>');
                     this.updateMat(mats[i]);
                     // TODO removed anyway
-                    this.listenTo(window.gevents, 'materials:' + mats[i], this.updateMat.curry(mats[i]));
+                    this.listenTo(window.DirtyListener, 'materials:' + mats[i], this.updateMat.curry(mats[i]));
                 }
             }
 
@@ -682,7 +682,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.listenTo(this.model, 'craftSuccess', this.remove);
             if (this.model.get('craftCost')) {
                 this.matType = this.model.get('craftCost').split(' ')[1];
-                this.listenTo(window.gevents, 'materials:' + this.matType, this.onChange);
+                this.listenTo(window.DirtyListener, 'materials:' + this.matType, this.onChange);
             } else {
                 console.log(this);
             }
@@ -695,7 +695,7 @@ namespace.module('bot.inv', function (exports, require) {
 	craft: function() {
 	    console.log(this.model);
 	    this.model.trigger('craftClick', this.model);
-            this.stopListening(window.gevents, 'materials:' + this.matType);
+            this.stopListening(window.DirtyListener, 'materials:' + this.matType);
             //console.log(this);
 	},
 

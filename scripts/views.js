@@ -54,7 +54,7 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
 
         initialize: function() {
-            this.listenTo(window.gevents, 'monsters:death zone:newZone zone:nextRoom', this.render);
+            this.listenTo(window.DirtyListener, 'monsters:death zone:newZone zone:nextRoom', this.render);
         },
 
         render: function() {
@@ -170,7 +170,7 @@ namespace.module('bot.views', function (exports, require) {
 
             this.lastCd = -1;
             this.renderState();
-            this.listenTo(window.gevents, 'skill:change', this.renderState);
+            this.listenTo(window.DirtyListener, 'skill:change', this.renderState);
             return this;
         },
 

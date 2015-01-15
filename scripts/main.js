@@ -10,9 +10,6 @@ namespace.module('bot.main', function (exports, require) {
     var DT = 10;
 
     function onReady() {
-        // TODO: put this in events.js and name it properly
-        window.gevents = _.extend({}, Backbone.Events);
-
         window.msgs = new namespace.bot.messages.MessageCollection();
 
         localStorage.clear();
@@ -171,9 +168,9 @@ namespace.module('bot.main', function (exports, require) {
 
             this.updateModels();
 
-            window.Events.mark('vis');
+            window.DirtyQueue.mark('vis');
 
-            window.Events.triggerAll(window.gevents);
+            window.DirtyQueue.triggerAll(window.DirtyListener);
 
             if (this.get('running')) {
                 requestAnimFrame(this.tick.bind(this));

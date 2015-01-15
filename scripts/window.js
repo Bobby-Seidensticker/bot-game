@@ -64,7 +64,7 @@ namespace.module('bot.window', function (exports, require) {
             $(window).on('resize', this.resize.bind(this));
             this.resize();
 
-            this.listenTo(window.gevents, 'vis', this.redraw.bind(this));
+            this.listenTo(window.DirtyListener, 'vis', this.redraw.bind(this));
         },
 
         resize: function() {

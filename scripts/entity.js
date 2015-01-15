@@ -133,9 +133,9 @@ namespace.module('bot.entity', function (exports, require) {
 
             if (this.get('hp') <= 0) {
                 if (this.isMonster()) {
-                    window.Events.mark('monsters:death');
+                    window.DirtyQueue.mark('monsters:death');
                 } else {
-                    window.Events.mark('char:death');
+                    window.DirtyQueue.mark('char:death');
                 }
                 log.info('Lvl %d - %s from team %s DEAD, hit for %s', this.get('level'), this.get('name'), this.teamString(), JSON.stringify(damage));
             } else {
@@ -159,7 +159,7 @@ namespace.module('bot.entity', function (exports, require) {
             target.takeDamage(dmg);
             if (!target.isAlive()) {
                 if (this.isChar()) {
-                    window.Events.mark('monsters:death');
+                    window.DirtyQueue.mark('monsters:death');
                     this.onKill(target, skill);
                 } else {
                     target.onDeath();
@@ -273,7 +273,7 @@ namespace.module('bot.entity', function (exports, require) {
             skills.each(function(skill) { skill.cooldown -= dt; });
             this.nextAction -= dt;
             if (this.isChar()) {
-                window.Events.mark('skill:change');
+                window.DirtyQueue.mark('skill:change');
             }
         }
     });

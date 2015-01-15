@@ -7,43 +7,6 @@ namespace.module('bot.inv', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
 
-
-    var MaterialModel = Backbone.Model.extend({
-        defaults: function() {
-            return {
-                'poops': 0,
-                'planks': 0,
-                'skulls': 0,
-                'embers': 0,
-                'mints': 0,
-                'sparks': 0,
-                'tumors': 0,
-                'nuggets': 0,
-            }
-        },
-
-        enoughToPay: function(craftCost) {
-            var splits = craftCost.split(' ');
-            if (this.get(splits[1]) >= splits[0]) {
-                return true;
-            }
-            return false;
-        },
-
-        payCost: function(craftCost) {
-            // craft cost is a string formatted 'material int' eg 'tumors 3'
-            var splits = craftCost.split(' ');
-            this.set(splits[1], this.get(splits[1]) - splits[0]);
-            window.DirtyQueue.mark('materials:' + splits[1]);
-        },
-
-        addDrop: function(drop) {
-            var splits = drop.split(' ');
-            this.set(splits[1], this.get(splits[1]) + parseInt(splits[0]));
-            window.DirtyQueue.mark('materials:' + splits[1]);
-        }
-    });
-
     var GearModel = Backbone.Model.extend({
         defaults: function() {
             return {
@@ -78,16 +41,6 @@ namespace.module('bot.inv', function (exports, require) {
             return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
         },
 
-        reroll: function() {
-            log.debug('gearmodel reroll called');
-            var rerollCost = this.get('level') + ' poops';
-
-            if (this.collection.materials.enoughToPay(rerollCost)) {
-                this.collection.materials.payCost(rerollCost);
-                this.set('nextAffix', this.rollAffix());
-            }
-        },
-
         levelUp: function() {
             if (this.get('nextAffix') === '') {
                 log.error('item levelUp called without nextAffix properly initted');
@@ -103,42 +56,6 @@ namespace.module('bot.inv', function (exports, require) {
             this.set('level', this.get('level') + 1);
             if (this.canLevel()) {
                 this.prepLevelUp();
-            }
-        },
-
-        rollAffix: function() {
-            var type = this.get('itemType');
-
-            var rollable = itemref.ref.affix.rollable;
-            var possibleAffs = [];
-            for (var i = 0; i < rollable.length; i++){
-                var aff = itemref.expand('affix', rollable[i]);
-                if (aff.validTypes.indexOf(type) !== -1) {
-                    possibleAffs.push(aff);
-                }
-            }
-            var pick = prob.pick(_.map(possibleAffs, function(aff) { return aff.weight }));
-
-            var pickedAff = possibleAffs[pick];
-
-            // TODO - update entity.computeAttrs to expand unique affixes
-            if (pickedAff.unique) {
-                log.warning('Unique affix!');
-                return pickedAff.name;
-            } else {
-                var modWeights = [];
-                // TODO: solve this issue caused by clicking level-up: Object.keys called on non-object
-                var modKeys = Object.keys(pickedAff.modifier);
-                for (var i = 0; i < modKeys.length; i++) {
-                    modWeights[i] = pickedAff.modifier[modKeys[i]].weight;
-                }
-
-                var pickedMod = modKeys[prob.pick(modWeights)];
-                var min = pickedAff.modifier[pickedMod].min;
-                var max = pickedAff.modifier[pickedMod].max;
-                var pickedAmt = prob.rootRand(min, max);
-
-                return [pickedAff.name, pickedMod, pickedAmt].join(' ');
             }
         }
     });
@@ -393,29 +310,9 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    // TODO eliminate this
-    var RecipeCollection = Backbone.Collection.extend({
-        itemTypes: function() {
-            return ['weapon', 'armor', 'skill', 'material'];
-        },
-
-        initialize: function() {
-            var defaults = [
-                new WeaponModel({name: 'bowie knife'}),
-                new WeaponModel({name: 'decent wand'}),
-                new SkillModel({name: 'fire slash'}),
-                new SkillModel({name: 'ice arrow'}),
-                new SkillModel({name: 'poison ball'}),
-                new ArmorModel({name: 'balsa helmet'})
-            ];
-            this.add(defaults);
-        },
-
-    });
-
     var ItemCollection = Backbone.Collection.extend({
         itemTypes: function() {
-            return ['weapon', 'armor', 'skill', 'material', 'recipe'];
+            return ['weapon', 'armor', 'skill'];
         },
 
         initialize: function() {
@@ -430,37 +327,9 @@ namespace.module('bot.inv', function (exports, require) {
                 new ArmorModel({name: 'cardboard kneepads'})
             ];
             this.add(defaults);
-            this.materials = new MaterialModel({});
-            this.recipes = new RecipeCollection();
-            this.recipes.materials = this.materials;
-            // TODO getting rid of recipes anyway
-            this.listenTo(this.recipes, 'craftClick', this.craft);
         },
 
-        craft: function(item) {
-            log.warning('ItemCollection.craft called on item: %s', item.toJSON());
-            //TODO check canCraft
-            var cost = item.get('craftCost');
-            if (this.materials.enoughToPay(cost)) {
-                this.materials.payCost(item.get('craftCost'));
-                this.add(item);
-	        this.recipes.remove(item);
-                item.collection = this;
-                item.trigger('craftSuccess');
-	    } else {
-                log.warning('insufficient resources, craft failed');
-            }
-
-        },
-
-        canCraft: function(item) {
-            if (this.materials.enoughToPay(item.get('craftCost'))) {
-                return true;
-            }
-            return false;
-        },
-
-        addDrops: function(drops) {
+        /*addDrops: function(drops) {
             _.each(drops, function(drop){
                 if (typeof(drop)== 'object') {
                     this.recipes.add(drop);
@@ -470,7 +339,7 @@ namespace.module('bot.inv', function (exports, require) {
                     log.warning('invalid drop %s', typeof(drop));
                 }
             }, this);
-        },
+        },*/
     });
 
     var ItemCollectionView = Backbone.View.extend({
@@ -479,7 +348,7 @@ namespace.module('bot.inv', function (exports, require) {
         template: _.template($('#inv-menu-template').html()),
 
         initialize: function() {
-            var groups = this.collection.itemTypes().slice(0,4);// slice is hack to keep recipe from appearing in inv
+            var groups = this.collection.itemTypes();
             this.$el.html(this.template({groups: groups}));
 
             this.groupContentEls = _.object(groups, _.map(groups, function(group) {
@@ -493,20 +362,6 @@ namespace.module('bot.inv', function (exports, require) {
                 $container.append(view.render().el);
             }, this);
 
-            var mats = itemref.ref.materials;
-
-            if (this.collection.materials) {
-                for (var i = 0; i < mats.length; i++) {
-                    var mat = mats[i];
-                    var amount = this.collection.materials.get(mat);
-                    //TODO put in proper template
-                    this.groupContentEls.material.append('<p>' + mats[i] + ': <span class="' + mats[i] + '"></span></p>');
-                    this.updateMat(mats[i]);
-                    // TODO removed anyway
-                    this.listenTo(window.DirtyListener, 'materials:' + mats[i], this.updateMat.curry(mats[i]));
-                }
-            }
-
             // TODO done
             this.listenTo(this.collection, 'add', this.onAdd);
         },
@@ -519,11 +374,7 @@ namespace.module('bot.inv', function (exports, require) {
             var el = view.render().el;
 
             $container.append(el);
-        },
-
-        updateMat: function(matName) {
-            this.$('.' + matName).html(this.collection.materials.get(matName));
-        },
+        }
     });
 
     var ItemView = Backbone.View.extend({
@@ -672,71 +523,15 @@ namespace.module('bot.inv', function (exports, require) {
         }
     });
 
-    var CraftItemView = ItemView.extend({
-        events: _.extend({}, ItemView.prototype.events, {
-	    'click .craft': 'craft',
-	}),
-
-	initialize: function() {
-	    this.buttons = $('#craft-menu-item-buttons-template').html();
-            this.listenTo(this.model, 'craftSuccess', this.remove);
-            if (this.model.get('craftCost')) {
-                this.matType = this.model.get('craftCost').split(' ')[1];
-                this.listenTo(window.DirtyListener, 'materials:' + this.matType, this.onChange);
-            } else {
-                console.log(this);
-            }
-	},
-
-        remove: function() {
-            this.$el.remove();
-        },
-
-	craft: function() {
-	    console.log(this.model);
-	    this.model.trigger('craftClick', this.model);
-            this.stopListening(window.DirtyListener, 'materials:' + this.matType);
-            //console.log(this);
-	},
-
-        midExtra: function() {
-            return 'Craft Cost: ' + this.model.get('craftCost') +
-                '<br>Scrap Value: 2 Poops';
-        },
-
-        onChange: function() {
-            this.render(true);
-
-            if (!this.model.collection) {
-                log.error('CraftItemView failure: model does not have a collection');
-            }
-            if (this.model.collection.materials.enoughToPay(this.model.get('craftCost'))) {
-                this.$('.craft').prop('disabled', false);
-            } else {
-                this.$('.craft').prop('disabled', true);
-            }
-
-        },
-    });
-
     var InvItemCollectionView = ItemCollectionView.extend({
         el: $('#inv-menu-holder'),
         template: _.template($('#inv-menu-template').html()),
         SubView: InvItemView
     });
 
-    var CraftItemCollectionView = ItemCollectionView.extend({
-        el: $('#craft-menu-holder'),
-        template: _.template($('#craft-menu-template').html()),
-        SubView: CraftItemView
-    });
-
     exports.extend({
         ItemCollection: ItemCollection,
         InvItemCollectionView: InvItemCollectionView,
-
-        RecipeCollection: RecipeCollection,
-        CraftItemCollectionView: CraftItemCollectionView,
 
         WeaponModel: WeaponModel,
         ArmorModel: ArmorModel,

@@ -179,17 +179,6 @@ namespace.module('bot.entity', function (exports, require) {
             return Math.ceil(10 * Math.pow(1.15, this.get('level')-1));
         },
 
-        getDamage: function(skill) {
-            skill.use();
-            return {
-                'physDmg': skill.get('physDmg'),
-                'fireDmg': skill.get('fireDmg'),
-                'coldDmg': skill.get('coldDmg'),
-                'lightDmg': skill.get('lightDmg'),
-                'poisDmg': skill.get('poisDmg')
-            };
-        },
-
         inRange: function(target) {
             return true;
         },
@@ -327,7 +316,7 @@ namespace.module('bot.entity', function (exports, require) {
         onKill: function(target, skill) {
             //console.log(target);
             var drops = target.getDrops();
-            this.get('inv').addDrops(drops);
+            // this.get('inv').addDrops(drops);
             var xp = target.xpOnKill();
             this.applyXp(xp);
             window.msgs.send('Killed ' + (Math.floor(new Date().getTime() % 100000)));
@@ -388,11 +377,11 @@ namespace.module('bot.entity', function (exports, require) {
                 drops.push(drop);
             }
 
-            var recipeDropChance = 0.05;
+            /*var recipeDropChance = 0.05;
             
             if(prob.binProb(recipeDropChance)) {
                 drops.push(this.getRandItem());
-            }
+            }*/
 
             log.info(this.get('name') + ' dropped: ' + JSON.stringify(drops));
             return drops;

@@ -10,7 +10,7 @@ namespace.module('bot.main', function (exports, require) {
     var DT = 10;
 
     function onReady() {
-        window.msgs = new namespace.bot.messages.MessageCollection();
+        //window.msgs = new namespace.bot.messages.MessageCollection();
 
         localStorage.clear();
 
@@ -24,7 +24,7 @@ namespace.module('bot.main', function (exports, require) {
         $(window).on('keypress', function(event) {
             var SPACE = 32;
             var EKEY = 101;
-            var DKEY = 100;
+            //var DKEY = 100;
             var SKEY = 115;
             if (event.keyCode == SPACE) {
                 gameModel.toggle();
@@ -32,13 +32,6 @@ namespace.module('bot.main', function (exports, require) {
                 //Cheat for adding 1000xp (for easier testing)
                 log.warning("XP Cheat!");                
                 gameModel.char.applyXp(1000);
-            } else if (event.keyCode == DKEY) {
-                //Cheat for dropping 50 of each currency
-                log.warning("Currency Cheat!");
-                var matTypes = ["embers", "mints", "planks", "poops", "skulls", "sparks", "tumors"];
-                _.each(matTypes, function(mat) {
-                    gameModel.char.get('inv').addDrops(['50 ' + mat]);
-                });
             } else if (event.keyCode == SKEY) {
                 log.warning("Time Cheat!");
                 gameModel.lastTime -= 100000;
@@ -55,6 +48,7 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         initialize: function() {
+            window.msgs = new namespace.bot.messages.MessageCollection();
             //this.inv = new inv.InvModel();
             //this.inv = new inv.ItemCollection({}, []);
 

@@ -47,8 +47,8 @@ namespace.module('bot.zone', function (exports, require) {
                     hero: undefined
                 };
             }
-            log.info('ZoneManager newZone%s', monsters.reduce(function(m, n) {
-                return m + n.get('name') + ", "}, ""));
+            //log.info('ZoneManager newZone %s', monsters.reduce(function(m, n) {
+            //    return m + n.get('name') + ", "}, ""));
             
             data.heroPos = 0;
             data.rooms = rooms;
@@ -94,26 +94,25 @@ namespace.module('bot.zone', function (exports, require) {
         }
     });
 
-    var MonsterCollection = Backbone.Collection.extend({
-        model: entity.MonsterModel,
-
+    var MonsterCollection = window.Model.extend({
         initialize: function(models) {
+            this.models = _.map(models, function(model) { return new entity.MonsterModel(model); });
         },
 
         update: function(t) {
-            this.each(function(monster) { monster.update(t) });
+            _.each(this.models, function(monster) { monster.update(t) }, this);
         },
 
         tryDoStuff: function(room) {
-            this.invoke('tryDoStuff', room);
+            _.invoke(this.models, 'tryDoStuff', room);
         },
 
         living: function() {
-            return this.filter(function(m) { return m.isAlive(); });
+            return _.filter(this.models, function(m) { return m.isAlive(); });
         },
 
         cleared: function() {
-            return !(this.find(function(monster) { return monster.isAlive(); }));
+            return !(_.find(this.models, function(monster) { return monster.isAlive(); }));
         }
     });
 

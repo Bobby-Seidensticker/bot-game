@@ -12,49 +12,44 @@ namespace.module('bot.entity', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
     
-    var EntityModel = Backbone.Model.extend({
-        defaults: function () { 
-            return {
-                strength: 10,
-                dexterity: 10,
-                wisdom: 10,
-                vitality: 10,
-                level: 1,
-                //weapon: {'damage': 1, 'range':1, 'speed': 1, 'affixes': ['strength more 1.1']}, //'fists' weapon auto equipped when unarmed.
-                //armor: [],
-                affixes: [],
-                xp: 0,
-                team: 1
-            };
-        },
-
+    var EntityModel = window.Model.extend({
         initialize: function() {
-            throw('Entity is an abstract class');
+            this.strength = 10;
+            this.dexterity = 10;
+            this.wisdom = 10;
+            this.vitality = 10;
+            this.level = 1;
+            this.affixes = [];
+            this.xp = 0;
         },
 
         computeAttrs: function() {
             log.debug('Computing Attrs for Entity on team %s', this.teamString());
-            var t = {};  // temp values
 
-            t.strength = this.defaults.strength;
+            //var t = {};  // temp values
+
+            /*t.strength = this.defaults.strength;
             t.dexterity = this.defaults.dexterity;
             t.wisdom = this.defaults.wisdom;
-            t.vitality = this.defaults.vitality;
-            t.level = this.get('level');
+            t.vitality = this.defaults.vitality;*/
+            //t.level = this.get('level');
             
-            t.equipped = this.get('equipped');
-            t.affixes = t.equipped.getAffixes();
-            if (this.get('team') === 1) {
-                t.affixes = t.affixes.concat(this.get('affixes'));
-            }
+            /* TODO Chris something with this
 
-            t.skillchain = this.get('skillchain');
+               t.equipped = this.get('equipped');
+               t.affixes = t.equipped.getAffixes();
+               if (this.get('team') === 1) {
+               t.affixes = t.affixes.concat(this.get('affixes'));
+               }
+            */
+
+            //t.skillchain = this.get('skillchain');
 
             //Add affix bonuses
             //Affix format is 'stat modtype amount'
-            var affixDict = utils.affixesToAffDict(t.affixes);
+            //var affixDict = utils.affixesToAffDict(t.affixes);
 
-            utils.applyAllAffixes(t, ['strength', 'dexterity', 'wisdom', 'vitality'], affixDict);
+            //utils.applyAllAffixes(t, ['strength', 'dexterity', 'wisdom', 'vitality'], affixDict);
 
             // Todo? should we pull these constants out and give them easily manipulable names 
             // so we can balance away from crucial code? 
@@ -62,66 +57,62 @@ namespace.module('bot.entity', function (exports, require) {
             // HP_PER_LVL = 10;
             // HP_PER_VIT = 2;
 
-            t.maxHp = t.level * 10 + t.vitality * 2;
-            t.maxMana = t.level * 5 + t.wisdom * 2;
-            t.armor = t.strength * 0.5;
-            t.dodge = t.dexterity * 0.5;
-            t.eleResistAll = 1 - Math.pow(0.997, t.wisdom); //temp var only
+            this.maxHp = this.level * 10 + this.vitality * 2;
+            this.maxMana = this.level * 5 + this.wisdom * 2;
+            this.armor = this.strength * 0.5;
+            this.dodge = this.dexterity * 0.5;
+            var eleResistAll = 1 - Math.pow(0.997, this.wisdom); //temp var only
 
-            utils.applyAllAffixes(t, ['maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll'], affixDict);
+            //utils.applyAllAffixes(t, ['maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll'], affixDict);
 
-            t.fireResist = t.eleResistAll;
-            t.coldResist = t.eleResistAll;
-            t.lightResist = t.eleResistAll;
-            t.poisResist = t.eleResistAll;
+            this.fireResist = eleResistAll;
+            this.coldResist = eleResistAll;
+            this.lightResist = eleResistAll;
+            this.poisResist = eleResistAll;
 
-            utils.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
+            //utils.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
 
-            t.skillchain.computeAttrs(t.equipped.getWeapon(), affixDict);
+            // TODO something with affix dict, doesn't make sense now
+            // this.skillchain.computeAttrs(this.equipped.getWeapon(), affixDict); // old
+            this.skillchain.computeAttrs(this.equipped.getWeapon(), {});
 
-            delete t.eleResistAll;
-            this.set(t);
-
-            this.set('nextLevelXp', this.getNextLevelXp());
+            this.nextLevelXp = this.getNextLevelXp();
         },
 
         revive: function() {
-            this.set({
-                hp: this.get('maxHp'),
-                mana: this.get('maxMana')
-            });
+            this.hp = this.maxHp;
+            this.mana = this.maxMana;
             this.initPos();
         },
 
         isMonster: function() {
-            return this.get('team') === TEAM_MONSTER;
+            return this.team === TEAM_MONSTER;
         },
 
         isHero: function() {
-            return this.get('team') === TEAM_HERO;
+            return this.team === TEAM_HERO;
         },
 
         teamString: function() {
-            if (this.get('team') === TEAM_HERO) {
+            if (this.team === TEAM_HERO) {
                 return 'Hero';
             }
             return 'Monster';
         },
 
         isAlive: function() {
-            return this.get('hp') > 0;
+            return this.hp > 0;
         },
 
         takeDamage: function(damage) {
-            //console.log("takedmg called with", damage, this.get('name'), this);
             var physDmg = damage.physDmg;
-            var armorReductionMult = physDmg / (physDmg + this.get('armor'));
+            var armorReductionMult = physDmg / (physDmg + this.armor);
             physDmg = physDmg * armorReductionMult;
 
-            var fireResist = this.get('fireResist');
-            var coldResist = this.get('coldResist');
-            var lightResist = this.get('lightResist');
-            var poisResist = this.get('poisResist');            
+            var fireResist = this.fireResist;
+            var coldResist = this.coldResist;
+            var lightResist = this.lightResist;
+            var poisResist = this.poisResist;
 
             var fireDmg = damage.fireDmg * (1 - fireResist * 0.01);
             var coldDmg = damage.coldDmg * (1 - coldResist * 0.01);
@@ -129,17 +120,17 @@ namespace.module('bot.entity', function (exports, require) {
             var poisDmg = damage.poisDmg * (1 - poisResist * 0.01);            
             
             var totalDmg = physDmg + fireDmg + coldDmg + lightDmg + poisDmg;
-            this.set('hp', this.get('hp') - totalDmg);
+            this.hp -= totalDmg;
 
-            if (this.get('hp') <= 0) {
+            if (this.hp <= 0) {
                 if (this.isMonster()) {
                     window.DirtyQueue.mark('monsters:death');
                 } else {
                     window.DirtyQueue.mark('hero:death');
                 }
-                log.info('Lvl %d - %s from team %s DEAD, hit for %s', this.get('level'), this.get('name'), this.teamString(), JSON.stringify(damage));
+                log.info('Lvl %d - %s from team %s DEAD, hit for %s', this.level, this.name, this.teamString(), JSON.stringify(damage));
             } else {
-                log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.get('hp'));
+                log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.hp);
             }
             // modify own health
         },
@@ -154,8 +145,8 @@ namespace.module('bot.entity', function (exports, require) {
             // TODO: use duration value on skillToUse to set nextAction value on entity
             this.nextAction = 500;
             var dmg = skill.getDamage(500);
-            log.debug('%s attacking target %s for %s dmg with %s', this.get('name'),
-                      target.get('name'), JSON.stringify(dmg), skill.get('name'));
+            log.debug('%s attacking target %s for %s dmg with %s', this.name,
+                      target.name, JSON.stringify(dmg), skill.name);
             target.takeDamage(dmg);
             if (!target.isAlive()) {
                 if (this.isHero()) {
@@ -165,18 +156,16 @@ namespace.module('bot.entity', function (exports, require) {
                     target.onDeath();
                 }
             }
-            this.set({
-                mana: this.get('mana') - skill.get('manaCost'),
-            });
 
+            this.mana -= skill.get('manaCost');
         },
 
         getNextLevelXp: function() {
-            return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
+            return Math.floor(100 * Math.exp((this.level - 1) / Math.PI));
         },
 
         xpOnKill: function() {
-            return Math.ceil(10 * Math.pow(1.15, this.get('level')-1));
+            return Math.ceil(10 * Math.pow(1.15, this.level - 1));
         },
 
         inRange: function(target) {
@@ -222,9 +211,9 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         tryAttack: function(enemies, distances) {
-            var skill = this.get('skillchain').bestSkill(this.get('mana'), distances);
+            var skill = this.skillchain.bestSkill(this.mana, distances);
             if (skill) {
-                var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.get('range') >= distances[i]; });
+                var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.range >= distances[i]; });
                 var target = enemies[targetIndex];
                 this.attackTarget(target, skill);
             }
@@ -248,7 +237,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (!vector.equal(curPos, newPos)) {
                 this.x = newPos[0];
                 this.y = newPos[1];
-                log.debug('%s moving closer', this.get('name'));
+                log.debug('%s moving closer', this.name);
                 this.nextAction = 30;
             }
         },
@@ -258,7 +247,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         update: function(dt) {
-            var skills = this.get('skillchain');
+            var skills = this.skillchain;
             skills.each(function(skill) { skill.cooldown -= dt; });
             this.nextAction -= dt;
             if (this.isHero()) {
@@ -268,48 +257,49 @@ namespace.module('bot.entity', function (exports, require) {
     });
     
     var HeroModel = EntityModel.extend({
-        defaults: _.extend({}, EntityModel.prototype.defaults(), {
-            team: TEAM_HERO,
-        }),
 
         localStorage: new Backbone.LocalStorage('hero'),
 
-        initialize: function() {
+        initialize: function(name, skillchain, inv, equipped) {
+            this.name = name;
+            this.skillchain = skillchain;
+            this.inv = inv;
+            this.equipped = equipped;
+
+            EntityModel.prototype.initialize.call(this);
+            this.team = TEAM_HERO;
+
             log.info('HeroModel initialize');
             this.nextAction = 0;
-            this.fetch();
             this.computeAttrs();
 
             this.revive();
             // TODO, should be listening to window.ItemEvents
             // this.listenTo(window.ItemEvents, 'equipSuccess', this.computeAttrs);
-            this.listenTo(this.get('inv'), 'equipClick', this.equipClick);
-            this.listenTo(this.get('equipped'), 'change', this.computeAttrs);
+            this.listenTo(this.inv, 'equipClick', this.equipClick);
+            this.listenTo(this.equipped, 'change', this.computeAttrs);
 
-            this.set({
-                x: 1,
-                y: 10
-            });
+            this.initPos();
         },
 
         applyXp: function(xp) {
-            this.get('equipped').applyXp(xp);
-            this.set('xp', this.get('xp') + xp);
-            while (this.get('xp') >= this.get('nextLevelXp')) {
-                this.set('level', this.get('level') + 1);
-                this.set('xp', this.get('xp') - this.get('nextLevelXp'));
-                this.set('nextLevelXp', this.getNextLevelXp());
+            this.equipped.applyXp(xp);
+            this.xp += xp;
+            while (this.xp >= this.nextLevelXp) {
+                this.level += 1;
+                this.xp -= this.nextLevelXp;
+                this.nextLevelXp = this.getNextLevelXp();
             }            
         },
         
         equipClick: function(item) {
-            var itemType = item.get('itemType');
+            var itemType = item.itemType;
             if (itemType === 'armor') {
-                this.get('equipped').equip(item, item.get('type'));
+                this.equipped.equip(item, item.type);
             } else if (itemType === 'weapon') {
-                this.get('equipped').equip(item, 'mainHand');
+                this.equipped.equip(item, 'mainHand');
             } else if (itemType === 'skill') {
-                this.get('skillchain').add(item);
+                this.skillchain.add(item);
             }
         },
 
@@ -330,34 +320,34 @@ namespace.module('bot.entity', function (exports, require) {
     });
 
     var MonsterModel = EntityModel.extend({
-        defaults: _.extend({}, EntityModel.prototype.defaults(), {
-            team: TEAM_MONSTER,
-        }),
 
-        initialize: function() {
+        initialize: function(data) {
+            EntityModel.prototype.initialize.call(this);
+            this.team = TEAM_MONSTER;
+            _.extend(this, data);
+
             //fetchMonsterConstants(name, level);
             // lookup given name and level
-            log.debug('MonsterModel initialize, attrs: %s', JSON.stringify(this.toJSON()));
+            log.debug('MonsterModel initialize, attrs: %s', JSON.stringify(this));
 
-            this.set(itemref.expand('monster', this.get('name')));
+            _.extend(this, itemref.expand('monster', this.name));
 
             var skillchain = new inventory.Skillchain();
-            skillchain.add(_.map(this.get('skillchain'), function(name) {
+            skillchain.add(_.map(this.skillchain, function(name) {
                 return new inventory.SkillModel({name: name});
             }));
 
             var equipped = new inventory.EquippedGearModel()
-            equipped.equip(new inventory.WeaponModel({name: this.get('weapon')}), 'mainHand');
+            equipped.equip(new inventory.WeaponModel({name: this.weapon}), 'mainHand');
 
-            _.each(this.get('armor'), function(name) {
+            _.each(this.armor, function(name) {
                 var armor = new inventory.ArmorModel({name: name});
+                log.info('%s', armor.get('type'));
                 equipped.equip(armor, armor.get('type'));
             });
 
-            this.set({
-                skillchain: skillchain,
-                equipped: equipped
-            });
+            this.skillchain = skillchain;
+            this.equipped = equipped;
             this.initPos();
 
             this.computeAttrs();
@@ -368,7 +358,7 @@ namespace.module('bot.entity', function (exports, require) {
             //  Monster uses internal model to roll one or more drops, returns array of drops
             // string items in array are materials, objects are full items
             var drops = [];
-            var dropRef = this.get('drops');
+            var dropRef = this.drops;
             //console.log(dropRef);
 
             var matCount = prob.pProb(1,10);
@@ -383,11 +373,13 @@ namespace.module('bot.entity', function (exports, require) {
                 drops.push(this.getRandItem());
             }*/
 
-            log.info(this.get('name') + ' dropped: ' + JSON.stringify(drops));
+            log.info(this.name + ' dropped: ' + JSON.stringify(drops));
             return drops;
         },
 
         getRandItem: function() {
+            // TODO major overhaul
+            /*
             // helper function for getDrops
             //selects a random weapon, armor or skill
             //console.log('HERERERE');
@@ -419,7 +411,7 @@ namespace.module('bot.entity', function (exports, require) {
                 return this.getRandItem();
             }
             //console.log(ref, weapcount);
-            
+            */
         }
     });
 
@@ -433,12 +425,7 @@ namespace.module('bot.entity', function (exports, require) {
         var skillchain = inventory.newSkillchain()
         skillchain.add(inv.findWhere({name: 'basic melee'}));
 
-        var hero = new HeroModel({
-            name: heroName,
-            skillchain: skillchain,
-            inv: inv,
-            equipped: equipped
-        });
+        var hero = new HeroModel(heroName, skillchain, inv, equipped);
 
         return hero;
     }

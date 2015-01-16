@@ -49,7 +49,7 @@ namespace.module('bot.zone', function (exports, require) {
             }
             //log.info('ZoneManager newZone %s', monsters.reduce(function(m, n) {
             //    return m + n.get('name') + ", "}, ""));
-            
+
             data.heroPos = 0;
             data.rooms = rooms;
             data.rooms[0].hero = this.hero;

@@ -29,9 +29,9 @@ namespace.module('bot.entity', function (exports, require) {
             //var t = {};  // temp values
 
             /*t.strength = this.defaults.strength;
-            t.dexterity = this.defaults.dexterity;
-            t.wisdom = this.defaults.wisdom;
-            t.vitality = this.defaults.vitality;*/
+              t.dexterity = this.defaults.dexterity;
+              t.wisdom = this.defaults.wisdom;
+              t.vitality = this.defaults.vitality;*/
             //t.level = this.get('level');
             
             /* TODO Chris something with this
@@ -57,24 +57,89 @@ namespace.module('bot.entity', function (exports, require) {
             // HP_PER_LVL = 10;
             // HP_PER_VIT = 2;
 
-            this.maxHp = this.level * 10 + this.vitality * 2;
-            this.maxMana = this.level * 5 + this.wisdom * 2;
-            this.armor = this.strength * 0.5;
-            this.dodge = this.dexterity * 0.5;
-            var eleResistAll = 1 - Math.pow(0.997, this.wisdom); //temp var only
 
-            //utils.applyAllAffixes(t, ['maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll'], affixDict);
+            // compile cards
+            // go through items to get base damages and armor
 
-            this.fireResist = eleResistAll;
-            this.coldResist = eleResistAll;
-            this.lightResist = eleResistAll;
-            this.poisResist = eleResistAll;
+            // calc stats uses level, cards that modify stats added/more str added/more wis
+            // sets strength, vitality, wisdom, dexterity
 
-            //utils.applyAllAffixes(t, ['fireResist','coldResist', 'lightResist', 'poisResist'], affixDict);
+            // go through stats to get base hp, mana, armor, dodge, eleResistAll
 
-            // TODO something with affix dict, doesn't make sense now
-            // this.skillchain.computeAttrs(this.equipped.getWeapon(), affixDict); // old
-            this.skillchain.computeAttrs(this.equipped.getWeapon(), {});
+            // apply added damages
+            // apply more damages
+
+            // apply less resists to eleresistall
+
+            var attrKeys = [
+                'strength',
+                'vitality',
+                'wisdom',
+                'dexterity',
+            ];
+            var defKeys = [
+                'hpMax',
+                'manaMax',
+                'armor',
+                'dodge',
+                'eleResistAll',
+            ];
+            var eleResistKeys = [
+                'fireResist',
+                'coldResist',
+                'lightResist',
+                'poisResist'
+            ];
+            var dmgOrder = [
+                'physDmg',
+                'lightDmg',
+                'coldDmg',
+                'fireDmg',
+                'poisDmg'
+            ];
+
+            var all = {};
+
+            all.attrs = utils.newBaseStatsDict(attrKeys);
+            all.def = utils.newBaseStatsDict(defKeys);
+            all.eleResist = utils.newBaseStatsDict(eleResistKeys);
+
+            all.dmg = utils.newDmgStatsDict();
+
+            var cards = this.equipped.getCards();
+            cards = cards.concat(this.getCards());
+
+            utils.addAllCards(all, cards);
+            // Now 'all' has the expanded trie structured mod data
+            // Do final multiplication and put on the entity
+
+            _.each(attrKeys, function(stat) {
+                this[stat] = (all.attrs[stat].added) * all.attrs[stat].more;
+            }, this);
+
+            all.def.hpMax.added += this.level * 10 + this.vitality * 2;
+            all.def.maxMana.added += this.level * 5 + this.wisdom * 2;
+            all.def.armor.added += this.strength * 0.5;
+            all.def.dodge.added += this.dexterity * 0.5;
+            all.def.eleResistAll.more *= Math.pow(0.997, this.wisdom); //temp var only
+
+            _.each(defKeys, function(stat) {
+                this[stat] = (all.def[stat].added) * all.def[stat].more;
+            }, this);
+
+            // note that eleResistAll is on the def keys because of the ordering
+            all.eleResist.lightResist.more *= all.def.eleResistAll.more;
+            all.eleResist.coldResist.more *= all.def.eleResistAll.more;
+            all.eleResist.fireResist.more *= all.def.eleResistAll.more;
+            all.eleResist.poisResist.more *= all.def.eleResistAll.more;
+
+            _.each(eleResistKeys, function(stat) {
+                this[stat] = (all.eleResist[stat].added) * all.eleResist[stat].more;
+            }, this);
+
+            // Damage is left uncombined, handled in skills
+
+            this.skillchain.computeAttrs(all.dmg, dmgOrder);
 
             this.nextLevelXp = this.getNextLevelXp();
         },
@@ -368,10 +433,10 @@ namespace.module('bot.entity', function (exports, require) {
             }
 
             /*var recipeDropChance = 0.05;
-            
-            if(prob.binProb(recipeDropChance)) {
-                drops.push(this.getRandItem());
-            }*/
+              
+              if(prob.binProb(recipeDropChance)) {
+              drops.push(this.getRandItem());
+              }*/
 
             log.info(this.name + ' dropped: ' + JSON.stringify(drops));
             return drops;
@@ -395,20 +460,20 @@ namespace.module('bot.entity', function (exports, require) {
             var newItem;
             
             if (roll < weapcount) {
-                newItem =  new inventory.WeaponModel({'name': Object.keys(ref.weapon)[roll]});
+            newItem =  new inventory.WeaponModel({'name': Object.keys(ref.weapon)[roll]});
             } else if (roll < weapcount + armorcount) {
-                newItem =  new inventory.ArmorModel({'name': Object.keys(ref.armor)[roll - weapcount]});
+            newItem =  new inventory.ArmorModel({'name': Object.keys(ref.armor)[roll - weapcount]});
             } else if (roll < weapcount + armorcount + skillcount) {
-                newItem = new inventory.SkillModel({'name': Object.keys(ref.skill)[roll - weapcount - armorcount]});
+            newItem = new inventory.SkillModel({'name': Object.keys(ref.skill)[roll - weapcount - armorcount]});
             } else {
-                log.warning("wtf: dropRand rolled higher number than it should have");
+            log.warning("wtf: dropRand rolled higher number than it should have");
             }
 
             //janky recursive way of escaping invalid items - potentially infinite
             if (newItem.get('craftCost')) {
-                return newItem;
+            return newItem;
             } else {
-                return this.getRandItem();
+            return this.getRandItem();
             }
             //console.log(ref, weapcount);
             */
@@ -418,11 +483,12 @@ namespace.module('bot.entity', function (exports, require) {
     function newHero(inv) {
         // stopgap measures: basic equipped stuff
         var heroName = 'bobbeh';
-        var equipped = new inventory.EquippedGearModel({'heroName': heroName});
+        var equipped = new inventory.EquippedGearModel();
+        // this needs to change, don't have find where anymore
         equipped.equip(inv.findWhere({name: 'wooden sword'}), 'mainHand');
         equipped.equip(inv.findWhere({name: 'cardboard kneepads'}), 'legs');
 
-        var skillchain = inventory.newSkillchain()
+        var skillchain = new inventory.Skillchain()
         skillchain.add(inv.findWhere({name: 'basic melee'}));
 
         var hero = new HeroModel(heroName, skillchain, inv, equipped);

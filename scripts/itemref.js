@@ -2,100 +2,167 @@ namespace.module('bot.itemref', function (exports, require) {
     var log = namespace.bot.log;
     var prob = namespace.bot.prob;
 
+    function gearSlotFormula(classLevel, itemLevel) {
+        return Math.min(Math.floor(1 + classLevel + itemLevel / 10), 10);
+    }
+
     var ref = {
         "weapon": {
-            "weapon": {
+            "melee": {
+                "formula": function(classLevel, itemLevel) {
+                    return {
+                        "physDmg": Math.floor(Math.pow(2 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 3 + itemLevel
+                    }
+                },
+                "slotFormula": gearSlotFormula,
                 "speed": 1,
-                "damage": 1,
-                "range": 100000
+                "range": 100000,
+                "names": ["cardboard sword", "ass axe", "master sword"]
             },
-            "fists" : {
-                "prototype": ["weapon"]
-            },
-            "wooden sword": {
-                "prototype": ["weapon"],
-                "type": "melee",
-                "damage": 20,
-                "craftCost": "2 planks",
-            },
-            "bowie knife": {
-                "prototype": ["weapon"],
-                "type": "melee",
-                "damage": 3,
-                "craftCost": "3 poops",
-            },
-            "shitty bow": {
-                "prototype": ["weapon"],
-                "type": "range",
-                "damage": 5,
-                "range": 400000,
-                "craftCost": "3 poops",
-            },
-            "crappy wand": {
-                "prototype": ["weapon"],
-                "type": "spell",
-                "range": 600000,
-                "damage": 5,
-                "craftCost": "3 poops",
-            },
-
-            "knobby club": {
-                "prototype": ["weapon"],
-                "type": "melee",
-                "speed": 1.2,
-                "damage": 4,
-                "craftCost": "2 planks",
-            },
-            "wooden bow": {
-                "prototype": ["weapon"],
-                "type": "range",
-                "damage": 4,
+            "range": {
+                "formula": function(classLevel, itemLevel) {
+                    return {
+                        "physDmg": Math.floor(Math.pow(2 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 3 + itemLevel
+                    }
+                },
+                "slotFormula": gearSlotFormula,
+                "speed": 1,
                 "range": 500000,
-                "craftCost": "2 planks",
+                "names": ["shitty bow", "crappy bow", "compound bow"]
             },
-            "decent wand": {
-                "prototype": ["weapon"],
-                "type": "spell",
-                "damage": 3,
-                "range": 600000,
-                "craftCost": "10 planks",
-            },
-        },
-        "armor": {
-            "armor": {
-                "affixes": ["armor added 1"],
-                "weight": 1
-            },
-            "balsa helmet": {
-                "prototype": ["armor"],
-                "type": "head",
-                "affixes":["armor added 500"],
-                "craftCost": "4 planks",
-            },
-            "smelly cod piece": {
-                "prototype": ["armor"],
-                "type": "chest",
-                "weight": 2,
-                "craftCost": "4 poops",
-            },
-            "cardboard kneepads": {
-                "prototype": ["armor"],
-                "affixes": ["armor added 500"],
-                "type": "legs",
-                "craftCost": "2 poops"
-            },
-            "latex gloves": {
-                "prototype": ["armor"],
-                "affixes": ["poisDmg added 2"],
-                "type": "hands",
-                "craftCost": "2 poops"
-            },
-            "wood shield": {
-                "prototype": ["armor"],
-                "type": "offHand",
-                "craftCost": "4 planks"
+            "spell": {
+                "formula": function(classLevel, itemLevel) {
+                    return {
+                        "physDmg": Math.floor(Math.pow(2 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 3 + itemLevel
+                    }
+                },
+                "slotFormula": gearSlotFormula,
+                "speed": 1,
+                "range": 700000,
+                "names": ["shitty bow", "crappy bow", "compound bow"]
             }
         },
+        "armor": {
+            "head": {
+                "formula": function(classLevel, itemLevel) {
+                    return {
+                        "armor": Math.floor(Math.pow(1 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 5 + itemLevel
+                    }
+                },
+                "slotFormula": gearSlotFormula,
+                "weight": 1,
+                "names": ["balsa helmet", "oak helmet", "steel helmet"]
+            },
+            "chest": {
+                "formula": function(classLevel, itemLevel) {
+                    return {
+                        "armor": Math.floor(Math.pow(1 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 5 + itemLevel
+                    }
+                },
+                "slotFormula": gearSlotFormula,
+                "weight": 2,
+                "names": ["smelly cod piece", "foamcore tunic", "steel breastplate"]
+            },
+            "legs": {
+                "formula": function(classLevel, itemLevel) {
+                    return {
+                        "armor": Math.floor(Math.pow(1 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 5 + itemLevel
+                    }
+                },
+                "slotFormula": gearSlotFormula,
+                "weight": 2,
+                "names": ["cardboard kneepads", "jeans", "platemail leggings"]
+            },
+            "hands": {
+                "formula": function(classLevel, itemLevel) {
+                    return {
+                        "armor": Math.floor(Math.pow(1 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 5 + itemLevel
+                    }
+                },
+                "slotFormula": gearSlotFormula,
+                "weight": 1,
+                "names": ["latex gloves", "gardening gloves", "chainmail gloves"]
+            }
+        },
+        /*
+            "hot sword": {
+                "slot": "weapon",
+                "levels": 10,
+                "modType": "added",
+                "stat": "fireDmg",
+                "perLevel": 2
+            },
+            "surprisingly hot sword": {
+                "slot": "weapon",
+                "levels": 10,
+                "modType": "more",
+                "stat": "fireDmg",
+                "perLevel": 1
+            },
+            {base: [], perLevel: 'fireDmg more 1'}
+
+          added
+          converted increased % of other
+          converted decreased % of max
+          more
+
+          hatred 50% phys as cold
+          phys to light 50% physical converted to light
+          cold to fire 50%  cold converted to fire
+
+          100 phys (after added and more), 0 of else
+
+          phys to light:
+          100 (-50) phys
+          50 light
+
+
+          hatred:
+          phys is 50
+          cold 25
+
+          cold to fire:
+          25 - 12.5 cold
+          12.5 fire
+
+          50 phys
+          50 light
+          12.5 cold
+          12.5 fire
+          0 pois
+
+            "hot sword": {
+                "slot": "weapon",
+                "levels": 10,
+                "mods": [
+                {def: 'fireDmg added 2 perLevel', type: 'dmg'},
+                {def: 'fireDmg more 1 perLevel', type: 'dmg'}
+                ]
+            },
+
+          itemref has this format:
+          mods: [
+          ['fireDmg more 100', 'dmg'],
+          ['physDmg converted 50 fireDmg', 'dmg'],
+          ['fireDmg more 1 perLevel', 'dmg']
+          ]
+
+          [
+          ['physDmg more 100', 'dmg'],
+          ['physDmg added 5 perLevel', 'dmg']
+          ]
+
+          compileCards converts to this:
+
+          primary verb amt special(perLevel / element inc ase of converted and gainedas)
+
+          
+
+          hatred:
+
+          {base: ['physDmg gainedas coldDmg 50'], perLevel: 'physDmg gainedas 2 coldDmg'}
+          
+         */
         "skill": {
             "basic": {
             },
@@ -103,28 +170,36 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "melee",
                 "types": ["melee"],
+                "formula": function(dmg) { return dmg; }
             },
             "basic range": {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
+                "formula": function(dmg) { return dmg; }
             },
             "basic spell": {
                 "prototype": ["basic"],
                 "class": "spell",
                 "types": ["proj"],
+                "formula": function(dmg) { return dmg; }
             },
             "super smash": {
                 "prototype": ["basic melee"],
-                "affixes": ["physDmg more 40"],
-                "manaCost": 5,
-                "craftCost": "2 skulls",
-            },        
+                "manaCost": 3,
+                "formula": function(dmg, level) {
+                    dmg.physDmg = dmg.physDmg * 2 + level * 5;
+                    return dmg;
+                }
+            },
             "fire slash": {
                 "prototype": ["basic melee"],
-                "affixes": ["fireDmg added 10"],
                 "manaCost": 3,
-                "craftCost": "3 embers",
+                "formula": function(dmg, level) {
+                    dmg.fireDmg = (dmg.fireDmg * 2 + dmg.physDmg * 0.6) * Math.pow(1.01, level);
+                    dmg.physDmg *= 0.4;
+                    return dmg;
+                }
             },
             "ice slash": {
                 "prototype": ["basic melee"],
@@ -194,6 +269,29 @@ namespace.module('bot.itemref', function (exports, require) {
                 "craftCost": "3 tumors",
             },
 
+        },
+        "card": {
+            "hot sword": {
+                "slot": "weapon",
+                "levels": 10,
+                "modType": "added",
+                "stat": "fireDmg",
+                "perLevel": 2
+            },
+            "surprisingly hot sword": {
+                "slot": "weapon",
+                "levels": 10,
+                "modType": "more",
+                "stat": "fireDmg",
+                "perLevel": 1
+            },
+            "hard head": {
+                "slot": "head",
+                "levels": 10,
+                "modType": "added",
+                "stat": "armor",
+                "perLevel": 4
+            },
         },
         "affix": {
             "rollable": [

@@ -7,320 +7,290 @@ namespace.module('bot.inv', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
 
-    var GearModel = Backbone.Model.extend({
-        defaults: function() {
-            return {
-                xp: 0,
-                level: 1,
-                affixes: [],
-                nextAffix: '',
-                equippedBy: ''
-            };
+    var GearModel = window.Model.extend({
+        initialize: function() {
+            this.xp = 0;
+            this.level = 1;
+            this.cards = [];
+            this.equipped = false;
+            this.maxCards = 0;
         },
 
         applyXp: function(xp) {
-            this.set('xp', this.get('xp') + xp);
+            this.xp += xp;
             if (this.canLevel()) {
                 // this.prepLevelUp();
             }
         },
 
         canLevel: function() {
-            return this.get('xp') >= this.getNextLevelXp();
+            return this.xp >= this.getNextLevelXp();
         },
 
         getNextLevelXp: function() {
-            return Math.floor(100 * Math.exp((this.get('level') - 1) / Math.PI));
+            return Math.floor(100 * Math.exp((this.level - 1) / Math.PI));
         },
 
         levelUp: function() {
-            if (this.get('nextAffix') === '') {
-                log.error('item levelUp called without nextAffix properly initted');
-            }
+            var type = this.itemType;
+            this.xp -= this.getNextLevelXp();
+            this.level += 1;
 
-            var type = this.get('itemType');
-            var affixes = this.get('affixes');
-            this.set('affixes', affixes.concat(this.get('nextAffix')));
-            this.set('nextAffix', '');
-
-            log.info('leveling up %s', type);
-            this.set('xp', this.get('xp') - this.getNextLevelXp());
-            this.set('level', this.get('level') + 1);
-            if (this.canLevel()) {
-                this.prepLevelUp();
+            if (type === 'skill') {
+                this.maxCards = Math.min(this.level, 1);
+            } else {
+                this.maxCards = this.slotFormula(this.classLevel, this.itemLevel);
             }
-        }
+        },
+
+        equipCard: function(card) {
+            if (this.cards.length) {}
+        },
     });
 
     var ArmorModel = GearModel.extend({
-        defaults: function() {
-            return _.extend({
-                weight: 0,
-                type: 'ERR type',
-                itemType: 'armor'
-            }, GearModel.prototype.defaults());
-        },
+        initialize: function(classLevel, type) {
+            GearModel.prototype.initialize.call(this)
+            this.itemType = 'armor';
+            this.classLevel = classLevel;
+            this.type = type;
 
-        initialize: function() {
-            log.debug('loading armor %s from file', this.get('name'));
-            this.set(itemref.expand('armor', this.get('name')));
-        },
+            var ref = itemref.ref.armor[type];
+            this.formula = ref.formula;
+            this.slotFormula = ref.slotFormula;
+            this.weight = ref.weight;
+            this.name = ref.names[this.classLevel];
+
+            this.maxCards = this.slotFormula(classLevel, itemLevel);
+            log.debug('Made a new armor cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
+        }
     });
 
-    //var WeaponModel = GearModel.extend({
     var WeaponModel = GearModel.extend({
-        defaults: function() {
-            return _.extend({
-                speed: 0,
-                type: 'ERR type',
-                damage: 0,
-                range: 0,
-                itemType: 'weapon'
-            }, GearModel.prototype.defaults());
-        },
+        initialize: function(classLevel, type) {
+            GearModel.prototype.initialize.call(this)
+            this.itemType = 'weapon';
+            this.classLevel = classLevel;
+            this.type = type;
 
-        initialize: function() {
-            log.debug('loading weapon %s from file %s', this.get('name'), JSON.stringify(this.get('affixes')));
-            this.set(itemref.expand('weapon', this.get('name')));
-        },
+            var ref = itemref.ref.weapon[type];
+            this.formula = ref.formula;
+            this.slotFormula = ref.slotFormula;
+            this.speed = ref.speed;
+            this.range = ref.range;
+            this.name = ref.names[this.classLevel];
+
+            log.debug('Made a new weapon cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
+        }
     });
 
     var SkillModel = GearModel.extend({
-        defaults: function() {
-            return _.extend({
-                manaCost: 0,
-                cooldownTime: 800,
-                types: [],
-                level: 1,
-                itemType: 'skill'
-            }, GearModel.prototype.defaults());
-        },
-
-        initialize: function() {
+        initialize: function(name) {
+            this.itemType = 'skill';
+            this.name = name;
+            this.manaCost = 0;
             this.cooldown = 0;
-            log.debug('loading skill %s from file', this.get('name'));
-            this.set(itemref.expand('skill', this.get('name')));
+            this.cooldownTime = 800;
+            GearModel.prototype.initialize.call(this);
+
+            log.debug('loading skill %s from file', this.name);
+            _.extend(this, itemref.expand('skill', this.name));
         },
 
         cool: function() {
+            // TODO remember cooldown is not being decremented, we just check to see if current fake time is greater than fake time of expire
             return this.cooldown <= 0;
         },
 
-        getDamage: function(castTime) {
-            this.use(castTime);
-            return {
-                'physDmg': this.get('physDmg'),
-                'fireDmg': this.get('fireDmg'),
-                'coldDmg': this.get('coldDmg'),
-                'lightDmg': this.get('lightDmg'),
-                'poisDmg': this.get('poisDmg')
-            };
-        },
-
         use: function(castTime) {
-            this.cooldown = this.get('cooldownTime') + castTime;
+            this.cooldown = this.cooldownTime + castTime;
         },
 
-        computeAttrs: function(weapon, affixDict) {
-            //log.info('Skill compute attrs');
-            var t = {
-                physDmg: weapon.get('damage'),
-                range: weapon.get('range'),
-                speed: weapon.get('speed'),
-                fireDmg: 0,
-                coldDmg: 0,
-                lightDmg: 0,
-                poisDmg: 0,
-                manaCost: this.get('manaCost')
-            };
+        computeAttrs: function(baseDmgStats, dmgKeys) {
+            this.baseDmgStats = baseDmgStats;  // please don't modify this
+            this.dmgStats = $.extend(true, {}, baseDmgStats);
 
-            utils.applyAllAffixes(
-                t,
-                ['physDmg', 'range', 'speed', 'fireDmg',
-                 'coldDmg', 'lightDmg', 'poisDmg', 'manaCost'],
-                affixDict);
-            var skillAffDict = utils.affixesToAffDict(this.get('affixes'));
-            utils.applyAllAffixes(
-                t,
-                ['physDmg', 'range', 'speed', 'fireDmg', 'coldDmg',
-                 'lightDmg', 'poisDmg', 'manaCost'],
-                skillAffDict);
-            //console.log('skill computeAttrs', t, this, affixDict);
-            this.set(t);
+            // log.info('Skill compute attrs');
+            this.range = weapon.range;
+            this.speed = weapon.speed;
 
-            log.debug('Skill compute attrs: %s', JSON.stringify(t));
+            var cards = this.getCards();
+            cards.push(this);  // pushing the skills 'mods' array and level
+            var mods;
+            for (var i = 0; i < cards.length; i++) {
+                var mods = cards[i].mods;
+                for (var j = 0; j < mods.length; j++) {
+                    utils.addMod(this.dmgStats, mods[j].def, cards[i].level);
+                }
+            }
+
+            var dtype, obj, targetKeys, dmg, convPct, convAmt, gainedAmt, i, j;
+            var keysLen = dmgKeys.length;
+            for (var i = 0; i < keysLen; i++) {
+                dtype = dmgKeys[i];
+                obj = this.dmgStats[dtype];
+                convPct = 100;
+
+                dmg = obj.added * obj.more;
+                for (var j = i; j < keysLen; j++) {
+                    convAmt = obj.converted[dmgKeys[j]];
+                    if (convAmt > convPct) {
+                        convAmt = convPct;
+                    }
+                    this.dmgStats[dmgKeys[j]].added += convAmt / 100 * dmg;
+                    convPct -= convAmt;
+                }
+                dmg *= (convPct / 100);
+                for (var j = i; j < keysLen; j++) {
+                    gainedAmt = obj.gainedas[dmgKeys[j]];
+                    this.dmgStats[dmgKeys[j]].added += gainedAmt / 100 * dmg;
+                }
+                this[dtype] = dmg;
+            }
         },
     });
 
-    var Skillchain = Backbone.Collection.extend({
-        model: SkillModel,
-
+    var Skillchain = window.Model.extend({
         initialize: function() {
-            this.on('add remove', this.countChange, this);
+            this.skills = [undefined, undefined, undefined, undefined];
+            // this.on('add remove', this.countChange, this);
         },
 
-        countChange: function(item) {
-            log.debug('Skillchain countChange');
-            var ranges = this.pluck('range');
+        equip: function(skill, slot) {
+            // something that equips skills and takes slot, puts it in proper place, pushes others out of way, throws error if too many equipped
+            // then updates ranges, computes attrs?
+        },
+
+        ranges: function() {
+            if (this.skills.length === 0) {
+                this.furthest = undefined;
+                this.shortest = undefined;
+                return;
+            }
+
+            var i, l;
+            var ranges = [];
+            for (i = 0, l = this.skills.length; i < l; i++) {
+                if (this.skills[i] === undefined) {
+                    return;
+                }
+                ranges.push(skill.range);
+            }
             this.shortest = ranges.min();
             this.furthest = ranges.max();
-            // TODO: figure out range
-            //console.log(item.get('range'));
         },
 
         bestSkill: function(mana, distances) {
-            return this.find(function(skill) {
+            var skill;
+            for (i = 0, l = this.skills.length; i < l; i++) {
+                skill = this.skills[i];
+                if (skill === undefined) {
+                    return;
+                }
+                // all this shit:
+            }
+            /*return this.find(function(skill) {
                 if (mana >= skill.get('manaCost') && skill.cool()) {
                     return _.some(distances, function(dist) {
                         return this.get('range') >= dist;
                     }, skill);
                 }
                 return false;
-            }, this);
+            }, this);*/
         },
 
-        computeAttrs: function(weapon, affixDict) {
-            log.debug('skill chain compute attrs len: %d', this.length);
-            this.invoke('computeAttrs', weapon, affixDict);
+        computeAttrs: function(dmgStats, dmgOrder) {
+            log.debug('skill chain compute attrs');
+
+            this.lastDmgStats = dmgStats;
+            _.each(this.skills, function(skill) {
+                if (skill !== undefined) {
+                    skill.computeAttrs(dmgStats, dmgOrder);
+                }
+            });
         },
     });
 
-    function newSkillchain() {
-        var sk;
-        sk = new Skillchain();
-        return sk;
-    }
+    var EquippedGearModel = window.Model.extend({
 
-    var EquippedGearModel = Backbone.Model.extend({
+        slots: ['mainHand','head', 'hands', 'chest', 'legs'],
 
-        slots: ['mainHand','head', 'offHand', 'hands', 'chest', 'legs'],
-
-        // weapon slots: mainHand, offHand
+        // weapon slots: mainHand
         // armor slots: head, chest, hands, legs
-        initialize: function(options, inv) {
-        },
 
         equip: function(item, slot) {
             log.debug('EquippedGearModel.equip, slot: %s', slot);
-            if(this.get(slot) == item) {
-                //If already equipped, unequip
-                this.unset(slot);
-                item.set('equippedBy', '');
-                this.trigger('equipSuccess');
-                return;
-            }
-            var canEquipItem = true;
-            var success = false;
+            var changed = false;
 
-            if (!canEquipItem) {
-                log.warning('You cannot equip this item name: %s type: %s',
-                            item.get('name'), item.get('itemType'));
-                throw('shit');
+            if (this[slot].id === item.id) {
+                this.unequip(this[slot]);
+                item.equipped = false;
+                changed = true;
             }
 
-            if (item.get('itemType') === 'weapon') {
-                if (slot === 'mainHand' || slot === 'offHand') {
-                    this.unequip(this.get(slot));
-                    this.set(slot, item);
-                    item.set('equippedBy', this.get('heroName'));
-                    success = true;
+            if (item.itemType === 'weapon') {
+                if (slot === 'mainHand') {
+                    this.unequip(this[slot]);
+                    this[slot] = item;
+                    item.equipped = true;
+                    changed = true;
                 } else {
                     log.info('ya done fucked up equipping a weapon name: %s type: %s',
-                             item.get('name'), item.get('itemType'));
+                             item.name, item.itemType);
                     throw('shit');
                 }
-            } else if (item.get('itemType') === 'armor') {
-                if (item.get('type') === slot) {
-                    this.unequip(this.get(slot));
-                    this.set(slot, item);
-                    item.set('equippedBy', this.get('heroName'));
-                    success = true;
+            } else if (item.itemType === 'armor') {
+                if (item.type === slot) {
+                    this.unequip(this[slot]);
+                    this[slot] = item;
+                    item.equipped = true;
+                    changed = true;
                 } else {
                     log.info('ya done fucked up equipped armor name: %s type: %s',
-                             item.get('name'), item.get('itemType'));
+                             item.name, item.itemType);
                     throw('shit');
                 }
             } else {
                 log.info('ya done fucked up equipped sumpin\' ya don\'t equip' +
-                         ' name: %s type: %s', item.get('name'), item.get('itemType'));
+                         ' name: %s type: %s', item.name, item.itemType);
                 throw('shit');
             }
-            if (success) {
-                this.trigger('equipSuccess');
-                // TODO, this is a dumb passthrough, will be removed when we are using the global event queue
-                this.listenTo(item, 'change', this.trigger.curry('change'));
+            if (changed) {
+                window.ItemEvents.trigger('equipChange', item, slot);
             }
-            //console.log('equippedgearmodel, equp: ', item, slot, this.get(slot));
-        },
-
-        getWeapon: function() {
-            var weapon = this.get('mainHand');
-            if (weapon) {
-                return weapon;
-            }
-            return new WeaponModel({name: 'fists'});
-        },
-
-        getAffixes: function() {
-            var all = _.map(this.slots, function(name) {
-                //console.log(name);
-                var item = this.get(name);
-                //console.log(item);
-                return item === undefined ? [] : item.get('affixes');
-            }, this);
-            //console.log(all);
-            return _.flatten(all);
-        },
-
-        getStats: function() {
-            // maybe refactor computeAttrs stuff into here possibly
         },
 
         unequip: function(item) {
             if (item !== undefined) {
-                this.stopListening(item, 'change');
-                item.set({
-                    'equipped': false,
-                    'equippedBy': ''
-                });
+                item.equipped = false;
             }
         },
 
+        allCards: function() {
+            
+        },
+
         toDict: function() {
-            return _.object(
-                this.slots,
-                _.map(this.slots, this.get, this));
+            return _.object(this.slots, _.map(this.slots, function(slot) { return this[slot]; }, this));
         },
 
         applyXp: function(xp) {
             _.each(this.slots, function(slot) {
-                if (this.get(slot)) {
-                    this.get(slot).applyXp(xp);
+                if (this[slot] !== undefined) {
+                    this[slot].applyXp(xp);
                 }
             }, this);
-
         },
     });
 
-    var ItemCollection = Backbone.Collection.extend({
-        itemTypes: function() {
-            return ['weapon', 'armor', 'skill'];
-        },
-
+    var ItemCollection = window.Model.extend({
         initialize: function() {
-            // no models given, do basics
-            var defaults = [
-                new WeaponModel({name: 'wooden sword'}),
-                new WeaponModel({name: 'shitty bow'}),
-                new WeaponModel({name: 'crappy wand'}),
-                new SkillModel({name: 'basic melee'}),
-                new SkillModel({name: 'basic range'}),
-                new SkillModel({name: 'basic spell'}),
-                new ArmorModel({name: 'cardboard kneepads'})
+            this.models = [
+                new WeaponModel(0, 'melee'),
+                new SkillModel('basic melee'),
+                new ArmorModel(0, 'head'),
             ];
-            this.add(defaults);
         },
-
         /*addDrops: function(drops) {
             _.each(drops, function(drop){
                 if (typeof(drop)== 'object') {
@@ -334,6 +304,29 @@ namespace.module('bot.inv', function (exports, require) {
         },*/
     });
 
+    var CardModel = window.Model.extend({
+        initialize: function(name) {
+            _.extend(this, itemref.expand('card', this.name));
+            this.amts = [];
+            this.equipped = [];
+            for (var i = 0; i < this.levels; i++) {
+                this.amts[i] = 0;
+                this.equipped[i] = 0;
+            }
+        }
+    });
+
+    var CardCollection = window.Model.extend({
+        initialize: function() {
+            this.models = [
+                new CardModel('hot sword');
+                new CardModel('surprisingly hot sword');
+                new CardModel('hard head');
+            ];
+        }
+    });
+
+    /*
     var ItemCollectionView = Backbone.View.extend({
         el: $('#inv-menu-holder'),
 
@@ -519,17 +512,16 @@ namespace.module('bot.inv', function (exports, require) {
         el: $('#inv-menu-holder'),
         template: _.template($('#inv-menu-template').html()),
         SubView: InvItemView
-    });
+    });*/
 
     exports.extend({
         ItemCollection: ItemCollection,
-        InvItemCollectionView: InvItemCollectionView,
+        //InvItemCollectionView: InvItemCollectionView,
 
         WeaponModel: WeaponModel,
         ArmorModel: ArmorModel,
         SkillModel: SkillModel,
         Skillchain: Skillchain,
-        newSkillchain: newSkillchain,
         EquippedGearModel: EquippedGearModel,
     });
 });

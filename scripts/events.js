@@ -31,4 +31,6 @@ namespace.module('bot.events', function (exports, require) {
     window.DirtyQueue = new DirtyQueueClass();
 
     window.DirtyListener = _.extend({}, Backbone.Events);
+
+    window.ItemEvents = _.extend({}, Backbone.Events);
 });

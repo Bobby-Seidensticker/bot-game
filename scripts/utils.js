@@ -44,52 +44,96 @@ namespace.module('bot.utils', function (exports, require) {
 
     var log = namespace.bot.log;
 
-    function applyAffixes(startVal, mods) {
-        //console.log("applyAffixes", startVal, mods);
-        var mores, adds, splits, modtype, amt;
-        mores = 1;
-        adds = startVal;
-        _.each(mods, function(mod) {
-            splits = mod.split(' ');
-            modtype = splits[0];
-            amt = parseFloat(splits[1]);
-            if (modtype === 'added') {
-                adds += amt;
-            } else if (modtype === 'more') {
-                mores *= (1 + 0.01 * amt);
-            } else {
-                log.error('Improperly formatted affix %s', mod);
-                throw('up');
-                console.log(mods, startVal, mores, adds);
-            }
-        });
-        //console.log("returning", adds*mores, adds, mores);
-        return adds * mores;
-    }
-
-    function applyAllAffixes(t, stats, affixDict) {
-        stats = _.filter(stats, function(stat) { return stat in affixDict});
-        _.each(stats, function(stat) { t[stat] = applyAffixes(t[stat], affixDict[stat]); });
-    }
-
-    function affixesToAffDict(affixes) {
-        var affixDict = {};
-        for (var i = 0; i < affixes.length; i++) {
-            var affix = affixes[i].split(' ');
-            var stat = affix[0];
-            var mod = affix.slice(1).join(' ');
-            if (affixDict[stat]) {
-                affixDict[stat].push(mod);
-            } else {
-                affixDict[stat] = [mod];
+    function newBaseStatsDict() {
+        var a, i, j, l;
+        var comp = {};
+        for (i = 0; i < arguments.length; i++) {
+            a = arguments[i];
+            for (j = 0; j < a.length; j++) {
+                comp[a[j]] = {"added": 0, "more": 1};
             }
         }
-        return affixDict;
+        return comp;
+    }
+
+    function newDmgStatsDict() {
+        return {
+            physDmg: {
+                added: 0,
+                more: 1,
+                converted: {lightDmg: 0, coldDmg: 0, fireDmg: 0, poisDmg: 0},
+                gainedas: {lightDmg: 0, coldDmg: 0, fireDmg: 0, poisDmg: 0}
+            },
+            lightDmg: {
+                added: 0,
+                more: 1,
+                converted: {coldDmg: 0, fireDmg: 0, poisDmg: 0},
+                gainedas: {coldDmg: 0, fireDmg: 0, poisDmg: 0}
+            },
+            coldDmg: {
+                added: 0,
+                more: 1,
+                converted: {fireDmg: 0, poisDmg: 0},
+                gainedas: {fireDmg: 0, poisDmg: 0}
+            },
+            fireDmg: {
+                added: 0,
+                more: 1,
+                converted: {poisDmg: 0},
+                gainedas: {poisDmg: 0}
+            },
+            poisDmg: {
+                added: 0,
+                more: 1,
+                converted: {},
+                gainedas: {}
+            }
+        };
+    }
+
+    // [primary] [verb] [amt] [special]   Note: special is either perLevel or dmgType in case of converted and gainedas
+    // mod restrictions:
+    // can only have 4, cannot have a converted or gainedas as perlevel
+    function addMod(dict, str, level) {
+        var s = str.split(' ');
+        var amt = parseInt(s[2], 10);
+        if (s.length === 4 && s[3] === 'perLevel') {
+            amt *= level;
+        }
+        if (s[1] === 'added') {
+            trie[s[0]]['added'] += amt;
+        } else {
+            trie[s[0]]['more'] *= 1 + (amt / 100);
+        } else if (s[1] === 'converted') {
+            trie[s[0]]['converted'][s[3]] += amt;  // TODO: converted and gainedas are the same
+        } else if (s[1] === 'gainedas') {
+            trie[s[0]]['gainedas'][s[3]] += amt;
+        } else {
+            throw('shit');
+        }
+    }
+
+    // this should also work for the mod object on an item (same fmt)
+    function addCardStats(all, card) {
+        var i, mod;
+        for (var i = 0; i < card.mods.length; i++) {
+            mod = card.mods[i];
+            addMod(all[mod.type], mod.def, card.level);
+        }
+    }
+
+    function addAllCards(all, cards) {
+        var group, card;
+        for (var i = 0; i < cards.length; i++) {
+            addCardStats(all, cards[i]);
+        }
     }
 
     exports.extend({
-        applyAllAffixes: applyAllAffixes,
-        affixesToAffDict: affixesToAffDict
+        newBaseStatsDict: newBaseStatsDict,
+        newDmgStatsDict: newDmgStatsDict,
+        addAllCards: addAllCards,
+        addMod: addMod
     });
 
 });

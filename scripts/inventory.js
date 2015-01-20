@@ -38,19 +38,41 @@ namespace.module('bot.inv', function (exports, require) {
             this.level += 1;
 
             if (type === 'skill') {
-                this.maxCards = Math.min(this.level, 1);
+                this.ensureCardArray(1);
             } else {
-                this.maxCards = this.slotFormula(this.classLevel, this.level);
+                this.ensureCardArray(this.slotFormula(this.classLevel, this.level));
+            }
+        },
+
+        ensureCardArray: function(maxCards) {
+            if (maxCards === this.cards.length) {
+                return;
+            }
+            if (maxCards < this.cards.length) {
+                log.error('Somehow ensureCardArray was called with maxCards less than the current cards array\'s length.');
+                return;
+            }
+            while (this.cards.length < maxCards) {
+                this.cards.push(undefined);
             }
         },
 
         getCards: function() {
-            return this.cards.concat(this);
+            return _.filter(this.cards, function(card) { return card !== undefined; }).concat(this);
         },
 
-        equipCard: function(card) {
-            // TODO: fill this out
-            if (this.cards.length) {}
+        equipCard: function(cardTypeModel, level, slotIndex) {
+            if (slotIndex >= this.cards.length) {
+                log.error('Cannot equip card in slotIndex %d when item only has %d slots', slotIndex, this.cards.length);
+            }
+
+            if (this.cards[slotIndex] !== undefined) {
+                this.cards[slotIndex].callback();
+            }
+            this.cards[slotIndex] = cardTypeModel.getCard(level);
+
+            // TODO: make this more specific
+            window.ItemEvents.trigger('heroComputeAttr');
         },
     });
 
@@ -67,7 +89,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.weight = ref.weight;
             this.name = ref.names[this.classLevel];
 
-            this.maxCards = this.slotFormula(this.classLevel, this.level);
+            this.ensureCardArray(this.slotFormula(this.classLevel, this.level));
             log.debug('Made a new armor cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
         }
     });
@@ -84,6 +106,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.slotFormula = ref.slotFormula;
             this.name = ref.names[this.classLevel];
 
+            this.ensureCardArray(this.slotFormula(this.classLevel, this.level));
             log.debug('Made a new weapon cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
         }
     });
@@ -97,6 +120,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.cooldownTime = 800;
             GearModel.prototype.initialize.call(this);
 
+            this.ensureCardArray(1);
             log.debug('loading skill %s from file', this.name);
             _.extend(this, itemref.expand('skill', this.name));
         },
@@ -305,20 +329,13 @@ namespace.module('bot.inv', function (exports, require) {
                 new ArmorModel(0, 'head'),
             ];
         },
-        /*addDrops: function(drops) {
-            _.each(drops, function(drop){
-                if (typeof(drop)== 'object') {
-                    this.recipes.add(drop);
-                } else if (typeof(drop) == 'string'){
-                    this.materials.addDrop(drop);
-                } else {
-                    log.warning('invalid drop %s', typeof(drop));
-                }
-            }, this);
-        },*/
+
+        addDrop: function(drop) {
+            this.models.push(drop);
+        }
     });
 
-    var CardModel = window.Model.extend({
+    var CardTypeModel = window.Model.extend({
         initialize: function(name) {
             _.extend(this, itemref.expand('card', this.name));
             this.amts = [];
@@ -327,15 +344,42 @@ namespace.module('bot.inv', function (exports, require) {
                 this.amts[i] = 0;
                 this.equipped[i] = 0;
             }
+        },
+
+        levelAvailable: function(level) {
+            var index = level - 1;
+            return index < this.levels && this.amts[index] > 0 && this.equipped[index] === 0;
+        },
+
+        // Must already be available, and called must then equip it
+        getCard: function(level) {
+            var index = level - 1;
+            log.error('CardTypeModel.getCard. name: %d, level: %d, amts: %d, equipped: %d',
+                      this.name, level, this.amts[index], this.equipped[index]);
+
+            var card = this.getCard(level);
+            this.equipped[index] = 1;
+            return {
+                mods: this.mods,
+                level: level,
+                callback: _.bind(this.unequip, this, level)
+            };
+        },
+
+        // this is called with level, not index.  If it's out of range, you're screwed, so don't do that
+        unequip: function(level) {
+            log.info('CardTypeModel.unequip card name: %s, level: %d, current equipped[level-1]: %d',
+                     this.name, level, this.equipped[level - 1]);
+            this.equipped[level - 1] = 0;
         }
     });
 
-    var CardCollection = window.Model.extend({
+    var CardTypeCollection = window.Model.extend({
         initialize: function() {
             this.models = [
-                new CardModel('hot sword'),
-                new CardModel('surprisingly hot sword'),
-                new CardModel('hard head')
+                new CardTypeModel('hot sword'),
+                new CardTypeModel('surprisingly hot sword'),
+                new CardTypeModel('hard head')
             ];
         }
     });

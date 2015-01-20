@@ -78,8 +78,8 @@ namespace.module('bot.entity', function (exports, require) {
                 'dexterity',
             ];
             var defKeys = [
-                'hpMax',
-                'manaMax',
+                'maxHp',
+                'maxMana',
                 'armor',
                 'dodge',
                 'eleResistAll',
@@ -95,12 +95,14 @@ namespace.module('bot.entity', function (exports, require) {
                 'lightDmg',
                 'coldDmg',
                 'fireDmg',
-                'poisDmg'
+                'poisDmg',
+                'range',
+                'speed'
             ];
 
             var all = {};
 
-            all.attrs = utils.newBaseStatsDict(attrKeys);
+            all.attr = utils.newBaseStatsDict(attrKeys);
             all.def = utils.newBaseStatsDict(defKeys);
             all.eleResist = utils.newBaseStatsDict(eleResistKeys);
 
@@ -114,11 +116,11 @@ namespace.module('bot.entity', function (exports, require) {
             // Do final multiplication and put on the entity
 
             _.each(attrKeys, function(stat) {
-                this[stat] = (all.attrs[stat].added) * all.attrs[stat].more;
+                this[stat] = (all.attr[stat].added) * all.attr[stat].more;
             }, this);
 
-            all.def.hpMax.added += this.level * 10 + this.vitality * 2;
-            all.def.maxMana.added += this.level * 5 + this.wisdom * 2;
+            all.def.maxHp.added += this.vitality * 2;
+            all.def.maxMana.added += this.wisdom * 2;
             all.def.armor.added += this.strength * 0.5;
             all.def.dodge.added += this.dexterity * 0.5;
             all.def.eleResistAll.more *= Math.pow(0.997, this.wisdom); //temp var only
@@ -142,6 +144,19 @@ namespace.module('bot.entity', function (exports, require) {
             this.skillchain.computeAttrs(all.dmg, dmgOrder);
 
             this.nextLevelXp = this.getNextLevelXp();
+        },
+
+        getCards: function() {
+            return [
+                {mods: [
+                    {def: 'strength added 10', type: 'attr'},
+                    {def: 'dexterity added 10', type: 'attr'},
+                    {def: 'wisdom added 10', type: 'attr'},
+                    {def: 'vitality added 10', type: 'attr'},
+                    {def: 'maxHp added 10 perLevel', type: 'def'},
+                    {def: 'maxMana added 5 perLevel', type: 'def'},
+                ], level: this.level}
+            ];
         },
 
         revive: function() {
@@ -485,11 +500,11 @@ namespace.module('bot.entity', function (exports, require) {
         var heroName = 'bobbeh';
         var equipped = new inventory.EquippedGearModel();
         // this needs to change, don't have find where anymore
-        equipped.equip(inv.findWhere({name: 'wooden sword'}), 'mainHand');
-        equipped.equip(inv.findWhere({name: 'cardboard kneepads'}), 'legs');
+        equipped.equip(_.findWhere(inv.models, {name: 'cardboard sword'}), 'mainHand');
+        equipped.equip(_.findWhere(inv.models, {name: 'balsa helmet'}), 'head');
 
         var skillchain = new inventory.Skillchain()
-        skillchain.add(inv.findWhere({name: 'basic melee'}));
+        skillchain.equip(_.findWhere(inv.models, {name: 'basic melee'}), 0);
 
         var hero = new HeroModel(heroName, skillchain, inv, equipped);
 

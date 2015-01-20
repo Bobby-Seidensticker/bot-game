@@ -23,7 +23,7 @@ Game === :
 
 User === :
 - Header at top of screen
-- contains hero stats (such as hp/hpmax), current level info, skillchain and equipped items
+- contains hero stats (such as hp/maxhp), current level info, skillchain and equipped items
 
 -needs access to:
 -- inventory for equiped items and skills

@@ -11,6 +11,7 @@ namespace.module('bot.inv', function (exports, require) {
         initialize: function() {
             this.xp = 0;
             this.level = 1;
+            this.mods = [];
             this.cards = [];
             this.equipped = false;
             this.maxCards = 0;
@@ -39,11 +40,16 @@ namespace.module('bot.inv', function (exports, require) {
             if (type === 'skill') {
                 this.maxCards = Math.min(this.level, 1);
             } else {
-                this.maxCards = this.slotFormula(this.classLevel, this.itemLevel);
+                this.maxCards = this.slotFormula(this.classLevel, this.level);
             }
         },
 
+        getCards: function() {
+            return this.cards.concat(this);
+        },
+
         equipCard: function(card) {
+            // TODO: fill this out
             if (this.cards.length) {}
         },
     });
@@ -55,13 +61,13 @@ namespace.module('bot.inv', function (exports, require) {
             this.classLevel = classLevel;
             this.type = type;
 
-            var ref = itemref.ref.armor[type];
-            this.formula = ref.formula;
+            var ref = $.extend(true, {}, itemref.ref.armor[type]);
+            this.mods = ref.mods.concat(ref.getClassMods(this.classLevel));
             this.slotFormula = ref.slotFormula;
             this.weight = ref.weight;
             this.name = ref.names[this.classLevel];
 
-            this.maxCards = this.slotFormula(classLevel, itemLevel);
+            this.maxCards = this.slotFormula(this.classLevel, this.level);
             log.debug('Made a new armor cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
         }
     });
@@ -73,11 +79,9 @@ namespace.module('bot.inv', function (exports, require) {
             this.classLevel = classLevel;
             this.type = type;
 
-            var ref = itemref.ref.weapon[type];
-            this.formula = ref.formula;
+            var ref = $.extend(true, {}, itemref.ref.weapon[type]);
+            this.mods = ref.mods.concat(ref.getClassMods(this.classLevel));
             this.slotFormula = ref.slotFormula;
-            this.speed = ref.speed;
-            this.range = ref.range;
             this.name = ref.names[this.classLevel];
 
             log.debug('Made a new weapon cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
@@ -111,8 +115,8 @@ namespace.module('bot.inv', function (exports, require) {
             this.dmgStats = $.extend(true, {}, baseDmgStats);
 
             // log.info('Skill compute attrs');
-            this.range = weapon.range;
-            this.speed = weapon.speed;
+            //this.range = weapon.range;
+            //this.speed = weapon.speed;
 
             var cards = this.getCards();
             cards.push(this);  // pushing the skills 'mods' array and level
@@ -125,7 +129,8 @@ namespace.module('bot.inv', function (exports, require) {
             }
 
             var dtype, obj, targetKeys, dmg, convPct, convAmt, gainedAmt, i, j;
-            var keysLen = dmgKeys.length;
+            var keysLen = dmgKeys.length - 2; // TODO fix this jankyness because of range and speed
+            // Note: range and speed are computed properly even though it's weird
             for (var i = 0; i < keysLen; i++) {
                 dtype = dmgKeys[i];
                 obj = this.dmgStats[dtype];
@@ -147,6 +152,8 @@ namespace.module('bot.inv', function (exports, require) {
                 }
                 this[dtype] = dmg;
             }
+            this.range = this.dmgStats.range.added * this.dmgStats.range.more;
+            this.speed = this.dmgStats.speed.added * this.dmgStats.speed.more;
         },
     });
 
@@ -157,6 +164,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         equip: function(skill, slot) {
+            this.skills[slot] = skill;
             // something that equips skills and takes slot, puts it in proper place, pushes others out of way, throws error if too many equipped
             // then updates ranges, computes attrs?
         },
@@ -213,7 +221,7 @@ namespace.module('bot.inv', function (exports, require) {
 
     var EquippedGearModel = window.Model.extend({
 
-        slots: ['mainHand','head', 'hands', 'chest', 'legs'],
+        slots: ['mainHand', 'head', 'hands', 'chest', 'legs'],
 
         // weapon slots: mainHand
         // armor slots: head, chest, hands, legs
@@ -222,7 +230,7 @@ namespace.module('bot.inv', function (exports, require) {
             log.debug('EquippedGearModel.equip, slot: %s', slot);
             var changed = false;
 
-            if (this[slot].id === item.id) {
+            if (this[slot] !== undefined && this[slot].id === item.id) {
                 this.unequip(this[slot]);
                 item.equipped = false;
                 changed = true;
@@ -266,8 +274,14 @@ namespace.module('bot.inv', function (exports, require) {
             }
         },
 
-        allCards: function() {
-            
+        getCards: function() {
+            var cards = [];
+            _.each(this.slots, function(slot) {
+                if (this[slot] !== undefined) {
+                    cards = cards.concat(this[slot].getCards());
+                }
+            });
+            return cards;
         },
 
         toDict: function() {
@@ -319,9 +333,9 @@ namespace.module('bot.inv', function (exports, require) {
     var CardCollection = window.Model.extend({
         initialize: function() {
             this.models = [
-                new CardModel('hot sword');
-                new CardModel('surprisingly hot sword');
-                new CardModel('hard head');
+                new CardModel('hot sword'),
+                new CardModel('surprisingly hot sword'),
+                new CardModel('hard head')
             ];
         }
     });

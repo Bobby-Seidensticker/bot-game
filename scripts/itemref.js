@@ -9,75 +9,90 @@ namespace.module('bot.itemref', function (exports, require) {
     var ref = {
         "weapon": {
             "melee": {
-                "formula": function(classLevel, itemLevel) {
-                    return {
-                        "physDmg": Math.floor(Math.pow(2 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 3 + itemLevel
-                    }
+                "mods": [
+                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 5 perLevel', type: 'dmg'}
+                ],
+                "getClassMods": function(classLevel) {
+                    return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
-                "speed": 1,
-                "range": 100000,
                 "names": ["cardboard sword", "ass axe", "master sword"]
             },
             "range": {
-                "formula": function(classLevel, itemLevel) {
-                    return {
-                        "physDmg": Math.floor(Math.pow(2 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 3 + itemLevel
-                    }
+                "mods": [
+                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 5 perLevel', type: 'dmg'}
+                ],
+                "getClassMods": function(classLevel) {
+                    return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
-                "speed": 1,
-                "range": 500000,
                 "names": ["shitty bow", "crappy bow", "compound bow"]
             },
             "spell": {
-                "formula": function(classLevel, itemLevel) {
-                    return {
-                        "physDmg": Math.floor(Math.pow(2 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 3 + itemLevel
-                    }
+                "mods": [
+                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 5 perLevel', type: 'dmg'}
+                ],
+                "getClassMods": function(classLevel) {
+                    return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
-                "speed": 1,
-                "range": 700000,
                 "names": ["shitty bow", "crappy bow", "compound bow"]
             }
         },
         "armor": {
             "head": {
-                "formula": function(classLevel, itemLevel) {
-                    return {
-                        "armor": Math.floor(Math.pow(1 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 5 + itemLevel
-                    }
+                "mods": [
+                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor more 5 perLevel', type: 'def'},
+                    {def: 'armor added 1 perLevel', type: 'def'},
+                ],
+                "getClassMods": function(classLevel) {
+                    return [{def: 'armor added ' + Math.floor(Math.pow(1 + classLevel, 2)), type: 'def'}];
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 1,
                 "names": ["balsa helmet", "oak helmet", "steel helmet"]
             },
             "chest": {
-                "formula": function(classLevel, itemLevel) {
-                    return {
-                        "armor": Math.floor(Math.pow(1 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 5 + itemLevel
-                    }
+                "mods": [
+                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor more 5 perLevel', type: 'def'},
+                    {def: 'armor added 1 perLevel', type: 'def'},
+                ],
+                "getClassMods": function(classLevel) {
+                    return [{def: 'armor added ' + Math.floor(Math.pow(1 + classLevel, 2)), type: 'def'}];
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 2,
                 "names": ["smelly cod piece", "foamcore tunic", "steel breastplate"]
             },
             "legs": {
-                "formula": function(classLevel, itemLevel) {
-                    return {
-                        "armor": Math.floor(Math.pow(1 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 5 + itemLevel
-                    }
+                "mods": [
+                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor more 5 perLevel', type: 'def'},
+                    {def: 'armor added 1 perLevel', type: 'def'},
+                ],
+                "getClassMods": function(classLevel) {
+                    return [{def: 'armor added ' + Math.floor(Math.pow(1 + classLevel, 2)), type: 'def'}];
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 2,
                 "names": ["cardboard kneepads", "jeans", "platemail leggings"]
             },
             "hands": {
-                "formula": function(classLevel, itemLevel) {
-                    return {
-                        "armor": Math.floor(Math.pow(1 + classLevel, 2) * Math.pow(1.05, itemLevel)) + 5 + itemLevel
-                    }
+                "mods": [
+                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor more 5 perLevel', type: 'def'},
+                    {def: 'armor added 1 perLevel', type: 'def'},
+                ],
+                "getClassMods": function(classLevel) {
+                    return [{def: 'armor added ' + Math.floor(Math.pow(1 + classLevel, 2)), type: 'def'}];
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 1,
@@ -170,36 +185,48 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "melee",
                 "types": ["melee"],
-                "formula": function(dmg) { return dmg; }
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added 100000', type: 'dmg'},
+                ]
             },
             "basic range": {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "formula": function(dmg) { return dmg; }
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added 500000', type: 'dmg'},
+                ]
             },
             "basic spell": {
                 "prototype": ["basic"],
                 "class": "spell",
                 "types": ["proj"],
-                "formula": function(dmg) { return dmg; }
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added 700000', type: 'dmg'},
+                ]
             },
             "super smash": {
                 "prototype": ["basic melee"],
                 "manaCost": 3,
-                "formula": function(dmg, level) {
-                    dmg.physDmg = dmg.physDmg * 2 + level * 5;
-                    return dmg;
-                }
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'physDmg more 100', type: 'dmg'},
+                    {def: 'physDmg added 5 perLevel', type: 'dmg'}
+                ]
             },
             "fire slash": {
                 "prototype": ["basic melee"],
                 "manaCost": 3,
-                "formula": function(dmg, level) {
-                    dmg.fireDmg = (dmg.fireDmg * 2 + dmg.physDmg * 0.6) * Math.pow(1.01, level);
-                    dmg.physDmg *= 0.4;
-                    return dmg;
-                }
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'fireDmg more 100', type: 'dmg'},
+                    {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
+                ]
             },
             "ice slash": {
                 "prototype": ["basic melee"],

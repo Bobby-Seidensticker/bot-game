@@ -11,8 +11,8 @@ Hero(name)
   la          // Last Attack
   weapon      // class instance of equipped weapon
   armor       // class instance of equipped armor
-  hpMax       // calculated from vit * 5
-  hp          // current hp, when constructed, hp == hpMax
+  maxHp       // calculated from vit * 5
+  hp          // current hp, when constructed, hp == maxHp
   dmgMod      // calculated from str / 3, multiplied by weapon to get actual damage
   isAlive()   // bool, returns if hero is alive
 

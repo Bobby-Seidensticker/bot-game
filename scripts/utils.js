@@ -87,7 +87,9 @@ namespace.module('bot.utils', function (exports, require) {
                 more: 1,
                 converted: {},
                 gainedas: {}
-            }
+            },
+            range: {added: 0, more: 1},
+            speed: {added: 0, more: 1}
         };
     }
 
@@ -101,13 +103,13 @@ namespace.module('bot.utils', function (exports, require) {
             amt *= level;
         }
         if (s[1] === 'added') {
-            trie[s[0]]['added'] += amt;
-        } else {
-            trie[s[0]]['more'] *= 1 + (amt / 100);
+            dict[s[0]]['added'] += amt;
+        } else if (s[1] === 'more') {
+            dict[s[0]]['more'] *= 1 + (amt / 100);
         } else if (s[1] === 'converted') {
-            trie[s[0]]['converted'][s[3]] += amt;  // TODO: converted and gainedas are the same
+            dict[s[0]]['converted'][s[3]] += amt;  // TODO: converted and gainedas are the same
         } else if (s[1] === 'gainedas') {
-            trie[s[0]]['gainedas'][s[3]] += amt;
+            dict[s[0]]['gainedas'][s[3]] += amt;
         } else {
             throw('shit');
         }

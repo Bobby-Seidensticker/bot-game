@@ -22,51 +22,6 @@ namespace.module('bot.entity', function (exports, require) {
         computeAttrs: function() {
             log.debug('Computing Attrs for Entity on team %s', this.teamString());
 
-            //var t = {};  // temp values
-
-            /*t.strength = this.defaults.strength;
-              t.dexterity = this.defaults.dexterity;
-              t.wisdom = this.defaults.wisdom;
-              t.vitality = this.defaults.vitality;*/
-            //t.level = this.get('level');
-            
-            /* TODO Chris something with this
-
-               t.equipped = this.get('equipped');
-               t.affixes = t.equipped.getAffixes();
-               if (this.get('team') === 1) {
-               t.affixes = t.affixes.concat(this.get('affixes'));
-               }
-            */
-
-            //t.skillchain = this.get('skillchain');
-
-            //Add affix bonuses
-            //Affix format is 'stat modtype amount'
-            //var affixDict = utils.affixesToAffDict(t.affixes);
-
-            //utils.applyAllAffixes(t, ['strength', 'dexterity', 'wisdom', 'vitality'], affixDict);
-
-            // Todo? should we pull these constants out and give them easily manipulable names 
-            // so we can balance away from crucial code? 
-            // eg
-            // HP_PER_LVL = 10;
-            // HP_PER_VIT = 2;
-
-
-            // compile cards
-            // go through items to get base damages and armor
-
-            // calc stats uses level, cards that modify stats added/more str added/more wis
-            // sets strength, vitality, wisdom, dexterity
-
-            // go through stats to get base hp, mana, armor, dodge, eleResistAll
-
-            // apply added damages
-            // apply more damages
-
-            // apply less resists to eleresistall
-
             var attrKeys = [
                 'strength',
                 'vitality',

@@ -227,52 +227,51 @@ namespace.module('bot.inv', function (exports, require) {
         // weapon slots: mainHand
         // armor slots: head, chest, hands, legs
 
-        equip: function(item, slot) {
-            log.debug('EquippedGearModel.equip, slot: %s', slot);
-            var changed = false;
-
-            if (this[slot] !== undefined && this[slot].id === item.id) {
-                this.unequip(this[slot]);
-                item.equipped = false;
-                changed = true;
-            }
-
-            if (item.itemType === 'weapon') {
-                if (slot === 'mainHand') {
-                    this.unequip(this[slot]);
-                    this[slot] = item;
-                    item.equipped = true;
-                    changed = true;
-                } else {
-                    log.info('ya done fucked up equipping a weapon name: %s type: %s',
-                             item.name, item.itemType);
-                    throw('shit');
-                }
-            } else if (item.itemType === 'armor') {
-                if (item.type === slot) {
-                    this.unequip(this[slot]);
-                    this[slot] = item;
-                    item.equipped = true;
-                    changed = true;
-                } else {
-                    log.info('ya done fucked up equipped armor name: %s type: %s',
-                             item.name, item.itemType);
-                    throw('shit');
-                }
-            } else {
-                log.info('ya done fucked up equipped sumpin\' ya don\'t equip' +
-                         ' name: %s type: %s', item.name, item.itemType);
-                throw('shit');
-            }
-            if (changed) {
-                window.ItemEvents.trigger('equipChange', item, slot);
-            }
+        initialize: function() {
+            this.listenTo(window.ItemEvents, 'equip', this.equip);
         },
 
-        unequip: function(item) {
-            if (item !== undefined) {
-                item.equipped = false;
+        equip: function(item, slot) {
+            log.debug('EquippedGearModel.equip item %s in slot %s', item.name, slot);
+
+            /*
+              Slot empty, filling with item: fill slot
+              Slot empty, filling with nothing: error
+              Slot full, filling with item: unequip old, fill new
+              Slot full, filling with nothing: unequip old, empty slot
+              Slot full, trying to equip same item, error
+              When equipping, ensure it's a falid operation
+
+              If no error, fire an equipChange event
+            */
+
+            if (item === undefined) {
+                if (this[slot] === undefined) {
+                    log.error('Equip: Slot empty, filling with nothing, returning...');
+                    return;
+                }
+                this[slot].equipped = false;
+            } else {
+                if (this[slot] !== undefined) {
+                    if (this[slot].id === item.id) {
+                        return
+                    }
+                    this[slot].equipped = false;
+                }
+
+                if (item.itemType === 'armor' && item.type !== slot) {
+                    log.error('Tried to equip armor %s of type %s in slot %s, returning...', item.name, item.type, slot);
+                    return
+                }
+                if (item.itemType === 'weapon' && slot !== 'mainHand') {
+                    log.error('Tried to equip weapon %s in slot %s, can only be mainHand, returning...', item.name, slot);
+                    return
+                }
+                item.equipped = true;
             }
+
+            this[slot] = item;
+            window.ItemEvents.trigger('equipChange', item, slot);
         },
 
         getCards: function() {

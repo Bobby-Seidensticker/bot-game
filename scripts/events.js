@@ -32,5 +32,6 @@ namespace.module('bot.events', function (exports, require) {
 
     window.DirtyListener = _.extend({}, Backbone.Events);
 
+    window.GameEvents = _.extend({}, Backbone.Events);
     window.ItemEvents = _.extend({}, Backbone.Events);
 });

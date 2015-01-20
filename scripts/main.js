@@ -27,7 +27,7 @@ namespace.module('bot.main', function (exports, require) {
             //var DKEY = 100;
             var SKEY = 115;
             if (event.keyCode == SPACE) {
-                gameModel.toggle();
+                window.GameEvents.trigger('togglePause');
             } else if (event.keyCode == EKEY) {
                 //Cheat for adding 1000xp (for easier testing)
                 log.warning("XP Cheat!");                
@@ -46,24 +46,18 @@ namespace.module('bot.main', function (exports, require) {
             this.inZone = false;
 
             window.msgs = new namespace.bot.messages.MessageCollection();
-            //this.inv = new inv.InvModel();
-            //this.inv = new inv.ItemCollection({}, []);
-
-            //this.recipes = new inv.RecipeCollection();
 
             this.inv = new inv.ItemCollection();
             this.hero = new entity.newHero(this.inv);
             this.zone = new zone.ZoneManager(this.hero);
 
-            // TODO remove recipes
-            //this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});
-
-            //this.invView = new inv.InvItemCollectionView({collection: this.inv});
-            //this.headerView = views.newHeaderView(this.hero, this.inv, this.zone);
-
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;
             this.deaths = 0;
+
+            this.listenTo(window.GameEvents, 'unpause', this.start);
+            this.listenTo(window.GameEvents, 'pause', this.pause);
+            this.listenTo(window.GameEvents, 'togglePause', this.toggle);
         },
 
         start: function() {

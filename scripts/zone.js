@@ -9,37 +9,28 @@ namespace.module('bot.zone', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var vector = namespace.bot.vector;
 
-    var ZoneManager = Backbone.Model.extend({
-        defaults: {
-            initialized: false,
-            level: 1
-        },
-
-        initialize: function(options) {
-            options = options || {};
-            if (!options.hero) {
-                throw('no hero given to zone manager');
-            }
-            this.hero = options.hero;
+    var ZoneManager = window.Model.extend({
+        initialize: function(hero) {
+            this.initialize = false;
+            this.level = 1;
+            this.hero = hero;
             this.newZone('spooky dungeon', 1);
         },
 
         newZone: function(name, level) {
             var i, j, rooms, monsters, count, data;
 
-
-
-            data = itemref.expand('zone', name);
+            _.extend(this, itemref.expand('zone', name));
             rooms = [];
-            for (i = 0; i < data.roomCount; i++) {
-                count = 1 + prob.pProb(data.quantity);
-                
+            for (i = 0; i < this.roomCount; i++) {
+                count = 1 + prob.pProb(this.quantity);
+
                 monsters = new MonsterCollection(_.map(_.range(count), function() {
                     return {
-                        name: data.choices[prob.pick(data.weights)],
+                        name: this.choices[prob.pick(this.weights)],
                         level: level
                     };
-                }));
+                }, this));
 
                 rooms[i] = {
                     monsters: monsters,
@@ -50,11 +41,10 @@ namespace.module('bot.zone', function (exports, require) {
             //log.info('ZoneManager newZone %s', monsters.reduce(function(m, n) {
             //    return m + n.get('name') + ", "}, ""));
 
-            data.heroPos = 0;
-            data.rooms = rooms;
-            data.rooms[0].hero = this.hero;
-            data.initialized = true;
-            this.set(data);
+            this.heroPos = 0;
+            this.rooms = rooms;
+            this.rooms[0].hero = this.hero;
+            this.initialized = true;
             window.DirtyQueue.mark('zone:newZone');
         },
 

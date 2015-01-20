@@ -703,31 +703,24 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "monster": {
             "skeleton" : {
-                "skillchain": ["basic melee"],
-                "weapon" : ["wooden sword"],
-                "armor": ["smelly cod piece"],
-                "affixes": ["physDmg added 1", "maxHp added 10", "fireResist added -20"],
-                "drops": ['planks', 'poops']
-
+                "classLevel": 0,
+                "type": "melee",
+                "skillchain": ["basic melee"]
             },
             "skeleton archer" : {
                 "prototype" : ["skeleton"],
-                "skillchain": ["basic range"],
-                "armor": ["smelly cod piece"],
-                "weapon": "shitty bow",
-                "affixes": ["physDmg added 2", "maxHp added 10", "fireResist added -20"]
+                "type": "range",
+                "skillchain": ["basic range"]
             },
             "skeleton mage" : {
                 "prototype" : ["skeleton"],
-                "skillchain": ["basic spell"],
-                "armor": ["smelly cod piece"],
-                "weapon": "crappy wand",
-                "affixes": ["fireDmg added 10", "fireResist added -20"]
+                "type": "spell",
+                "skillchain": ["basic spell"]
             },
             "skeleton king" : {
-                "prototype" : ["skeleton"],
-                "skillchain": ["fire slash", "basic melee"],
-                "affixes": ["physDmg added 10", "maxHp added 5", "fireResist added -20"]
+                "classLevel": 1,
+                "type": "melee",
+                "skillchain": ["basic melee"]
             },
         },
         "zone": {

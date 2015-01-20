@@ -14,12 +14,8 @@ namespace.module('bot.entity', function (exports, require) {
     
     var EntityModel = window.Model.extend({
         initialize: function() {
-            this.strength = 10;
-            this.dexterity = 10;
-            this.wisdom = 10;
-            this.vitality = 10;
             this.level = 1;
-            this.affixes = [];
+            this.mods = [];
             this.xp = 0;
         },
 
@@ -90,7 +86,7 @@ namespace.module('bot.entity', function (exports, require) {
                 'lightResist',
                 'poisResist'
             ];
-            var dmgOrder = [
+            var dmgKeys = [
                 'physDmg',
                 'lightDmg',
                 'coldDmg',
@@ -123,6 +119,7 @@ namespace.module('bot.entity', function (exports, require) {
             all.def.maxMana.added += this.wisdom * 2;
             all.def.armor.added += this.strength * 0.5;
             all.def.dodge.added += this.dexterity * 0.5;
+            all.def.eleResistAll.added = 1;
             all.def.eleResistAll.more *= Math.pow(0.997, this.wisdom); //temp var only
 
             _.each(defKeys, function(stat) {
@@ -130,6 +127,12 @@ namespace.module('bot.entity', function (exports, require) {
             }, this);
 
             // note that eleResistAll is on the def keys because of the ordering
+            // added must be one, this is janky
+            all.eleResist.lightResist.added = 1;
+            all.eleResist.coldResist.added = 1;
+            all.eleResist.fireResist.added = 1;
+            all.eleResist.poisResist.added = 1;
+
             all.eleResist.lightResist.more *= all.def.eleResistAll.more;
             all.eleResist.coldResist.more *= all.def.eleResistAll.more;
             all.eleResist.fireResist.more *= all.def.eleResistAll.more;
@@ -141,7 +144,7 @@ namespace.module('bot.entity', function (exports, require) {
 
             // Damage is left uncombined, handled in skills
 
-            this.skillchain.computeAttrs(all.dmg, dmgOrder);
+            this.skillchain.computeAttrs(all.dmg, dmgKeys);
 
             this.nextLevelXp = this.getNextLevelXp();
         },
@@ -412,21 +415,17 @@ namespace.module('bot.entity', function (exports, require) {
 
             _.extend(this, itemref.expand('monster', this.name));
 
-            var skillchain = new inventory.Skillchain();
-            skillchain.add(_.map(this.skillchain, function(name) {
-                return new inventory.SkillModel({name: name});
-            }));
+            // TODO: allow monsters to equip more than 1 skill
+            var skillName = this.skillchain[0]
+            this.skillchain = new inventory.Skillchain();
+            this.skillchain.equip(new inventory.SkillModel(skillName), 0);
 
             var equipped = new inventory.EquippedGearModel()
-            equipped.equip(new inventory.WeaponModel({name: this.weapon}), 'mainHand');
+            equipped.equip(new inventory.WeaponModel(this.classLevel, this.type), 'mainHand');
 
-            _.each(this.armor, function(name) {
-                var armor = new inventory.ArmorModel({name: name});
-                log.info('%s', armor.get('type'));
-                equipped.equip(armor, armor.get('type'));
-            });
+            // TODO: allow monsters to equip other pieces
+            equipped.equip(new inventory.ArmorModel(this.classLevel, 'chest'), 'chest');
 
-            this.skillchain = skillchain;
             this.equipped = equipped;
             this.initPos();
 

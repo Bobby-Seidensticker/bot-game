@@ -118,8 +118,10 @@ namespace.module('bot.inv', function (exports, require) {
             //this.range = weapon.range;
             //this.speed = weapon.speed;
 
+            console.log(baseDmgStats);
             var cards = this.getCards();
             cards.push(this);  // pushing the skills 'mods' array and level
+            console.log(cards);
             var mods;
             for (var i = 0; i < cards.length; i++) {
                 var mods = cards[i].mods;
@@ -137,7 +139,7 @@ namespace.module('bot.inv', function (exports, require) {
                 convPct = 100;
 
                 dmg = obj.added * obj.more;
-                for (var j = i; j < keysLen; j++) {
+                for (var j = i + 1; j < keysLen; j++) {
                     convAmt = obj.converted[dmgKeys[j]];
                     if (convAmt > convPct) {
                         convAmt = convPct;
@@ -146,7 +148,7 @@ namespace.module('bot.inv', function (exports, require) {
                     convPct -= convAmt;
                 }
                 dmg *= (convPct / 100);
-                for (var j = i; j < keysLen; j++) {
+                for (var j = i + 1; j < keysLen; j++) {
                     gainedAmt = obj.gainedas[dmgKeys[j]];
                     this.dmgStats[dmgKeys[j]].added += gainedAmt / 100 * dmg;
                 }

@@ -12,6 +12,7 @@ namespace.module('bot.test', function (exports, require) {
     var main = namespace.bot.main;
     var itemref = namespace.bot.itemref;
     var vector = namespace.bot.vector;
+    var utils = namespace.bot.utils;
     
     function onReady() {
         log.info('LOADED');
@@ -30,7 +31,57 @@ namespace.module('bot.test', function (exports, require) {
         QUnit.test('gameModel initialized', function(assert) {
             assert.ok(gameModel.hero, 'initialized with hero');
             assert.ok(gameModel.inv, 'initialized with inv');
-            assert.ok(gameModel.lastTime, 'able to get time');
+            assert.ok(gameModel.lastTime !== undefined, 'lastTime is defined');
+            assert.ok(gameModel.running === false, 'not running');
+        });
+
+        QUnit.test('Util tests', function(assert) {
+            var dmgStats = utils.newDmgStatsDict();
+            assert.ok('physDmg' in dmgStats);
+            assert.ok('lightDmg' in dmgStats);
+            assert.ok('coldDmg' in dmgStats);
+            assert.ok('fireDmg' in dmgStats);
+            assert.ok('poisDmg' in dmgStats);
+            assert.ok('range' in dmgStats);
+            assert.ok('speed' in dmgStats);
+            assert.equal(dmgStats.physDmg.added, 0);
+            assert.equal(dmgStats.physDmg.more, 1);
+            assert.ok('converted' in dmgStats.physDmg);
+            assert.ok('lightDmg' in dmgStats.physDmg.converted);
+            assert.ok('lightDmg' in dmgStats.physDmg.gainedas);
+            assert.ok('gainedas' in dmgStats.physDmg);
+
+            utils.addMod(dmgStats, 'physDmg added 2', 1);
+            assert.equal(dmgStats.physDmg.added, 2, 'physDmg added 2');
+            utils.addMod(dmgStats, 'physDmg more 100', 1);
+            assert.equal(dmgStats.physDmg.more, 2, 'physDmg more 100');
+            utils.addMod(dmgStats, 'physDmg converted 40 fireDmg', 1);
+            assert.equal(dmgStats.physDmg.converted.fireDmg, 40, 'physDmg converted 40 fireDmg');
+            utils.addMod(dmgStats, 'physDmg gainedas 40 fireDmg', 1);
+            assert.equal(dmgStats.physDmg.gainedas.fireDmg, 40, 'physDmg gainedas 40 fireDmg');
+        });
+
+        QUnit.test('Util dmg skill tests', function(assert) {
+            var dmgStats = utils.newDmgStatsDict();
+
+            var skill = new inv.SkillModel('basic melee');
+
+            utils.addMod(dmgStats, 'physDmg added 2', 1);
+            assert.equal(dmgStats.physDmg.added, 2, 'physDmg added 2');
+
+            var dmgKeys = [
+                'physDmg',
+                'lightDmg',
+                'coldDmg',
+                'fireDmg',
+                'poisDmg',
+                'range',
+                'speed'
+            ];
+
+            skill.computeAttrs(dmgStats, dmgKeys);
+
+            assert.equal(skill.physDmg, 2, 'Skill\'s physDmg is equal to 2');
         });
 
         QUnit.test('Hero properly initialized', function(assert) {
@@ -47,12 +98,12 @@ namespace.module('bot.test', function (exports, require) {
 
             // Skills
             var skillchain = hero.skillchain;
-            assert.equal(skillchain.length, 1, 'initialized skill chain with one skill');
-            var skill = skillchain.at(0);
-            assert.equal(skill.get('name'), 'basic melee', 'initialized with "basic melee"');
+            assert.ok(skillchain.skills[0] !== undefined, 'initialized skill chain with one skill');
+            var skill = skillchain.skills[0];
+            assert.equal(skill.name, 'basic melee', 'initialized with "basic melee"');
             validateSkill(assert, skill);
-            assert.equal(skill.get('xp'), 0, 'skill created with 0 xp');
-            assert.equal(skill.get('level'), 1, 'skill should be initialized at level 1, current level: ' + skill.get('level'));
+            assert.equal(skill.xp, 0, 'skill created with 0 xp');
+            assert.equal(skill.level, 1, 'skill should be initialized at level 1, current level: ' + skill.level);
             //assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
 	});
 
@@ -211,14 +262,13 @@ namespace.module('bot.test', function (exports, require) {
 	//NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
         function validateSkill(assert, skill) {
 	    //console.log('validate skill', skill);
-            assert.ok(skill.get('cooldownTime') > 0, 'skill has positive cooldown time: ' + skill.get('cooldownTime'));
+            assert.ok(skill.cooldownTime > 0, 'skill has positive cooldown time: ' + skill.cooldownTime);
 
             var skillTypes = ['melee', 'range', 'spell'];
-            assert.ok(skillTypes.indexOf(skill.get('class')) >= 0, 'valid skill class: ' + skill.get('class'));
-            assert.ok(skill.get('physDmg') > 0, 'skill has positive physDmg: ' + skill.get('physDmg'));
-            assert.ok(skill.get('range') > 0, 'skill has positive range: ' + skill.get('range'));
-            assert.ok(skill.get('speed') > 0, 'skill has positive speed: ' + skill.get('speed')); // TODO - figure out how speed actuallly works
-            assert.ok(skill.get('affixes').length !== undefined, 'skill contains array of affixes');
+            assert.ok(skillTypes.indexOf(skill['class']) >= 0, 'valid skill class: ' + skill['class']);
+            assert.ok(skill.physDmg > 0, 'skill has positive physDmg: ' + skill.physDmg);
+            assert.ok(skill.range > 0, 'skill has positive range: ' + skill.range);
+            assert.ok(skill.speed > 0, 'skill has positive speed: ' + skill.speed);
 
             //console.log(skill.attributes);
         }

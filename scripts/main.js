@@ -53,7 +53,7 @@ namespace.module('bot.main', function (exports, require) {
 
             this.inv = new inv.ItemCollection();
             this.hero = new entity.newHero(this.inv);
-            this.zone = new zone.ZoneManager({hero: this.hero});
+            this.zone = new zone.ZoneManager(this.hero);
 
             // TODO remove recipes
             //this.recipesView = new inv.CraftItemCollectionView({collection: this.inv.recipes});

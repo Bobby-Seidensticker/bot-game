@@ -1,6 +1,6 @@
 namespace.module('bot.log', function (exports, require) {
 
-    var LEVEL = 'info';
+    var LEVEL = 'debug';
 
     var FNS = [debug, info, warning, error, stack];
 

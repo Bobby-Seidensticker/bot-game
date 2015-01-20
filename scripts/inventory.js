@@ -106,22 +106,21 @@ namespace.module('bot.inv', function (exports, require) {
             return this.cooldown <= 0;
         },
 
-        use: function(castTime) {
-            this.cooldown = this.cooldownTime + castTime;
+        // TODO: Add back in castTime (time it takes for entity to use the skill), but don't hard code it this time
+        use: function() {
+            this.cooldown = this.cooldownTime + this.speed;
         },
 
         computeAttrs: function(baseDmgStats, dmgKeys) {
             this.baseDmgStats = baseDmgStats;  // please don't modify this
             this.dmgStats = $.extend(true, {}, baseDmgStats);
 
-            // log.info('Skill compute attrs');
+            log.debug('Skill compute attrs');
             //this.range = weapon.range;
             //this.speed = weapon.speed;
 
-            console.log(baseDmgStats);
             var cards = this.getCards();
             cards.push(this);  // pushing the skills 'mods' array and level
-            console.log(cards);
             var mods;
             for (var i = 0; i < cards.length; i++) {
                 var mods = cards[i].mods;
@@ -282,7 +281,7 @@ namespace.module('bot.inv', function (exports, require) {
                 if (this[slot] !== undefined) {
                     cards = cards.concat(this[slot].getCards());
                 }
-            });
+            }, this);
             return cards;
         },
 

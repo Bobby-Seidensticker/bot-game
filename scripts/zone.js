@@ -49,7 +49,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         getCurrentRoom: function() {
-            return this.get('rooms')[this.get('heroPos')];
+            return this.rooms[this.heroPos];
         },
 
         roomCleared: function() {

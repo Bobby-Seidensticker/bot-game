@@ -192,16 +192,11 @@ namespace.module('bot.entity', function (exports, require) {
             var armorReductionMult = physDmg / (physDmg + this.armor);
             physDmg = physDmg * armorReductionMult;
 
-            var fireResist = this.fireResist;
-            var coldResist = this.coldResist;
-            var lightResist = this.lightResist;
-            var poisResist = this.poisResist;
+            var lightDmg = damage.lightDmg * this.lightResist;
+            var coldDmg = damage.coldDmg * this.coldResist;
+            var fireDmg = damage.fireDmg * this.fireResist;
+            var poisDmg = damage.poisDmg * this.poisResist;
 
-            var fireDmg = damage.fireDmg * (1 - fireResist * 0.01);
-            var coldDmg = damage.coldDmg * (1 - coldResist * 0.01);
-            var lightDmg = damage.lightDmg * (1 - lightResist * 0.01);
-            var poisDmg = damage.poisDmg * (1 - poisResist * 0.01);            
-            
             var totalDmg = physDmg + fireDmg + coldDmg + lightDmg + poisDmg;
             this.hp -= totalDmg;
 
@@ -219,18 +214,11 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         attackTarget: function(target, skill) {
-            //var skillToUse = this.skillchain[skillIndex];
-            /*var dodged = this.rollDodge(this.get('accuracy'), target.get('dodge'));
-              if (dodged) {
-              // clean up cooldowns for 'this'
-              return;
-              }*/
-            // TODO: use duration value on skillToUse to set nextAction value on entity
-            this.nextAction = 500;
-            var dmg = skill.getDamage(500);
-            log.debug('%s attacking target %s for %s dmg with %s', this.name,
-                      target.name, JSON.stringify(dmg), skill.name);
-            target.takeDamage(dmg);
+            skill.use();
+            this.nextAction = skill.speed;
+            //log.debug('%s attacking target %s for %s dmg with %s', this.name,
+            //          target.name, JSON.stringify(dmg), skill.name);
+            target.takeDamage(skill);
             if (!target.isAlive()) {
                 if (this.isHero()) {
                     window.DirtyQueue.mark('monsters:death');
@@ -240,7 +228,7 @@ namespace.module('bot.entity', function (exports, require) {
                 }
             }
 
-            this.mana -= skill.get('manaCost');
+            this.mana -= skill.manaCost;
         },
 
         getNextLevelXp: function() {
@@ -331,7 +319,7 @@ namespace.module('bot.entity', function (exports, require) {
 
         update: function(dt) {
             var skills = this.skillchain;
-            skills.each(function(skill) { skill.cooldown -= dt; });
+            _.each(skills, function(skill) { skill.cooldown -= dt; }, this);
             this.nextAction -= dt;
             if (this.isHero()) {
                 window.DirtyQueue.mark('skill:change');
@@ -405,6 +393,7 @@ namespace.module('bot.entity', function (exports, require) {
     var MonsterModel = EntityModel.extend({
 
         initialize: function(data) {
+            // All you need is a name
             EntityModel.prototype.initialize.call(this);
             this.team = TEAM_MONSTER;
             _.extend(this, data);

@@ -4,6 +4,7 @@ namespace.module('bot.test', function (exports, require) {
         onReady: onReady
     });
 
+    require('org.startpad.funcs').patch();
     var log = namespace.bot.log;
     var inv = namespace.bot.inv;
     var menu = namespace.bot.menu;
@@ -66,8 +67,6 @@ namespace.module('bot.test', function (exports, require) {
 
             var skill = new inv.SkillModel('basic melee');
 
-            utils.addMod(dmgStats, 'physDmg added 2', 1);
-            assert.equal(dmgStats.physDmg.added, 2, 'physDmg added 2');
 
             var dmgKeys = [
                 'physDmg',
@@ -79,9 +78,42 @@ namespace.module('bot.test', function (exports, require) {
                 'speed'
             ];
 
+            // add 2
+            utils.addMod(dmgStats, 'physDmg added 2', 1);
+            assert.equal(dmgStats.physDmg.added, 2, 'physDmg added 2');
             skill.computeAttrs(dmgStats, dmgKeys);
+            assert.equal(skill.physDmg, 2, 'Skill\'s physDmg is equal to 2 after added 2');
 
-            assert.equal(skill.physDmg, 2, 'Skill\'s physDmg is equal to 2');
+            // more 50
+            utils.addMod(dmgStats, 'physDmg more 50', 1);
+            assert.equal(dmgStats.physDmg.more, 1.5, 'physDmg more 1.5');
+            skill.computeAttrs(dmgStats, dmgKeys);
+            assert.equal(skill.physDmg, 3, 'Skill\'s physDmg is equal to 3 after more 50');
+
+            // 50 pct phys to lightning
+            utils.addMod(dmgStats, 'physDmg converted 50 lightDmg', 1);
+            assert.equal(dmgStats.physDmg.converted.lightDmg, 50, 'physDmg converted 50 lightDmg');
+            skill.computeAttrs(dmgStats, dmgKeys);
+            assert.equal(skill.physDmg, 1.5, 'Skill physDmg is equal to 1.5 after half phys to light');
+            assert.equal(skill.lightDmg, 1.5, 'Skill lightDmg is equal to 1.5 after half phys to light');
+
+            // more lightning
+            utils.addMod(dmgStats, 'lightDmg more 100', 1);
+            skill.computeAttrs(dmgStats, dmgKeys);
+            assert.equal(skill.lightDmg, 3, 'Skill\'s lightDmg is equal to 3 after phys to lightning and more 100');
+
+            // more lightning
+            utils.addMod(dmgStats, 'lightDmg gainedas 50 fireDmg', 1);
+            skill.computeAttrs(dmgStats, dmgKeys);
+            assert.equal(skill.fireDmg, 1.5, 'Half of lightDmg gained as fireDmg');
+
+            // add 2
+            utils.addMod(dmgStats, 'coldDmg added 2 perLevel', 10);
+            assert.equal(dmgStats.coldDmg.added, 20, 'coldDmg added 2 * 10');
+            skill.computeAttrs(dmgStats, dmgKeys);
+            assert.equal(skill.coldDmg, 20, 'Skill\'s coldDmg is equal to 20 after added 2 perLevel by 10 levels');
+
+            
         });
 
         QUnit.test('Hero properly initialized', function(assert) {
@@ -105,75 +137,71 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(skill.xp, 0, 'skill created with 0 xp');
             assert.equal(skill.level, 1, 'skill should be initialized at level 1, current level: ' + skill.level);
             //assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
-	});
+        });
 
-	QUnit.test('Zone test', function(assert) {
+        QUnit.test('Zone test', function(assert) {
             assert.equal(false, gameModel.inZone, 'not inZone');
             assert.equal(false, gameModel.running, 'not running');
-	    gameModel.tick();
-	    assert.ok(1, 'gameModel.tick didn\'t crash it');
+            gameModel.tick();
+            assert.ok(1, 'gameModel.tick didn\'t crash it');
             assert.equal(true, gameModel.inZone, 'inZone');
-	    // console.log('zone', gameModel.zone);
-	    assert.ok(gameModel.zone, 'Zone created on tick');
-	    assert.ok(gameModel.zone.get('roomCount') >= 0, 'has roomcount of at least 1');
-	    assert.equal(gameModel.zone.get('rooms').length, gameModel.zone.get('roomCount'), 'roomcount matches number of rooms created');
-	    assert.ok(gameModel.zone.get('initialized'), 'has a hero');
+            // console.log('zone', gameModel.zone);
+            assert.ok(gameModel.zone, 'Zone created on tick');
+            assert.ok(gameModel.zone.rooms.length, 'has more than 1 room');
+            assert.ok(gameModel.zone.initialized, 'is initialized');
 
-            assert.equal(gameModel.zone.get('heroPos'), 0, 'Hero is in room 0');
-	    var monsters = gameModel.zone.getCurrentRoom().monsters;
-	    // console.log(monsters);
-	    assert.ok(monsters.models.length, 'room 0 monsters have truthy length');
-	    var mon = monsters.models[0];
-	    assert.equal(mon.team, 1, 'First monster in room 0 is on correct team');
-	    validateAttributes(assert, mon);
-	    validateSkill(assert, mon.skillchain.models[0]);
-	});
+            assert.equal(gameModel.zone.heroPos, 0, 'Hero is in room 0');
+            var monsters = gameModel.zone.getCurrentRoom().monsters;
+            assert.ok(monsters.models.length, 'room 0 monsters have truthy length');
+            var mon = monsters.models[0];
+            assert.equal(mon.team, 1, 'First monster in room 0 is on correct team');
+            validateAttributes(assert, mon);
+            validateSkill(assert, mon.skillchain.skills[0]);
+        });
 
-	QUnit.test('inventory', function(assert) {
-	    //TODO - why dont these inv locations have any attributes?  Inv seems to work on index.html...?
-	    var inv = gameModel.hero.inv;
+        QUnit.test('inventory', function(assert) {
+            //TODO - why dont these inv locations have any attributes?  Inv seems to work on index.html...?
+            var inv = gameModel.hero.inv;
 
-	    assert.ok(inv.where({'itemType': 'weapon'}).length, 'inventory has at least one weapon');
-	    assert.ok(inv.where({'itemType': 'armor'}).length, 'inventory has at least one armor');
-	    assert.ok(inv.where({'itemType': 'skill'}).length, 'inventory has at least one skill');
-	    //assert.ok(inv.armor.length, 'inventory has at least one armor');
-	    //assert.ok(inv.skills.length, 'inventory has at least one skill');
+            assert.ok(inv.models.length, 'inventory has at least one item');
 
-	    validateWeapon(assert, inv.findWhere({'itemType': 'weapon'}));
-	    validateItem(assert, inv.findWhere({'itemType': 'armor'}));
-	    validateItem(assert, inv.findWhere({'itemType': 'skill'}));
-	});
+            assert.ok(_.findWhere(inv.models, {itemType: 'weapon'}) !== undefined);
+            assert.ok(_.findWhere(inv.models, {itemType: 'armor'}) !== undefined);
+            assert.ok(_.findWhere(inv.models, {itemType: 'skill'}) !== undefined);
 
-	QUnit.test('Combat', function(assert) {
-	    var hero = gameModel.hero;
+            validateWeapon(assert, _.findWhere(inv.models, {itemType: 'weapon'}));
+            validateItem(assert, _.findWhere(inv.models, {itemType: 'armor'}));
+            validateItem(assert, _.findWhere(inv.models, {itemType: 'skill'}));
+        });
 
-	    var mon = new entity.MonsterModel({'name':'skeleton'});
-	    assert.equal(mon.hp, mon.maxHp, 'Monster HP maxed for taking hit');
+        QUnit.test('Combat', function(assert) {
+            var hero = gameModel.hero;
 
-	    var skill = hero.skillchain.at(0);
-	    console.log(skill);
-	    assert.ok(skill, 'hero skill found');
-	    assert.ok(skill.get('name'), 'hero about to try using ' + skill.get('name'));
+            var mon = new entity.MonsterModel({'name': 'skeleton'});
+            assert.equal(mon.hp, mon.maxHp, 'Monster HP maxed for taking hit');
 
-	    hero.attackTarget(mon, skill);
-	    assert.ok(mon.hp < mon.maxHp, "Monster's hp decreased from attack");
-	    assert.ok(skill.cooldown == skill.get('cooldownTime') + 500, 'cooldown set to cooldownTime after attack');
+            var skill = hero.skillchain.skills[0];
+            assert.ok(skill, 'Hero skill found');
+            assert.ok(skill.name, 'hero about to try using ' + skill.name);
+
+            hero.attackTarget(mon, skill);
+            assert.ok(mon.hp < mon.maxHp, 'Monster\'s hp decreased from attack');
+            assert.ok(skill.cooldown === skill.cooldownTime + skill.speed, 'skill\'s cooldown set to cooldownTime + speed after attack');
+            assert.ok(hero.nextAction === skill.speed, 'Hero\'s next action skill\'s speed after attack');
 
             hero.revive();
-	    assert.equal(hero.hp, hero.maxHp, 'Hero HP maxed for taking hit');
-	    var skill = mon.skillchain.at(0);
-	    console.log(skill);
-	    assert.ok(skill, 'mon skill found');
-	    assert.ok(skill.get('name'), 'mon about to try using ' + skill.get('name'));
+            assert.equal(hero.hp, hero.maxHp, 'Hero HP maxed for taking hit');
+            var skill = mon.skillchain.skills[0];
+            assert.ok(skill !== undefined, 'Mon has a skill equipped');
+            assert.ok(skill.name, 'mon about to try using ' + skill.name);
 
-	    mon.attackTarget(hero, skill);
-	    assert.ok(hero.hp < hero.maxHp, "Hero's hp decreased from attack");
-	    assert.ok(skill.cooldown == skill.get('cooldownTime') + 500, 'cooldown set to cooldownTime after attack');	    
+            mon.attackTarget(hero, skill);
+            assert.ok(hero.hp < hero.maxHp, 'Hero\'s hp decreased from attack');
+            assert.ok(skill.cooldown === skill.cooldownTime + skill.speed, 'skill\'s cooldown set to cooldownTime + speed after attack');
+            assert.ok(mon.nextAction === skill.speed, 'Mon\'s next action skill\'s speed after attack');
+        });
 
-            assert.equal(hero.nextAction, 500, 'Hero nextAction equal to 500');
-	});
-
-	QUnit.test('Vector', function(assert) {
+        QUnit.test('Vector', function(assert) {
             var vector = namespace.bot.vector;
 
             assert.ok(vector.equal([1,2], [1,2]));
@@ -204,64 +232,93 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(dist, 0);
         });
 
-	function validateWeapon(assert, item) {
-	    validateItem(assert, item);
-	    var name = item.get('name');
-	    var types = ['melee','range','spell']; //valid weapon types
-	    assert.ok(types.indexOf(item.get('type')) >= 0, name + ' has valid type: ' + item.get('type'));
-	    assert.ok(item.get('damage') >= 0, name + ' has non-negative damage value: ' + item.get('damage'));
-	    assert.ok(item.get('range') >= 0, name + ' has non-negative range value: ' + item.get('range'));
-	    assert.ok(item.get('speed') >= 0, name + ' has non-negative speed value: ' + item.get('speed'));	    
-	}
-
-	function validateItem(assert, item) {
-	    var name = item.get('name');
-	    assert.ok(name, name + ' has valid name');
-
-	    assert.ok(item.get('xp') >= 0, name + ' has non-negative xp value: ' + item.get('xp'));
-	    var affs = item.get('affixes');
-	    assert.ok(jQuery.isArray(affs), name + ' has affix array');
-
-	    //item affix validation
-	    if (affs.length === 0) {
-		assert.ok(1, 'empty affix array is valid');
-	    } else {
-		for (var i = 0; i < affs.length; i++) {
-		    var split = affs[i].split(' ');
-		    assert.equal(split.length, 3, 'affix:"' + affs[i] + '" should contain three space separated terms');
-		    var validModifiers = ['added', 'more']
-		    assert.ok(validModifiers.indexOf(split[1]) >= 0, 'affix modifier is valid : ' + split[1]);
-		}
-	    }
-	}
-	
-        function validateAttributes(assert, entity) {
-            assert.ok(entity.maxHp > 0, 'entity has  positive maxHp: ' + entity.maxHp);
-            assert.ok(entity.hp <= entity.maxHp, 'hp is <=  maxHp: ' + entity.hp);
-            assert.ok(entity.maxMana > 0, 'hero initialized with positive maxMana: ' + entity.maxMana);
-            assert.equal(entity.mana, entity.maxMana, 'mana initialized to maxMana');
-
-            //Base Stats
-            assert.ok(entity.strength > 0, 'strength intilaized with positive value: ' + entity.strength);
-            assert.ok(entity.dexterity > 0,'dexterity intilaized with positive value: ' + entity.dexterity);
-            assert.ok(entity.wisdom > 0,'wisdom intilaized with positive value: ' + entity.wisdom);
-            assert.ok(entity.vitality > 0,'vitality intilaized with positive value: ' + entity.vitality);
-
-            //Derivative Stats
-            assert.ok(entity.armor > 0, 'armor initialized with positive value: ' + entity.armor);
-            assert.ok(entity.dodge > 0, 'dodge initialized with positive value: ' + entity.dodge);
-            // TODO - cast resist floats (and probably all stats) to 2-decimal places only (currently long and ugly floats)
-            // We should have a discussion about this -Bobby
-            // assert.equal(parseFloat(entity.fireResist.toFixed(4)), entity.fireResist, 'stats should have max of four  decimal places - XX.XX%');
-            assert.ok(entity.fireResist, 'fireResist initialized with value: ' + entity.fireResist);
-            assert.ok(entity.coldResist, 'coldResist initialized with value: ' + entity.coldResist);
-            assert.ok(entity.lightResist, 'lightResist initialized with value: ' + entity.lightResist);
-            assert.ok(entity.poisResist, 'poisResist initialized with value: ' + entity.poisResist);
+        function validateWeapon(assert, item) {
+            validateItem(assert, item);
+            
+            var name = item.name;
+            var types = ['melee', 'range', 'spell']; //valid weapon types
+            assert.ok(types.indexOf(item.type) !== -1, name + ' has valid type: ' + item.type);
+            var necessary = ['physDmg'];
+            var allTargets = [];
+            console.log(item);
+            _.each(item.mods, function(mod) {
+                var target = mod.def.split(' ')[0];
+                allTargets.push(target);
+                var index = necessary.indexOf(target);
+                if (index !== -1) {
+                    necessary.splice(index, 1);
+                }
+            });
+            assert.ok(necessary.length === 0, 'item has all the necessary mods, targets: ' + JSON.stringify(allTargets));
         }
 
-	//NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
+        function validateItem(assert, item) {
+            var name = item.name;
+            assert.ok(name, name + ' has valid name');
+
+            assert.ok(item.xp >= 0, name + ' has non-negative xp value: ' + item.xp);
+            var mods = item.mods;
+            assert.ok(mods.length, name + ' has at least one mod');
+            assert.ok(item.level >= 1, name + ' has level >= 1');
+
+            _.each(mods, validateMod.curry(assert));
+        }
+
+        function validateMod(assert, mod) {
+            assert.ok('def' in mod, 'mod has a def field');
+            assert.ok('type' in mod, 'mod has a type field');
+            var validTypes = ['attr', 'def', 'eleResist', 'dmg'];
+            assert.ok(validTypes.indexOf(mod.type) !== -1, 'mod has a valid type field ' + mod.type);
+
+            var keys = {
+                attr: ['strength', 'vitality', 'wisdom', 'dexterity'],
+                def: ['maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll'],
+                eleResist: ['fireResist', 'coldResist', 'lightResist', 'poisResist'],
+                dmg: ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'range', 'speed']
+            };
+            var validVerbs = ['added', 'more', 'converted', 'gainedas'];
+            var valid3Verbs = ['added', 'more'];
+            var validSpecial = ['perLevel'].concat(keys.dmg.slice(0, 5));
+
+            var split = mod.def.split(' ');
+            assert.ok(keys[mod.type].indexOf(split[0]) !== -1, 'mod matches type');
+            assert.ok(split.length >= 3 && split.length <= 4, 'mod has valid number of terms');
+            assert.ok(validVerbs.indexOf(split[1]) !== -1, 'valid verb');
+            assert.ok(typeof(parseInt(split[2], 10)) === 'number', 'valid number');
+            assert.ok(parseInt(split[2], 10) === parseFloat(split[2]), 'is an integer');
+
+            if (split.length === 3) {
+                assert.ok(valid3Verbs.indexOf(split[1]) !== -1, 'appropriate verb for length 3: ' + split[1]);
+            } else if (split.length === 4) {
+                assert.ok(validVerbs.indexOf(split[1]) !== -1, 'appropriate verb for length 4: ' + split[1]);
+                assert.ok(validSpecial.indexOf(split[3]) !== -1, 'appropriate special: ' + split[3]);
+            }
+        }
+
+        function validateAttributes(assert, entity) {
+            assert.ok(entity.maxHp > 0, 'entity has positive maxHp: ' + entity.maxHp);
+            assert.ok(entity.hp <= entity.maxHp, 'hp is <= maxHp: ' + entity.hp);
+            assert.ok(entity.maxMana > 0, 'hero has positive maxMana: ' + entity.maxMana);
+            assert.ok(entity.mana <= entity.maxMana, 'mana is <= maxMana');
+
+            // Base Stats
+            assert.ok(entity.strength > 0, 'strength positive value: ' + entity.strength);
+            assert.ok(entity.dexterity > 0, 'dexterity positive value: ' + entity.dexterity);
+            assert.ok(entity.wisdom > 0, 'wisdom positive value: ' + entity.wisdom);
+            assert.ok(entity.vitality > 0, 'vitality positive value: ' + entity.vitality);
+
+            // Derivative Stats
+            assert.ok(entity.armor > 0, 'armor has valid positive value: ' + entity.armor);
+            assert.ok(entity.dodge > 0, 'dodge has valid positive value: ' + entity.dodge);
+            assert.ok(entity.fireResist < 1, 'fireResist has valid value: ' + entity.fireResist);
+            assert.ok(entity.coldResist < 1, 'coldResist has valid value: ' + entity.coldResist);
+            assert.ok(entity.lightResist < 1, 'lightResist has valid value: ' + entity.lightResist);
+            assert.ok(entity.poisResist < 1, 'poisResist has valid value: ' + entity.poisResist);
+        }
+
+        // NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
         function validateSkill(assert, skill) {
-	    //console.log('validate skill', skill);
+            //console.log('validate skill', skill);
             assert.ok(skill.cooldownTime > 0, 'skill has positive cooldown time: ' + skill.cooldownTime);
 
             var skillTypes = ['melee', 'range', 'spell'];
@@ -270,7 +327,7 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(skill.range > 0, 'skill has positive range: ' + skill.range);
             assert.ok(skill.speed > 0, 'skill has positive speed: ' + skill.speed);
 
-            //console.log(skill.attributes);
+            // console.log(skill.attributes);
         }
 
         //var gameView = new namespace.bot.window.GameView();

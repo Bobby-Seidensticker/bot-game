@@ -59,10 +59,13 @@ namespace.module('bot.entity', function (exports, require) {
 
             all.dmg = utils.newDmgStatsDict();
 
-            var cards = this.equipped.getCards();
-            cards = cards.concat(this.getCards());
-
-            utils.addAllCards(all, cards);
+            if (this.isHero()) {
+                var cards = this.equipped.getCards();
+                cards = cards.concat(this.getCards());
+                utils.addAllCards(all, cards);
+            } else {
+                utils.addAllCards(all, this.cards.concat(this.getCards()));
+            }
             // Now 'all' has the expanded trie structured mod data
             // Do final multiplication and put on the entity
 
@@ -359,22 +362,25 @@ namespace.module('bot.entity', function (exports, require) {
 
             _.extend(this, itemref.expand('monster', this.name));
 
+            var gearMods = [];
+
+            _.each(this.items, function (item) { gearMods = gearMods.concat(inventory.getGearModsOnly(item[0], item[1], item[2])); });
+
+            this.cards = [{mods: gearMods, level: 1}].concat(utils.expandSourceCards(this.sourceCards));
+
             // TODO: allow monsters to equip more than 1 skill
-            var skillName = this.skillchain[0]
             this.skillchain = new inventory.Skillchain();
-            this.skillchain.equip(new inventory.SkillModel(skillName), 0);
-
-            var equipped = new inventory.EquippedGearModel()
-            equipped.equip(new inventory.WeaponModel(this.classLevel, this.type), 'mainHand');
-
-            // TODO: allow monsters to equip other pieces
-            equipped.equip(new inventory.ArmorModel(this.classLevel, 'chest'), 'chest');
-
-            this.equipped = equipped;
-            this.initPos();
+            for (var i = 0; i < this.skills.length; i++) {
+                this.skillchain.equip(new inventory.SkillModel(this.skills[i]), i);
+            }
+            // Before removing equipped, make sure that entity computeAttrs has been changed to handle the differences between hero and monsters
+            // this.equipped = equipped;
 
             this.computeAttrs();
             this.revive();
+
+            // TODO: this is wrong, no references to transient state
+            
         },
 
         getDrops: function() {

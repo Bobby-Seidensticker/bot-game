@@ -76,6 +76,10 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
+    function getGearModsOnly(itemType, type, classLevel) {
+        return itemref.ref[itemType][type].getClassMods(classLevel);
+    }
+
     var ArmorModel = GearModel.extend({
         initialize: function(classLevel, type) {
             GearModel.prototype.initialize.call(this)
@@ -576,6 +580,7 @@ namespace.module('bot.inv', function (exports, require) {
         ItemCollection: ItemCollection,
         //InvItemCollectionView: InvItemCollectionView,
 
+        getGearModsOnly: getGearModsOnly,
         WeaponModel: WeaponModel,
         ArmorModel: ArmorModel,
         SkillModel: SkillModel,

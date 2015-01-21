@@ -299,25 +299,25 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "card": {
             "hot sword": {
+                "mods": [
+                    {"def": "fireDmg added 2 perLevel", "type": "dmg"}
+                ],
                 "slot": "weapon",
-                "levels": 10,
-                "modType": "added",
-                "stat": "fireDmg",
-                "perLevel": 2
+                "levels": 10
             },
             "surprisingly hot sword": {
+                "mods": [
+                    {"def": "fireDmg more 1 perLevel", "type": "dmg"}
+                ],
                 "slot": "weapon",
-                "levels": 10,
-                "modType": "more",
-                "stat": "fireDmg",
-                "perLevel": 1
+                "levels": 10
             },
             "hard head": {
+                "mods": [
+                    {"def": "armor added 4 perLevel", "type": "def"}
+                ],
                 "slot": "head",
-                "levels": 10,
-                "modType": "added",
-                "stat": "armor",
-                "perLevel": 4
+                "levels": 10
             },
         },
         "affix": {
@@ -704,23 +704,29 @@ namespace.module('bot.itemref', function (exports, require) {
         "monster": {
             "skeleton" : {
                 "classLevel": 0,
-                "type": "melee",
-                "skillchain": ["basic melee"]
+                "items": [["weapon", "melee", 0], ["armor", "head", 0]],
+                "skills": ["basic melee"],
+                "sourceCards": []
             },
             "skeleton archer" : {
                 "prototype" : ["skeleton"],
-                "type": "range",
-                "skillchain": ["basic range"]
+                "items": [["weapon", "range", 0], ["armor", "chest", 0]],
+                "skills": ["basic range"],
+                "sourceCards": []
             },
             "skeleton mage" : {
                 "prototype" : ["skeleton"],
-                "type": "spell",
-                "skillchain": ["basic spell"]
+                "items": [["weapon", "spell", 0], ["armor", "legs", 0]],
+                "skills": ["basic spell"],
+                "sourceCards": []
             },
             "skeleton king" : {
                 "classLevel": 1,
-                "type": "melee",
-                "skillchain": ["basic melee"]
+                "items": [["weapon", "melee", 1], ["armor", "head", 1], ["armor", "chest", 1], ["armor", "hands", 1], ["armor", "legs", 1]],
+                "skills": ["basic melee"],
+                "sourceCards": [
+                    ["hot sword", 1]
+                ]
             },
         },
         "zone": {

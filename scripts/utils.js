@@ -43,6 +43,7 @@ namespace.module('bot.vector', function (exports, require) {
 namespace.module('bot.utils', function (exports, require) {
 
     var log = namespace.bot.log;
+    var itemref = namespace.bot.itemref;
 
     function newBaseStatsDict() {
         var a, i, j, l;
@@ -131,7 +132,16 @@ namespace.module('bot.utils', function (exports, require) {
         }
     }
 
+    // turns shorthand from monster definitions into usable cards
+    // [['hot sword', 1], ['hard head', 1]] => [{mods: [(hot sword mods)], level: 1}, {mods: [(hard head mods)], level: 1}]
+    function expandSourceCards(sourceCards) {
+        return _.map(sourceCards, function(card) {
+            return {mods: itemref.ref.card[card[0]].mods, level: card[1]};
+        });
+    }
+
     exports.extend({
+        expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
         newDmgStatsDict: newDmgStatsDict,
         addAllCards: addAllCards,

@@ -357,6 +357,8 @@ namespace.module('bot.zone', function (exports, require) {
     });*/
 
     exports.extend({
-        ZoneManager: ZoneManager
+        ZoneManager: ZoneManager,
+        MonsterBody: MonsterBody, //extended for use in test.js
+        HeroBody: HeroBody
     });
 });

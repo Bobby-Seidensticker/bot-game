@@ -116,7 +116,7 @@ namespace.module('bot.test', function (exports, require) {
             
         });
 
-        QUnit.test('Hero properly initialized', function(assert) {
+        QUnit.test('HeroSpec properly initialized', function(assert) {
             var hero = gameModel.hero;
             //console.log('hero', hero);
             assert.ok(hero, 'hero created');
@@ -126,25 +126,26 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(hero.xp, 0, 'Hero xp initialize to 0');
             assert.equal(hero.nextLevelXp, hero.getNextLevelXp(), 'nextLevelXp initialized');
 
-            validateAttributes(assert, hero);
+            validateSpec(assert, hero);
 
             // Skills
             var skillchain = hero.skillchain;
             assert.ok(skillchain.skills[0] !== undefined, 'initialized skill chain with one skill');
             var skill = skillchain.skills[0];
             assert.equal(skill.name, 'basic melee', 'initialized with "basic melee"');
-            validateSkill(assert, skill);
+            console.log('heroskill', skill);
+            validateSkillSpec(assert, skill);
             assert.equal(skill.xp, 0, 'skill created with 0 xp');
             assert.equal(skill.level, 1, 'skill should be initialized at level 1, current level: ' + skill.level);
             //assert.equal(skill.get('equippedBy'), 'bobbeh', 'skill\'s equippedBy should be set to bobbeh');
         });
 
         QUnit.test('Zone test', function(assert) {
-            assert.equal(false, gameModel.inZone, 'not inZone');
             assert.equal(false, gameModel.running, 'not running');
+            assert.ok(gameModel.zone, 'gameModel initialized with zone');
             gameModel.tick();
             assert.ok(1, 'gameModel.tick didn\'t crash it');
-            assert.equal(true, gameModel.inZone, 'inZone');
+            
             // console.log('zone', gameModel.zone);
             assert.ok(gameModel.zone, 'Zone created on tick');
             assert.ok(gameModel.zone.rooms.length, 'has more than 1 room');
@@ -152,11 +153,14 @@ namespace.module('bot.test', function (exports, require) {
 
             assert.equal(gameModel.zone.heroPos, 0, 'Hero is in room 0');
             var monsters = gameModel.zone.getCurrentRoom().monsters;
-            assert.ok(monsters.models.length, 'room 0 monsters have truthy length');
-            var mon = monsters.models[0];
-            assert.equal(mon.team, 1, 'First monster in room 0 is on correct team');
-            validateAttributes(assert, mon);
-            validateSkill(assert, mon.skillchain.skills[0]);
+            assert.ok(monsters.length, 'room 0 monsters have truthy length');
+            var mon = monsters[0];
+            assert.equal(mon.spec.team, 1, 'First monster in room 0 is on correct team');
+            validateSpec(assert, mon.spec);
+            
+            assert.ok(mon.skills[0].coolAt !== undefined, 'first skill has coolAt: ' + mon.skills[0].coolAt);
+
+            validateSkillSpec(assert, mon.skills[0].spec);
         });
 
         QUnit.test('inventory', function(assert) {
@@ -175,30 +179,34 @@ namespace.module('bot.test', function (exports, require) {
         });
 
         QUnit.test('Combat', function(assert) {
-            var hero = gameModel.hero;
+            var hero = new zone.HeroBody(gameModel.hero);
+            var mon = new zone.MonsterBody('skeleton', 1);
+            assert.equal(mon.hp, mon.spec.maxHp, 'Monster HP maxed for taking hit at ' + mon.hp);
 
-            var mon = new entity.MonsterModel({'name': 'skeleton'});
-            assert.equal(mon.hp, mon.maxHp, 'Monster HP maxed for taking hit');
+            var skill = hero.skills[0].spec;
 
-            var skill = hero.skillchain.skills[0];
             assert.ok(skill, 'Hero skill found');
             assert.ok(skill.name, 'hero about to try using ' + skill.name);
 
-            hero.attackTarget(mon, skill);
-            assert.ok(mon.hp < mon.maxHp, 'Monster\'s hp decreased from attack');
-            assert.ok(skill.cooldown === skill.cooldownTime + skill.speed, 'skill\'s cooldown set to cooldownTime + speed after attack');
-            assert.ok(hero.nextAction === skill.speed, 'Hero\'s next action skill\'s speed after attack');
-
+            hero.attackTarget(mon, hero.skills[0]);
+            assert.ok(mon.hp < mon.spec.maxHp, 'Monster\'s hp decreased from attack to ' + mon.hp);
+            //            console.log(mon);
+            assert.ok(hero.skills[0].coolAt === window.time + skill.speed + skill.cooldownTime,
+                      'skill\'s cooldown set to cooldownTime + speed after attack');
+            assert.ok(hero.nextAction === window.time + skill.speed, 'Hero\'s next action skill\'s speed after attack');
+            
             hero.revive();
-            assert.equal(hero.hp, hero.maxHp, 'Hero HP maxed for taking hit');
-            var skill = mon.skillchain.skills[0];
+            assert.equal(hero.hp, hero.spec.maxHp, 'Hero HP maxed for taking hit at ' + hero.hp);
+            var skill = mon.skills[0];
             assert.ok(skill !== undefined, 'Mon has a skill equipped');
-            assert.ok(skill.name, 'mon about to try using ' + skill.name);
+            assert.ok(skill.spec.name, 'mon about to try using ' + skill.spec.name);
 
             mon.attackTarget(hero, skill);
-            assert.ok(hero.hp < hero.maxHp, 'Hero\'s hp decreased from attack');
-            assert.ok(skill.cooldown === skill.cooldownTime + skill.speed, 'skill\'s cooldown set to cooldownTime + speed after attack');
-            assert.ok(mon.nextAction === skill.speed, 'Mon\'s next action skill\'s speed after attack');
+            assert.ok(hero.hp < hero.spec.maxHp, 'Hero\'s hp decreased from attack to ' + hero.hp);
+            assert.equal(skill.coolAt, skill.spec.cooldownTime + skill.spec.speed + window.time,
+                         'skill\'s cooldown set to cooldownTime + speed + windowtime after attack');
+            assert.equal(mon.nextAction, skill.spec.speed + window.time,
+                         'Mon\'s nextAction set to window time and skill\'s speed after attack');
         });
 
         QUnit.test('Vector', function(assert) {
@@ -240,7 +248,7 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(types.indexOf(item.type) !== -1, name + ' has valid type: ' + item.type);
             var necessary = ['physDmg'];
             var allTargets = [];
-            console.log(item);
+            //console.log(item);
             _.each(item.mods, function(mod) {
                 var target = mod.def.split(' ')[0];
                 allTargets.push(target);
@@ -295,18 +303,18 @@ namespace.module('bot.test', function (exports, require) {
             }
         }
 
-        function validateAttributes(assert, entity) {
+        function validateSpec(assert, entity) {
             assert.ok(entity.maxHp > 0, 'entity has positive maxHp: ' + entity.maxHp);
-            assert.ok(entity.hp <= entity.maxHp, 'hp is <= maxHp: ' + entity.hp);
+            //assert.ok(entity.hp <= entity.maxHp, 'hp is <= maxHp: ' + entity.hp); HeroSpec does not have hp (only body)
             assert.ok(entity.maxMana > 0, 'hero has positive maxMana: ' + entity.maxMana);
-            assert.ok(entity.mana <= entity.maxMana, 'mana is <= maxMana');
+            //assert.ok(entity.mana <= entity.maxMana, 'mana is <= maxMana'); HeroSpec does not have mana (only body)
 
             // Base Stats
             assert.ok(entity.strength > 0, 'strength positive value: ' + entity.strength);
             assert.ok(entity.dexterity > 0, 'dexterity positive value: ' + entity.dexterity);
             assert.ok(entity.wisdom > 0, 'wisdom positive value: ' + entity.wisdom);
             assert.ok(entity.vitality > 0, 'vitality positive value: ' + entity.vitality);
-
+            
             // Derivative Stats
             assert.ok(entity.armor > 0, 'armor has valid positive value: ' + entity.armor);
             assert.ok(entity.dodge > 0, 'dodge has valid positive value: ' + entity.dodge);
@@ -317,15 +325,22 @@ namespace.module('bot.test', function (exports, require) {
         }
 
         // NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
-        function validateSkill(assert, skill) {
-            //console.log('validate skill', skill);
-            assert.ok(skill.cooldownTime > 0, 'skill has positive cooldown time: ' + skill.cooldownTime);
+        function validateSkillSpec(assert, skillSpec) {
+            console.log('validate skill', skillSpec);
 
+            assert.ok(skillSpec.name, 'skill has a name: ' + skillSpec.name);
+
+            
             var skillTypes = ['melee', 'range', 'spell'];
-            assert.ok(skillTypes.indexOf(skill['class']) >= 0, 'valid skill class: ' + skill['class']);
-            assert.ok(skill.physDmg > 0, 'skill has positive physDmg: ' + skill.physDmg);
-            assert.ok(skill.range > 0, 'skill has positive range: ' + skill.range);
-            assert.ok(skill.speed > 0, 'skill has positive speed: ' + skill.speed);
+            assert.ok(skillTypes.indexOf(skillSpec['class']) >= 0, 'valid skill class: ' + skillSpec['class']);
+            assert.ok(skillSpec.physDmg >= 0, 'skill has non-negative physDmg: ' + skillSpec.physDmg);
+            assert.ok(skillSpec.lightDmg >= 0, 'skill has non-negative lightDmg: ' + skillSpec.lightDmg);
+            assert.ok(skillSpec.coldDmg >= 0, 'skill has non-negative coldDmg: ' + skillSpec.coldDmg);
+            assert.ok(skillSpec.fireDmg >= 0, 'skill has non-negative fireDmg: ' + skillSpec.fireDmg);
+            assert.ok(skillSpec.poisDmg >= 0, 'skill has non-negative poisDmg: ' + skillSpec.poisDmg);
+            
+            assert.ok(skillSpec.range > 0, 'skill has positive range: ' + skillSpec.range);
+            assert.ok(skillSpec.speed > 0, 'skill has positive speed: ' + skillSpec.speed);
 
             // console.log(skill.attributes);
         }

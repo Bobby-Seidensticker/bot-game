@@ -166,7 +166,7 @@ namespace.module('bot.entity', function (exports, require) {
 
             _.extend(this, itemref.expand('monster', this.name));
 
-            this.cards = _.map(this.items, function(item) { return utils.expandSourceItem(item[0], item[1], this.level, item[2]); });
+            this.cards = _.map(this.items, function(item) { return utils.expandSourceItem(item[0], item[1], this.level, item[2]);}, this);
 
             this.cards = this.cards.concat(utils.expandSourceCards(this.sourceCards));
 

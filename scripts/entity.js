@@ -11,8 +11,13 @@ namespace.module('bot.entity', function (exports, require) {
     var utils = namespace.bot.utils;
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
-    
-    var EntityModel = window.Model.extend({
+
+    var attrKeys = ['strength', 'vitality', 'wisdom', 'dexterity',];
+    var defKeys = ['maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll',];
+    var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
+    var dmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'range', 'speed'];
+
+    var EntitySpec = window.Model.extend({
         initialize: function() {
             this.level = 1;
             this.mods = [];
@@ -20,37 +25,6 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         computeAttrs: function() {
-            log.debug('Computing Attrs for Entity on team %s', this.teamString());
-
-            var attrKeys = [
-                'strength',
-                'vitality',
-                'wisdom',
-                'dexterity',
-            ];
-            var defKeys = [
-                'maxHp',
-                'maxMana',
-                'armor',
-                'dodge',
-                'eleResistAll',
-            ];
-            var eleResistKeys = [
-                'fireResist',
-                'coldResist',
-                'lightResist',
-                'poisResist'
-            ];
-            var dmgKeys = [
-                'physDmg',
-                'lightDmg',
-                'coldDmg',
-                'fireDmg',
-                'poisDmg',
-                'range',
-                'speed'
-            ];
-
             var all = {};
 
             all.attr = utils.newBaseStatsDict(attrKeys);
@@ -59,20 +33,15 @@ namespace.module('bot.entity', function (exports, require) {
 
             all.dmg = utils.newDmgStatsDict();
 
-            if (this.isHero()) {
-                var cards = this.equipped.getCards();
-                cards = cards.concat(this.getCards());
-                utils.addAllCards(all, cards);
-            } else {
-                utils.addAllCards(all, this.cards.concat(this.getCards()));
-            }
+            utils.addAllCards(all, this.getCards());
             // Now 'all' has the expanded trie structured mod data
             // Do final multiplication and put on the entity
 
+            // factor this out
             _.each(attrKeys, function(stat) {
                 this[stat] = (all.attr[stat].added) * all.attr[stat].more;
             }, this);
-
+            
             all.def.maxHp.added += this.vitality * 2;
             all.def.maxMana.added += this.wisdom * 2;
             all.def.armor.added += this.strength * 0.5;
@@ -102,9 +71,14 @@ namespace.module('bot.entity', function (exports, require) {
 
             // Damage is left uncombined, handled in skills
 
-            this.skillchain.computeAttrs(all.dmg, dmgKeys);
+            this.baseDmg = all.dmg;
+            this.computeSkillAttrs();
 
             this.nextLevelXp = this.getNextLevelXp();
+        },
+
+        computeSkillAttrs: function() {
+            this.skillchain.computeAttrs(this.baseDmg, dmgKeys);
         },
 
         getCards: function() {
@@ -120,207 +94,54 @@ namespace.module('bot.entity', function (exports, require) {
             ];
         },
 
-        revive: function() {
-            this.hp = this.maxHp;
-            this.mana = this.maxMana;
-            this.initPos();
-        },
-
-        isMonster: function() {
-            return this.team === TEAM_MONSTER;
-        },
-
-        isHero: function() {
-            return this.team === TEAM_HERO;
-        },
-
-        teamString: function() {
-            if (this.team === TEAM_HERO) {
-                return 'Hero';
-            }
-            return 'Monster';
-        },
-
-        isAlive: function() {
-            return this.hp > 0;
-        },
-
-        takeDamage: function(damage) {
-            var physDmg = damage.physDmg;
-            var armorReductionMult = physDmg / (physDmg + this.armor);
-            physDmg = physDmg * armorReductionMult;
-
-            var lightDmg = damage.lightDmg * this.lightResist;
-            var coldDmg = damage.coldDmg * this.coldResist;
-            var fireDmg = damage.fireDmg * this.fireResist;
-            var poisDmg = damage.poisDmg * this.poisResist;
-
-            var totalDmg = physDmg + fireDmg + coldDmg + lightDmg + poisDmg;
-            this.hp -= totalDmg;
-
-            if (this.hp <= 0) {
-                if (this.isMonster()) {
-                    window.DirtyQueue.mark('monsters:death');
-                } else {
-                    window.DirtyQueue.mark('hero:death');
-                }
-                log.info('Lvl %d - %s from team %s DEAD, hit for %s', this.level, this.name, this.teamString(), JSON.stringify(damage));
-            } else {
-                log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), JSON.stringify(damage), this.hp);
-            }
-            // modify own health
-        },
-
-        attackTarget: function(target, skill) {
-            skill.use();
-            this.nextAction = skill.speed;
-            //log.debug('%s attacking target %s for %s dmg with %s', this.name,
-            //          target.name, JSON.stringify(dmg), skill.name);
-            target.takeDamage(skill);
-            if (!target.isAlive()) {
-                if (this.isHero()) {
-                    window.DirtyQueue.mark('monsters:death');
-                    this.onKill(target, skill);
-                } else {
-                    target.onDeath();
-                }
-            }
-
-            this.mana -= skill.manaCost;
-        },
-
         getNextLevelXp: function() {
             return Math.floor(100 * Math.exp((this.level - 1) / Math.PI));
         },
 
+        // TODO: memoize this
         xpOnKill: function() {
             return Math.ceil(10 * Math.pow(1.15, this.level - 1));
-        },
-
-        inRange: function(target) {
-            return true;
-        },
-
-        getCoords: function() {
-            return [this.x, this.y];
-        },
-
-        initPos: function() {
-            if (this.isHero()) {
-                this.x = 0;
-                this.y = 500000;
-            } else if (this.isMonster()) {
-                this.x = 800000 + prob.rand(0, 100000);
-                this.y = 500000 + prob.rand(-100000, 100000);
-            }
-        },
-
-        tryDoStuff: function(room) {
-            if (!this.isAlive() || this.busy()) {
-                return;
-            }
-            var enemies;
-
-            if (this.isMonster()) {
-                if (!room.hero.isAlive()) {
-                    return;
-                }
-                enemies = [room.hero];
-            } else {
-                enemies = room.monsters.living();
-            }
-
-            var distances = vector.getDistances(
-                this.getCoords(),
-                _.map(enemies, function(e) { return e.getCoords(); })
-            );
-
-            this.tryAttack(enemies, distances);
-            this.tryMove(enemies, distances, room.door);
-        },
-
-        tryAttack: function(enemies, distances) {
-            var skill = this.skillchain.bestSkill(this.mana, distances);
-            if (skill) {
-                var targetIndex = _.find(_.range(enemies.length), function(i) { return skill.range >= distances[i]; });
-                var target = enemies[targetIndex];
-                this.attackTarget(target, skill);
-            }
-        },
-
-        tryMove: function(enemies, distances, door) {
-            if (this.busy()) { return; }
-            var newPos;
-            var curPos = this.getCoords();
-            var rate = 10000;
-            var range = 100000;
-
-            if (enemies.length === 0) {
-                newPos = vector.closer(curPos, door, rate, 0);
-            } else {
-                var minDist = distances.min();
-                var closestPos = enemies[distances.minIndex()].getCoords();
-                newPos = vector.closer(curPos, closestPos, rate, range);
-            }
-
-            if (!vector.equal(curPos, newPos)) {
-                this.x = newPos[0];
-                this.y = newPos[1];
-                log.debug('%s moving closer', this.name);
-                this.nextAction = 30;
-            }
-        },
-
-        busy: function() {
-            return this.nextAction > 0;
-        },
-
-        update: function(dt) {
-            var skills = this.skillchain;
-            _.each(skills, function(skill) { skill.cooldown -= dt; }, this);
-            this.nextAction -= dt;
-            if (this.isHero()) {
-                window.DirtyQueue.mark('skill:change');
-            }
         }
     });
-    
-    var HeroModel = EntityModel.extend({
 
-        localStorage: new Backbone.LocalStorage('hero'),
-
+    var HeroSpec = EntitySpec.extend({
         initialize: function(name, skillchain, inv, equipped) {
             this.name = name;
             this.skillchain = skillchain;
             this.inv = inv;
             this.equipped = equipped;
 
-            EntityModel.prototype.initialize.call(this);
+            EntitySpec.prototype.initialize.call(this);
             this.team = TEAM_HERO;
 
-            log.info('HeroModel initialize');
-            this.nextAction = 0;
+            log.info('HeroSpec initialize');
+            this.nextAction = window.time;
             this.computeAttrs();
 
-            this.revive();
             // TODO, should be listening to window.ItemEvents
             // this.listenTo(window.ItemEvents, 'equipSuccess', this.computeAttrs);
-            this.listenTo(this.inv, 'equipClick', this.equipClick);
+            //this.listenTo(this.inv, 'equipClick', this.equipClick);
             this.listenTo(this.equipped, 'change', this.computeAttrs);
+            this.listenTo(this.skillchain, 'change', this.computeSkillAttrs);
+        },
 
-            this.initPos();
+        getCards: function() {
+            var cards = EntitySpec.prototype.getCards.call(this);
+            return cards.concat(this.equipped.getCards());
         },
 
         applyXp: function(xp) {
+            // TODO needs to do this to the skillchain as well
             this.equipped.applyXp(xp);
             this.xp += xp;
             while (this.xp >= this.nextLevelXp) {
                 this.level += 1;
                 this.xp -= this.nextLevelXp;
                 this.nextLevelXp = this.getNextLevelXp();
-            }            
+            }
         },
-        
+
+        /*
         equipClick: function(item) {
             var itemType = item.itemType;
             if (itemType === 'armor') {
@@ -330,80 +151,59 @@ namespace.module('bot.entity', function (exports, require) {
             } else if (itemType === 'skill') {
                 this.skillchain.add(item);
             }
-        },
-
-        onKill: function(target, skill) {
-            //console.log(target);
-            var drops = target.getDrops();
-            // this.get('inv').addDrops(drops);
-            var xp = target.xpOnKill();
-            this.applyXp(xp);
-            window.msgs.send('Killed ' + (Math.floor(new Date().getTime() % 100000)));
-        },
-
-        onDeath: function() {
-            //TODO write this
-            log.warning('Hero has died');
-        }
-        
+        },*/
     });
 
-    var MonsterModel = EntityModel.extend({
+    var MonsterSpec = EntitySpec.extend({
 
-        initialize: function(data) {
+        // TODO: fn signature needs to be (name, level)
+        initialize: function(name, level) {
             // All you need is a name
-            EntityModel.prototype.initialize.call(this);
+            EntitySpec.prototype.initialize.call(this);
             this.team = TEAM_MONSTER;
-            _.extend(this, data);
-
-            //fetchMonsterConstants(name, level);
-            // lookup given name and level
-            log.debug('MonsterModel initialize, attrs: %s', JSON.stringify(this));
+            this.name = name;
+            this.level = level;
 
             _.extend(this, itemref.expand('monster', this.name));
 
-            var gearMods = [];
+            this.cards = _.map(this.items, function(item) { return utils.expandSourceItem(item[0], item[1], this.level, item[2]); });
 
-            _.each(this.items, function (item) { gearMods = gearMods.concat(inventory.getGearModsOnly(item[0], item[1], item[2])); });
+            this.cards = this.cards.concat(utils.expandSourceCards(this.sourceCards));
 
-            this.cards = [{mods: gearMods, level: 1}].concat(utils.expandSourceCards(this.sourceCards));
-
-            // TODO: allow monsters to equip more than 1 skill
             this.skillchain = new inventory.Skillchain();
             for (var i = 0; i < this.skills.length; i++) {
                 this.skillchain.equip(new inventory.SkillModel(this.skills[i]), i);
             }
-            // Before removing equipped, make sure that entity computeAttrs has been changed to handle the differences between hero and monsters
-            // this.equipped = equipped;
 
             this.computeAttrs();
-            this.revive();
-
-            // TODO: this is wrong, no references to transient state
-            
         },
 
-        getDrops: function() {
+        getCards: function() {
+            return this.cards.concat(EntitySpec.prototype.getCards.call(this));
+        },
+
+        getDrop: function() {
             //  Monster uses internal model to roll one or more drops, returns array of drops
             // string items in array are materials, objects are full items
-            var drops = [];
-            var dropRef = this.drops;
-            //console.log(dropRef);
+            /*
+              var drops = [];
+              var dropRef = this.drops;
+              //console.log(dropRef);
 
-            var matCount = prob.pProb(1,10);
-            if (matCount > 0) {
-                var drop = matCount + " " + dropRef[prob.pyRand(0, dropRef.length)];
-                drops.push(drop);
-            }
+              var matCount = prob.pProb(1,10);
+              if (matCount > 0) {
+              var drop = matCount + " " + dropRef[prob.pyRand(0, dropRef.length)];
+              drops.push(drop);
+              }
 
-            /*var recipeDropChance = 0.05;
+              //var recipeDropChance = 0.05;
               
-              if(prob.binProb(recipeDropChance)) {
-              drops.push(this.getRandItem());
-              }*/
+              //   if(prob.binProb(recipeDropChance)) {
+              //  drops.push(this.getRandItem());
+              //   }
 
-            log.info(this.name + ' dropped: ' + JSON.stringify(drops));
-            return drops;
+              log.info(this.name + ' dropped: ' + JSON.stringify(drops));
+              return drops;*/
         },
 
         getRandItem: function() {
@@ -444,7 +244,7 @@ namespace.module('bot.entity', function (exports, require) {
         }
     });
 
-    function newHero(inv) {
+    function newHeroSpec(inv) {
         // stopgap measures: basic equipped stuff
         var heroName = 'bobbeh';
         var equipped = new inventory.EquippedGearModel();
@@ -455,14 +255,14 @@ namespace.module('bot.entity', function (exports, require) {
         var skillchain = new inventory.Skillchain()
         skillchain.equip(_.findWhere(inv.models, {name: 'basic melee'}), 0);
 
-        var hero = new HeroModel(heroName, skillchain, inv, equipped);
+        var hero = new HeroSpec(heroName, skillchain, inv, equipped);
 
         return hero;
     }
 
     exports.extend({
-        newHero: newHero,
-        MonsterModel: MonsterModel,
+        newHeroSpec: newHeroSpec,
+        MonsterSpec: MonsterSpec,
     });
 
 });

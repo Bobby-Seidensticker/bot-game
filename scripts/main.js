@@ -7,7 +7,7 @@ namespace.module('bot.main', function (exports, require) {
     var zone = namespace.bot.zone;
     //var views = namespace.bot.views;
 
-    var DT = 10;
+    var STEP_SIZE = 10;
 
     function onReady() {
         //window.msgs = new namespace.bot.messages.MessageCollection();
@@ -42,13 +42,16 @@ namespace.module('bot.main', function (exports, require) {
     var GameModel = window.Model.extend({
 
         initialize: function() {
+            window.time = 0;
+            this.timeCoefficient = 1;
+
             this.running = false;
             this.inZone = false;
 
             window.msgs = new namespace.bot.messages.MessageCollection();
 
             this.inv = new inv.ItemCollection();
-            this.hero = new entity.newHero(this.inv);
+            this.hero = new entity.newHeroSpec(this.inv);
             this.zone = new zone.ZoneManager(this.hero);
 
             this.lastTime = new Date().getTime();
@@ -98,7 +101,7 @@ namespace.module('bot.main', function (exports, require) {
             }
             return this.zone.getCurrentRoom();
         },
-
+/*
         updateModels: function() {
             var room = this.ensureRoom();
 
@@ -108,9 +111,6 @@ namespace.module('bot.main', function (exports, require) {
 
             for (var i = steps; i--;) {
                 // TODO: Change update to "check if you have anything to do"
-                window.msgs.update(DT);
-                this.hero.update(DT);
-                room.monsters.update(DT);
 
                 this.hero.tryDoStuff(room);
 
@@ -146,12 +146,23 @@ namespace.module('bot.main', function (exports, require) {
                             dt,
                             (steps / (1000 / DT)) / dt);
             }
-        },
+        },*/
 
         tick: function() {
             log.debug('begin tick');
 
-            this.updateModels();
+            var thisTime = new Date().getTime();
+            var dt = (thisTime - this.lastTime) * this.timeCoefficient;
+            this.lastTime = thisTime;
+
+            var steps = Math.floor(dt / STEP_SIZE);
+            var extra = dt * STEP_SIZE;
+            for (var i = 0; i < steps; i++) {
+                window.time += STEP_SIZE;
+                this.zone.zoneTick();
+            }
+            window.time += extra;
+            this.zone.zoneTick();
 
             window.DirtyQueue.mark('vis');
 

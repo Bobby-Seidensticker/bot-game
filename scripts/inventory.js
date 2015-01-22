@@ -76,10 +76,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    function getGearModsOnly(itemType, type, classLevel) {
-        return itemref.ref[itemType][type].getClassMods(classLevel);
-    }
-
     var ArmorModel = GearModel.extend({
         initialize: function(classLevel, type) {
             GearModel.prototype.initialize.call(this)
@@ -196,6 +192,8 @@ namespace.module('bot.inv', function (exports, require) {
             this.skills[slot] = skill;
             // something that equips skills and takes slot, puts it in proper place, pushes others out of way, throws error if too many equipped
             // then updates ranges, computes attrs?
+
+            this.trigger('change');
         },
 
         ranges: function() {
@@ -335,6 +333,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         addDrop: function(drop) {
+            // TODO add checking in here to ignore duplicates and do something about cards n stuff
             this.models.push(drop);
         }
     });
@@ -580,7 +579,6 @@ namespace.module('bot.inv', function (exports, require) {
         ItemCollection: ItemCollection,
         //InvItemCollectionView: InvItemCollectionView,
 
-        getGearModsOnly: getGearModsOnly,
         WeaponModel: WeaponModel,
         ArmorModel: ArmorModel,
         SkillModel: SkillModel,

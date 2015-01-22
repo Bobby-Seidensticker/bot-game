@@ -132,6 +132,12 @@ namespace.module('bot.utils', function (exports, require) {
         }
     }
 
+    function expandSourceItem(itemType, type, itemLevel, classLevel) {
+        var ref = itemref.ref[itemType][type];
+        var mods = ref.getClassMods(classLevel);
+        return {mods: mods.concat(ref.mods), level: itemLevel};
+    }
+
     // turns shorthand from monster definitions into usable cards
     // [['hot sword', 1], ['hard head', 1]] => [{mods: [(hot sword mods)], level: 1}, {mods: [(hard head mods)], level: 1}]
     function expandSourceCards(sourceCards) {
@@ -141,6 +147,7 @@ namespace.module('bot.utils', function (exports, require) {
     }
 
     exports.extend({
+        expandSourceItem: expandSourceItem,
         expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
         newDmgStatsDict: newDmgStatsDict,

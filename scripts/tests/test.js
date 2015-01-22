@@ -123,7 +123,7 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(hero.name, 'bobbeh', 'hero name is bobbeh');
             assert.equal(hero.level, 1, 'hero level intialized to level 1');
             assert.equal(hero.team, 0, 'hero on correct team');
-            assert.equal(hero.xp, 0, 'Hero xp initialize to 0');
+            assert.equal(hero.xp, 0, 'Hero xp initialized to 0');
             assert.equal(hero.nextLevelXp, hero.getNextLevelXp(), 'nextLevelXp initialized');
 
             validateSpec(assert, hero);
@@ -133,7 +133,7 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(skillchain.skills[0] !== undefined, 'initialized skill chain with one skill');
             var skill = skillchain.skills[0];
             assert.equal(skill.name, 'basic melee', 'initialized with "basic melee"');
-            console.log('heroskill', skill);
+            //console.log('heroskill', skill);
             validateSkillSpec(assert, skill);
             assert.equal(skill.xp, 0, 'skill created with 0 xp');
             assert.equal(skill.level, 1, 'skill should be initialized at level 1, current level: ' + skill.level);
@@ -326,7 +326,7 @@ namespace.module('bot.test', function (exports, require) {
 
         // NOTE: this validates skills after they have been computeAttr'ed - skill item will fail with not enough info
         function validateSkillSpec(assert, skillSpec) {
-            console.log('validate skill', skillSpec);
+            //console.log('validate skill', skillSpec);
 
             assert.ok(skillSpec.name, 'skill has a name: ' + skillSpec.name);
 

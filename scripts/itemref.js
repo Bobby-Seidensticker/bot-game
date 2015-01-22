@@ -230,21 +230,33 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "ice slash": {
                 "prototype": ["basic melee"],
-                "affixes": ["coldDmg added 11"],
                 "manaCost": 5,
-                "craftCost": "3 mints",
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'coldDmg more 100', type: 'dmg'},
+                    {def: 'coldDmg converted 60 coldDmg', type: 'dmg'}
+                ]
             },
             "lightning slash": {
                 "prototype": ["basic melee"],
-                "affixes": ["lightDmg added 12"],
-                "manaCost": 6,
-                "craftCost": "3 sparks",
+                "manaCost": 5,
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'lightDmg more 100', type: 'dmg'},
+                    {def: 'lightDmg converted 60 lightDmg', type: 'dmg'}
+                ]
             },
             "poison slash": {
                 "prototype": ["basic melee"],
-                "affixes": ["poisDmg added 13"],
-                "manaCost": 7,
-                "craftCost": "3 tumors",
+                "manaCost": 5,
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'poisDmg more 100', type: 'dmg'},
+                    {def: 'poisDmg converted 60 poisDmg', type: 'dmg'}
+                ]
             },
             "fire arrow": {
                 "prototype": ["basic range"],
@@ -319,6 +331,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "head",
                 "levels": 10
             },
+            "quenching blade": {
+                "mods": [
+                    {"def": "fireResist more -5 perlevel", "type": "eleResist"}
+                ],
+                "slot": "weapon",
+                "levels": 10
+            }
         },
         "affix": {
             "rollable": [
@@ -707,6 +726,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "melee", 0], ["armor", "head", 0]],
                 "skills": ["basic melee"],
                 "sourceCards": []
+            },
+            "fire skeleton": {
+                "classLevel": 0,
+                "items": [["weapon", "melee", 0], ["armor", "head", 0]],
+                "skills": ["fire slash"],
+                "sourceCards": [["hot sword", 1]]
             },
             "skeleton archer" : {
                 "prototype" : ["skeleton"],

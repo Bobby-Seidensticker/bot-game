@@ -340,7 +340,8 @@ namespace.module('bot.inv', function (exports, require) {
 
     var CardTypeModel = window.Model.extend({
         initialize: function(name) {
-            _.extend(this, itemref.expand('card', this.name));
+            _.extend(this, itemref.expand('card', name));
+            this.name = name;
             this.amts = [];
             this.equipped = [];
             for (var i = 0; i < this.levels; i++) {
@@ -357,10 +358,10 @@ namespace.module('bot.inv', function (exports, require) {
         // Must already be available, and called must then equip it
         getCard: function(level) {
             var index = level - 1;
-            log.error('CardTypeModel.getCard. name: %d, level: %d, amts: %d, equipped: %d',
+            log.debug('CardTypeModel.getCard. name: %s, level: %d, amts: %d, equipped: %d',
                       this.name, level, this.amts[index], this.equipped[index]);
 
-            var card = this.getCard(level);
+            //var card = this.getCard(level);
             this.equipped[index] = 1;
             return {
                 mods: this.mods,
@@ -578,7 +579,7 @@ namespace.module('bot.inv', function (exports, require) {
     exports.extend({
         ItemCollection: ItemCollection,
         //InvItemCollectionView: InvItemCollectionView,
-
+        CardTypeModel: CardTypeModel,
         WeaponModel: WeaponModel,
         ArmorModel: ArmorModel,
         SkillModel: SkillModel,

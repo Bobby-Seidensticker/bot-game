@@ -209,6 +209,43 @@ namespace.module('bot.test', function (exports, require) {
                          'Mon\'s nextAction set to window time and skill\'s speed after attack');
         });
 
+        QUnit.test('Combat, Equip, Resist', function(assert) {
+            var hero = new zone.HeroBody(gameModel.hero);
+            var mon = new zone.MonsterBody('fire skeleton', 1);
+            
+            assert.equal(hero.hp, hero.spec.maxHp, 'Hero HP maxed for taking hit at ' + hero.hp);
+            var skill = mon.skills[0];
+            assert.ok(skill !== undefined, 'Mon has a skill equipped');
+            assert.ok(skill.spec.name, 'mon about to try using ' + skill.spec.name);
+            assert.ok(skill.spec.fireDmg, 'mon skill has fireDmg: ' + skill.spec.fireDmg);
+            mon.attackTarget(hero, skill);
+            var startFireRes = hero.spec.fireResist;
+            var damageTaken = hero.spec.maxHp - hero.hp;
+            assert.ok(damageTaken, 'Hero hit for dmg: ' + damageTaken);
+            hero.revive();
+            
+            console.log('hi');
+            // equip fire resist card in armor
+            var card = new inv.CardTypeModel("quenching blade");
+            console.log(card);
+
+            assert.ok(card, 'generated quenching blade card to equip and add fire resist');
+            
+            hero.spec.inv.models[0].equipCard(card, 2, 0);
+            hero.spec.computeAttrs();
+            assert.ok(hero.spec.fireResist < startFireRes, 'equipping card reduced fireResistance from ' + startFireRes + ' to: ' + hero.spec.fireResist);
+            console.log(hero.spec.inv.models[0]);
+
+            assert.equal(hero.hp, hero.spec.maxHp, 'Post-equip: Hero HP maxed for taking hit at ' + hero.hp);
+            mon.attackTarget(hero,skill);
+            
+            var newDamageTaken = hero.spec.maxHp - hero.hp;
+            assert.ok(newDamageTaken, 'Hero hit for dmg: ' + newDamageTaken);
+            assert.ok(newDamageTaken < damageTaken, 'fireResist card correctly reduced damage taken: ' + damageTaken +
+                     ' to new value: ' + newDamageTaken);
+            
+        });
+        
         QUnit.test('Vector', function(assert) {
             var vector = namespace.bot.vector;
 

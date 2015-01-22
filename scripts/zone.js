@@ -246,11 +246,11 @@ namespace.module('bot.zone', function (exports, require) {
         takeDamage: function(skill) {
             var physDmg = skill.physDmg;
 
-            var totalDmg = physDmg * physDmg / (physDmg + this.armor) +
-                skill.lightDmg * this.lightResist +
-                skill.coldDmg * this.coldResist +
-                skill.fireDmg * this.fireResist +
-                skill.poisDmg * this.poisResist;
+            var totalDmg = physDmg * physDmg / (physDmg + this.spec.armor) +
+                skill.lightDmg * this.spec.lightResist +
+                skill.coldDmg * this.spec.coldResist +
+                skill.fireDmg * this.spec.fireResist +
+                skill.poisDmg * this.spec.poisResist;
 
             this.hp -= totalDmg;
 

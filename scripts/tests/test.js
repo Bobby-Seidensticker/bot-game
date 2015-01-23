@@ -224,17 +224,17 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(damageTaken, 'Hero hit for dmg: ' + damageTaken);
             hero.revive();
             
-            console.log('hi');
+            //console.log('hi');
             // equip fire resist card in armor
             var card = new inv.CardTypeModel("quenching blade");
-            console.log(card);
+            //console.log(card);
 
             assert.ok(card, 'generated quenching blade card to equip and add fire resist');
             
             hero.spec.inv.models[0].equipCard(card, 2, 0);
             hero.spec.computeAttrs();
             assert.ok(hero.spec.fireResist < startFireRes, 'equipping card reduced fireResistance from ' + startFireRes + ' to: ' + hero.spec.fireResist);
-            console.log(hero.spec.inv.models[0]);
+            //console.log(hero.spec.inv.models[0]);
 
             assert.equal(hero.hp, hero.spec.maxHp, 'Post-equip: Hero HP maxed for taking hit at ' + hero.hp);
             mon.attackTarget(hero,skill);

@@ -6,6 +6,10 @@ namespace.module('bot.itemref', function (exports, require) {
         return Math.min(Math.floor(1 + classLevel + itemLevel / 10), 10);
     }
 
+    var BASE_MELEE_RANGE = 100000
+    var BASE_RANGE_RANGE = 700000
+    var BASE_SPELL_RANGE = 500000
+    
     var ref = {
         "weapon": {
             "melee": {
@@ -187,7 +191,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["melee"],
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
-                    {def: 'range added 100000', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
                 ]
             },
             "basic range": {
@@ -196,7 +200,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj"],
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
-                    {def: 'range added 500000', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
             },
             "basic spell": {
@@ -205,7 +209,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj"],
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
-                    {def: 'range added 700000', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                 ]
             },
             "super smash": {
@@ -213,101 +217,173 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 3,
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
-                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'physDmg more 100', type: 'dmg'},
                     {def: 'physDmg added 5 perLevel', type: 'dmg'}
                 ]
             },
             "fire slash": {
                 "prototype": ["basic melee"],
+                "types": ["melee", "fire"],
                 "manaCost": 3,
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
-                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'fireDmg more 100', type: 'dmg'},
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },
             "ice slash": {
                 "prototype": ["basic melee"],
+                "types": ["melee", "cold"],
                 "manaCost": 5,
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
-                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'coldDmg more 100', type: 'dmg'},
-                    {def: 'coldDmg converted 60 coldDmg', type: 'dmg'}
+                    {def: 'physDmg converted 60 coldDmg', type: 'dmg'}
                 ]
             },
             "lightning slash": {
                 "prototype": ["basic melee"],
+                "types": ["melee", "lightning"],
                 "manaCost": 5,
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
-                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'lightDmg more 100', type: 'dmg'},
-                    {def: 'lightDmg converted 60 lightDmg', type: 'dmg'}
+                    {def: 'physDmg converted 60 lightDmg', type: 'dmg'}
                 ]
             },
             "poison slash": {
                 "prototype": ["basic melee"],
+                "types": ["melee", "poison"],                
                 "manaCost": 5,
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
-                    {def: 'range added 150000', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'poisDmg more 100', type: 'dmg'},
-                    {def: 'poisDmg converted 60 poisDmg', type: 'dmg'}
+                    {def: 'physDmg converted 60 poisDmg', type: 'dmg'}
+                ]
+            },
+            "speed shot": {
+                "prototype": ["basic"],
+                "class": "range",
+                "manaCost": 3,
+                "types": ["proj"],
+                "mods": [
+                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
             },
             "fire arrow": {
-                "prototype": ["basic range"],
-                "affixes": ["fireDmg added 8"],
-                "manaCost": 3,
-                "craftCost": "3 embers",
+                "prototype": ["basic"],
+                "class": "range",
+                "manaCost": 6,
+                "types": ["proj", "fire"],
+                "mods": [
+                    {def: 'speed added 800', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
+                    {def: 'fireDmg more 50', type: 'dmg'},
+                    {def: 'physDmg converted 50 fireDmg', type: 'dmg'}
+                ]
             },
-            "ice arrow": {
-                "prototype": ["basic range"],
-                "affixes": ["coldDmg added 9"],
-                "manaCost": 4,
-                "craftCost": "3 mints"
+            "cold arrow": {
+                "prototype": ["basic"],
+                "class": "range",
+                "manaCost": 6,
+                "types": ["proj", "cold"],
+                "mods": [
+                    {def: 'speed added 800', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
+                    {def: 'coldDmg more 50', type: 'dmg'},
+                    {def: 'physDmg converted 50 coldDmg', type: 'dmg'}
+                ]
             },
             "lightning arrow": {
-                "prototype": ["basic range"],
-                "affixes": ["lightDmg added 10"],
-                "manaCost": 5,
-                "craftCost": "3 sparks",
+                "prototype": ["basic"],
+                "class": "range",
+                "manaCost": 6,
+                "types": ["proj", "lightning"],
+                "mods": [
+                    {def: 'speed added 800', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
+                    {def: 'lightDmg more 50', type: 'dmg'},
+                    {def: 'physDmg converted 50 lightDmg', type: 'dmg'}
+                ]
             },
             "poison arrow": {
-                "prototype": ["basic range"],
-                "affixes": ["poisDmg added 11"],
-                "manaCost": 5,
-                "craftCost": "3 tumors",
+                "prototype": ["basic"],
+                "class": "range",
+                "manaCost": 6,
+                "types": ["proj", "poison"],
+                "mods": [
+                    {def: 'speed added 800', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
+                    {def: 'poisDmg more 50', type: 'dmg'},
+                    {def: 'physDmg converted 50 poisDmg', type: 'dmg'}
+                ]
+            },
+            "incinerate": {                
+                "prototype": ["basic"],
+                "class": "spell",
+                "manaCost": 1,
+                "types": ["proj", "fire", "spell"],
+                "mods": [
+                    {def: 'speed added 100', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
+                    {def: 'fireDmg more -50', type: 'dmg'},
+                    {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
+                ]
             },
             "fire ball": {
-                "prototype": ["basic spell"],
-                "affixes": ["fireDmg added 10"],
-                "manaCost": 5,
-                "craftCost": "3 embers",
+                "prototype": ["basic"],
+                "class": "spell",
+                "manaCost": 7,
+                "types": ["proj", "fire", "spell"],
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'fireDmg more 50', type: 'dmg'},
+                    {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
+                ]
             },
             "ice ball": {
-                "prototype": ["basic spell"],
-                "affixes": ["coldDmg added 10"],
-                "manaCost": 5,
-                "craftCost": "3 mints",
+                "prototype": ["basic"],
+                "class": "spell",
+                "manaCost": 7,
+                "types": ["proj", "cold", "spell"],
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'coldDmg more 50', type: 'dmg'},
+                    {def: 'physDmg converted 100 coldDmg', type: 'dmg'}
+                ]
             },
-            "lightning ball": {
-                "prototype": ["basic spell"],
-                "affixes": ["lightDmg added 10"],
-                "manaCost": 5,
-                "craftCost": "3 sparks",
+            "lighting ball": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "manaCost": 7,
+                "types": ["proj", "lightning", "spell"],
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'lightDmg more 50', type: 'dmg'},
+                    {def: 'physDmg converted 100 lightDmg', type: 'dmg'}
+                ]
             },
             "poison ball": {
-                "prototype": ["basic spell"],
-                "types": ["proj", "DOT"],
-                "affixes": ["poisDmg added 15"],
-                "manaCost": 5,
-                "craftCost": "3 tumors",
+                "prototype": ["basic"],
+                "class": "spell",
+                "manaCost": 7,
+                "types": ["proj", "poison", "spell"],
+                "mods": [
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'poisDmg more 50', type: 'dmg'},
+                    {def: 'physDmg converted 100 poisDmg', type: 'dmg'}
+                ]
             },
-
         },
         "card": {
             "hot sword": {

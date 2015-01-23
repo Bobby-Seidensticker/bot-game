@@ -112,6 +112,7 @@ namespace.module('bot.utils', function (exports, require) {
         } else if (s[1] === 'gainedas') {
             dict[s[0]]['gainedas'][s[3]] += amt;
         } else {
+            console.log("addMod about to barf with state ", dict, str, level);
             throw('shit');
         }
     }

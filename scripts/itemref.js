@@ -400,20 +400,75 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "weapon",
                 "levels": 10
             },
+            "honed blade": {
+                "mods": [
+                    {"def": "physDmg added 2 perLevel", "type": "dmg"}
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
+            
+            
             "hard head": {
                 "mods": [
                     {"def": "armor added 4 perLevel", "type": "def"}
                 ],
                 "slot": "head",
                 "levels": 10
+            },            
+            "six pack": {
+                "mods": [
+                    {"def": "armor added 8 perLevel", "type": "def"}
+                ],
+                "slot": "body",
+                "levels": 10
             },
+            "steel toed": {
+                "mods": [
+                    {"def": "armor added 4 perLevel", "type": "def"}
+                ],
+                "slot": "legs",
+                "levels": 10
+            },
+            "extra plating": {
+                "mods": [
+                    {"def": "armor added 3 perLevel", "type": "def"}
+                ],
+                "slot": "hands",
+                "levels": 10
+            },
+            
             "quenching blade": {
                 "mods": [
                     {"def": "fireResist more -5 perlevel", "type": "eleResist"}
                 ],
                 "slot": "weapon",
                 "levels": 10
-            }
+            },
+            "cool shoes": {
+                "mods": [
+                    {"def": "fireResist more -5 perlevel", "type": "eleResist"}
+                ],
+                "slot": "legs",
+                "levels": 10
+            },
+            "asbestos lining": {
+                "mods": [
+                    {"def": "fireResist more -5 perlevel", "type": "eleResist"}
+                ],
+                "slot": "hands",
+                "levels": 10
+            },
+            "drenched undershirt": {
+                "mods": [
+                    {"def": "fireResist more -5 perlevel", "type": "eleResist"}
+                ],
+                "slot": "body",
+                "levels": 10
+            },
+            
+           
+            
         },
         "affix": {
             "rollable": [

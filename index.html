@@ -27,6 +27,15 @@
 
   <div class="messages"></div>
 
+  <script id="kv-table-template" type="text/template">
+    <% _.each(data, function(value, key) { %>
+        <tr><th><%= key %></th></tr>
+        <% _.each(value, function(val) { %>
+            <tr><td><%= val[0] %></td><td><%= val[1] %></td></tr>
+        <% }); %>
+    <% }); %>
+  </script>
+
   <script id="map-tab-template" type="text/template">
     <div class="mapcontent">
       Mappy<br><br>

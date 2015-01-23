@@ -16,12 +16,13 @@ namespace.module('bot.zone', function (exports, require) {
         initialize: function(hero) {
             this.initialize = false;
             this.level = 1;
-            // TODO zone manager is given a static model, need to turn this hero static model in to an instance model
             this.hero = new HeroBody(hero);
             this.newZone('spooky dungeon', 1);
         },
 
         newZone: function(name, level) {
+            this.iuid = _.uniqueId('inst');
+
             var i, j, rooms, monsters, count, data;
 
             _.extend(this, itemref.expand('zone', name));
@@ -96,6 +97,11 @@ namespace.module('bot.zone', function (exports, require) {
                     return;
                 }
             }
+            window.DirtyQueue.mark('tick');
+        },
+
+        liveMons: function() {
+            return _.filter(this.rooms[this.heroPos].monsters, function(mon) { return mon.isAlive(); });
         },
 
         livingEnemies: function(team) {
@@ -317,17 +323,17 @@ namespace.module('bot.zone', function (exports, require) {
         },
     });
 
-    window.staticMonsterSpecs = {};
+    window.monsterSpecs = {};
 
     var MonsterBody = EntityBody.extend({
         initialize: function(name, level) {
             var uid = name + '_' + level;
             var spec;
-            if (uid in window.staticMonsterSpecs) {
-                spec = window.staticMonsterSpecs[uid]
+            if (uid in window.monsterSpecs) {
+                spec = window.monsterSpecs[uid]
             } else {
                 spec = new entity.MonsterSpec(name, level);
-                window.staticMonsterSpecs[uid] = spec;
+                window.monsterSpecs[uid] = spec;
             }
             EntityBody.prototype.initialize.call(this, spec);
         }

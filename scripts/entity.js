@@ -263,6 +263,10 @@ namespace.module('bot.entity', function (exports, require) {
     exports.extend({
         newHeroSpec: newHeroSpec,
         MonsterSpec: MonsterSpec,
+        attrKeys: attrKeys,
+        defKeys: defKeys,
+        eleResistKeys: eleResistKeys,
+        dmgKeys: dmgKeys
     });
 
 });

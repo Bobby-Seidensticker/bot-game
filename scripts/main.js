@@ -10,7 +10,6 @@ namespace.module('bot.main', function (exports, require) {
     var STEP_SIZE = 10;
 
     function onReady() {
-        //window.msgs = new namespace.bot.messages.MessageCollection();
 
         localStorage.clear();
 
@@ -18,7 +17,8 @@ namespace.module('bot.main', function (exports, require) {
 
         var gameModel = new GameModel();
 
-        // var gameView = new namespace.bot.window.GameView({gameModel: gameModel, messageCollection: window.msgs});
+
+        var gameView = new namespace.bot.window.GameView(gameModel);
         //var m = new menu.TabView();
 
         $(window).on('keypress', function(event) {
@@ -48,7 +48,7 @@ namespace.module('bot.main', function (exports, require) {
             this.running = false;
             this.inZone = false;
 
-            window.msgs = new namespace.bot.messages.MessageCollection();
+            window.messages = new namespace.bot.messages.Messages();
 
             this.inv = new inv.ItemCollection();
             this.hero = new entity.newHeroSpec(this.inv);
@@ -91,7 +91,7 @@ namespace.module('bot.main', function (exports, require) {
             this.inZone = false;
         },
 
-        ensureRoom: function() {
+        /*ensureRoom: function() {
             if (!this.inZone || !this.hero.hp || this.hero.hp <= 0 || this.zone.done()) {
                 log.info('Getting new zone, recomputing hero attrs');
                 this.hero.computeAttrs();
@@ -101,7 +101,7 @@ namespace.module('bot.main', function (exports, require) {
             }
             return this.zone.getCurrentRoom();
         },
-/*
+
         updateModels: function() {
             var room = this.ensureRoom();
 

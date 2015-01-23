@@ -162,88 +162,27 @@ namespace.module('bot.messages', function (exports, require) {
 
     var log = namespace.bot.log;
 
-    var MessageModel = Backbone.Model.extend({
-        defaults: function() {
-            return {
-                expiresIn: 20000,
-                message: ''
-            };
-        }
-    });
+    var EXPIRES_IN = 10000;
 
-    var MessageCollection = Backbone.Collection.extend({
-        model: MessageModel,
-        comparator: 'expires',
-
+    var Messages = window.Model.extend({
         initialize: function() {
-            this.storedTime = 0;
+            this.messages = [];
         },
 
-        update: function(dt) {
-            this.storedTime += dt;
-        },
-        applyTime: function() {
-            this.each(function(model) {
-                model.set('expiresIn', model.get('expiresIn') - this.storedTime);
-            });
+        send: function(text) {
+            this.messages.push({text: text, expires: window.time + EXPIRES_IN});
         },
 
         prune: function() {
-            var now = new Date().getTime();
-            this.remove(this.filter(function(model) {
-                return model.get('expires') < now;
-            }));
-            log.info('message collection prune, data: %s', JSON.stringify(this.pluck('message')));
-            this.trigger('pruned');
-        },
-
-        send: function(message, expiresIn) {
-            this.applyTime();
-            var obj = {message: message, expiresIn: expiresIn};
-            this.add(new MessageModel(obj));
-            this.prune();
+            var i = 0, l = this.messages.length;
+            while (i < l && this.messages[i].expires < window.time) {
+                i++;
+            }
+            this.messages.splice(0, i);
         }
     });
-
-    /*
-    function Messages() {
-        this.msgs = new MessageCollection();
-    }
-
-    Messages.prototype.send = function(message, expiresIn) {
-    }*/
 
     exports.extend({
-        MessageCollection: MessageCollection
+        Messages: Messages
     });
-});
-
-
-var MessageModel = Backbone.Model.extend({
-    initialize: function() {
-        this.unloaded = 0;
-    },
-
-    update: function(dt) {
-        this.unloaded += dt;
-        if (condition) {
-            this.prune();
-        }
-    },
-
-    prune: function() {
-        var now = new Date().getTime();
-        this.remove(this.filter(function(model) { return model.get('expires') < now; }));
-        log.info('message collection prune, data: %s', JSON.stringify(this.pluck('message')));
-        this.trigger('pruned');
-    },
-
-    send: function(message, expiresIn) {
-        var obj = {message: message};
-        if (expiresIn !== undefined) {
-            obj.expires = new Date().getTime() + expiresIn;
-        }
-        this.add(new MessageModel(obj));
-        this.prune();
-    }
 });

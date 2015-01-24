@@ -332,9 +332,9 @@ namespace.module('bot.inv', function (exports, require) {
             ];
         },
 
-        addDrop: function(drop) {
+        addDrops: function(drops) {
             // TODO add checking in here to ignore duplicates and do something about cards n stuff
-            this.models.push(drop);
+            this.models = this.models.concat(drops);
         }
     });
 

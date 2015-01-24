@@ -215,7 +215,7 @@ namespace.module('bot.window', function (exports, require) {
                 var arr = [];
                 skill = this.model.skills[i];
                 _.each(entity.dmgKeys, function(key) {
-                    arr.push([key, skill.spec[key]]);
+                    arr.push([key, skill.spec[key].toFixed(2)]);
                 });
                 arr.push(['cool in', skill.coolAt - window.time]);
                 data[skill.spec.name] = arr;
@@ -226,7 +226,7 @@ namespace.module('bot.window', function (exports, require) {
             var key;
             for (var i = 0; i < specKeys.length; i++) {
                 key = specKeys[i];
-                data.spec.push([key, this.model.spec[key].toFixed(2)]);
+                  data.spec.push([key, this.model.spec[key].toFixed(2)]);
             }
 
             this.$el.html(this.template({data: data}));

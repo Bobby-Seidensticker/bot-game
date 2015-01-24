@@ -28,11 +28,15 @@ namespace.module('bot.zone', function (exports, require) {
             _.extend(this, itemref.expand('zone', name));
             rooms = [];
             for (i = 0; i < this.roomCount; i++) {
-                count = 1 + prob.pProb(this.quantity);
+                count = this.quantity[0] + prob.pProb(this.quantity[1], this.quantity[2]);
 
                 monsters = [];
                 for (var j = 0; j < count; j++) {
                     monsters.push(new MonsterBody(this.choices[prob.pick(this.weights)], level));
+                }
+
+                if (i === this.roomCount - 1) {
+                    monsters.push(new MonsterBody(this.boss, level));
                 }
 
                 rooms[i] = {
@@ -41,8 +45,6 @@ namespace.module('bot.zone', function (exports, require) {
                     hero: undefined
                 };
             }
-            //log.info('ZoneManager newZone %s', monsters.reduce(function(m, n) {
-            //    return m + n.get('name') + ", "}, ""));
 
             this.heroPos = 0;
             this.rooms = rooms;
@@ -121,7 +123,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         roomCleared: function() {
-            return _.findWhere(this.getCurrentRoom().monsters, function(mon) { return mon.isAlive(); }) === undefined;
+            return this.liveMons().length === 0;
         },
 
         done: function() {
@@ -314,7 +316,7 @@ namespace.module('bot.zone', function (exports, require) {
             var xpGained = target.spec.xpOnKill();
             this.spec.applyXp(xpGained);
             // TODO ensure this works:
-            this.spec.inv.addDrop(target.spec.getDrop());
+            this.spec.inv.addDrops(target.spec.getDrops());
             window.DirtyQueue.mark('monsters:death');
         },
 

@@ -141,13 +141,13 @@ namespace.module('bot.prob', function (exports, require) {
         for (var i = 0; i < 100; i++) {
             hist[i] = 0;
         }
-        for (var i = 0; i < 100; i++) {
-            var prob = pProb(1, 100);
+        for (var i = 0; i < 1000; i++) {
+            var prob = pProb(40, 200);
             console.log(prob + ' monsters in room ' + i);
             hist[prob]++;
         }
 
-        console.log('100 cycles took ' + (new Date().getTime() - start) + 'ms');
+        console.log('1000 cycles took ' + (new Date().getTime() - start) + 'ms');
         console.log(hist);
 
         for (var i = 0; i < 20; i++) {

@@ -218,7 +218,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
-                    {def: 'physDmg more 100', type: 'dmg'},
+                    {def: 'physDmg more 10', type: 'dmg'},
                     {def: 'physDmg added 5 perLevel', type: 'dmg'}
                 ]
             },
@@ -386,6 +386,18 @@ namespace.module('bot.itemref', function (exports, require) {
             },
         },
         "card": {
+            "proto-skeleton": {
+                "mods": [
+                    {"def": "fireResist more -20", "type": "eleResist"}
+                ],
+            },
+            "proto-boss": {
+                "mods": [
+                    //{"def": "physDmg more 10", "type": "dmg"},
+                    {"def": "maxHp more 100", "type": "def"}
+                ],
+            },
+
             "hot sword": {
                 "mods": [
                     {"def": "fireDmg added 2 perLevel", "type": "dmg"}
@@ -407,8 +419,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "weapon",
                 "levels": 10
             },
-            
-            
+
             "hard head": {
                 "mods": [
                     {"def": "armor added 4 perLevel", "type": "def"}
@@ -469,44 +480,51 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "monster": {
             "skeleton" : {
-                "classLevel": 0,
                 "items": [["weapon", "melee", 0], ["armor", "head", 0]],
-                "skills": ["basic melee"],
-                "sourceCards": []
-            },
-            "fire skeleton": {
-                "classLevel": 0,
-                "items": [["weapon", "melee", 0], ["armor", "head", 0]],
-                "skills": ["fire slash"],
-                "sourceCards": [["hot sword", 1]]
-            },
-            "skeleton archer" : {
-                "prototype" : ["skeleton"],
-                "items": [["weapon", "range", 0], ["armor", "chest", 0]],
-                "skills": ["basic range"],
-                "sourceCards": []
-            },
-            "skeleton mage" : {
-                "prototype" : ["skeleton"],
-                "items": [["weapon", "spell", 0], ["armor", "legs", 0]],
-                "skills": ["basic spell"],
-                "sourceCards": []
-            },
-            "skeleton king" : {
-                "classLevel": 1,
-                "items": [["weapon", "melee", 1], ["armor", "head", 1], ["armor", "chest", 1], ["armor", "hands", 1], ["armor", "legs", 1]],
                 "skills": ["basic melee"],
                 "sourceCards": [
+                    ["proto-skeleton", 0]
+                ]
+            },
+            "fire skeleton": {
+                "items": [["weapon", "melee", 0], ["armor", "head", 0]],
+                "skills": ["fire slash"],
+                "sourceCards": [
+                    ["hot sword", 1],
+                    ["proto-skeleton", 0]
+                ]
+            },
+            "skeleton archer" : {
+                "items": [["weapon", "range", 0], ["armor", "chest", 0]],
+                "skills": ["basic range"],
+                "sourceCards": [
+                    ["proto-skeleton", 0]
+                ]
+            },
+            "skeleton mage" : {
+                "items": [["weapon", "spell", 0], ["armor", "legs", 0]],
+                "skills": ["basic spell"],
+                "sourceCards": [
+                    ["proto-skeleton", 0]
+                ]
+            },
+            "skeleton king" : {
+                "items": [["weapon", "melee", 1], ["armor", "head", 1], ["armor", "chest", 1], ["armor", "hands", 1], ["armor", "legs", 1]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["proto-skeleton", 1],
+                    ["proto-boss", 1],
                     ["hot sword", 1]
                 ]
             },
         },
         "zone": {
             "spooky dungeon": {
-                "choices": ["skeleton", "skeleton archer", "skeleton mage", "skeleton king"],
-                "weights": [20, 10, 5, 1],
-                "roomCount": 20,
-                "quantity": 1
+                "choices": ["skeleton", "skeleton archer", "skeleton mage"],
+                "weights": [20, 10, 5],
+                "boss": "skeleton king",
+                "roomCount": 3,
+                "quantity": [1, 2, 4]
             }
         },
         "test": {

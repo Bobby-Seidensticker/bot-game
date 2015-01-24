@@ -17,24 +17,32 @@ namespace.module('bot.main', function (exports, require) {
 
         var gameModel = new GameModel();
 
-
         var gameView = new namespace.bot.window.GameView(gameModel);
         //var m = new menu.TabView();
 
-        $(window).on('keypress', function(event) {
+        $(window).on('keydown', function(event) {
             var SPACE = 32;
             var EKEY = 101;
             //var DKEY = 100;
             var SKEY = 115;
-            if (event.keyCode == SPACE) {
+            var UP = 38;
+            var DN = 40;
+            var key = event.keyCode;
+            if (key == SPACE) {
                 window.GameEvents.trigger('togglePause');
-            } else if (event.keyCode == EKEY) {
+            } else if (key == EKEY) {
                 //Cheat for adding 1000xp (for easier testing)
                 log.warning("XP Cheat!");                
                 gameModel.hero.applyXp(1000);
-            } else if (event.keyCode == SKEY) {
+            } else if (key == SKEY) {
                 log.warning("Time Cheat!");
                 gameModel.lastTime -= 100000;
+            } else if (key === UP) {
+                gameModel.timeCoefficient *= 2;
+                log.error('Time coefficient now %.2f', gameModel.timeCoefficient);
+            } else if (key === DN) {
+                gameModel.timeCoefficient /= 2;
+                log.error('Time coefficient now %.2f', gameModel.timeCoefficient);
             }
         });
     }

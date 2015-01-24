@@ -41,8 +41,10 @@ namespace.module('bot.entity', function (exports, require) {
             _.each(attrKeys, function(stat) {
                 this[stat] = (all.attr[stat].added) * all.attr[stat].more;
             }, this);
-            
             all.def.maxHp.added += this.vitality * 2;
+            if (this.team === TEAM_HERO) {
+                all.def.maxHp.added += this.vitality * 200;
+            }
             all.def.maxMana.added += this.wisdom * 2;
             all.def.armor.added += this.strength * 0.5;
             all.def.dodge.added += this.dexterity * 0.5;
@@ -72,6 +74,9 @@ namespace.module('bot.entity', function (exports, require) {
             // Damage is left uncombined, handled in skills
 
             this.baseDmg = all.dmg;
+            if (this.team === TEAM_HERO) {
+                this.baseDmg.physDmg.more *= 2;
+            }
             this.computeSkillAttrs();
 
             this.nextLevelXp = this.getNextLevelXp();
@@ -182,7 +187,31 @@ namespace.module('bot.entity', function (exports, require) {
             return this.cards.concat(EntitySpec.prototype.getCards.call(this));
         },
 
-        getDrop: function() {
+        getDrops: function() {
+            var drops = [];
+            if (Math.random() < 0.03) {
+                var cards = _.filter(this.sourceCards, function(card) { if (card[0].slice(0, 5) !== 'proto') { return true; }});
+                if (cards.length) {
+                    drops.push(cards[prob.pyRand(0, cards.length)]);
+                }
+            }
+            if (Math.random() < 0.001) {
+                if (this.items.length) {
+                    drops.push(this.items[prob.pyRand(0, this.items.length)]);
+                }
+            }
+            if (Math.random() < 0.001) {
+                if (this.skills.length) {
+                    drops.push(this.skills[prob.pyRand(0, this.skills.length)]);
+                }
+            }
+            if (drops.length > 0) {
+                log.info('%s is dropping %s', this.name, JSON.stringify(drops));
+            }
+            return drops;
+
+            
+
             //  Monster uses internal model to roll one or more drops, returns array of drops
             // string items in array are materials, objects are full items
             /*

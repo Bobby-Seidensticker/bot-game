@@ -51,47 +51,10 @@ namespace.module('bot.utils', function (exports, require) {
         for (i = 0; i < arguments.length; i++) {
             a = arguments[i];
             for (j = 0; j < a.length; j++) {
-                comp[a[j]] = {"added": 0, "more": 1};
+                comp[a[j]] = {added: 0, more: 1, converted: {}, gainedas: {}};
             }
         }
         return comp;
-    }
-
-    function newDmgStatsDict() {
-        return {
-            physDmg: {
-                added: 0,
-                more: 1,
-                converted: {lightDmg: 0, coldDmg: 0, fireDmg: 0, poisDmg: 0},
-                gainedas: {lightDmg: 0, coldDmg: 0, fireDmg: 0, poisDmg: 0}
-            },
-            lightDmg: {
-                added: 0,
-                more: 1,
-                converted: {coldDmg: 0, fireDmg: 0, poisDmg: 0},
-                gainedas: {coldDmg: 0, fireDmg: 0, poisDmg: 0}
-            },
-            coldDmg: {
-                added: 0,
-                more: 1,
-                converted: {fireDmg: 0, poisDmg: 0},
-                gainedas: {fireDmg: 0, poisDmg: 0}
-            },
-            fireDmg: {
-                added: 0,
-                more: 1,
-                converted: {poisDmg: 0},
-                gainedas: {poisDmg: 0}
-            },
-            poisDmg: {
-                added: 0,
-                more: 1,
-                converted: {},
-                gainedas: {}
-            },
-            range: {added: 0, more: 1},
-            speed: {added: 0, more: 1}
-        };
     }
 
     // [primary] [verb] [amt] [special]   Note: special is either perLevel or dmgType in case of converted and gainedas
@@ -107,14 +70,42 @@ namespace.module('bot.utils', function (exports, require) {
             dict[s[0]]['added'] += amt;
         } else if (s[1] === 'more') {
             dict[s[0]]['more'] *= 1 + (amt / 100);
-        } else if (s[1] === 'converted') {
-            dict[s[0]]['converted'][s[3]] += amt;  // TODO: converted and gainedas are the same
-        } else if (s[1] === 'gainedas') {
-            dict[s[0]]['gainedas'][s[3]] += amt;
+        } else if (s[1] === 'gainedas' || s[1] === 'converted') {
+            if (dict[s[0]][s[1]][s[3]]) {
+                dict[s[0]][s[1]][s[3]] += amt;
+            } else {
+                dict[s[0]][s[1]][s[3]] = amt;
+            }
         } else {
             console.log("addMod about to barf with state ", dict, str, level);
             throw('shit');
         }
+    }
+
+    function computeStat(section, stat) {
+        var stat, obj, res;
+
+        obj = section[stat];
+        convPct = 100;
+
+        var res = obj.added * obj.more;
+        _.each(obj.converted, function(value, key) {
+            convAmt = obj.converted[key];
+            if (convAmt > convPct) {
+                convAmt = convPct;
+            }
+            section[key].added += convAmt / 100 * res;
+            convPct -= convAmt;
+        });
+
+        res *= (convPct / 100);
+        
+        _.each(obj.gainedas, function(value, key) {
+            gainedAmt = obj.gainedas[key];
+            section[key].added += gainedAmt / 100 * res;
+        });
+
+        return res;
     }
 
     // this should also work for the mod object on an item (same fmt)
@@ -151,9 +142,9 @@ namespace.module('bot.utils', function (exports, require) {
         expandSourceItem: expandSourceItem,
         expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
-        newDmgStatsDict: newDmgStatsDict,
         addAllCards: addAllCards,
-        addMod: addMod
+        addMod: addMod,
+        computeStat: computeStat
     });
 
 });

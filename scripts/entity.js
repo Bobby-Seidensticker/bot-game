@@ -12,10 +12,9 @@ namespace.module('bot.entity', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
 
-    var attrKeys = ['strength', 'vitality', 'wisdom', 'dexterity',];
-    var defKeys = ['maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll',];
+    var defKeys = ['strength', 'vitality', 'wisdom', 'dexterity', 'maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll', 'hpRegen', 'manaRegen'];
     var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
-    var dmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'range', 'speed'];
+    var dmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech', 'range', 'speed'];
 
     var EntitySpec = window.Model.extend({
         initialize: function() {
@@ -27,33 +26,23 @@ namespace.module('bot.entity', function (exports, require) {
         computeAttrs: function() {
             var all = {};
 
-            all.attr = utils.newBaseStatsDict(attrKeys);
             all.def = utils.newBaseStatsDict(defKeys);
             all.eleResist = utils.newBaseStatsDict(eleResistKeys);
-
-            all.dmg = utils.newDmgStatsDict();
+            all.dmg = utils.newBaseStatsDict(dmgKeys); // utils.newDmgStatsDict();
 
             utils.addAllCards(all, this.getCards());
             // Now 'all' has the expanded trie structured mod data
             // Do final multiplication and put on the entity
 
-            // factor this out
-            _.each(attrKeys, function(stat) {
-                this[stat] = (all.attr[stat].added) * all.attr[stat].more;
-            }, this);
-            all.def.maxHp.added += this.vitality * 2;
-            if (this.team === TEAM_HERO) {
-                all.def.maxHp.added += this.vitality * 200;
-            }
-            all.def.maxMana.added += this.wisdom * 2;
-            all.def.armor.added += this.strength * 0.5;
-            all.def.dodge.added += this.dexterity * 0.5;
-            all.def.eleResistAll.added = 1;
-            all.def.eleResistAll.more *= Math.pow(0.997, this.wisdom); //temp var only
-
             _.each(defKeys, function(stat) {
-                this[stat] = (all.def[stat].added) * all.def[stat].more;
+                this[stat] = utils.computeStat(all.def, stat);
             }, this);
+
+            this.eleResistAll *= Math.pow(0.997, this.wisdom);
+
+            if (this.team === TEAM_HERO) {
+                this.maxHp *= 10;
+            }
 
             // note that eleResistAll is on the def keys because of the ordering
             // added must be one, this is janky
@@ -62,13 +51,13 @@ namespace.module('bot.entity', function (exports, require) {
             all.eleResist.fireResist.added = 1;
             all.eleResist.poisResist.added = 1;
 
-            all.eleResist.lightResist.more *= all.def.eleResistAll.more;
-            all.eleResist.coldResist.more *= all.def.eleResistAll.more;
-            all.eleResist.fireResist.more *= all.def.eleResistAll.more;
-            all.eleResist.poisResist.more *= all.def.eleResistAll.more;
+            all.eleResist.lightResist.more *= this.eleResistAll;
+            all.eleResist.coldResist.more *= this.eleResistAll;
+            all.eleResist.fireResist.more *= this.eleResistAll;
+            all.eleResist.poisResist.more *= this.eleResistAll;
 
             _.each(eleResistKeys, function(stat) {
-                this[stat] = (all.eleResist[stat].added) * all.eleResist[stat].more;
+                this[stat] = utils.computeStat(all.eleResist, stat);
             }, this);
 
             // Damage is left uncombined, handled in skills
@@ -89,12 +78,21 @@ namespace.module('bot.entity', function (exports, require) {
         getCards: function() {
             return [
                 {mods: [
-                    {def: 'strength added 10', type: 'attr'},
-                    {def: 'dexterity added 10', type: 'attr'},
-                    {def: 'wisdom added 10', type: 'attr'},
-                    {def: 'vitality added 10', type: 'attr'},
+                    {def: 'strength added 10', type: 'def'},
+                    {def: 'dexterity added 10', type: 'def'},
+                    {def: 'wisdom added 10', type: 'def'},
+                    {def: 'vitality added 10', type: 'def'},
+                    {def: 'vitality gainedas 200 maxHp', type: 'def'},
+                    {def: 'wisdom gainedas 200 maxMana', type: 'def'},
+
+                    {def: 'strength gainedas 50 armor', type: 'def'},
+                    {def: 'dexterity gainedas 50 dodge', type: 'def'},
+                    {def: 'eleResistAll added 1', type: 'def'},
+
                     {def: 'maxHp added 10 perLevel', type: 'def'},
                     {def: 'maxMana added 5 perLevel', type: 'def'},
+                    {def: 'maxHp gainedas 2 hpRegen', type: 'def'},
+                    {def: 'maxMana gainedas 2 manaRegen', type: 'def'}
                 ], level: this.level}
             ];
         },
@@ -110,10 +108,11 @@ namespace.module('bot.entity', function (exports, require) {
     });
 
     var HeroSpec = EntitySpec.extend({
-        initialize: function(name, skillchain, inv, equipped) {
+        initialize: function(name, skillchain, inv, equipped, cards) {
             this.name = name;
             this.skillchain = skillchain;
             this.inv = inv;
+            this.cards = cards;
             this.equipped = equipped;
 
             EntitySpec.prototype.initialize.call(this);
@@ -175,6 +174,8 @@ namespace.module('bot.entity', function (exports, require) {
 
             this.cards = this.cards.concat(utils.expandSourceCards(this.sourceCards));
 
+            this.droppableCards = _.filter(this.sourceCards, function(card) { if (card[0].slice(0, 5) !== 'proto') { return true; } }, this);
+
             this.skillchain = new inventory.Skillchain();
             for (var i = 0; i < this.skills.length; i++) {
                 this.skillchain.equip(new inventory.SkillModel(this.skills[i]), i);
@@ -189,102 +190,49 @@ namespace.module('bot.entity', function (exports, require) {
 
         getDrops: function() {
             var drops = [];
-            if (Math.random() < 0.03) {
-                var cards = _.filter(this.sourceCards, function(card) { if (card[0].slice(0, 5) !== 'proto') { return true; }});
-                if (cards.length) {
-                    drops.push(cards[prob.pyRand(0, cards.length)]);
+            if (Math.random() < 1) { // 0.03 * 10) {
+                if (this.droppableCards.length) {
+                    drops.push({
+                        dropType: 'card',
+                        data: this.droppableCards[prob.pyRand(0, this.droppableCards.length)]
+                    });
                 }
             }
-            if (Math.random() < 0.001) {
+            if (Math.random() < 0.001 * 50) {
                 if (this.items.length) {
-                    drops.push(this.items[prob.pyRand(0, this.items.length)]);
+                    var sel = this.items[prob.pyRand(0, this.items.length)];
+                    drops.push({
+                        dropType: sel[0],
+                        data: sel
+                    });
                 }
             }
-            if (Math.random() < 0.001) {
+            if (Math.random() < 0.001 * 50) {
                 if (this.skills.length) {
-                    drops.push(this.skills[prob.pyRand(0, this.skills.length)]);
+                    drops.push({
+                        dropType: 'skill',
+                        data: this.skills[prob.pyRand(0, this.skills.length)]
+                    });
                 }
             }
             if (drops.length > 0) {
                 log.info('%s is dropping %s', this.name, JSON.stringify(drops));
             }
             return drops;
-
-            
-
-            //  Monster uses internal model to roll one or more drops, returns array of drops
-            // string items in array are materials, objects are full items
-            /*
-              var drops = [];
-              var dropRef = this.drops;
-              //console.log(dropRef);
-
-              var matCount = prob.pProb(1,10);
-              if (matCount > 0) {
-              var drop = matCount + " " + dropRef[prob.pyRand(0, dropRef.length)];
-              drops.push(drop);
-              }
-
-              //var recipeDropChance = 0.05;
-              
-              //   if(prob.binProb(recipeDropChance)) {
-              //  drops.push(this.getRandItem());
-              //   }
-
-              log.info(this.name + ' dropped: ' + JSON.stringify(drops));
-              return drops;*/
-        },
-
-        getRandItem: function() {
-            // TODO major overhaul
-            /*
-            // helper function for getDrops
-            //selects a random weapon, armor or skill
-            //console.log('HERERERE');
-            var ref = namespace.bot.itemref.ref;
-            var weapcount = Object.keys(ref.weapon).length;
-            var armorcount = Object.keys(ref.armor).length;
-            var skillcount = Object.keys(ref.skill).length;
-            var allcount = weapcount + armorcount + skillcount;
-
-            //console.log(prob);
-            var roll = prob.pyRand(0, allcount);
-
-            var newItem;
-            
-            if (roll < weapcount) {
-            newItem =  new inventory.WeaponModel({'name': Object.keys(ref.weapon)[roll]});
-            } else if (roll < weapcount + armorcount) {
-            newItem =  new inventory.ArmorModel({'name': Object.keys(ref.armor)[roll - weapcount]});
-            } else if (roll < weapcount + armorcount + skillcount) {
-            newItem = new inventory.SkillModel({'name': Object.keys(ref.skill)[roll - weapcount - armorcount]});
-            } else {
-            log.warning("wtf: dropRand rolled higher number than it should have");
-            }
-
-            //janky recursive way of escaping invalid items - potentially infinite
-            if (newItem.get('craftCost')) {
-            return newItem;
-            } else {
-            return this.getRandItem();
-            }
-            //console.log(ref, weapcount);
-            */
         }
     });
 
-    function newHeroSpec(inv) {
+    function newHeroSpec(inv, cards) {
         // stopgap measures: basic equipped stuff
         var heroName = 'bobbeh';
         var equipped = new inventory.EquippedGearModel();
-        // this needs to change, don't have find where anymore
         equipped.equip(_.findWhere(inv.models, {name: 'cardboard sword'}), 'mainHand');
         equipped.equip(_.findWhere(inv.models, {name: 'balsa helmet'}), 'head');
 
         var skillchain = new inventory.Skillchain()
         skillchain.equip(_.findWhere(inv.models, {name: 'basic melee'}), 0);
 
-        var hero = new HeroSpec(heroName, skillchain, inv, equipped);
+        var hero = new HeroSpec(heroName, skillchain, inv, equipped, cards);
 
         return hero;
     }
@@ -292,7 +240,6 @@ namespace.module('bot.entity', function (exports, require) {
     exports.extend({
         newHeroSpec: newHeroSpec,
         MonsterSpec: MonsterSpec,
-        attrKeys: attrKeys,
         defKeys: defKeys,
         eleResistKeys: eleResistKeys,
         dmgKeys: dmgKeys

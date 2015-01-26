@@ -316,7 +316,9 @@ namespace.module('bot.zone', function (exports, require) {
             var xpGained = target.spec.xpOnKill();
             this.spec.applyXp(xpGained);
             // TODO ensure this works:
-            this.spec.inv.addDrops(target.spec.getDrops());
+            var drops = target.spec.getDrops();
+            this.spec.inv.addDrops(drops);
+            this.spec.cards.addDrops(drops);
             window.DirtyQueue.mark('monsters:death');
         },
 

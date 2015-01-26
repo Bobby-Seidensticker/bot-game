@@ -153,32 +153,9 @@ namespace.module('bot.inv', function (exports, require) {
                 }
             }
 
-            var dtype, obj, targetKeys, dmg, convPct, convAmt, gainedAmt, i, j;
-            var keysLen = dmgKeys.length - 2; // TODO fix this jankyness because of range and speed
-            // Note: range and speed are computed properly even though it's weird
-            for (var i = 0; i < keysLen; i++) {
-                dtype = dmgKeys[i];
-                obj = this.dmgStats[dtype];
-                convPct = 100;
-
-                dmg = obj.added * obj.more;
-                for (var j = i + 1; j < keysLen; j++) {
-                    convAmt = obj.converted[dmgKeys[j]];
-                    if (convAmt > convPct) {
-                        convAmt = convPct;
-                    }
-                    this.dmgStats[dmgKeys[j]].added += convAmt / 100 * dmg;
-                    convPct -= convAmt;
-                }
-                dmg *= (convPct / 100);
-                for (var j = i + 1; j < keysLen; j++) {
-                    gainedAmt = obj.gainedas[dmgKeys[j]];
-                    this.dmgStats[dmgKeys[j]].added += gainedAmt / 100 * dmg;
-                }
-                this[dtype] = dmg;
-            }
-            this.range = this.dmgStats.range.added * this.dmgStats.range.more;
-            this.speed = this.dmgStats.speed.added * this.dmgStats.speed.more;
+            _.each(dmgKeys, function(stat) {
+                this[stat] = utils.computeStat(this.dmgStats, stat);
+            }, this);
         },
     });
 
@@ -334,6 +311,35 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             // TODO add checking in here to ignore duplicates and do something about cards n stuff
+            var drop;
+            for (var i = 0; i < drops.length; i++) {
+                drop = drops[i];
+                if (drop.dropType === 'card') {
+                    continue;
+                }
+                if (drop.dropType === 'weapon' || drop.dropType === 'armor') {
+                    var exists = !!(_.findWhere(this.models, {itemType: drop.data[0], type: drop.data[1], classLevel: drop.data[2]}));
+                    if (!exists) {
+                        if (drop.dropType === 'weapon') {
+                            this.models.push(new WeaponModel(drop.data[2], drop.data[1]));
+                            log.info('Adding %s %s %d to inv', drop.data[0], drop.data[1], drop.data[2]);
+                        } else if (drop.dropType === 'armor') {
+                            this.models.push(new ArmorModel(drop.data[2], drop.data[1]));
+                            log.info('Adding %s %s %d to inv', drop.data[0], drop.data[1], drop.data[2]);
+                        }
+                    } else {
+                        log.info('Already have %s %s %d', drop.data[0], drop.data[1], drop.data[2]);
+                    }
+                } else if (drop.dropType === 'skill') {
+                    var exists = !!(_.findWhere(this.models, {name: drop.data}));
+                    if (!exists) {
+                        this.models.push(new SkillModel(drop.data));
+                        log.info('Adding skill %s', drop.data);
+                    } else {
+                        log.info('Already have skill %s', drop.data);
+                    }
+                }
+            }
             this.models = this.models.concat(drops);
         }
     });
@@ -375,6 +381,10 @@ namespace.module('bot.inv', function (exports, require) {
             log.info('CardTypeModel.unequip card name: %s, level: %d, current equipped[level-1]: %d',
                      this.name, level, this.equipped[level - 1]);
             this.equipped[level - 1] = 0;
+        },
+
+        addCard: function(level) {
+            this.amts[level]++;
         }
     });
 
@@ -385,7 +395,24 @@ namespace.module('bot.inv', function (exports, require) {
                 new CardTypeModel('surprisingly hot sword'),
                 new CardTypeModel('hard head')
             ];
-        }
+        },
+
+        addDrops: function(drops) {
+            var drop;
+            for (var i = 0; i < drops.length; i++) {
+                drop = drops[i];
+                if (drop.dropType !== 'card') {
+                    continue;
+                }
+                var typeModel = _.findWhere(this.models, {name: drop.data[0]});
+                if (typeModel === undefined) {
+                    typeModel = new CardTypeModel(drop.data[0]);
+                    this.models.push(typeModel);
+                }
+                typeModel.addCard(drop.data[1]);
+                log.info('Added card %s level %d to card inv', drop.data[0], drop.data[1]);
+            }
+        },
     });
 
     /*
@@ -579,6 +606,7 @@ namespace.module('bot.inv', function (exports, require) {
     exports.extend({
         ItemCollection: ItemCollection,
         //InvItemCollectionView: InvItemCollectionView,
+        CardTypeCollection: CardTypeCollection,
         CardTypeModel: CardTypeModel,
         WeaponModel: WeaponModel,
         ArmorModel: ArmorModel,

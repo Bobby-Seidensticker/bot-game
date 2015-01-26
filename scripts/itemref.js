@@ -451,28 +451,28 @@ namespace.module('bot.itemref', function (exports, require) {
             
             "quenching blade": {
                 "mods": [
-                    {"def": "fireResist more -5 perlevel", "type": "eleResist"}
+                    {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
                 "slot": "weapon",
                 "levels": 10
             },
             "cool shoes": {
                 "mods": [
-                    {"def": "fireResist more -5 perlevel", "type": "eleResist"}
+                    {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
                 "slot": "legs",
                 "levels": 10
             },
             "asbestos lining": {
                 "mods": [
-                    {"def": "fireResist more -5 perlevel", "type": "eleResist"}
+                    {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
                 "slot": "hands",
                 "levels": 10
             },
             "sopping underclothes": {
                 "mods": [
-                    {"def": "fireResist more -5 perlevel", "type": "eleResist"}
+                    {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
                 "slot": "body",
                 "levels": 10

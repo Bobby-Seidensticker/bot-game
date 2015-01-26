@@ -59,7 +59,8 @@ namespace.module('bot.main', function (exports, require) {
             window.messages = new namespace.bot.messages.Messages();
 
             this.inv = new inv.ItemCollection();
-            this.hero = new entity.newHeroSpec(this.inv);
+            this.cards = new inv.CardTypeCollection();
+            this.hero = new entity.newHeroSpec(this.inv, this.cards);
             this.zone = new zone.ZoneManager(this.hero);
 
             this.lastTime = new Date().getTime();

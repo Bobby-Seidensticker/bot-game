@@ -222,7 +222,7 @@ namespace.module('bot.window', function (exports, require) {
             }
 
             data.spec = [];
-            var specKeys = entity.attrKeys.concat(entity.defKeys).concat(entity.eleResistKeys);
+            var specKeys = entity.defKeys.concat(entity.eleResistKeys);
             var key;
             for (var i = 0; i < specKeys.length; i++) {
                 key = specKeys[i];

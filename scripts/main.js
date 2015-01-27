@@ -18,6 +18,7 @@ namespace.module('bot.main', function (exports, require) {
         var gameModel = new GameModel();
 
         var gameView = new namespace.bot.window.GameView(gameModel);
+        $('body').html(gameView.el);
         //var m = new menu.TabView();
 
         $(window).on('keydown', function(event) {

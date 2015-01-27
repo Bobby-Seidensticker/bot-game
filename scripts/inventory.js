@@ -20,7 +20,7 @@ namespace.module('bot.inv', function (exports, require) {
         applyXp: function(xp) {
             this.xp += xp;
             if (this.canLevel()) {
-                // this.prepLevelUp();
+                this.levelUp();
             }
         },
 

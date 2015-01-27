@@ -9,7 +9,7 @@
   <script src="scripts/tests/qunit.js"></script>
 
   <!-- COPY BELOW HERE -->
-
+  <!--
   <div class="header"></div>
 
   <div class="vis"></div>
@@ -29,7 +29,36 @@
       <div class="sub-menu closed" id="lvlup-menu-holder">lvlup</div>
       <div class="sub-menu closed" id="settings-menu-holder">settings</div>
     </div>
-  </div>
+  </div>-->
+
+  <script id="item-tab-template" type="text/template">
+    <div class="equipped">
+      <% _.each(equipped.slots, function(slot) { %>
+          <div><%= slot %></div>
+          <% if (equipped[slot] === undefined) { %>
+              <div>Empty</div>
+          <% } else { %>
+              <div>equipped[slot].name</div>
+          <% } %>
+      <% }); %>
+    </div>
+
+    <div class="skillchain">
+      <% _.each(skillchain.skills, function(skill) { %>
+          <% if (skill === undefined) { %>
+              <div>Empty</div>
+          <% } else { %>
+              <div>skill.name</div>
+          <% } %>
+      <% }); %>
+    </div>
+
+    <div class="items">
+      <% _.each(items.models, function(item) { %>
+          <div>item.name</div>
+      <% }); %>
+    </div>
+  </script>
 
   <script id="kv-table-template" type="text/template">
     <% _.each(keys, function(key) { %>

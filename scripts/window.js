@@ -235,7 +235,8 @@ namespace.module('bot.window', function (exports, require) {
     });
 
     var GameView = Backbone.View.extend({
-        el: $('body'),
+        tagName: 'div',
+        className: 'stats',
 
         initialize: function(game) {
             log.info('GameView initialize');
@@ -246,10 +247,12 @@ namespace.module('bot.window', function (exports, require) {
 
             this.zone = game.zone;
             this.last = {};
-            this.heroView = new EntityView({model: this.zone.hero});;
+            this.heroView = new EntityView({model: this.zone.hero});
             this.render();
 
             this.listenTo(window.DirtyListener, 'tick', this.render);
+
+            $(window).on('resize', (function() {this.$el.css({width: window.innerWidth / 4}); this.render();}).bind(this));
             
             //var zone = new ZoneView({model: this.game.zone});
             /*

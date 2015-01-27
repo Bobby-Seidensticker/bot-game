@@ -4,6 +4,7 @@
 </head>
 
 <body>
+  <!--
   <div class="header"></div>
 
   <div class="vis"></div>
@@ -26,6 +27,36 @@
   </div>
 
   <div class="messages"></div>
+  -->
+
+  <script id="item-tab-template" type="text/template">
+    <div class="equipped">
+      <% _.each(equipped.slots, function(slot) { %>
+          <div><%= slot %></div>
+          <% if (equipped[slot] === undefined) { %>
+              <div>Empty</div>
+          <% } else { %>
+              <div>equipped[slot].name</div>
+          <% } %>
+      <% }); %>
+    </div>
+
+    <div class="skillchain">
+      <% _.each(skillchain.skills, function(skill) { %>
+          <% if (skill === undefined) { %>
+              <div>Empty</div>
+          <% } else { %>
+              <div>skill.name</div>
+          <% } %>
+      <% }); %>
+    </div>
+
+    <div class="items">
+      <% _.each(items.models, function(item) { %>
+          <div>item.name</div>
+      <% }); %>
+    </div>
+  </script>
 
   <script id="kv-table-template" type="text/template">
     <% _.each(data, function(value, key) { %>

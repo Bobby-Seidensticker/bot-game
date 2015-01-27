@@ -211,7 +211,33 @@ namespace.module('bot.views', function (exports, require) {
         }
     });
 
+    var ItemTab = Backbone.View.extend({
+        tagName: 'div',
+        className: 'itemTab',
+        template: _.template($('#item-tab-template').html()),
+
+        events: {
+        },
+
+        initialize: function(options, itemCollection, equippedGearModel, skillchain) {
+            this.items = itemCollection;
+            this.equipped = equippedGearModel;
+            this.skillchain = skillchain;
+        },
+
+        render: function() {
+            /*
+              Render template
+              for each slot in equipped.itemslots render equipped[slot]
+              for each item in skillchain render it
+              for each item in itemCollection.models
+             */
+            this.$el.html(this.template(this));
+        },
+    });
+
     exports.extend({
-        newHeaderView: newHeaderView
+        newHeaderView: newHeaderView,
+        ItemTab: ItemTab
     });
 });

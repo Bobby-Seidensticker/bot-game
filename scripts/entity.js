@@ -12,9 +12,11 @@ namespace.module('bot.entity', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
 
-    var defKeys = ['strength', 'vitality', 'wisdom', 'dexterity', 'maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll', 'hpRegen', 'manaRegen'];
+    var defKeys = ['strength', 'vitality', 'wisdom', 'dexterity', 'maxHp', 'maxMana', 'armor',
+                   'dodge', 'eleResistAll', 'hpRegen', 'manaRegen'];
     var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
-    var dmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech', 'range', 'speed'];
+    var dmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech',
+                   'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed'];
 
     var EntitySpec = window.Model.extend({
         initialize: function() {

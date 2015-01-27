@@ -190,7 +190,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "melee",
                 "types": ["melee"],
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
                 ]
             },
@@ -199,7 +199,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj"],
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
             },
@@ -208,7 +208,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "spell",
                 "types": ["proj"],
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                 ]
             },
@@ -216,7 +216,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "manaCost": 3,
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'physDmg more 10', type: 'dmg'},
                     {def: 'physDmg added 5 perLevel', type: 'dmg'}
@@ -227,7 +228,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["melee", "fire"],
                 "manaCost": 3,
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'fireDmg more 100', type: 'dmg'},
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
@@ -238,7 +240,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["melee", "cold"],
                 "manaCost": 5,
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'coldDmg more 100', type: 'dmg'},
                     {def: 'physDmg converted 60 coldDmg', type: 'dmg'}
@@ -249,7 +252,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["melee", "lightning"],
                 "manaCost": 5,
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'lightDmg more 100', type: 'dmg'},
                     {def: 'physDmg converted 60 lightDmg', type: 'dmg'}
@@ -260,7 +264,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["melee", "poison"],                
                 "manaCost": 5,
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'poisDmg more 100', type: 'dmg'},
                     {def: 'physDmg converted 60 poisDmg', type: 'dmg'}
@@ -272,7 +277,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 3,
                 "types": ["proj"],
                 "mods": [
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
             },
@@ -282,7 +288,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 6,
                 "types": ["proj", "fire"],
                 "mods": [
-                    {def: 'speed added 800', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'fireDmg more 50', type: 'dmg'},
                     {def: 'physDmg converted 50 fireDmg', type: 'dmg'}
@@ -294,7 +301,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 6,
                 "types": ["proj", "cold"],
                 "mods": [
-                    {def: 'speed added 800', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'coldDmg more 50', type: 'dmg'},
                     {def: 'physDmg converted 50 coldDmg', type: 'dmg'}
@@ -306,7 +314,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 6,
                 "types": ["proj", "lightning"],
                 "mods": [
-                    {def: 'speed added 800', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'lightDmg more 50', type: 'dmg'},
                     {def: 'physDmg converted 50 lightDmg', type: 'dmg'}
@@ -318,7 +327,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 6,
                 "types": ["proj", "poison"],
                 "mods": [
-                    {def: 'speed added 800', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'poisDmg more 50', type: 'dmg'},
                     {def: 'physDmg converted 50 poisDmg', type: 'dmg'}
@@ -330,6 +340,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 1,
                 "types": ["proj", "fire", "spell"],
                 "mods": [
+                    {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 100', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
                     {def: 'fireDmg more -50', type: 'dmg'},
@@ -342,7 +353,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 7,
                 "types": ["proj", "fire", "spell"],
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'fireDmg more 50', type: 'dmg'},
                     {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
@@ -354,7 +366,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 7,
                 "types": ["proj", "cold", "spell"],
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'coldDmg more 50', type: 'dmg'},
                     {def: 'physDmg converted 100 coldDmg', type: 'dmg'}
@@ -366,7 +379,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 7,
                 "types": ["proj", "lightning", "spell"],
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'lightDmg more 50', type: 'dmg'},
                     {def: 'physDmg converted 100 lightDmg', type: 'dmg'}
@@ -378,7 +392,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "manaCost": 7,
                 "types": ["proj", "poison", "spell"],
                 "mods": [
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'poisDmg more 50', type: 'dmg'},
                     {def: 'physDmg converted 100 poisDmg', type: 'dmg'}
@@ -503,7 +518,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "skeleton mage" : {
                 "items": [["weapon", "spell", 0], ["armor", "legs", 0]],
-                "skills": ["basic spell"],
+                "skills": ["fire ball", "basic spell"],
                 "sourceCards": [
                     ["proto-skeleton", 0]
                 ]

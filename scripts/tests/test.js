@@ -315,10 +315,9 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(validTypes.indexOf(mod.type) !== -1, 'mod has a valid type field ' + mod.type);
 
             var keys = {
-                attr: ['strength', 'vitality', 'wisdom', 'dexterity'],
-                def: ['maxHp', 'maxMana', 'armor', 'dodge', 'eleResistAll'],
-                eleResist: ['fireResist', 'coldResist', 'lightResist', 'poisResist'],
-                dmg: ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'range', 'speed']
+                def: entity.defKeys,
+                eleResist: entity.eleResistKeys,
+                dmg: entity.dmgKeys,
             };
             var validVerbs = ['added', 'more', 'converted', 'gainedas'];
             var valid3Verbs = ['added', 'more'];

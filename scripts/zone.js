@@ -321,7 +321,6 @@ namespace.module('bot.zone', function (exports, require) {
 
             log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), totalDmg, this.hp);
             // TODO: Add rolling for dodge in here so we can sometimes return 0;
-            log.info('total dmg: %.2f', totalDmg);
             return totalDmg;
         },
 

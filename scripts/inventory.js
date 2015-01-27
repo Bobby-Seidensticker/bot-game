@@ -116,23 +116,11 @@ namespace.module('bot.inv', function (exports, require) {
             this.itemType = 'skill';
             this.name = name;
             this.manaCost = 0;
-            this.cooldown = 0;
-            this.cooldownTime = 800;
             GearModel.prototype.initialize.call(this);
 
             this.ensureCardArray(1);
             log.debug('loading skill %s from file', this.name);
             _.extend(this, itemref.expand('skill', this.name));
-        },
-
-        cool: function() {
-            // TODO remember cooldown is not being decremented, we just check to see if current fake time is greater than fake time of expire
-            return this.cooldown <= 0;
-        },
-
-        // TODO: Add back in castTime (time it takes for entity to use the skill), but don't hard code it this time
-        use: function() {
-            this.cooldown = this.cooldownTime + this.speed;
         },
 
         computeAttrs: function(baseDmgStats, dmgKeys) {
@@ -144,7 +132,6 @@ namespace.module('bot.inv', function (exports, require) {
             //this.speed = weapon.speed;
 
             var cards = this.getCards();
-            cards.push(this);  // pushing the skills 'mods' array and level
             var mods;
             for (var i = 0; i < cards.length; i++) {
                 var mods = cards[i].mods;

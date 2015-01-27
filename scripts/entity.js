@@ -16,7 +16,7 @@ namespace.module('bot.entity', function (exports, require) {
                    'dodge', 'eleResistAll', 'hpRegen', 'manaRegen'];
     var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
     var dmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech',
-                   'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed'];
+                   'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed', 'manaCost'];
 
     var EntitySpec = window.Model.extend({
         initialize: function() {

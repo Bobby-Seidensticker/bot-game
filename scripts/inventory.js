@@ -115,7 +115,6 @@ namespace.module('bot.inv', function (exports, require) {
         initialize: function(name) {
             this.itemType = 'skill';
             this.name = name;
-            this.manaCost = 0;
             GearModel.prototype.initialize.call(this);
 
             this.ensureCardArray(1);

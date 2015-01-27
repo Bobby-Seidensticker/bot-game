@@ -214,8 +214,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "super smash": {
                 "prototype": ["basic melee"],
-                "manaCost": 3,
                 "mods": [
+                    {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
@@ -226,8 +226,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "fire slash": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
-                "manaCost": 3,
                 "mods": [
+                    {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
@@ -238,8 +238,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "ice slash": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "cold"],
-                "manaCost": 5,
                 "mods": [
+                    {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
@@ -250,8 +250,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "lightning slash": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "lightning"],
-                "manaCost": 5,
                 "mods": [
+                    {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
@@ -262,8 +262,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "poison slash": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "poison"],                
-                "manaCost": 5,
                 "mods": [
+                    {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
@@ -274,9 +274,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "speed shot": {
                 "prototype": ["basic"],
                 "class": "range",
-                "manaCost": 3,
                 "types": ["proj"],
                 "mods": [
+                    {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -285,9 +285,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "fire arrow": {
                 "prototype": ["basic"],
                 "class": "range",
-                "manaCost": 6,
                 "types": ["proj", "fire"],
                 "mods": [
+                    {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -298,9 +298,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "cold arrow": {
                 "prototype": ["basic"],
                 "class": "range",
-                "manaCost": 6,
                 "types": ["proj", "cold"],
                 "mods": [
+                    {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -311,9 +311,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "lightning arrow": {
                 "prototype": ["basic"],
                 "class": "range",
-                "manaCost": 6,
                 "types": ["proj", "lightning"],
                 "mods": [
+                    {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -324,9 +324,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "poison arrow": {
                 "prototype": ["basic"],
                 "class": "range",
-                "manaCost": 6,
                 "types": ["proj", "poison"],
                 "mods": [
+                    {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -337,9 +337,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "incinerate": {                
                 "prototype": ["basic"],
                 "class": "spell",
-                "manaCost": 1,
                 "types": ["proj", "fire", "spell"],
                 "mods": [
+                    {def: 'manaCost added 1', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 100', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
@@ -350,9 +350,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "fire ball": {
                 "prototype": ["basic"],
                 "class": "spell",
-                "manaCost": 7,
                 "types": ["proj", "fire", "spell"],
                 "mods": [
+                    {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -363,9 +363,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "ice ball": {
                 "prototype": ["basic"],
                 "class": "spell",
-                "manaCost": 7,
                 "types": ["proj", "cold", "spell"],
                 "mods": [
+                    {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -376,9 +376,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "lighting ball": {
                 "prototype": ["basic"],
                 "class": "spell",
-                "manaCost": 7,
                 "types": ["proj", "lightning", "spell"],
                 "mods": [
+                    {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -389,9 +389,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "poison ball": {
                 "prototype": ["basic"],
                 "class": "spell",
-                "manaCost": 7,
                 "types": ["proj", "poison", "spell"],
                 "mods": [
+                    {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},

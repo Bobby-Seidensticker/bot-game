@@ -165,13 +165,15 @@ namespace.module('bot.main', function (exports, require) {
             this.lastTime = thisTime;
 
             var steps = Math.floor(dt / STEP_SIZE);
-            var extra = dt * STEP_SIZE;
+            var extra = dt % STEP_SIZE;
             for (var i = 0; i < steps; i++) {
                 window.time += STEP_SIZE;
                 this.zone.zoneTick();
             }
-            window.time += extra;
-            this.zone.zoneTick();
+            if (extra > 0) {
+                window.time += extra;
+                this.zone.zoneTick();
+            }
 
             window.DirtyQueue.mark('vis');
 

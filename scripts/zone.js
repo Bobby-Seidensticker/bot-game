@@ -57,7 +57,7 @@ namespace.module('bot.zone', function (exports, require) {
             if (!this.hero.isAlive() || this.done()) {
                 log.info('Getting new zone');
                 this.hero.revive();
-                this.newZone('spooky dungeon', this.hero.spec.level);
+                this.newZone('spooky dungeon', 1); //this.hero.spec.level);
             }
             if (this.roomCleared() && this.atDoor()) {
                 var room = this.rooms[this.heroPos];
@@ -156,6 +156,10 @@ namespace.module('bot.zone', function (exports, require) {
         revive: function() {
             this.hp = this.spec.maxHp;
             this.mana = this.spec.maxMana;
+            this.lastHpFullTime = window.time;
+            this.hpRegened = 0;
+            this.lastManaFullTime = window.time;
+            this.manaRegened = 0;
             this.initPos();
         },
 
@@ -177,7 +181,42 @@ namespace.module('bot.zone', function (exports, require) {
 
         isAlive: function() { return this.hp > 0; },
 
+        modifyHp: function(added) {
+            this.hp += added;
+            if (this.hp >= this.spec.maxHp) {
+                this.hp = this.spec.maxHp;
+                this.lastHpFullTime = window.time;
+                this.hpRegened = 0;
+            }
+        },
+
+        modifyMana: function(added) {
+            this.mana += added;
+            if (this.mana >= this.spec.maxMana) {
+                this.mana = this.spec.maxMana;
+                this.lastManaFullTime = window.time;
+                this.manaRegened = 0;
+            }
+        },
+
+        regen: function() {
+            if (window.time > this.lastHpFullTime) {
+                var total = this.spec.hpRegen * (window.time - this.lastHpFullTime) / 1000;
+                var toAdd = total - this.hpRegened;
+                this.hpRegened = total;
+                this.modifyHp(toAdd);
+            }
+            if (window.time > this.lastManaFullTime) {
+                var total = this.spec.manaRegen * (window.time - this.lastManaFullTime) / 1000;
+                var toAdd = total - this.manaRegened;
+                this.manaRegened = total;
+                this.modifyMana(toAdd);
+            }
+        },
+
         tryDoStuff: function(room, livingEnemies) {
+            this.regen();
+
             if (!this.isAlive() || this.busy()) {
                 return;
             }
@@ -241,7 +280,21 @@ namespace.module('bot.zone', function (exports, require) {
         attackTarget: function(target, skill) {
             skill.coolAt = window.time + skill.spec.speed + skill.spec.cooldownTime;
             this.nextAction = window.time + skill.spec.speed;
-            target.takeDamage(skill.spec);
+            var dmgDealt = target.takeDamage(skill.spec);
+
+            if (dmgDealt) {
+                log.info('dmg dealt, hponhit: %.2f, hpLeech: %.2f', skill.spec.hpOnHit, skill.spec.hpLeech);
+                var hpGain = skill.spec.hpOnHit + skill.spec.hpLeech;
+                var manaGain = skill.spec.manaOnHit + skill.spec.manaLeech;
+                if (hpGain) {
+                    log.info('hp on hit: %.2f, hpleech: %.2f', skill.spec.hpOnHit, skill.spec.hpLeech);
+                    this.modifyHp(hpGain);
+                }
+                if (manaGain) {
+                    log.info('mana on hit: %.2f, manaleech: %.2f', skill.spec.manaOnHit, skill.spec.manaLeech);
+                    this.modifyMana(manaGain);
+                }
+            }
 
             if (!target.isAlive()) {
                 this.onKill(target, skill);
@@ -260,9 +313,16 @@ namespace.module('bot.zone', function (exports, require) {
                 skill.fireDmg * this.spec.fireResist +
                 skill.poisDmg * this.spec.poisResist;
 
-            this.hp -= totalDmg;
+            if (this.spec.team === TEAM_HERO) {
+                log.info('Team Hero taking %.2f damage', -totalDmg);
+            }
+            this.modifyHp(-totalDmg);
+            //this.hp -= totalDmg;
 
             log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), totalDmg, this.hp);
+            // TODO: Add rolling for dodge in here so we can sometimes return 0;
+            log.info('total dmg: %.2f', totalDmg);
+            return totalDmg;
         },
 
         busy: function() {

@@ -92,6 +92,10 @@ namespace.module('bot.entity', function (exports, require) {
                     {def: 'maxHp added 10 perLevel', type: 'def'},
                     {def: 'maxMana added 5 perLevel', type: 'def'},
                     {def: 'maxHp gainedas 2 hpRegen', type: 'def'},
+
+                    //{def: 'physDmg gainedas 100 hpOnHit', type: 'dmg'},
+                    //{def: 'physDmg gainedas 10 hpLeech', type: 'dmg'},
+
                     {def: 'maxMana gainedas 2 manaRegen', type: 'def'}
                 ], level: this.level}
             ];

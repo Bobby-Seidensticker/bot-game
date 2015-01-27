@@ -81,9 +81,14 @@ namespace.module('bot.entity', function (exports, require) {
             return [
                 {mods: [
                     {def: 'strength added 10', type: 'def'},
+                    {def: 'strength added 2 perLevel', type: 'def'},
                     {def: 'dexterity added 10', type: 'def'},
+                    {def: 'dexterity added 2 perLevel', type: 'def'},
                     {def: 'wisdom added 10', type: 'def'},
+                    {def: 'wisdom added 2 perLevel', type: 'def'},
                     {def: 'vitality added 10', type: 'def'},
+                    {def: 'vitality added 2 perLevel', type: 'def'},
+
                     {def: 'vitality gainedas 200 maxHp', type: 'def'},
                     {def: 'wisdom gainedas 200 maxMana', type: 'def'},
 
@@ -148,6 +153,7 @@ namespace.module('bot.entity', function (exports, require) {
                 this.level += 1;
                 this.xp -= this.nextLevelXp;
                 this.nextLevelXp = this.getNextLevelXp();
+                this.computeAttrs();
             }
         },
 

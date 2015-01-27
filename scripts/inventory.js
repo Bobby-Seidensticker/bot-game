@@ -336,25 +336,24 @@ namespace.module('bot.inv', function (exports, require) {
             this.name = name;
             this.amts = [];
             this.equipped = [];
-            for (var i = 0; i < this.levels; i++) {
+            // this.amts and equipped have 0 undefined so weird stuff will happen if you access / write them
+            // the 0th element is ignored so we don't have to deal with index and level being different
+            for (var i = 1; i <= this.levels; i++) {
                 this.amts[i] = 0;
                 this.equipped[i] = 0;
             }
         },
 
         levelAvailable: function(level) {
-            var index = level - 1;
-            return index < this.levels && this.amts[index] > 0 && this.equipped[index] === 0;
+            return level <= this.levels && this.amts[level] > 0 && this.equipped[level] === 0;
         },
 
         // Must already be available, and called must then equip it
         getCard: function(level) {
-            var index = level - 1;
             log.debug('CardTypeModel.getCard. name: %s, level: %d, amts: %d, equipped: %d',
-                      this.name, level, this.amts[index], this.equipped[index]);
+                      this.name, level, this.amts[level], this.equipped[level]);
 
-            //var card = this.getCard(level);
-            this.equipped[index] = 1;
+            this.equipped[level] = 1;
             return {
                 mods: this.mods,
                 level: level,
@@ -365,13 +364,22 @@ namespace.module('bot.inv', function (exports, require) {
         // this is called with level, not index.  If it's out of range, you're screwed, so don't do that
         unequip: function(level) {
             log.info('CardTypeModel.unequip card name: %s, level: %d, current equipped[level-1]: %d',
-                     this.name, level, this.equipped[level - 1]);
-            this.equipped[level - 1] = 0;
+                     this.name, level, this.equipped[level]);
+            this.equipped[level] = 0;
         },
 
         addCard: function(level) {
             this.amts[level]++;
-        }
+            this.upgrade(level);
+        },
+
+        upgrade: function(level) {
+            if (this.amts[level] > 10 && (level + 1) <= this.levels) {
+                this.amts[level] -= 10;
+                this.amts[level + 1] += 1;
+                log.info('Upgrading 10 level %d %s\'s to level %d', level, this.name, level + 1);
+            }
+        },
     });
 
     var CardTypeCollection = window.Model.extend({

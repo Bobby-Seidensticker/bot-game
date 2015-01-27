@@ -283,7 +283,7 @@ namespace.module('bot.zone', function (exports, require) {
             var dmgDealt = target.takeDamage(skill.spec);
 
             if (dmgDealt) {
-                log.info('dmg dealt, hponhit: %.2f, hpLeech: %.2f', skill.spec.hpOnHit, skill.spec.hpLeech);
+                log.debug('dmg dealt, hponhit: %.2f, hpLeech: %.2f', skill.spec.hpOnHit, skill.spec.hpLeech);
                 var hpGain = skill.spec.hpOnHit + skill.spec.hpLeech;
                 var manaGain = skill.spec.manaOnHit + skill.spec.manaLeech;
                 if (hpGain) {
@@ -308,7 +308,7 @@ namespace.module('bot.zone', function (exports, require) {
             var dodgeChance = Math.pow(0.998, this.spec.dodge);
 
             if (Math.random() > dodgeChance) {
-                log.info('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
+                log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
                 return 0;
             }
 
@@ -321,7 +321,7 @@ namespace.module('bot.zone', function (exports, require) {
                 skill.poisDmg * this.spec.poisResist;
 
             if (this.spec.team === TEAM_HERO) {
-                log.info('Team Hero taking %.2f damage', -totalDmg);
+                log.debug('Team Hero taking %.2f damage', -totalDmg);
             }
             this.modifyHp(-totalDmg);
             //this.hp -= totalDmg;

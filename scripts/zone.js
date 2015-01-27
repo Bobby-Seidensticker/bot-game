@@ -305,6 +305,13 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         takeDamage: function(skill) {
+            var dodgeChance = Math.pow(0.998, this.spec.dodge);
+
+            if (Math.random() > dodgeChance) {
+                log.info('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
+                return 0;
+            }
+
             var physDmg = skill.physDmg;
 
             var totalDmg = physDmg * physDmg / (physDmg + this.spec.armor) +

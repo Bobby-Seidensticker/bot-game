@@ -30,30 +30,40 @@
   -->
 
   <script id="item-tab-template" type="text/template">
-    <div class="equipped">
+    <div class="container equipped">
+      <div class="header">Equipped Gear</div>
       <% _.each(equipped.slots, function(slot) { %>
-          <div><%= slot %></div>
-          <% if (equipped[slot] === undefined) { %>
-              <div>Empty</div>
-          <% } else { %>
-              <div>equipped[slot].name</div>
-          <% } %>
+          <div class="itemBox">
+              <div><%= slot %></div>
+              <% if (equipped[slot] === undefined) { %>
+                  <div>Empty</div>
+              <% } else { %>
+                  <div><%= equipped[slot].name %></div>
+              <% } %>
+          </div>
       <% }); %>
     </div>
 
-    <div class="skillchain">
+    <div class="container skillchain">
+      <div class="header">Equipped Skills</div>
       <% _.each(skillchain.skills, function(skill) { %>
-          <% if (skill === undefined) { %>
-              <div>Empty</div>
-          <% } else { %>
-              <div>skill.name</div>
-          <% } %>
+          <div class="itemBox">
+              <% if (skill === undefined) { %>
+                  <div>Empty</div>
+              <% } else { %>
+                  <div><%= skill.name %></div>
+              <% } %>
+          </div>
       <% }); %>
     </div>
 
-    <div class="items">
+    <div class="container items">
+      <div class="header">Inventory</div>
       <% _.each(items.models, function(item) { %>
-          <div>item.name</div>
+          <div class="itemBox">
+            <div><%= item.type %></div>
+            <div><%= item.name %></div>
+          </div>
       <% }); %>
     </div>
   </script>

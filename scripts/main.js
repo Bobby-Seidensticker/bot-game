@@ -5,7 +5,7 @@ namespace.module('bot.main', function (exports, require) {
     var menu = namespace.bot.menu;
     var entity = namespace.bot.entity;
     var zone = namespace.bot.zone;
-    //var views = namespace.bot.views;
+    var views = namespace.bot.views;
 
     var STEP_SIZE = 10;
 
@@ -17,8 +17,9 @@ namespace.module('bot.main', function (exports, require) {
 
         var gameModel = new GameModel();
 
-        var gameView = new namespace.bot.window.GameView(gameModel);
-        $('body').html(gameView.el);
+        var gameView = new views.GameView({}, gameModel);
+        //        var gameView = new namespace.bot.window.GameView(gameModel);
+        //$('body').html(gameView.el);
         //var m = new menu.TabView();
 
         $(window).on('keydown', function(event) {

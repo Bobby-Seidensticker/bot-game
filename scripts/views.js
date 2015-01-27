@@ -1,8 +1,9 @@
 namespace.module('bot.views', function (exports, require) {
 
     var log = namespace.bot.log;
+    var entity = namespace.bot.entity;
 
-    var HeaderView = Backbone.View.extend({
+    /*var HeaderView = Backbone.View.extend({
         tagName: 'div',
 
         template: _.template($('#header-stats-template').html()),
@@ -209,7 +210,143 @@ namespace.module('bot.views', function (exports, require) {
             }
             this.$veil.css(css);
         }
+    });*/
+
+    var GameView = Backbone.View.extend({
+        el: $('body'),
+
+        initialize: function(options, game) {
+            this.$el.empty();
+            this.statsTab = new StatsTab({}, game);
+            this.itemTab = new ItemTab({}, game);
+
+            this.$el.append(this.statsTab.render().el);
+            this.$el.append(this.itemTab.render().el);
+        }
     });
+
+    function ceilRatio(a, b) {
+        return Math.ceil(a) + ' / ' + Math.ceil(b);
+    }
+
+    function twoRatio(a, b) {
+        return a.toFixed(2) + ' / ' + b.toFixed(2);
+    }
+
+    function two(a) {
+        return a.toFixed(2);
+    }
+
+    var EntityView = Backbone.View.extend({
+        tagName: 'table',
+
+        template: _.template($('#kv-table-template').html()),
+
+        initialize: function(options) {
+            
+        },
+
+        render: function() {
+            var skill;
+            var data = {};
+            var body = this.model;
+            var spec = body.spec;
+
+            data.body = [
+                ['name', spec.name],
+                ['level', spec.level],
+                ['hp', twoRatio(body.hp, spec.maxHp)],
+                ['mana', twoRatio(body.mana, spec.maxMana)],
+                ['xp', twoRatio(spec.xp, spec.nextLevelXp)],
+                ['pos/10k', '[' + Math.round(body.x / 10000) + ', ' + Math.round(body.y / 10000) + ']']
+            ];
+
+            for (var i = 0; i < this.model.skills.length; i++) {
+                var arr = [];
+                skill = this.model.skills[i];
+                _.each(entity.dmgKeys, function(key) {
+                    arr.push([key, skill.spec[key].toFixed(2)]);
+                });
+                arr.push(['cool in', skill.coolAt - window.time]);
+                data[skill.spec.name] = arr;
+            }
+
+            data.spec = [];
+            var specKeys = entity.defKeys.concat(entity.eleResistKeys);
+            var key;
+            for (var i = 0; i < specKeys.length; i++) {
+                key = specKeys[i];
+                  data.spec.push([key, this.model.spec[key].toFixed(2)]);
+            }
+
+            this.$el.html(this.template({data: data}));
+            return this;
+        },
+    });
+
+    var StatsTab = Backbone.View.extend({
+        tagName: 'div',
+        className: 'stats',
+
+        initialize: function(options, game) {
+            log.info('GameView initialize');
+
+            //var specKeys = entity.attrKeys.concat(entity.defKeys).concat(entity.eleResistKeys).concat(entity.dmgKeys);
+            //specKeys = ['name', 'level', 'team', 'xp', 'nextLevelXp'].concat(specKeys);
+
+            this.zone = game.zone;
+            this.last = {};
+            this.heroView = new EntityView({model: this.zone.hero});
+            this.render();
+
+            this.listenTo(window.DirtyListener, 'tick', this.render);
+
+            $(window).on('resize', this.onResize.bind(this));
+            
+            //var zone = new ZoneView({model: this.game.zone});
+            /*
+            this.headerView = new HeaderView();
+            this.menuView = new MenuView();
+            this.visView = new VisView({}, options.gameModel);
+            this.messagesView = new MessagesView({collection: options.messageCollection});*/
+        },
+
+        onResize: function() {
+            this.$el.css({width: window.innerWidth / 4});
+            this.render();
+        },
+
+        diffs: function() {
+            return {
+                inst_uid: this.zone.iuid,
+                heroPos: this.zone.heroPos,
+                liveMonsCount: this.zone.liveMons().length
+            };
+        },
+
+        render: function() {
+            var diffs = this.diffs();
+            var sameEntities = _.every(diffs, function(value, key) { return this.last[key] === value; }, this);
+
+            if (sameEntities) {
+                this.heroView.render();
+                _.invoke(this.monsterViews, 'render');
+            } else {
+                var frag = document.createDocumentFragment();
+                frag.appendChild(this.heroView.render().el);
+
+                this.monsterViews = [];
+                var livingMons = this.zone.liveMons();
+                for (var i = 0; i < livingMons.length; i++) {
+                    this.monsterViews.push(new EntityView({model: livingMons[i]}));
+                    frag.appendChild(this.monsterViews[i].render().el);
+                }
+                this.$el.html(frag);
+            }
+            return this;
+        },
+    });
+
 
     var ItemTab = Backbone.View.extend({
         tagName: 'div',
@@ -219,10 +356,10 @@ namespace.module('bot.views', function (exports, require) {
         events: {
         },
 
-        initialize: function(options, itemCollection, equippedGearModel, skillchain) {
-            this.items = itemCollection;
-            this.equipped = equippedGearModel;
-            this.skillchain = skillchain;
+        initialize: function(options, game) {  // itemCollection, equippedGearModel, skillchain) {
+            this.items = game.inv; // itemCollection;
+            this.equipped = game.hero.equipped;  // equippedGearModel;
+            this.skillchain = game.hero.skillchain;  // skillchain;
         },
 
         render: function() {
@@ -233,11 +370,13 @@ namespace.module('bot.views', function (exports, require) {
               for each item in itemCollection.models
              */
             this.$el.html(this.template(this));
+            return this;
         },
     });
 
     exports.extend({
-        newHeaderView: newHeaderView,
+        GameView: GameView,
+        StatsTab: StatsTab,
         ItemTab: ItemTab
     });
 });

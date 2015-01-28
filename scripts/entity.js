@@ -26,6 +26,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         computeAttrs: function() {
+            log.error('compute attrs');
             var all = {};
 
             all.def = utils.newBaseStatsDict(defKeys);
@@ -136,8 +137,8 @@ namespace.module('bot.entity', function (exports, require) {
             // TODO, should be listening to window.ItemEvents
             // this.listenTo(window.ItemEvents, 'equipSuccess', this.computeAttrs);
             //this.listenTo(this.inv, 'equipClick', this.equipClick);
-            this.listenTo(this.equipped, 'change', this.computeAttrs);
-            this.listenTo(this.skillchain, 'change', this.computeSkillAttrs);
+            this.listenTo(window.ItemEvents, 'equipChange', this.computeAttrs);
+            this.listenTo(window.ItemEvents, 'skillchainChange', this.computeSkillAttrs);
         },
 
         getCards: function() {

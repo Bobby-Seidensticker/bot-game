@@ -242,7 +242,9 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#kv-table-template').html()),
 
         initialize: function(options) {
-            
+            // TODO add selective updating
+            this.listenTo(window.DirtyListener, 'equipChange', this.render);
+            this.listenTo(window.DirtyListener, 'skillchainChange', this.render);
         },
 
         render: function() {
@@ -296,6 +298,7 @@ namespace.module('bot.views', function (exports, require) {
             this.zone = game.zone;
             this.last = {};
             this.heroView = new EntityView({model: this.zone.hero});
+            this.monsterViews = [];
             this.render();
 
             this.listenTo(window.DirtyListener, 'tick', this.render);
@@ -334,6 +337,7 @@ namespace.module('bot.views', function (exports, require) {
                 var frag = document.createDocumentFragment();
                 frag.appendChild(this.heroView.render().el);
 
+                _.invoke(this.monsterViews, 'remove');
                 this.monsterViews = [];
                 var livingMons = this.zone.liveMons();
                 for (var i = 0; i < livingMons.length; i++) {
@@ -415,6 +419,7 @@ namespace.module('bot.views', function (exports, require) {
                     this.subs.inventory[this.itemsInInv].fill(unequippingModel);
                     this.itemsInInv++;
                 }
+
             }
             this.fillInvGaps();
         },
@@ -425,7 +430,7 @@ namespace.module('bot.views', function (exports, require) {
             for (; i < views.length; i++) {
                 this.subs.inventory[i].fill(views[i].model);
             }
-            for (;i < this.subs.inventory.length; i++) {
+            for (; i < this.subs.inventory.length; i++) {
                 this.subs.inventory[i].empty();
             }
         },

@@ -164,7 +164,8 @@ namespace.module('bot.inv', function (exports, require) {
             // something that equips skills and takes slot, puts it in proper place, pushes others out of way, throws error if too many equipped
             // then updates ranges, computes attrs?
 
-            this.trigger('change');
+            window.DirtyQueue.mark('skillchainChange');
+            window.ItemEvents.trigger('skillchainChange', skill, slot);
             return true;
         },
 
@@ -273,6 +274,7 @@ namespace.module('bot.inv', function (exports, require) {
             }
 
             this[slot] = item;
+            window.DirtyQueue.mark('equipChange');
             window.ItemEvents.trigger('equipChange', item, slot);
             return true;
         },

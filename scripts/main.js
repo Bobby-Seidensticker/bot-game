@@ -72,6 +72,8 @@ namespace.module('bot.main', function (exports, require) {
             this.listenTo(window.GameEvents, 'unpause', this.start);
             this.listenTo(window.GameEvents, 'pause', this.pause);
             this.listenTo(window.GameEvents, 'togglePause', this.toggle);
+
+            this.start();
         },
 
         start: function() {
@@ -102,88 +104,31 @@ namespace.module('bot.main', function (exports, require) {
             this.inZone = false;
         },
 
-        /*ensureRoom: function() {
-            if (!this.inZone || !this.hero.hp || this.hero.hp <= 0 || this.zone.done()) {
-                log.info('Getting new zone, recomputing hero attrs');
-                this.hero.computeAttrs();
-                this.hero.revive();
-                this.zone.newZone('spooky dungeon', this.hero.level);
-                this.inZone = true;
-            }
-            return this.zone.getCurrentRoom();
-        },
-
-        updateModels: function() {
-            var room = this.ensureRoom();
-
-            // TODO No more 'actual' time, only fake time that is incremented whenever seen fit, should be a global
-            var thisTime = new Date().getTime();
-            var steps = Math.floor((thisTime - this.lastTime) / DT);
-
-            for (var i = steps; i--;) {
-                // TODO: Change update to "check if you have anything to do"
-
-                this.hero.tryDoStuff(room);
-
-                if (this.zone.done()) {
-                    this.zonesCleared++;
-                    this.inZone = false;
-                    room = this.ensureRoom();
-                    continue;
-                }
-
-                if (this.zone.nextRoom()) {
-                    room = this.zone.getCurrentRoom();
-                }
-
-                // TODO: trydostuff is called once per monster regardless of if hero is alive
-                //   not really a bug, but imperfect behavior
-                room.monsters.tryDoStuff(room);
-
-                if (!this.hero.isAlive()) {
-                    this.deaths++;
-                    this.inZone = false;
-                    room = this.ensureRoom();
-                    continue;
-                }
-            }
-
-            this.lastTime += steps * DT;
-
-            if (steps > 1000) {
-                var dt = (new Date().getTime() - thisTime) / 1000;
-                log.warning('Took a big jump forward, ran %d loops in %.3f seconds, %.2f X real time',
-                            steps,
-                            dt,
-                            (steps / (1000 / DT)) / dt);
-            }
-        },*/
-
         tick: function() {
             log.debug('begin tick');
-
             var thisTime = new Date().getTime();
             var dt = (thisTime - this.lastTime) * this.timeCoefficient;
             this.lastTime = thisTime;
 
             var steps = Math.floor(dt / STEP_SIZE);
             var extra = dt % STEP_SIZE;
-            for (var i = 0; i < steps; i++) {
-                window.time += STEP_SIZE;
-                this.zone.zoneTick();
-            }
-            if (extra > 0) {
-                window.time += extra;
-                this.zone.zoneTick();
+
+            if (this.running) {
+                for (var i = 0; i < steps; i++) {
+                    window.time += STEP_SIZE;
+                    this.zone.zoneTick();
+                }
+                if (extra > 0) {
+                    window.time += extra;
+                    this.zone.zoneTick();
+                }
             }
 
             window.DirtyQueue.mark('vis');
 
             window.DirtyQueue.triggerAll(window.DirtyListener);
 
-            if (this.running) {
-                requestAnimFrame(this.tick.bind(this));
-            }
+            requestAnimFrame(this.tick.bind(this));
         },
     });
 

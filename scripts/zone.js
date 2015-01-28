@@ -351,7 +351,7 @@ namespace.module('bot.zone', function (exports, require) {
 
     var HeroBody = EntityBody.extend({
         initialize: function(spec) {
-            this.listenTo(spec.skillchain, 'change', this.updateSkillchain);
+            this.listenTo(window.ItemEvents, 'skillchainChange', this.updateSkillchain);
             EntityBody.prototype.initialize.call(this, spec);
         },
 

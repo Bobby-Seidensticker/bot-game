@@ -34,4 +34,5 @@ namespace.module('bot.events', function (exports, require) {
 
     window.GameEvents = _.extend({}, Backbone.Events);
     window.ItemEvents = _.extend({}, Backbone.Events);
+    window.UIEvents = _.extend({}, Backbone.Events);
 });

@@ -153,11 +153,18 @@ namespace.module('bot.inv', function (exports, require) {
 
         equip: function(skill, slot) {
             if (skill === undefined) {
+                if (this.skills[slot]) {
+                    this.skills[slot].equipped = false;
+                }
                 this.skills[slot] = undefined;
             } else {
                 if (skill.itemType !== 'skill') {
                     return false;
                 }
+                if (this.skills[slot]) {
+                    this.skills[slot].equipped = false;
+                }
+                skill.equipped = true;
                 this.skills[slot] = skill;
             }
 

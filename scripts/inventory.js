@@ -309,6 +309,10 @@ namespace.module('bot.inv', function (exports, require) {
             ];
         },
 
+        byId: function(id) {
+            return _.findWhere(this.models, {id: id});
+        },
+
         addDrops: function(drops) {
             // TODO add checking in here to ignore duplicates and do something about cards n stuff
             var drop;

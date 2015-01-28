@@ -396,22 +396,17 @@ namespace.module('bot.views', function (exports, require) {
                     }
                 }
             } else {
-                //log.info('%s itemSlot on click', loc);
                 if (this.selected) {
-                    //var item = this.items.byId(this.curId);
-                    var equipSuccess = this[itemSlot.loc].equip(this.selected.model, itemSlot.slot);
-                    if (equipSuccess) {
+                    this.selected.unselect();
+                    if (this[itemSlot.loc].equip(this.selected.model, itemSlot.slot)) {
                         log.info('Successfully equipped item %s', this.selected.name);
                         // selected is always from the inventory
                         itemSlot.fill(this.selected.model);
-                        this.selected.unselect();
                         this.selected.empty();
-                        this.selected = undefined;
                     } else {
                         log.info('Failed to equip item %s', this.selected.name);
-                        this.selected.unselect();
-                        this.selected = undefined;
                     }
+                    this.selected = undefined;
                 } else {
                     this[itemSlot.loc].equip(undefined, itemSlot.slot);
                     var unequippingModel = itemSlot.model;
@@ -421,45 +416,17 @@ namespace.module('bot.views', function (exports, require) {
                     this.itemsInInv++;
                 }
             }
+            this.fillInvGaps();
+        },
 
+        fillInvGaps: function() {
             var views = _.filter(this.subs.inventory, function(view) { return view.model !== undefined; });
-            console.log('shit', views.length);
             var i = 0;
             for (; i < views.length; i++) {
                 this.subs.inventory[i].fill(views[i].model);
             }
             for (;i < this.subs.inventory.length; i++) {
                 this.subs.inventory[i].empty();
-            }
-        },
-
-        unselect: function() {
-            if (this.curTarget) {
-                log.info('unselecting');
-                this.curTarget.removeClass('selected');
-                this.curTarget = undefined;
-                this.curId = undefined;
-            }
-        },
-
-        select: function($target, itemId) {
-            this.unselect();
-
-            var item = this.items.byId(itemId);
-            if (item) {
-                log.info('selecting item id: %s, name: %s', item.id, item.name);
-            } else {
-                log.error('Tried to select item id %s but failed');
-            }
-
-            this.curTarget = $target;
-            this.curTarget.addClass('selected');
-            this.curId = itemId;
-        },
-
-        ensureSelection: function() {
-            if (this.curTarget) {
-                this.curTarget.addClass('selected');
             }
         },
 
@@ -486,20 +453,6 @@ namespace.module('bot.views', function (exports, require) {
             for (var i = 0; i < 10; i++) {
                 this.addItemSlot(undefined, 'inventory');
             }
-            /*this.subs = {
-                equipped: _.object(this.equipped.slots,
-                                   _.map(this.equipped.slots, function(slot) {
-                                       return new ItemSlot({model: this.equipped[slot]}, 'equipped');
-                                   }, this), this),
-                skillchain: _.map(_.range(4),
-                                  function(i) {
-                                      return new ItemSlot({model: this.skillchain.skills[i]}, 'skillchain');
-                                  }, this),
-                inventory: _.map(this.inventory.models,
-                                 function(model) {
-                                     return new ItemSlot({model: model}, 'inventory');
-                                 })
-            };*/
 
             this.selected = undefined;
             this.rendered = false;

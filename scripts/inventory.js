@@ -152,11 +152,20 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         equip: function(skill, slot) {
-            this.skills[slot] = skill;
+            if (skill === undefined) {
+                this.skills[slot] = undefined;
+            } else {
+                if (skill.itemType !== 'skill') {
+                    return false;
+                }
+                this.skills[slot] = skill;
+            }
+
             // something that equips skills and takes slot, puts it in proper place, pushes others out of way, throws error if too many equipped
             // then updates ranges, computes attrs?
 
             this.trigger('change');
+            return true;
         },
 
         ranges: function() {
@@ -221,7 +230,8 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         equip: function(item, slot) {
-            log.debug('EquippedGearModel.equip item %s in slot %s', item.name, slot);
+
+            //log.debug('EquippedGearModel.equip item %s in slot %s', item.name, slot);
 
             /*
               Slot empty, filling with item: fill slot
@@ -236,31 +246,35 @@ namespace.module('bot.inv', function (exports, require) {
 
             if (item === undefined) {
                 if (this[slot] === undefined) {
-                    log.error('Equip: Slot empty, filling with nothing, returning...');
-                    return;
+                    log.info('Equip: Slot empty, filling with nothing, returning...');
+                    return false;
                 }
                 this[slot].equipped = false;
             } else {
+                if (item.itemType === 'skill') {
+                    return false;
+                }
                 if (this[slot] !== undefined) {
                     if (this[slot].id === item.id) {
-                        return
+                        return false;
                     }
                     this[slot].equipped = false;
                 }
 
                 if (item.itemType === 'armor' && item.type !== slot) {
                     log.error('Tried to equip armor %s of type %s in slot %s, returning...', item.name, item.type, slot);
-                    return
+                    return false;
                 }
                 if (item.itemType === 'weapon' && slot !== 'mainHand') {
                     log.error('Tried to equip weapon %s in slot %s, can only be mainHand, returning...', item.name, slot);
-                    return
+                    return false;
                 }
                 item.equipped = true;
             }
 
             this[slot] = item;
             window.ItemEvents.trigger('equipChange', item, slot);
+            return true;
         },
 
         getCards: function() {
@@ -306,6 +320,7 @@ namespace.module('bot.inv', function (exports, require) {
                 if (drop.dropType === 'weapon' || drop.dropType === 'armor') {
                     var exists = !!(_.findWhere(this.models, {itemType: drop.data[0], type: drop.data[1], classLevel: drop.data[2]}));
                     if (!exists) {
+                        window.DirtyQueue.mark('inventory:new');
                         if (drop.dropType === 'weapon') {
                             this.models.push(new WeaponModel(drop.data[2], drop.data[1]));
                             log.info('Adding %s %s %d to inv', drop.data[0], drop.data[1], drop.data[2]);
@@ -319,6 +334,7 @@ namespace.module('bot.inv', function (exports, require) {
                 } else if (drop.dropType === 'skill') {
                     var exists = !!(_.findWhere(this.models, {name: drop.data}));
                     if (!exists) {
+                        window.DirtyQueue.mark('inventory:new');
                         this.models.push(new SkillModel(drop.data));
                         log.info('Adding skill %s', drop.data);
                     } else {
@@ -326,7 +342,6 @@ namespace.module('bot.inv', function (exports, require) {
                     }
                 }
             }
-            this.models = this.models.concat(drops);
         }
     });
 

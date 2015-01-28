@@ -46,7 +46,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
-                "names": ["shitty bow", "crappy bow", "compound bow"]
+                "names": ["shitty wand", "crappy wand", "compound wand"]
             }
         },
         "armor": {

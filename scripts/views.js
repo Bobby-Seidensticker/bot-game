@@ -347,6 +347,33 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
+    /*var ItemSlotView = Backbone.View.extend({
+        tadName: 'div',
+        className: 'itemSlot',
+        template: _.template($('#item-slot-template').html()),
+
+        events: {
+            'click': 'onClick',
+        },
+
+        initialize: function(options, location) {
+            this.location = location;  // 'inventory', 'equipped', or 'skillchain'
+            this.selected = false;
+        },
+
+        onClick: function() {
+            this.selected = !this.selected;
+            this.$el.toggleClass('selected');
+        },
+
+        render: function() {
+            //if (this.model === undefined) {
+                // render slot
+            //} else if (
+            this.$el.html(this.template({model: this.model, location: this.location}));
+            return this;
+        }
+    });*/
 
     var ItemTab = Backbone.View.extend({
         tagName: 'div',
@@ -354,12 +381,76 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#item-tab-template').html()),
 
         events: {
+            'click .itemSlot': 'onClick',
+        },
+
+        onClick: function(event) {
+            log.info('itemSlot on click');
+            var $target = $(event.currentTarget);
+            var split = $target.attr('data').split('-');
+            var location = split[0];
+
+            if (location === 'equipped') {
+                log.info('equipped itemSlot on click');
+                var slot = split[1];
+                if (this.curId) {
+                    this.equipped.equip(_.findWhere(this.items, {id: this.curId}), slot);
+                } else {
+                    this.equipped.equip(undefined, slot);
+                }
+                this.unselect();
+            } else if (location === 'skillchain') {
+                log.info('skillchain itemSlot on click');
+                var slot = split[1];
+                if (this.curId) {
+                    this.skillchain.equip(_.findWhere(this.items, {id: this.curId}), slot);
+                } else {
+                    this.skillchain.equip(undefined, slot);
+                }
+                this.unselect();
+            } else {
+                log.info('inventory itemSlot on click');
+                var itemId = split[1];
+                if (this.curId) {
+                    this.curId = undefined;
+                    this.unselect();
+                } else {
+                    this.select($target, itemId);
+                }
+            }
+            this.render();
+        },
+
+        unselect: function() {
+            if (this.curTarget !== undefined) {
+                log.info('unselecting');
+                this.curTarget.removeClass('selected');
+                this.curTarget = undefined;
+                this.curId = undefined;
+            }
+        },
+
+        select: function($target, itemId) {
+            this.unselect();
+            log.info('selecting');
+            this.curTarget = $target;
+            this.curTarget.addClass('selected');
+            this.curId = itemId;
+        },
+
+        ensureSelection: function() {
+            if (this.curTarget !== undefined) {
+                this.curTarget.addClass('selected');
+            }
         },
 
         initialize: function(options, game) {  // itemCollection, equippedGearModel, skillchain) {
-            this.items = game.inv; // itemCollection;
             this.equipped = game.hero.equipped;  // equippedGearModel;
             this.skillchain = game.hero.skillchain;  // skillchain;
+            this.items = game.inv; // itemCollection;
+            this.curId = undefined;
+
+            this.listenTo(window.DirtyListener, 'inventory:new', this.render);
         },
 
         render: function() {
@@ -370,6 +461,7 @@ namespace.module('bot.views', function (exports, require) {
               for each item in itemCollection.models
              */
             this.$el.html(this.template(this));
+            this.ensureSelection();
             return this;
         },
     });

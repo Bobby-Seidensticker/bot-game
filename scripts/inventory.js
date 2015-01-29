@@ -228,9 +228,9 @@ namespace.module('bot.inv', function (exports, require) {
 
     var EquippedGearModel = window.Model.extend({
 
-        slots: ['mainHand', 'head', 'hands', 'chest', 'legs'],
+        slots: ['weapon', 'head', 'hands', 'chest', 'legs'],
 
-        // weapon slots: mainHand
+        // weapon slots: weapon
         // armor slots: head, chest, hands, legs
 
         initialize: function() {
@@ -273,8 +273,8 @@ namespace.module('bot.inv', function (exports, require) {
                     log.error('Tried to equip armor %s of type %s in slot %s, returning...', item.name, item.type, slot);
                     return false;
                 }
-                if (item.itemType === 'weapon' && slot !== 'mainHand') {
-                    log.error('Tried to equip weapon %s in slot %s, can only be mainHand, returning...', item.name, slot);
+                if (item.itemType === 'weapon' && slot !== 'weapon') {
+                    log.error('Tried to equip weapon %s in slot %s, can only be weapon, returning...', item.name, slot);
                     return false;
                 }
                 item.equipped = true;

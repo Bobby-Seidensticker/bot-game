@@ -164,7 +164,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (itemType === 'armor') {
                 this.equipped.equip(item, item.type);
             } else if (itemType === 'weapon') {
-                this.equipped.equip(item, 'mainHand');
+                this.equipped.equip(item, 'weapon');
             } else if (itemType === 'skill') {
                 this.skillchain.add(item);
             }
@@ -239,7 +239,7 @@ namespace.module('bot.entity', function (exports, require) {
         // stopgap measures: basic equipped stuff
         var heroName = 'bobbeh';
         var equipped = new inventory.EquippedGearModel();
-        equipped.equip(_.findWhere(inv.models, {name: 'cardboard sword'}), 'mainHand');
+        equipped.equip(_.findWhere(inv.models, {name: 'cardboard sword'}), 'weapon');
         equipped.equip(_.findWhere(inv.models, {name: 'balsa helmet'}), 'head');
 
         var skillchain = new inventory.Skillchain()

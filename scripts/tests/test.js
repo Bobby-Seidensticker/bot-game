@@ -33,7 +33,7 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(gameModel.hero, 'initialized with hero');
             assert.ok(gameModel.inv, 'initialized with inv');
             assert.ok(gameModel.lastTime !== undefined, 'lastTime is defined');
-            assert.ok(gameModel.running === false, 'not running');
+            assert.ok(gameModel.running === true, 'running is true');
         });
 
         QUnit.test('Util tests', function(assert) {
@@ -140,7 +140,7 @@ namespace.module('bot.test', function (exports, require) {
         });
 
         QUnit.test('Zone test', function(assert) {
-            assert.equal(false, gameModel.running, 'not running');
+            assert.equal(true, gameModel.running, 'running is true');
             assert.ok(gameModel.zone, 'gameModel initialized with zone');
             gameModel.tick();
             assert.ok(1, 'gameModel.tick didn\'t crash it');

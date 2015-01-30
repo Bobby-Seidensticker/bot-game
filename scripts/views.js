@@ -231,6 +231,22 @@ namespace.module('bot.views', function (exports, require) {
         className: 'itemTab',
         template: _.template($('#item-tab-template').html()),
 
+        initialize: function(options, game) {  // itemCollection, equippedGearModel, skillchain) {
+            this.equipped = game.hero.equipped;  // equippedGearModel;
+            this.skillchain = game.hero.skillchain;  // skillchain;
+            this.inventory = game.inv; // itemCollection;
+
+            this.subs = {
+                equipped: [],
+                skillchain: [],
+                inventory: []
+            };
+
+            this.listenTo(window.DirtyListener, 'inventory:new', this.render.bind(this));
+            this.listenTo(window.DirtyListener, 'equipChange', this.render);
+            this.listenTo(window.DirtyListener, 'skillchainChange', this.render);
+        },
+
         onClick: function(itemSlot) {
             log.info('itemSlot on click');
 
@@ -279,20 +295,6 @@ namespace.module('bot.views', function (exports, require) {
                 this.subs.inventory[i].remove();
             }
             this.subs.inventory = this.subs.inventory.slice(0, views.length);
-        },
-
-        initialize: function(options, game) {  // itemCollection, equippedGearModel, skillchain) {
-            this.equipped = game.hero.equipped;  // equippedGearModel;
-            this.skillchain = game.hero.skillchain;  // skillchain;
-            this.inventory = game.inv; // itemCollection;
-
-            this.subs = {
-                equipped: [],
-                skillchain: [],
-                inventory: []
-            };
-
-            this.listenTo(window.DirtyListener, 'inventory:new', this.render.bind(this));
         },
 
         newItemSlot: function(model, loc, slot) {
@@ -410,7 +412,9 @@ namespace.module('bot.views', function (exports, require) {
             this.cardInv = game.cardInv; // cardTypeCollection;
 
             this.views = [];
-            this.listenTo(window.DirtyListener, 'cards:new', this.render.bind(this));
+            this.listenTo(window.DirtyListener, 'cards:new', this.render);
+            this.listenTo(window.DirtyListener, 'equipChange', this.hardRender);
+            this.listenTo(window.DirtyListener, 'skillchainChange', this.hardRender);
         },
 
         onClick: function(clickedView) {
@@ -418,9 +422,7 @@ namespace.module('bot.views', function (exports, require) {
                 if (clickedView.model) {
                     if (this.selectedSlot) {
                         if (this.selectedSlot.model.id === clickedView.model.id) {
-                            this.selectedCard = undefined;
-                            this.selectedSlot = undefined;
-                            this.render();
+                            this.hardRender();
                             return;
                         } else {
                             this.selectedCard = undefined;
@@ -435,9 +437,7 @@ namespace.module('bot.views', function (exports, require) {
                         return;
                     }
                 } else {
-                    this.selectedCard = undefined;
-                    this.selectedSlot = undefined;
-                    this.render();
+                    this.hardRender();
                     return;
                 }
             } else if (clickedView.loc === 'equipped-cards') {
@@ -460,6 +460,12 @@ namespace.module('bot.views', function (exports, require) {
             } else {
                 throw('shit');
             }
+        },
+
+        hardRender: function() {
+            this.selectedCard = undefined;
+            this.selectedSlot = undefined;
+            return this.render();
         },
 
         render: function() {

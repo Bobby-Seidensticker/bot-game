@@ -88,6 +88,12 @@ namespace.module('bot.inv', function (exports, require) {
             window.ItemEvents.trigger('equipChange');
             return true;
         },
+
+        unequipCards: function() {
+            _.each(_.compact(this.cards), function(card) {
+                card.model.unequip(card.level);
+            });
+        },
     });
 
     var ArmorModel = GearModel.extend({
@@ -228,7 +234,7 @@ namespace.module('bot.inv', function (exports, require) {
               Slot full, filling with item: unequip old, fill new
               Slot full, filling with nothing: unequip old, empty slot
               Slot full, trying to equip same item, error
-              When equipping, ensure it's a falid operation
+              When equipping, ensure it's a valid operation
 
               If no error, fire an equipChange event
             */
@@ -239,6 +245,7 @@ namespace.module('bot.inv', function (exports, require) {
                     return false;
                 }
                 this[slot].equipped = false;
+                this[slot].unequipCards();
             } else {
                 if (item.itemType === 'skill') {
                     return false;
@@ -248,6 +255,7 @@ namespace.module('bot.inv', function (exports, require) {
                         return false;
                     }
                     this[slot].equipped = false;
+                    this[slot].unequipCards();
                 }
 
                 if (item.itemType === 'armor' && item.type !== slot) {

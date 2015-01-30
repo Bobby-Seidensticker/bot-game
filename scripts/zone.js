@@ -244,7 +244,8 @@ namespace.module('bot.zone', function (exports, require) {
             var minDist = distances[minIndex];
             // TODO: make this work:
             for (var si = 0; si < this.skills.length; si++) {       // use first skill that:
-                if (this.skills[si].coolAt <= window.time &&        // is cool
+                if (this.skills[si] && 
+                    this.skills[si].coolAt <= window.time &&        // is cool
                     this.skills[si].spec.manaCost <= this.mana &&  // has enough mana
                     this.skills[si].spec.range >= minDist) {       // is in range
                     this.attackTarget(enemies[minIndex], this.skills[si]);
@@ -384,7 +385,7 @@ namespace.module('bot.zone', function (exports, require) {
             // TODO ensure this works:
             var drops = target.spec.getDrops();
             this.spec.inv.addDrops(drops);
-            this.spec.cards.addDrops(drops);
+            this.spec.cardInv.addDrops(drops);
             window.DirtyQueue.mark('monsters:death');
         },
 

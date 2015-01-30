@@ -60,12 +60,9 @@ namespace.module('bot.utils', function (exports, require) {
     // [primary] [verb] [amt] [special]   Note: special is either perLevel or dmgType in case of converted and gainedas
     // mod restrictions:
     // can only have 4, cannot have a converted or gainedas as perlevel
-    function addMod(dict, str, level) {
-        var s = str.split(' ');
+    function addMod(dict, def) { //str, level) {
+        var s = def.split(' ');
         var amt = parseInt(s[2], 10);
-        if (s.length === 4 && s[3] === 'perLevel') {
-            amt *= level;
-        }
         if (s[1] === 'added') {
             dict[s[0]]['added'] += amt;
         } else if (s[1] === 'more') {
@@ -77,9 +74,34 @@ namespace.module('bot.utils', function (exports, require) {
                 dict[s[0]][s[1]][s[3]] = amt;
             }
         } else {
-            console.log("addMod about to barf with state ", dict, str, level);
+            console.log('addMod about to barf with state ', dict, def);
             throw('shit');
         }
+    }
+
+    function applyPerLevel(mod, level) {
+        var s = mod.def.split(' ');
+        if (s.length === 4 && s[3] === 'perLevel') {
+            s[2] = parseInt(s[2], 10) * level;
+            s.pop();
+            return {def: s.join(' '), type: mod.type};
+        } else {
+            return mod;
+        }
+    }
+
+    function applyPerLevels(mods, levels) {
+        var ret = [];
+        if (typeof(levels) === 'number') {
+            for (var i = 0; i < mods.length; i++) {
+                ret.push(applyPerLevel(mods[i], levels));
+            }
+        } else {
+            for (var i = 0; i < mods.length; i++) {
+                ret.push(applyPerLevel(mods[i], levels[i]));
+            }
+        }
+        return ret;
     }
 
     function computeStat(section, stat) {
@@ -108,41 +130,46 @@ namespace.module('bot.utils', function (exports, require) {
         return res;
     }
 
+    /*
     // this should also work for the mod object on an item (same fmt)
-    function addCardStats(all, card) {
+    function addModStats(all, mod) {
         var i, mod;
         for (var i = 0; i < card.mods.length; i++) {
             mod = card.mods[i];
             addMod(all[mod.type], mod.def, card.level);
         }
-    }
+    }*/
 
-    function addAllCards(all, cards) {
-        var group, card;
-        for (var i = 0; i < cards.length; i++) {
-            addCardStats(all, cards[i]);
+    function addAllMods(all, mods) {
+        for (var i = 0; i < mods.length; i++) {
+            //addMod(all, mods[i]);
+            addMod(all[mods[i].type], mods[i].def);
         }
     }
 
+    // rename this to getItemMods
     function expandSourceItem(itemType, type, itemLevel, classLevel) {
         var ref = itemref.ref[itemType][type];
-        var mods = ref.getClassMods(classLevel);
-        return {mods: mods.concat(ref.mods), level: itemLevel};
+        var mods = ref.getClassMods(classLevel).concat(ref.mods);
+        return applyPerLevels(mods, itemLevel);
     }
 
     // turns shorthand from monster definitions into usable cards
     // [['hot sword', 1], ['hard head', 1]] => [{mods: [(hot sword mods)], level: 1}, {mods: [(hard head mods)], level: 1}]
     function expandSourceCards(sourceCards) {
-        return _.map(sourceCards, function(card) {
-            return {mods: itemref.ref.card[card[0]].mods, level: card[1]};
-        });
+        return _.flatten(_.map(sourceCards, function(card) {
+            return applyPerLevels(itemref.ref.card[card[0]].mods, card[1]);
+        }, this));
     }
 
     exports.extend({
+        applyPerLevel: applyPerLevel,
+        applyPerLevels: applyPerLevels,
         expandSourceItem: expandSourceItem,
         expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
-        addAllCards: addAllCards,
+        //addAllCards: addAllCards,
+        addAllMods: addAllMods,
         addMod: addMod,
         computeStat: computeStat
     });

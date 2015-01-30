@@ -87,9 +87,11 @@
   </script>
 
   <script id="card-slot-template" type="text/template">
-    <div><%= model.name %></div>
-    <div><%= level %></div>
-    <div><%= model.amts[level] %></div>
+    <% if (model) { %>
+      <div><%= model.name %></div>
+      <div><%= level %></div>
+      <div><%= model.amts[level] %></div>
+    <% } %>
   </script>
 
   <script id="equipped-cards-item-slot-template" type="text/template">

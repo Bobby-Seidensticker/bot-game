@@ -365,9 +365,10 @@ namespace.module('bot.views', function (exports, require) {
         className: 'itemSlot',
         template: _.template($('#card-slot-template').html()),
 
-        initialize: function(options, level) {
-            this.loc = 'card-inventory';
+        initialize: function(options, level, loc, slot) {
             this.level = level;
+            this.loc = loc;                //this.loc = 'card-inventory';
+            this.slot = slot;
             this.render();
         },
 
@@ -382,7 +383,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
-            window.UIEvents.trigger('hoverover', this.model);
+            window.UIEvents.trigger('hoverover', this.card);
         },
 
         onMouseout: function() {
@@ -392,7 +393,7 @@ namespace.module('bot.views', function (exports, require) {
         select: function() { this.$el.addClass('selected'); },
 
         render: function() {
-            this.$el.html(this.template(this));
+            this.$el.html(this.template(_.extend({model: this.model}, this)));
             return this;
         }
     });
@@ -405,7 +406,7 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function(options, game) {
             this.equipped = game.hero.equipped;  // equippedGearModel;
             this.skillchain = game.hero.skillchain;  // skillchain;
-            this.cards = game.cards; // cardTypeCollection;
+            this.cardInv = game.cardInv; // cardTypeCollection;
 
             this.views = [];
             this.listenTo(window.DirtyListener, 'cards:new', this.render.bind(this));
@@ -440,9 +441,9 @@ namespace.module('bot.views', function (exports, require) {
                 }
             } else if (clickedView.loc === 'equipped-cards') {
                 if (this.selectedCard) {
-                    this.selectedSlot.model.equipCard(this.selectedCard.model, this.selectedCard.level, clickedView.slot);
+                    this.selectedSlot.model.equipCard({model: this.selectedCard.model, level: this.selectedCard.level}, clickedView.slot);
                 } else {
-                    this.selectedSlot.model.equipCard(undefined, undefined, clickedView.slot);
+                    this.selectedSlot.model.equipCard(undefined, clickedView.slot);
                 }
                 this.selectedCard = undefined;
                 this.render();
@@ -494,7 +495,11 @@ namespace.module('bot.views', function (exports, require) {
                 var frag = document.createDocumentFragment();
 
                 _.each(this.selectedSlot.model.cards, function(card, slot) {
-                    var view = new ItemSlot({model: card}, 'equipped-cards', slot);
+                    if (card) {
+                        var view = new CardSlot({model: card.model}, card.level, 'equipped-cards', slot);
+                    } else {
+                        var view = new CardSlot({}, undefined, 'equipped-cards', slot);
+                    }
                     this.views.push(view);
                     frag.appendChild(view.el);
                 }, this);
@@ -504,16 +509,16 @@ namespace.module('bot.views', function (exports, require) {
 
 
             if (this.selectedSlot) {
-                var ctmtr = this.cards.getSlotCards(this.selectedSlot.slot);
+                var ctmtr = this.cardInv.getSlotCTMs(this.selectedSlot.slot);
             } else {
-                var ctmtr = this.cards.models;
+                var ctmtr = this.cardInv.models;
             }
 
             frag = document.createDocumentFragment();
             _.each(ctmtr, function(ctm, i) {
                 for (var level = 1; level <= ctm.levels; level++) {
                     if (ctm.amts[level] > 0 && ctm.equipped[level] === 0) {
-                        var view = new CardSlot({model: ctm}, level);
+                        var view = new CardSlot({model: ctm}, level, 'card-inventory');
                         this.views.push(view);
                         frag.appendChild(view.el);
                     }

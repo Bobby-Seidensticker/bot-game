@@ -21,7 +21,6 @@ namespace.module('bot.entity', function (exports, require) {
     var EntitySpec = window.Model.extend({
         initialize: function() {
             this.level = 1;
-            this.mods = [];
             this.xp = 0;
         },
 
@@ -33,7 +32,7 @@ namespace.module('bot.entity', function (exports, require) {
             all.eleResist = utils.newBaseStatsDict(eleResistKeys);
             all.dmg = utils.newBaseStatsDict(dmgKeys); // utils.newDmgStatsDict();
 
-            utils.addAllCards(all, this.getCards());
+            utils.addAllMods(all, this.getMods());
             // Now 'all' has the expanded trie structured mod data
             // Do final multiplication and put on the entity
 
@@ -78,35 +77,34 @@ namespace.module('bot.entity', function (exports, require) {
             this.skillchain.computeAttrs(this.baseDmg, dmgKeys);
         },
 
-        getCards: function() {
-            return [
-                {mods: [
-                    {def: 'strength added 10', type: 'def'},
-                    {def: 'strength added 2 perLevel', type: 'def'},
-                    {def: 'dexterity added 10', type: 'def'},
-                    {def: 'dexterity added 2 perLevel', type: 'def'},
-                    {def: 'wisdom added 10', type: 'def'},
-                    {def: 'wisdom added 2 perLevel', type: 'def'},
-                    {def: 'vitality added 10', type: 'def'},
-                    {def: 'vitality added 2 perLevel', type: 'def'},
+        getMods: function() {
+            var mods = [
+                {def: 'strength added 10', type: 'def'},
+                {def: 'strength added 2 perLevel', type: 'def'},
+                {def: 'dexterity added 10', type: 'def'},
+                {def: 'dexterity added 2 perLevel', type: 'def'},
+                {def: 'wisdom added 10', type: 'def'},
+                {def: 'wisdom added 2 perLevel', type: 'def'},
+                {def: 'vitality added 10', type: 'def'},
+                {def: 'vitality added 2 perLevel', type: 'def'},
 
-                    {def: 'vitality gainedas 200 maxHp', type: 'def'},
-                    {def: 'wisdom gainedas 200 maxMana', type: 'def'},
+                {def: 'vitality gainedas 200 maxHp', type: 'def'},
+                {def: 'wisdom gainedas 200 maxMana', type: 'def'},
 
-                    {def: 'strength gainedas 50 armor', type: 'def'},
-                    {def: 'dexterity gainedas 50 dodge', type: 'def'},
-                    {def: 'eleResistAll added 1', type: 'def'},
+                {def: 'strength gainedas 50 armor', type: 'def'},
+                {def: 'dexterity gainedas 50 dodge', type: 'def'},
+                {def: 'eleResistAll added 1', type: 'def'},
 
-                    {def: 'maxHp added 10 perLevel', type: 'def'},
-                    {def: 'maxMana added 5 perLevel', type: 'def'},
-                    {def: 'maxHp gainedas 2 hpRegen', type: 'def'},
+                {def: 'maxHp added 10 perLevel', type: 'def'},
+                {def: 'maxMana added 5 perLevel', type: 'def'},
+                {def: 'maxHp gainedas 2 hpRegen', type: 'def'},
 
-                    //{def: 'physDmg gainedas 100 hpOnHit', type: 'dmg'},
-                    //{def: 'physDmg gainedas 10 hpLeech', type: 'dmg'},
+                //{def: 'physDmg gainedas 100 hpOnHit', type: 'dmg'},
+                //{def: 'physDmg gainedas 10 hpLeech', type: 'dmg'},
 
-                    {def: 'maxMana gainedas 2 manaRegen', type: 'def'}
-                ], level: this.level}
+                {def: 'maxMana gainedas 2 manaRegen', type: 'def'}
             ];
+            return _.map(mods, function(mod) { return utils.applyPerLevel(mod, this.level); }, this);
         },
 
         getNextLevelXp: function() {
@@ -120,11 +118,11 @@ namespace.module('bot.entity', function (exports, require) {
     });
 
     var HeroSpec = EntitySpec.extend({
-        initialize: function(name, skillchain, inv, equipped, cards) {
+        initialize: function(name, skillchain, inv, equipped, cardInv) {
             this.name = name;
             this.skillchain = skillchain;
             this.inv = inv;
-            this.cards = cards;
+            this.cardInv = cardInv;
             this.equipped = equipped;
 
             EntitySpec.prototype.initialize.call(this);
@@ -141,9 +139,9 @@ namespace.module('bot.entity', function (exports, require) {
             this.listenTo(window.ItemEvents, 'skillchainChange', this.computeSkillAttrs);
         },
 
-        getCards: function() {
-            var cards = EntitySpec.prototype.getCards.call(this);
-            return cards.concat(this.equipped.getCards());
+        getMods: function() {
+            var mods = EntitySpec.prototype.getMods.call(this);
+            return mods.concat(this.equipped.getMods());
         },
 
         applyXp: function(xp) {
@@ -183,9 +181,9 @@ namespace.module('bot.entity', function (exports, require) {
 
             _.extend(this, itemref.expand('monster', this.name));
 
-            this.cards = _.map(this.items, function(item) { return utils.expandSourceItem(item[0], item[1], this.level, item[2]);}, this);
-
-            this.cards = this.cards.concat(utils.expandSourceCards(this.sourceCards));
+            this.mods = _.map(this.items, function(item) { return utils.expandSourceItem(item[0], item[1], this.level, item[2]); }, this);
+            this.mods = _.flatten(this.mods);
+            this.mods = this.mods.concat(utils.expandSourceCards(this.sourceCards));
 
             this.droppableCards = _.filter(this.sourceCards, function(card) { if (card[0].slice(0, 5) !== 'proto') { return true; } }, this);
 
@@ -197,8 +195,8 @@ namespace.module('bot.entity', function (exports, require) {
             this.computeAttrs();
         },
 
-        getCards: function() {
-            return this.cards.concat(EntitySpec.prototype.getCards.call(this));
+        getMods: function() {
+            return this.mods.concat(EntitySpec.prototype.getMods.call(this));
         },
 
         getDrops: function() {
@@ -235,7 +233,7 @@ namespace.module('bot.entity', function (exports, require) {
         }
     });
 
-    function newHeroSpec(inv, cards) {
+    function newHeroSpec(inv, cardInv) {
         // stopgap measures: basic equipped stuff
         var heroName = 'bobbeh';
         var equipped = new inventory.EquippedGearModel();
@@ -245,7 +243,7 @@ namespace.module('bot.entity', function (exports, require) {
         var skillchain = new inventory.Skillchain()
         skillchain.equip(_.findWhere(inv.models, {name: 'basic melee'}), 0);
 
-        var hero = new HeroSpec(heroName, skillchain, inv, equipped, cards);
+        var hero = new HeroSpec(heroName, skillchain, inv, equipped, cardInv);
 
         return hero;
     }

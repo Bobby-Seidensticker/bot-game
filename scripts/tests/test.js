@@ -178,9 +178,10 @@ namespace.module('bot.test', function (exports, require) {
         });
 
         QUnit.test('Combat', function(assert) {
+            // TODO: do something about dodge
             var hero = new zone.HeroBody(gameModel.hero);
             var mon = new zone.MonsterBody('skeleton', 1);
-            assert.equal(mon.hp, mon.spec.maxHp, 'Monster HP maxed for taking hit at ' + mon.hp);
+            assert.equal(mon.hp, mon.spec.maxHp, 'Monster HP is at maxHp (' + mon.hp + '). Ready to take hit.');
 
             var skill = hero.skills[0].spec;
 
@@ -188,8 +189,7 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(skill.name, 'hero about to try using ' + skill.name);
 
             hero.attackTarget(mon, hero.skills[0]);
-            assert.ok(mon.hp < mon.spec.maxHp, 'Monster\'s hp decreased from attack to ' + mon.hp);
-            //            console.log(mon);
+            assert.ok(mon.hp < mon.spec.maxHp, 'After attack, monster\'s hp decreased to ' + mon.hp);
             assert.ok(hero.skills[0].coolAt === window.time + skill.speed + skill.cooldownTime,
                       'skill\'s cooldown set to cooldownTime + speed after attack');
             assert.ok(hero.nextAction === window.time + skill.speed, 'Hero\'s next action skill\'s speed after attack');

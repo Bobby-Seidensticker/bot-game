@@ -64,15 +64,19 @@ namespace.module('bot.inv', function (exports, require) {
         equipCard: function(cardTypeModel, level, slotIndex) {
             if (slotIndex >= this.cards.length) {
                 log.error('Cannot equip card in slotIndex %d when item only has %d slots', slotIndex, this.cards.length);
+                return false;
             }
 
             if (this.cards[slotIndex] !== undefined) {
                 this.cards[slotIndex].callback();
             }
-            this.cards[slotIndex] = cardTypeModel.getCard(level);
+            if (cardTypeModel !== undefined) {
+                this.cards[slotIndex] = cardTypeModel.getCard(level);
+            }
 
             // TODO: make this more specific
             window.ItemEvents.trigger('heroComputeAttr');
+            return true;
         },
     });
 
@@ -421,6 +425,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             var drop;
+            var changed = false;
             for (var i = 0; i < drops.length; i++) {
                 drop = drops[i];
                 if (drop.dropType !== 'card') {
@@ -433,7 +438,13 @@ namespace.module('bot.inv', function (exports, require) {
                 }
                 typeModel.addCard(drop.data[1]);
                 log.info('Added card %s level %d to card inv', drop.data[0], drop.data[1]);
+                changed = true;
             }
+            if (changed) { window.DirtyQueue.mark('cards:new'); }
+        },
+
+        getSlotCards: function(slot) {
+            return _.filter(this.models, function(model) { return model.slot === slot; });
         },
     });
 

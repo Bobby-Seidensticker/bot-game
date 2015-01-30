@@ -9,12 +9,14 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function(options, game) {
             this.statsTab = new StatsTab({}, game);
             this.itemTab = new ItemTab({}, game);
+            this.cardTab = new CardTab({}, game);
 
             this.infoBox = new InfoBox();
 
             this.$el.append(this.statsTab.render().el);
             this.$el.append(this.itemTab.render().el);
-            this.$el.append(this.infoBox.render().el);
+            this.$el.append(this.cardTab.render().el);
+            this.$el.append(this.infoBox.el);
         }
     });
 
@@ -148,12 +150,34 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'infoBox',
         template: _.template($('#info-box-template').html()),
+        citemplate: _.template($('#card-inventory-info-box-template').html()),
 
         initialize: function() {
-            this.listenTo(window.UIEvents, 'hover', this.render);
+            this.listenTo(window.UIEvents, 'hoverover', this.show);
+            this.listenTo(window.UIEvents, 'hoverout', this.hide);
         },
 
-        render: function(model) {
+        show: function(view) {
+            if (view.model) {
+                this.$el.css('display', 'block');
+                console.log(view);
+                if (view.loc === 'equipped-cards') {
+                    this.$el.html(this.citemplate(view));
+                } else {
+                    this.$el.html(this.template(view.model));
+                }
+            } else {
+                this.hide();
+            }
+        },
+
+        hide: function() {
+            this.$el.css('display', 'none');
+            this.$el.empty();
+        },
+
+        /*
+        render: function(view) {
             if (model) {
                 this.$el.css('display', 'block');
                 this.$el.html(this.template(model));
@@ -162,7 +186,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.$el.empty();
             }
             return this;
-        },
+        },*/
     });
 
     var ItemSlot = Backbone.View.extend({
@@ -180,11 +204,11 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
-            window.UIEvents.trigger('hover', this.model);
+            window.UIEvents.trigger('hoverover', this);
         },
 
         onMouseout: function() {
-            window.UIEvents.trigger('hover');
+            window.UIEvents.trigger('hoverout');
         },
 
         initialize: function(options, loc, slot) {
@@ -198,6 +222,10 @@ namespace.module('bot.views', function (exports, require) {
         toggleSelect: function() { this.$el.toggleClass('selected'); },
         empty: function() { this.model = undefined; this.render(); },
         fill: function(model) { this.model = model; this.render(); },
+
+        lookup: function() {
+            return {model: this.model, loc: this.loc, slot: this.slot};
+        },
 
         render: function() {
             this.$el.html(this.template(this));
@@ -257,6 +285,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.subs.inventory[i].fill(views[i].model);
             }
             for (; i < this.subs.inventory.length; i++) {
+                this.stopListening(this.subs.inventory[i]);
                 this.subs.inventory[i].remove();
             }
             log.error('len: %d', this.subs.inventory.length);
@@ -276,10 +305,6 @@ namespace.module('bot.views', function (exports, require) {
             };
 
             this.listenTo(window.DirtyListener, 'inventory:new', this.render.bind(this));
-            /*function() {
-                this.addItemSlot(undefined, 'inventory');
-                this.rerenderInv();
-            }.bind(this));*/
         },
 
         newItemSlot: function(model, loc, slot) {
@@ -300,8 +325,11 @@ namespace.module('bot.views', function (exports, require) {
         render: function() {
             this.$el.html(this.template());
 
-            _.each(this.subs, function(value, key) {
-                _.invoke(value, 'remove');
+            _.each(this.subs, function(arr, key) {
+                _.each(arr, function(subView) {
+                    this.stopListening(subView);
+                    subView.remove();
+                }, this);
                 this.subs[key] = [];
             }, this);
 
@@ -346,6 +374,236 @@ namespace.module('bot.views', function (exports, require) {
             return this;
         },
     });
+
+    var CardSlot = Backbone.View.extend({
+        tagName: 'div',
+        className: 'itemSlot',
+        template: _.template($('#card-slot-template').html()),
+
+        initialize: function(options, level) {
+            this.loc = 'card-inventory';
+            this.level = level;
+            this.render();
+        },
+
+        events: {
+            'click': 'onClick',
+            'mouseover': 'onMouseover',
+            'mouseout': 'onMouseout',
+        },
+
+        onClick: function() {
+            this.trigger('click', this);
+        },
+
+        onMouseover: function() {
+            window.UIEvents.trigger('hoverover', this.model);
+        },
+
+        onMouseout: function() {
+            window.UIEvents.trigger('hoverout');
+        },
+
+        select: function() { this.$el.addClass('selected'); },
+
+        lookup: function() {
+            return {name: this.model.name, level: this.level};
+        },
+
+        render: function() {
+            this.$el.html(this.template(this));
+            return this;
+        }
+    });
+
+    var CardTab = Backbone.View.extend({
+        tagName: 'div',
+        className: 'itemTab',
+        template: _.template($('#card-tab-template').html()),
+
+        initialize: function(options, game) {
+            this.equipped = game.hero.equipped;  // equippedGearModel;
+            this.skillchain = game.hero.skillchain;  // skillchain;
+            this.cards = game.cards; // cardTypeCollection;
+
+            this.views = [];
+            this.listenTo(window.DirtyListener, 'cards:new', this.render.bind(this));
+        },
+
+        onClick: function(clickedView) {
+            if (clickedView.loc === 'skillchain' || clickedView.loc === 'equipped') {
+                if (clickedView.model) {
+                    if (this.selectedSlot) {
+                        if (this.selectedSlot.model.id === clickedView.model.id) {
+                            this.selectedCard = undefined;
+                            this.selectedSlot = undefined;
+                            this.render();
+                            return;
+                        } else {
+                            this.selectedCard = undefined;
+                            this.selectedSlot = clickedView;
+                            this.render();
+                            return;
+                        }
+                    } else {
+                        this.selectedCard = undefined;
+                        this.selectedSlot = clickedView;
+                        this.render();
+                        return;
+                    }
+                } else {
+                    this.selectedCard = undefined;
+                    this.selectedSlot = undefined;
+                    this.render();
+                    return;
+                }
+            } else if (clickedView.loc === 'equipped-cards') {
+                if (clickedView.model) {
+                    // unequip the card you clicked
+                    // clickedView.slot make sure that equipped cards tab slots have a slot, should be index
+                    this.selectedSlot.model.equipCard(undefined, undefined, clickedView.slot);
+                }
+                if (this.selectedCard) {
+                    // equip the selected card in this.selected
+                    // clickedView.slot make sure that equipped cards tab slots have a slot, should be index
+                    this.selectedSlot.model.equipCard(this.selectedCard.model, this.selectedCard.level, clickedView.slot);
+                }
+                this.selectedCard = undefined;
+                this.render();
+                return;
+            } else if (clickedView.loc === 'card-inventory') {
+                if (this.selectedSlot) {
+                    this.selectedCard = clickedView;
+                    this.render();
+                    return;
+                } else {
+                    // nothing, you hover
+                }
+            } else {
+                throw('shit');
+            }
+        },
+
+        render: function() {
+            // call remove() on all views, and stopListening on all views
+
+            var ssmi, scmi;
+            if (this.selectedSlot) {
+                ssmi = this.selectedSlot.model.id;
+                this.selectedSlot = this.selectedSlot.lookup();
+            }
+            if (this.selectedCard) {
+                scmi = this.selectedCard.model.id;
+                this.selectedCard = this.selectedCard.lookup();
+            }
+
+            _.each(this.views, function(view) {
+                this.stopListening(view);
+                view.remove();
+            }, this);
+            this.views = [];
+
+            this.$el.html(this.template({}));
+
+            var frag = document.createDocumentFragment();
+
+            _.each(this.equipped.slots, function(slot) {
+                var view = new ItemSlot({model: this.equipped[slot]}, 'equipped', slot);
+                this.views.push(view);
+                frag.appendChild(view.el);
+            }, this);
+
+            this.$('.equipped').append(frag);
+
+            frag = document.createDocumentFragment();
+
+            _.each(this.skillchain.skills, function(skill, i) {
+                var view = new ItemSlot({model: skill}, 'skillchain', i);
+                this.views.push(view);
+                frag.appendChild(view.el);
+            }, this);
+
+            this.$('.skillchain').append(frag);
+
+            if (this.selectedSlot) {
+                var frag = document.createDocumentFragment();
+
+                _.each(this.selectedSlot.model.cards, function(card, slot) {
+                    var view = new ItemSlot({model: card}, 'equipped-cards', slot);
+                    this.views.push(view);
+                    frag.appendChild(view.el);
+                }, this);
+
+                this.$('.equipped-cards').append(frag);
+            }
+
+
+            if (this.selectedSlot) {
+                var ctmtr = this.cards.getSlotCards(this.selectedSlot.slot);
+            } else {
+                var ctmtr = this.cards.models;
+            }
+
+            frag = document.createDocumentFragment();
+            log.error('rendering, gonna try and render %d card type models', ctmtr.length);
+            _.each(ctmtr, function(ctm, i) {
+                for (var level = 1; level <= ctm.levels; level++) {
+                    if (ctm.amts[level] > 0 && ctm.equipped[level] === 0) {
+                        var view = new CardSlot({model: ctm}, level);
+                        this.views.push(view);
+                        frag.appendChild(view.el);
+                    }
+                }
+            }, this);
+
+            this.$('.card-inventory').append(frag);
+
+            if (this.selectedSlot) {
+                //this.selectedSlot = this.selectedSlot.lookup();
+                this.selectedSlot = _.findWhere(this.views, this.selectedSlot);
+                this.selectedSlot.select();
+                if (this.selectedSlot.model.id !== ssmi) {
+                    throw('fuck');
+                }
+            }
+            if (this.selectedCard) {
+                //this.selectedCard = this.selectedCard.lookup();
+                var name = this.selectedCard.name;
+                var level = this.selectedCard.level;
+                log.info('resetting selected card, now:');
+                console.log(this.selectedCard);
+                for (var i = this.views.length - 1; i >= 0; i--) {
+                    if (this.views[i].loc === 'card-inventory' && this.views[i].model.name === name && this.views[i].level === level) {
+                        this.selectedCard = this.views[i];
+                        this.selectedCard.select();
+                        break;
+                    }
+                }
+                log.info('after:');
+                console.log(this.selectedCard);
+                if (this.selectedCard.model.id !== scmi) {
+                    throw('fuck you');
+                }
+            }
+
+            _.each(this.views, function(view) {
+                this.listenTo(view, 'click', this.onClick);
+            }, this);
+
+            // for each slot in equipped, make cardslot view
+            // for each slot in skillchain, make cardslot view
+            // for each cardtypemodel in cards:
+            //     for (var i = 0; i < ctm.amts.length; i++):
+            //         if (ctm.amts[i] > 0 && ctm.equipped[i] === 0) { make cardslot view }
+            // when making, listen to click events triggered on views
+            // this.selectedCard
+            // this.selectedSlot
+
+            // click handler
+            return this;
+        },
+    });
+
 
     exports.extend({
         GameView: GameView,

@@ -63,6 +63,7 @@ namespace.module('bot.test', function (exports, require) {
         });
 
         QUnit.test('Util dmg skill tests', function(assert) {
+            var utils = namespace.bot.utils;
             var dmgStats = utils.newBaseStatsDict(entity.dmgKeys);
 
             var skill = new inv.SkillModel('basic melee');
@@ -107,12 +108,11 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(skill.fireDmg, 1.5, 'Half of lightDmg gained as fireDmg');
 
             // add 2
-            utils.addMod(dmgStats, 'coldDmg added 2 perLevel', 10);
+            var mod = {def: 'coldDmg added 2 perLevel', type: 'dmg'};
+            utils.addMod(dmgStats, utils.applyPerLevel(mod, 10).def);
             assert.equal(dmgStats.coldDmg.added, 20, 'coldDmg added 2 * 10');
             skill.computeAttrs(dmgStats, dmgKeys);
             assert.equal(skill.coldDmg, 20, 'Skill\'s coldDmg is equal to 20 after added 2 perLevel by 10 levels');
-
-            
         });
 
         QUnit.test('HeroSpec properly initialized', function(assert) {
@@ -222,15 +222,16 @@ namespace.module('bot.test', function (exports, require) {
             var damageTaken = hero.spec.maxHp - hero.hp;
             assert.ok(damageTaken, 'Hero hit for dmg: ' + damageTaken);
             hero.revive();
-            
+
             //console.log('hi');
             // equip fire resist card in armor
-            var card = new inv.CardTypeModel("quenching blade");
+            var card = {model: new inv.CardTypeModel('quenching blade'), level: 1};
             //console.log(card);
 
             assert.ok(card, 'generated quenching blade card to equip and add fire resist');
-            
-            hero.spec.inv.models[0].equipCard(card, 2, 0);
+
+            // Following line is problematic because it assumes models[0] is a weapon, relies on Hero's arbitrary initial state
+            hero.spec.inv.models[0].equipCard(card, 0);
             hero.spec.computeAttrs();
             assert.ok(hero.spec.fireResist < startFireRes, 'equipping card reduced fireResistance from ' + startFireRes + ' to: ' + hero.spec.fireResist);
             //console.log(hero.spec.inv.models[0]);
@@ -284,8 +285,7 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(types.indexOf(item.type) !== -1, name + ' has valid type: ' + item.type);
             var necessary = ['physDmg'];
             var allTargets = [];
-            //console.log(item);
-            _.each(item.mods, function(mod) {
+            _.each(item.baseMods, function(mod) {
                 var target = mod.def.split(' ')[0];
                 allTargets.push(target);
                 var index = necessary.indexOf(target);
@@ -301,8 +301,12 @@ namespace.module('bot.test', function (exports, require) {
             assert.ok(name, name + ' has valid name');
 
             assert.ok(item.xp >= 0, name + ' has non-negative xp value: ' + item.xp);
-            var mods = item.mods;
-            assert.ok(mods.length, name + ' has at least one mod');
+            assert.equal(typeof(item.itemType), 'string', 'has an itemType and it\'s a string')
+            assert.ok(item.cards && item.cards.length >= 0, 'has an array of cards');
+            
+
+            var mods = item.baseMods;
+            assert.ok(mods.length, name + ' has at least one baseMod');
             assert.ok(item.level >= 1, name + ' has level >= 1');
 
             _.each(mods, validateMod.curry(assert));

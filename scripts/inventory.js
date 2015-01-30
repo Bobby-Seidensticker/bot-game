@@ -58,7 +58,9 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getCards: function() {
-            return _.filter(this.cards, function(card) { return card !== undefined; }).concat(this);
+            var ctms = _.filter(this.cards, function(card) { return card !== undefined; });
+            var protocards = _.map(ctms, function(ctm) { return ctm.model.getCard(ctm.level); });
+            return protocards.concat(this);
         },
 
         equipCard: function(cardTypeModel, level, slotIndex) {
@@ -67,15 +69,18 @@ namespace.module('bot.inv', function (exports, require) {
                 return false;
             }
 
-            if (this.cards[slotIndex] !== undefined) {
-                this.cards[slotIndex].callback();
+            if (this.cards[slotIndex]) {
+                this.cards[slotIndex].model.callback();
+                this.cards[slotIndex] = undefined;
             }
-            if (cardTypeModel !== undefined) {
-                this.cards[slotIndex] = cardTypeModel.getCard(level);
+            if (cardTypeModel) {
+                this.cards[slotIndex] = {model: cardTypeModel, level: level}; // .getCard(level);
             }
 
+            log.warning('equipCard, now have %d cards equipped', _.filter(this.cards, function(card) { return !!card; }).length);
+
             // TODO: make this more specific
-            window.ItemEvents.trigger('heroComputeAttr');
+            window.ItemEvents.trigger('equipChange');
             return true;
         },
     });
@@ -395,7 +400,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         // this is called with level, not index.  If it's out of range, you're screwed, so don't do that
         unequip: function(level) {
-            log.info('CardTypeModel.unequip card name: %s, level: %d, current equipped[level-1]: %d',
+            log.info('CardTypeModel.unequip card name: %s, level: %d, current equipped[level]: %d',
                      this.name, level, this.equipped[level]);
             this.equipped[level] = 0;
         },
@@ -406,10 +411,11 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         upgrade: function(level) {
-            if (this.amts[level] > 10 && (level + 1) <= this.levels) {
+            while (this.amts[level] > 10 && (level + 1) <= this.levels) {
                 this.amts[level] -= 10;
                 this.amts[level + 1] += 1;
                 log.info('Upgrading 10 level %d %s\'s to level %d', level, this.name, level + 1);
+                level++;
             }
         },
     });

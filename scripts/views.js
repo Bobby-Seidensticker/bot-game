@@ -150,7 +150,6 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'infoBox',
         template: _.template($('#info-box-template').html()),
-        citemplate: _.template($('#card-inventory-info-box-template').html()),
 
         initialize: function() {
             this.listenTo(window.UIEvents, 'hoverover', this.show);
@@ -158,17 +157,8 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         show: function(view) {
-            if (view.model) {
-                this.$el.css('display', 'block');
-                console.log(view);
-                if (view.loc === 'equipped-cards') {
-                    this.$el.html(this.citemplate(view));
-                } else {
-                    this.$el.html(this.template(view.model));
-                }
-            } else {
-                this.hide();
-            }
+            this.$el.css('display', 'block');
+            this.$el.html(this.template(_.extend({}, {model: undefined, level: 'hngg'}, view)));
         },
 
         hide: function() {
@@ -279,7 +269,6 @@ namespace.module('bot.views', function (exports, require) {
 
         rerenderInv: function() {
             var views = _.filter(this.subs.inventory, function(view) { return view.model !== undefined && view.model.equipped === false; });
-            log.error('rerendering inv, len views: %d', views.length);
             var i = 0;
             for (; i < views.length; i++) {
                 this.subs.inventory[i].fill(views[i].model);
@@ -288,9 +277,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.stopListening(this.subs.inventory[i]);
                 this.subs.inventory[i].remove();
             }
-            log.error('len: %d', this.subs.inventory.length);
             this.subs.inventory = this.subs.inventory.slice(0, views.length);
-            log.error('len after: %d', this.subs.inventory.length);
         },
 
         initialize: function(options, game) {  // itemCollection, equippedGearModel, skillchain) {
@@ -310,9 +297,7 @@ namespace.module('bot.views', function (exports, require) {
         newItemSlot: function(model, loc, slot) {
             var view = new ItemSlot({model: model}, loc, slot);
             this.listenTo(view, 'click', this.onClick);
-            log.error('sub len bef: %d', this.subs[loc].length);
             this.subs[loc].push(view);
-            log.error('sub len aft: %d', this.subs[loc].length);
             return view;
         },
 
@@ -406,10 +391,6 @@ namespace.module('bot.views', function (exports, require) {
 
         select: function() { this.$el.addClass('selected'); },
 
-        lookup: function() {
-            return {name: this.model.name, level: this.level};
-        },
-
         render: function() {
             this.$el.html(this.template(this));
             return this;
@@ -458,15 +439,10 @@ namespace.module('bot.views', function (exports, require) {
                     return;
                 }
             } else if (clickedView.loc === 'equipped-cards') {
-                if (clickedView.model) {
-                    // unequip the card you clicked
-                    // clickedView.slot make sure that equipped cards tab slots have a slot, should be index
-                    this.selectedSlot.model.equipCard(undefined, undefined, clickedView.slot);
-                }
                 if (this.selectedCard) {
-                    // equip the selected card in this.selected
-                    // clickedView.slot make sure that equipped cards tab slots have a slot, should be index
                     this.selectedSlot.model.equipCard(this.selectedCard.model, this.selectedCard.level, clickedView.slot);
+                } else {
+                    this.selectedSlot.model.equipCard(undefined, undefined, clickedView.slot);
                 }
                 this.selectedCard = undefined;
                 this.render();
@@ -486,17 +462,6 @@ namespace.module('bot.views', function (exports, require) {
 
         render: function() {
             // call remove() on all views, and stopListening on all views
-
-            var ssmi, scmi;
-            if (this.selectedSlot) {
-                ssmi = this.selectedSlot.model.id;
-                this.selectedSlot = this.selectedSlot.lookup();
-            }
-            if (this.selectedCard) {
-                scmi = this.selectedCard.model.id;
-                this.selectedCard = this.selectedCard.lookup();
-            }
-
             _.each(this.views, function(view) {
                 this.stopListening(view);
                 view.remove();
@@ -545,7 +510,6 @@ namespace.module('bot.views', function (exports, require) {
             }
 
             frag = document.createDocumentFragment();
-            log.error('rendering, gonna try and render %d card type models', ctmtr.length);
             _.each(ctmtr, function(ctm, i) {
                 for (var level = 1; level <= ctm.levels; level++) {
                     if (ctm.amts[level] > 0 && ctm.equipped[level] === 0) {
@@ -558,31 +522,26 @@ namespace.module('bot.views', function (exports, require) {
 
             this.$('.card-inventory').append(frag);
 
+            // selected slot is an ItemSlot holding a equippedGear or skill model
             if (this.selectedSlot) {
-                //this.selectedSlot = this.selectedSlot.lookup();
-                this.selectedSlot = _.findWhere(this.views, this.selectedSlot);
-                this.selectedSlot.select();
-                if (this.selectedSlot.model.id !== ssmi) {
-                    throw('fuck');
-                }
-            }
-            if (this.selectedCard) {
-                //this.selectedCard = this.selectedCard.lookup();
-                var name = this.selectedCard.name;
-                var level = this.selectedCard.level;
-                log.info('resetting selected card, now:');
-                console.log(this.selectedCard);
-                for (var i = this.views.length - 1; i >= 0; i--) {
-                    if (this.views[i].loc === 'card-inventory' && this.views[i].model.name === name && this.views[i].level === level) {
-                        this.selectedCard = this.views[i];
-                        this.selectedCard.select();
+                for (var i = 0; i < this.views.length; i++) {
+                    var v = this.views[i];
+                    if (v.model && v.model.id === this.selectedSlot.model.id) {
+                        this.selectedSlot = v;
+                        this.selectedSlot.select();
                         break;
                     }
                 }
-                log.info('after:');
-                console.log(this.selectedCard);
-                if (this.selectedCard.model.id !== scmi) {
-                    throw('fuck you');
+            }
+            // selected card is a CardSlot holding a CardTypeModel and has a level
+            if (this.selectedCard) {
+                for (var i = 0; i < this.views.length; i++) {
+                    var v = this.views[i];
+                    if (v.model && v.model.id === this.selectedCard.model.id && v.level === this.selectedCard.level) {
+                        this.selectedCard = v;
+                        this.selectedCard.select();
+                        break;
+                    }
                 }
             }
 

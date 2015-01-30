@@ -100,14 +100,26 @@
   </script>
 
   <script id="info-box-template" type="text/template">
-    <h3><%= name %></h3>
+    <% if (model) { %>
+    <% if (model.itemType) { %>
+    <h3><%= model.name %></h3>
     <div class="mods">
-      <div>Level <%= level %></div>
-      <div>XP <%= xp %> / <% print(getNextLevelXp()); %></div>
-      <% _.each(mods, function(mod) { %>
+      <div>Level <%= model.level %></div>
+      <div>XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
+      <% _.each(model.mods, function(mod) { %>
         <div><%= mod.def %></div>
       <% }); %>
     </div>
+    <% } else { %>
+    <h3><%= model.name %></h3>
+    <div class="mods">
+      <div>Level <%= level %></div>
+      <% _.each(model.mods, function(mod) { %>
+        <div><%= mod.def %></div>
+      <% }); %>
+    </div>
+    <% } %>
+    <% } %>
   </script>
 
   <script id="card-inventory-info-box-template" type="text/template">

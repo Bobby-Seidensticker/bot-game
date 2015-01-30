@@ -8,6 +8,7 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options, game) {
             this.statsTab = new StatsTab({}, game);
+            this.statsTab.onResize();
             this.itemTab = new ItemTab({}, game);
             this.cardTab = new CardTab({}, game);
 
@@ -110,7 +111,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onResize: function() {
-            this.$el.css({width: window.innerWidth / 4});
+            this.$el.css({width: window.innerWidth / 3});
             this.render();
         },
 

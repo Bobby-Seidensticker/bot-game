@@ -11,6 +11,7 @@ namespace.module('bot.views', function (exports, require) {
             this.statsTab.onResize();
             this.itemTab = new ItemTab({}, game);
             this.cardTab = new CardTab({}, game);
+            this.visView = new VisView({}, game);
 
             this.infoBox = new InfoBox();
 
@@ -18,6 +19,7 @@ namespace.module('bot.views', function (exports, require) {
             this.$el.append(this.itemTab.render().el);
             this.$el.append(this.cardTab.render().el);
             this.$el.append(this.infoBox.el);
+            this.$el.append(this.visView.render().el);
         }
     });
 
@@ -65,7 +67,8 @@ namespace.module('bot.views', function (exports, require) {
                 _.each(entity.dmgKeys, function(key) {
                     arr.push([key, skill.spec[key].toFixed(2)]);
                 });
-                arr.push(['cool in', skill.coolAt - window.time]);
+                var coolIn = Math.max(0, skill.coolAt - window.time);
+                arr.push(['cool in', coolIn]);
                 data[skill.spec.name] = arr;
             }
 
@@ -386,7 +389,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
-            window.UIEvents.trigger('hoverover', this.card);
+            window.UIEvents.trigger('hoverover', this);
         },
 
         onMouseout: function() {
@@ -574,6 +577,90 @@ namespace.module('bot.views', function (exports, require) {
             return this;
         },
     });
+
+    function transpose(coords) {
+        return [coords[0] * RATIO, coords[1] * RATIO];
+    }
+
+    var REAL_SIZE = 300;
+    var SIZE = 1000 * 1000;
+    var RATIO = REAL_SIZE / SIZE;
+
+    var VisView = Backbone.View.extend({
+        tagName: 'canvas',
+        className: 'vis',
+
+        // this needs to get all zones, when game model changes, probably shoudl get all of gameModel
+        initialize: function(options, game) {
+            log.warning('visview init');
+            this.zone = game.zone;
+
+            this.clear();
+            this.listenTo(window.DirtyListener, 'tick', this.render);
+        },
+
+        clear: function() {
+            this.$el.attr({
+                width: REAL_SIZE,
+                height: REAL_SIZE
+            });
+            /*this.$canvas.css({
+                top: this.$el.height() / 2 - REAL_SIZE / 2 - 1,
+                left: this.$el.width() / 2 - REAL_SIZE / 2 - 1
+            });*/
+        },
+
+        render: function() {
+            this.zone.messages.prune();
+            var msgs = this.zone.messages.msgs;
+            this.clear();
+            var ctx = this.el.getContext('2d');
+
+            // draw all mons
+            var room = this.zone.ensureRoom();
+            var mons = this.zone.liveMons();
+
+            _.each(mons, function(mon) {
+                drawBody(ctx, mon, 'rgba(240, 20, 30, 1)');
+            }, this);
+
+            // draw hero
+            var cpos = transpose([this.zone.hero.x, this.zone.hero.y]);
+            drawBody(ctx, this.zone.hero, 'rgba(30, 20, 240, 1)');
+
+            drawMessages(ctx, msgs);
+
+            return this;
+        },
+    });
+
+    function drawMessages(ctx, msgs) {
+        _.each(msgs, function(msg) {
+            ctx.fillStyle = msg.color;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.font = '14px sans-serif';
+            var pos = transpose(msg.pos)
+            ctx.fillText(msg.text, pos[0], pos[1] - (window.time - msg.time) / msg.lifespan * 20);
+        });
+    }
+
+    function drawBody(ctx, body, color) {
+        var coords = transpose([body.x, body.y]);
+        circle(ctx, coords, color);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.font = '14px sans-serif';
+        ctx.fillText(body.spec.name, coords[0], coords[1] + 10);
+    }
+
+    function circle(ctx, pos, color) {
+        ctx.beginPath();
+        ctx.arc(pos[0], pos[1], 10, 0, 2 * Math.PI, false);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.closePath();
+    }
 
 
     exports.extend({

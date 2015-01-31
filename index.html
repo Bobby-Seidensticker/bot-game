@@ -89,8 +89,8 @@
   <script id="card-slot-template" type="text/template">
     <% if (model) { %>
       <div><%= model.name %></div>
-      <div><%= level %></div>
-      <div><%= model.amts[level] %></div>
+      <div>Level <%= level %></div>
+      <div><%= model.amts[level] - 1 %> / 10</div>
     <% } %>
   </script>
 
@@ -103,8 +103,8 @@
 
   <script id="info-box-template" type="text/template">
     <% if (model) { %>
-    <% if (model.itemType) { %>
-    <h3><%= model.name %></h3>
+    <% if (model.itemType && model.itemType !== 'ctm') { %>
+    <h3><%= model.itemType %> <%= model.name %></h3>
     <div class="mods">
       <div>Level <%= model.level %></div>
       <div>XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
@@ -113,7 +113,7 @@
       <% }); %>
     </div>
     <% } else { %>
-    <h3><%= model.name %></h3>
+    <h3>Card <%= model.name %></h3>
     <div class="mods">
       <div>Level <%= level %></div>
       <% _.each(model.mods, function(mod) { %>

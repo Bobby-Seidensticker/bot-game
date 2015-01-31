@@ -18,6 +18,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.level = 1;
             this.hero = new HeroBody(hero);
             this.newZone('spooky dungeon', 1);
+            this.messages = new ZoneMessages();
         },
 
         newZone: function(name, level) {
@@ -310,6 +311,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
+                window.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', [this.x, this.y], 'rgba(230, 230, 10, 0.5)', 1000));
                 return 0;
             }
 
@@ -329,6 +331,11 @@ namespace.module('bot.zone', function (exports, require) {
 
             log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), totalDmg, this.hp);
             // TODO: Add rolling for dodge in here so we can sometimes return 0;
+
+            window.MessageEvents.trigger(
+                'message',
+                newZoneMessage(Math.floor(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500)
+            );
             return totalDmg;
         },
 
@@ -410,28 +417,33 @@ namespace.module('bot.zone', function (exports, require) {
         }
     });
 
-    /*
-    var MonsterCollection = window.Model.extend({
-        initialize: function(models) {
-            this.models = _.map(models, function(model) { return new entity.MonsterSpec(model); });
+    function newZoneMessage(text, type, pos, color, lifespan) {
+        return {
+            text: text,
+            type: type,
+            pos: pos,
+            color: color,
+            lifespan: lifespan,
+            time: window.time,
+            expires: window.time + lifespan
+        };
+    }
+
+    var ZoneMessages = window.Model.extend({
+        initialize: function() {
+            this.listenTo(window.MessageEvents, 'message', this.addMessage);
+            this.msgs = [];
         },
 
-        update: function(t) {
-            _.each(this.models, function(monster) { monster.update(t) }, this);
+        addMessage: function(msgObj) {
+            this.msgs.push(msgObj);
+            this.prune();
         },
 
-        tryDoStuff: function(room) {
-            _.invoke(this.models, 'tryDoStuff', room);
+        prune: function() {
+            this.msgs = _.filter(this.msgs, function(msg) { return msg.expires > window.time });
         },
-
-        living: function() {
-            return _.filter(this.models, function(m) { return m.isAlive(); });
-        },
-
-        cleared: function() {
-            return !(_.find(this.models, function(monster) { return monster.isAlive(); }));
-        }
-    });*/
+    });
 
     exports.extend({
         ZoneManager: ZoneManager,

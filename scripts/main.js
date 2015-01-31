@@ -23,10 +23,11 @@ namespace.module('bot.main', function (exports, require) {
         //var m = new menu.TabView();
 
         $(window).on('keydown', function(event) {
+            log.info('keydown, key: %d', event.keyCode);
             var SPACE = 32;
-            var EKEY = 101;
-            //var DKEY = 100;
-            var SKEY = 115;
+            var EKEY = 69;
+            //var DKEY = 68;
+            var SKEY = 84;
             var UP = 38;
             var DN = 40;
             var key = event.keyCode;
@@ -38,7 +39,7 @@ namespace.module('bot.main', function (exports, require) {
                 gameModel.hero.applyXp(1000);
             } else if (key == SKEY) {
                 log.warning("Time Cheat!");
-                gameModel.lastTime -= 100000;
+                gameModel.lastTime -= 1000 * 60;
             } else if (key === UP) {
                 gameModel.timeCoefficient *= 2;
                 log.error('Time coefficient now %.2f', gameModel.timeCoefficient);

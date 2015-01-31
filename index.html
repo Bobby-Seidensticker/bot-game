@@ -30,27 +30,33 @@
   -->
 
   <script id="equipped-item-slot-template" type="text/template">
-    <div><%= slot %></div>
+    <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
-      <div><%= model.name %></div>
+      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
+      <div>Level <%= model.level %></div>
     <% } else { %>
       <div>Empty</div>
     <% } %>
   </script>
 
   <script id="skillchain-item-slot-template" type="text/template">
-    <div><%= slot %></div>
+    <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
-      <div><%= model.name %></div>
+      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
+      <div>Level <%= model.level %></div>
     <% } else { %>
-      <div>Empty</div>      
+      <div>Empty</div>
     <% } %>
+
   </script>
 
   <script id="inventory-item-slot-template" type="text/template">
+    <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
-      <div><%= model.type %> <%= model.itemType %></div>
-      <div><%= model.name %></div>
+      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
+      <div>Level <%= model.level %></div>
+    <% } else { %>
+      <div>Empty</div>
     <% } %>
   </script>
 
@@ -91,13 +97,6 @@
       <div><%= model.name %></div>
       <div>Level <%= level %></div>
       <div><%= model.amts[level] - 1 %> / 10</div>
-    <% } %>
-  </script>
-
-  <script id="equipped-cards-item-slot-template" type="text/template">
-    <% if (model) { %>
-      <div><%= model.name %></div>
-      <div><%= model.level %></div>
     <% } %>
   </script>
 

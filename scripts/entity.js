@@ -42,10 +42,6 @@ namespace.module('bot.entity', function (exports, require) {
 
             this.eleResistAll *= Math.pow(0.997, this.wisdom);
 
-            if (this.team === TEAM_HERO) {
-                this.maxHp *= 10;
-            }
-
             // note that eleResistAll is on the def keys because of the ordering
             // added must be one, this is janky
             all.eleResist.lightResist.added = 1;
@@ -65,9 +61,6 @@ namespace.module('bot.entity', function (exports, require) {
             // Damage is left uncombined, handled in skills
 
             this.baseDmg = all.dmg;
-            if (this.team === TEAM_HERO) {
-                this.baseDmg.physDmg.more *= 2;
-            }
             this.computeSkillAttrs();
 
             this.nextLevelXp = this.getNextLevelXp();

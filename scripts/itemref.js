@@ -403,7 +403,8 @@ namespace.module('bot.itemref', function (exports, require) {
         "card": {
             "proto-skeleton": {
                 "mods": [
-                    {"def": "fireResist more -20", "type": "eleResist"}
+                    {"def": "fireResist more -20", "type": "eleResist"},
+                    {"def": "maxHp more -50", "type": "def"}
                 ],
             },
             "proto-boss": {
@@ -491,18 +492,33 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "body",
                 "levels": 10
-            },            
+            },
+
+            "brain juice": {
+                "mods": [
+                    {"def": "manaRegen added 2 perLevel", "type": "def"}
+                ],
+                "slot": "head",
+                "levels": 10
+            },
+            "heart juice": {
+                "mods": [
+                    {"def": "hpRegen added 3 perLevel", "type": "def"}
+                ],
+                "slot": "head",
+                "levels": 10
+            },
         },
         "monster": {
             "skeleton" : {
-                "items": [["weapon", "melee", 0], ["armor", "head", 0]],
+                "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0]],
                 "skills": ["basic melee"],
                 "sourceCards": [
                     ["proto-skeleton", 0]
                 ]
             },
             "fire skeleton": {
-                "items": [["weapon", "melee", 0], ["armor", "head", 0]],
+                "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
                 "skills": ["fire slash"],
                 "sourceCards": [
                     ["hot sword", 1],
@@ -510,17 +526,19 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "skeleton archer" : {
-                "items": [["weapon", "range", 0], ["armor", "chest", 0]],
+                "items": [["weapon", "range", 0], ["armor", "chest", 0], ["armor", "hands", 0]],
                 "skills": ["basic range"],
                 "sourceCards": [
                     ["proto-skeleton", 0]
                 ]
             },
             "skeleton mage" : {
-                "items": [["weapon", "spell", 0], ["armor", "legs", 0]],
+                "items": [["weapon", "spell", 0], ["armor", "legs", 0], ["armor", "hands", 0]],
                 "skills": ["fire ball", "basic spell"],
                 "sourceCards": [
-                    ["proto-skeleton", 0]
+                    ["proto-skeleton", 0],
+                    ["brain juice", 1],
+                    ["heart juice", 1],
                 ]
             },
             "skeleton king" : {
@@ -538,8 +556,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "choices": ["skeleton", "skeleton archer", "skeleton mage"],
                 "weights": [20, 10, 5],
                 "boss": "skeleton king",
-                "roomCount": 3,
-                "quantity": [1, 2, 4]
+                "roomCount": 20,
+                "quantity": [1, 1, 3]
             }
         },
         "test": {

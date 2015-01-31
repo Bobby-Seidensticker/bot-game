@@ -39,7 +39,7 @@ namespace.module('bot.main', function (exports, require) {
                 gameModel.hero.applyXp(1000);
             } else if (key == SKEY) {
                 log.warning("Time Cheat!");
-                gameModel.lastTime -= 1000 * 60;
+                gameModel.lastTime -= 1000 * 60 * 5;
             } else if (key === UP) {
                 gameModel.timeCoefficient *= 2;
                 log.error('Time coefficient now %.2f', gameModel.timeCoefficient);

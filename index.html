@@ -108,7 +108,7 @@
     <div class="mods">
       <div>Level <%= model.level %></div>
       <div>XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
-      <% _.each(model.baseMods, function(mod) { %>
+      <% _.each(namespace.bot.utils.prettifyMods(model.baseMods, model.level), function(mod) { %>
         <div><%= mod.def %></div>
       <% }); %>
     </div>
@@ -116,8 +116,14 @@
     <h3><%= model.name %> - Card</h3>
     <div class="mods">
       <div>Level <%= level %></div>
-      <% _.each(model.mods, function(mod) { %>
-        <div><%= mod.def %></div>
+      <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(mod) {
+         if (mod.def.split(' ')[3] == "perLevel") {
+         
+         %><div><%= mod.def %></div><%
+         print('collapse me');                              
+         } else {%>
+      <div><%= mod.def %></div>
+      <% } %>
       <% }); %>
     </div>
     <% } %>

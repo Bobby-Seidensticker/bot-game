@@ -681,6 +681,18 @@ namespace.module('bot.views', function (exports, require) {
         ctx.textBaseline = 'top';
         ctx.font = '14px sans-serif';
         ctx.fillText(body.spec.name, coords[0], coords[1] + 10);
+
+        var pctHp = body.hp / body.spec.maxHp;
+        //console.log(pctHp);
+        ctx.fillStyle = "#A00";
+        ctx.fillRect(coords[0] - 15,coords[1]- 20, pctHp * 30, 5);
+
+        //ctx.fill();
+
+        ctx.rect(coords[0] - 15,coords[1]- 20,30,5);
+        ctx.stroke();
+        
+        console.log(body);
     }
 
     function circle(ctx, pos, color) {
@@ -690,6 +702,8 @@ namespace.module('bot.views', function (exports, require) {
         ctx.fill();
         ctx.closePath();
     }
+
+
 
 
     exports.extend({

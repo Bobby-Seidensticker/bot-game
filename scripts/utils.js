@@ -104,6 +104,14 @@ namespace.module('bot.utils', function (exports, require) {
         return ret;
     }
 
+    function prettifyMods(mods, level) {
+        var res = [];
+        _.each(mods, function(mod, i) {
+            res.push(applyPerLevel(mod, level));
+        });
+        return res;
+    }
+
     function computeStat(section, stat) {
         var stat, obj, res;
 
@@ -168,6 +176,7 @@ namespace.module('bot.utils', function (exports, require) {
         expandSourceItem: expandSourceItem,
         expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
+        prettifyMods: prettifyMods,
         //addAllCards: addAllCards,
         addAllMods: addAllMods,
         addMod: addMod,

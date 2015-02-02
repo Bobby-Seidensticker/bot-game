@@ -16,7 +16,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'physDmg added 3', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg more 5 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1 perLevel', type: 'dmg'}
                 ],
                 "getClassMods": function(classLevel) {
                     return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
@@ -28,7 +28,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'physDmg added 3', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg more 5 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1 perLevel', type: 'dmg'}
                 ],
                 "getClassMods": function(classLevel) {
                     return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
@@ -40,7 +40,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'physDmg added 3', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg more 5 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1 perLevel', type: 'dmg'}
                 ],
                 "getClassMods": function(classLevel) {
                     return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
@@ -53,7 +53,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "head": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 5 perLevel', type: 'def'},
+                    {def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -66,7 +66,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "chest": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 5 perLevel', type: 'def'},
+                    {def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -79,7 +79,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "legs": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 5 perLevel', type: 'def'},
+                    {def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -92,7 +92,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "hands": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 5 perLevel', type: 'def'},
+                    {def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {

@@ -16,6 +16,7 @@ namespace.module('bot.main', function (exports, require) {
         log.info('onReady');
 
         var gameModel = new GameModel();
+        window.game = gameModel;
 
         var gameView = new views.GameView({}, gameModel);
         //        var gameView = new namespace.bot.window.GameView(gameModel);

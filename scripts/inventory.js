@@ -90,9 +90,14 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         unequipCards: function() {
-            _.each(_.compact(this.cards), function(card) {
-                card.model.unequip(card.level);
-            });
+            var i, l, c;
+            for (i = 0, l = this.cards.length; i < l; i++) {
+                c = this.cards[i];
+                if (c) {
+                    c.model.unequip(c.level);
+                    this.cards[i] = undefined;
+                }
+            }
         },
     });
 
@@ -209,6 +214,12 @@ namespace.module('bot.inv', function (exports, require) {
                 if (skill !== undefined) {
                     skill.computeAttrs(dmgStats, dmgOrder);
                 }
+            });
+        },
+
+        applyXp: function(xp) {
+            _.each(_.compact(this.skills), function (skill) {
+                skill.applyXp(xp);
             });
         },
     });
@@ -383,15 +394,15 @@ namespace.module('bot.inv', function (exports, require) {
 
         // this is called with level, not index.  If it's out of range, you're screwed, so don't do that
         equip: function(level) {
-            log.info('CardTypeModel.equip card name: %s, level: %d, current equipped[level]: %d',
-                     this.name, level, this.equipped[level]);
             this.equipped[level]++;
+            log.warning('CardTypeModel.equip card name: %s, level: %d, current equipped[level]: %d',
+                     this.name, level, this.equipped[level]);
         },
 
         unequip: function(level) {
-            log.info('CardTypeModel.unequip card name: %s, level: %d, current equipped[level]: %d',
-                     this.name, level, this.equipped[level]);
             this.equipped[level]--;
+            log.warning('CardTypeModel.unequip card name: %s, level: %d, current equipped[level]: %d',
+                     this.name, level, this.equipped[level]);
         },
 
         addCard: function(level) {
@@ -411,11 +422,7 @@ namespace.module('bot.inv', function (exports, require) {
 
     var CardTypeCollection = window.Model.extend({
         initialize: function() {
-            this.models = [
-                new CardTypeModel('hot sword'),
-                new CardTypeModel('surprisingly hot sword'),
-                new CardTypeModel('hard head')
-            ];
+            this.models = [];
         },
 
         addDrops: function(drops) {

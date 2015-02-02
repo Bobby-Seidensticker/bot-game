@@ -12,6 +12,7 @@ namespace.module('bot.views', function (exports, require) {
             this.itemTab = new ItemTab({}, game);
             this.cardTab = new CardTab({}, game);
             this.visView = new VisView({}, game);
+            this.footerView = new FooterView({}, game);
 
             this.infoBox = new InfoBox();
 
@@ -20,6 +21,7 @@ namespace.module('bot.views', function (exports, require) {
             this.$el.append(this.cardTab.render().el);
             this.$el.append(this.infoBox.el);
             this.$el.append(this.visView.render().el);
+            this.$el.append(this.footerView.render().el);
         }
     });
 
@@ -574,6 +576,33 @@ namespace.module('bot.views', function (exports, require) {
             // this.selectedSlot
 
             // click handler
+            return this;
+        },
+    });
+
+    var FooterView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'footer',
+
+        initialize: function(options, game) {
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+
+            this.zone = game.zone;
+            this.hero = this.zone.hero;
+            this.skills = this.hero.skills;
+            this.skillchain = this.hero.spec.skillchain;
+        },
+
+        resize: function() {
+            var s = [window.innerWidth, window.innerHeight];
+            this.$el.css({
+                width: s[0],
+                top: s[1] - 150 - 5
+            });
+        },
+
+        render: function() {
             return this;
         },
     });

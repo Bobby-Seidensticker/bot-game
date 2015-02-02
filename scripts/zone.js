@@ -141,17 +141,9 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         createSkillchain: function() {
-            var s = this.spec.skillchain;
-
-            var skills = _.filter(s.skills, function (skill) { return skill !== undefined; });
-
-            this.skills = _.map(
-                skills,
-                function(skill) {
-                    // TODO do the window.time (fake time) stuff
-                    return {spec: skill, coolAt: window.time + skill.cooldownTime};
-                }
-            );
+            this.skills = _.map(_.compact(this.spec.skillchain.skills), function(skill) {
+                return {spec: skill, coolAt: window.time + skill.cooldownTime};
+            });
         },
 
         revive: function() {

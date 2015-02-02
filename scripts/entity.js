@@ -140,6 +140,7 @@ namespace.module('bot.entity', function (exports, require) {
         applyXp: function(xp) {
             // TODO needs to do this to the skillchain as well
             this.equipped.applyXp(xp);
+            this.skillchain.applyXp(xp);
             this.xp += xp;
             while (this.xp >= this.nextLevelXp) {
                 this.level += 1;

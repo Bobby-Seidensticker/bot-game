@@ -404,16 +404,29 @@ namespace.module('bot.itemref', function (exports, require) {
             "proto-skeleton": {
                 "mods": [
                     {"def": "fireResist more -20", "type": "eleResist"},
-                    {"def": "maxHp more -50", "type": "def"}
+                    {"def": "physDmg more -30", "type": "dmg"},
+                    
                 ],
             },
-            "proto-boss": {
+            "proto-grunt": {
                 "mods": [
-                    //{"def": "physDmg more 10", "type": "dmg"},
-                    {"def": "maxHp more 100", "type": "def"}
+                    {"def": "maxHp more -50", "type": "def"},
+                    {"def": "physDmg more -30", "type": "dmg"},                    
+                ],
+            }, 
+                "proto-boss": {
+                "mods": [
+                    {"def": "physDmg more 100", "type": "dmg"},
+                    {"def": "maxHp more 1000", "type": "def"}
                 ],
             },
-
+            "sharpened": {
+                "mods": [
+                    {"def": "physDmg added 1 perLevel", "type": "dmg"}
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
             "hot sword": {
                 "mods": [
                     {"def": "fireDmg added 2 perLevel", "type": "dmg"}
@@ -447,7 +460,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "armor added 8 perLevel", "type": "def"}
                 ],
-                "slot": "body",
+                "slot": "chest",
                 "levels": 10
             },
             "steel toed": {
@@ -490,7 +503,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
-                "slot": "body",
+                "slot": "chest",
                 "levels": 10
             },
 
@@ -503,33 +516,46 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "heart juice": {
                 "mods": [
-                    {"def": "hpRegen added 3 perLevel", "type": "def"}
+                    {"def": "hpRegen added 1 perLevel", "type": "def"}
                 ],
                 "slot": "head",
                 "levels": 10
             },
+            "head of vigor": {
+                "mods": [
+                    {"def": "maxHp added 5 perLevel", "type": "def"}
+                ],
+                "slot": "head",
+                "levels": 10
+            },
+            
         },
         "monster": {
             "skeleton" : {
                 "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0]],
                 "skills": ["basic melee"],
                 "sourceCards": [
-                    ["proto-skeleton", 0]
+                    ["proto-skeleton", 0],
+                    ["proto-grunt", 0],
+                    ["sharpened", 1],
+                    ["hard head", 1]
                 ]
             },
             "fire skeleton": {
                 "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
-                "skills": ["fire slash"],
+                "skills": ["fire slash", "super smash"],
                 "sourceCards": [
                     ["hot sword", 1],
-                    ["proto-skeleton", 0]
+                    ["proto-skeleton", 0],
+                    ["six pack", 1]
                 ]
             },
             "skeleton archer" : {
                 "items": [["weapon", "range", 0], ["armor", "chest", 0], ["armor", "hands", 0]],
                 "skills": ["basic range"],
                 "sourceCards": [
-                    ["proto-skeleton", 0]
+                    ["proto-skeleton", 0],
+                    ["head of vigor", 1]
                 ]
             },
             "skeleton mage" : {
@@ -553,8 +579,8 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "zone": {
             "spooky dungeon": {
-                "choices": ["skeleton", "skeleton archer", "skeleton mage"],
-                "weights": [20, 10, 5],
+                "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton"],
+                "weights": [20, 10, 5, 5],
                 "boss": "skeleton king",
                 "roomCount": 20,
                 "quantity": [1, 1, 3]

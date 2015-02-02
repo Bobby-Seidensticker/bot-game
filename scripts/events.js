@@ -8,6 +8,12 @@ namespace.module('bot.events', function (exports, require) {
 
     DirtyQueueClass.prototype.mark = function(name) {
         this.obj[name] = true;
+        var split = name.split(':');
+        if (split.length > 1) {
+            for (var i = 1; i < split.length; i++) {
+                this.obj[split.slice(0, split.length - i).join(':')] = true;
+            }
+        }
     }
 
     DirtyQueueClass.prototype.triggerAll = function(eventObject) {

@@ -82,10 +82,11 @@ namespace.module('bot.inv', function (exports, require) {
                 this.cards[slotIndex] = card;
             }
 
-            log.warning('equipCard, now have %d cards equipped', _.compact(this.cards).length);
+            log.info('equipCard, now have %d cards equipped', _.compact(this.cards).length);
 
-            // TODO: make this more specific
-            window.ItemEvents.trigger('equipChange');
+            // this trigger is exclusively for communication between gear and
+            // equipped gear model so egm doesn't have to listenTo and stopListening on every single gear change
+            window.EquipEvents.trigger('change');  
             return true;
         },
 
@@ -187,8 +188,7 @@ namespace.module('bot.inv', function (exports, require) {
                 this.skills[slot] = skill;
             }
 
-            window.DirtyQueue.mark('skillchainChange');
-            window.ItemEvents.trigger('skillchainChange', skill, slot);
+            this.trigger('change');
             return true;
         },
 
@@ -215,6 +215,8 @@ namespace.module('bot.inv', function (exports, require) {
                     skill.computeAttrs(dmgStats, dmgOrder);
                 }
             });
+
+            window.DirtyQueue.mark('skillComputeAttrs');
         },
 
         applyXp: function(xp) {
@@ -232,11 +234,14 @@ namespace.module('bot.inv', function (exports, require) {
         // armor slots: head, chest, hands, legs
 
         initialize: function() {
-            this.listenTo(window.ItemEvents, 'equip', this.equip);
+            // this line and event object is used exclusively for equipment card changes to propogate through here
+            // and up to the hero so the egm doesn't have to listen and stop listening every equip
+            this.listenTo(window.EquipEvents, 'change', this.propChange);
         },
 
-        equip: function(item, slot) {
+        propChange: function() { this.trigger('change'); },
 
+        equip: function(item, slot) {
             //log.debug('EquippedGearModel.equip item %s in slot %s', item.name, slot);
 
             /*
@@ -247,7 +252,7 @@ namespace.module('bot.inv', function (exports, require) {
               Slot full, trying to equip same item, error
               When equipping, ensure it's a valid operation
 
-              If no error, fire an equipChange event
+              If no error, fire appropriate events
             */
 
             if (item === undefined) {
@@ -281,8 +286,7 @@ namespace.module('bot.inv', function (exports, require) {
             }
 
             this[slot] = item;
-            window.DirtyQueue.mark('equipChange');
-            window.ItemEvents.trigger('equipChange', item, slot);
+            this.trigger('change');
             return true;
         },
 
@@ -427,7 +431,6 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             var drop;
-            var changed = false;
             for (var i = 0; i < drops.length; i++) {
                 drop = drops[i];
                 if (drop.dropType !== 'card') {
@@ -440,9 +443,8 @@ namespace.module('bot.inv', function (exports, require) {
                 }
                 typeModel.addCard(drop.data[1]);
                 log.info('Added card %s level %d to card inv', drop.data[0], drop.data[1]);
-                changed = true;
+                window.DirtyQueue.mark('cards:new');
             }
-            if (changed) { window.DirtyQueue.mark('cards:new'); }
         },
 
         getSlotCTMs: function(slot) {
@@ -450,197 +452,8 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    /*
-    var ItemCollectionView = Backbone.View.extend({
-        el: $('#inv-menu-holder'),
-
-        template: _.template($('#inv-menu-template').html()),
-
-        initialize: function() {
-            var groups = this.collection.itemTypes();
-            this.$el.html(this.template({groups: groups}));
-
-            this.groupContentEls = _.object(groups, _.map(groups, function(group) {
-                return this.$('.' + group + ' .item-group-content');
-            }, this), this);
-
-            this.collection.each(function(item) {
-                // This is sitting in the void, I believe that is ok
-                var view = new this.SubView({model: item});
-                var $container = this.groupContentEls[item.get('itemType')];
-                $container.append(view.render().el);
-            }, this);
-
-            // TODO done
-            this.listenTo(this.collection, 'add', this.onAdd);
-        },
-
-        onAdd: function(item) {
-            log.debug('ItemCollectionView onAdd');
-            //console.log(item);
-            var view = new this.SubView({model: item});
-            var $container = this.groupContentEls[item.get('itemType')];
-            var el = view.render().el;
-
-            $container.append(el);
-        }
-    });
-
-    var ItemView = Backbone.View.extend({
-        tagName: 'div',
-
-        template: _.template($('#inv-menu-item-template').html()),
-
-        events: {
-            'click .item-header': 'expandCollapse'
-        },
-
-        renderInitted: false,
-
-        initialize: function() {
-            this.listenTo(this.model, 'destroy', this.destroy);
-            this.listenTo(this.model, 'change', this.onChange);
-        },
-
-        prettyAffix: function(affix) {
-            //Working here now
-            var splits = affix.split(' ');
-            if (splits[1] == 'added') {
-                return '+' + splits[2] + ' Added ' + splits[0][0].toUpperCase() + splits[0].slice(1);
-            } else if (splits[1] == 'more') {
-                return splits[2] + '% More ' + splits[0][0].toUpperCase() + splits[0].slice(1);
-            } else {
-                log.warning('ItemView.prettyAffix returning unstyled affix, no modifier def');
-            }
-            return affix;
-        },
-
-        renderAffixes: function() {
-            var affixes = this.model.get('affixes');
-            var rendered = '';
-            _.each(affixes, function(affix) {
-                rendered += '<p>' + this.prettyAffix(affix) + '</p>'
-            }, this);
-            if (this.model.get('nextAffix') != '') {
-                rendered += '<p class="nextAffix">' + this.prettyAffix(this.model.get('nextAffix')) +
-                    '<input type="button" value="Reroll (' + this.model.get('level') + ' poops)" class="reroll"></p>';
-            }
-            //TODO - put nextAffix here
-            return rendered;
-        },
-
-        getNextLevelXp: function(xp) {
-            return this.model.getNextLevelXp(xp);
-        },
-
-        render: function(notFirst) {
-            //console.log('rendering this', this);
-            if (!this.renderInitted) {
-                this.initRender();
-                this.renderInitted = true;
-            } 
-            this.$('.xp').html(this.model.get('xp'));
-            this.$('.nextLevelXp').html(this.model.getNextLevelXp());
-            this.$('.item-affixes').html(this.renderAffixes());
-            this.$('.level').html(this.model.get('level'));
-
-            if (this.model.get('equippedBy') == '') {
-                this.$('.equip').attr('value', 'Equip');
-            } else {
-                this.$('.equip').attr('value', 'Unequip');
-            }
-                                                     
-
-            return this;
-        },
-
-        initRender: function(notFirst) {
-            var type = this.model.get('itemType');
-
-            //console.log('buttons', this.buttons);
-            var ext = {
-                'buttons': this.buttons,
-                'midExtra': this.midExtra()
-            };
-            //console.log('itemview', this.midExtra());
-
-            var obj = _.extend({}, this.model.toJSON(), ext);
-            this.$el.html(this.template(obj));
-            this.$el.attr({
-                'class': 'item collapsed '+ this.model.get('name').split(' ').join('-')
-            });
-        },
-
-        expandCollapse: function() {
-            log.debug('expand collapse click on model name %s', this.model.get('name'));
-            this.$el.toggleClass('collapsed');
-        },
-
-        onChange: function() {
-            this.render(true);
-        },
-
-        destroy: function() {
-            log.error('ItemView destroy, bad');
-            this.$el.remove();
-        },
-    });
-
-    var InvItemView = ItemView.extend({
-        events: _.extend({}, ItemView.prototype.events, {
-            'click .equip': 'equip',
-            'click .level-up': 'levelUp',
-            'click .reroll': 'reroll'
-        }),
-
-        buttons: $('#inv-menu-item-buttons-template').html(),
-
-        equip: function() {
-            log.info('equip click on model name %s', this.model.get('name'));
-            // TODO this is dumb, this should trigger a global event like this:
-            // window.ItemEvents.trigger('equipAttempt', this.model);
-            this.model.trigger('equipClick', this.model);
-        },
-
-        midExtra: function() {
-            return _.template($('#inv-menu-item-xp').html(), {
-                xp: this.model.get('xp'),
-                nextLevelXp: this.model.getNextLevelXp()
-            }, this);
-        },
-
-        reroll: function() {
-            log.debug('invitemview reroll called');
-            this.model.reroll();
-            this.render();
-        },
-
-        levelUp: function() {
-            this.model.levelUp();
-        },
-
-        onChange: function() {
-            this.render();
-            //Trying to un-disable butons here
-            //console.log('oh yeah', this.$('.level-up'));
-            if (this.model.canLevel()) {
-                this.$('.level-up').prop('disabled', false);
-            } else {
-                this.$('.level-up').prop('disabled', true);
-            }
-
-        }
-    });
-
-    var InvItemCollectionView = ItemCollectionView.extend({
-        el: $('#inv-menu-holder'),
-        template: _.template($('#inv-menu-template').html()),
-        SubView: InvItemView
-    });*/
-
     exports.extend({
         ItemCollection: ItemCollection,
-        //InvItemCollectionView: InvItemCollectionView,
         CardTypeCollection: CardTypeCollection,
         CardTypeModel: CardTypeModel,
         WeaponModel: WeaponModel,

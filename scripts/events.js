@@ -7,6 +7,9 @@ namespace.module('bot.events', function (exports, require) {
     }
 
     DirtyQueueClass.prototype.mark = function(name) {
+        if (this.obj[name]) {
+            return;
+        }
         this.obj[name] = true;
         var split = name.split(':');
         if (split.length > 1) {
@@ -23,9 +26,6 @@ namespace.module('bot.events', function (exports, require) {
             this.obj,
             function(value, key, list) {
                 if (value) {
-                    if (key !== 'vis') {
-                        log.debug('triggering event %s', key);
-                    }
                     eventObject.trigger(key);
                     list[key] = false;
                 }
@@ -40,6 +40,7 @@ namespace.module('bot.events', function (exports, require) {
 
     window.GameEvents = _.extend({}, Backbone.Events);
     window.ItemEvents = _.extend({}, Backbone.Events);
+    window.EquipEvents = _.extend({}, Backbone.Events);
     window.UIEvents = _.extend({}, Backbone.Events);
     window.MessageEvents = _.extend({}, Backbone.Events);
 });

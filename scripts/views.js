@@ -44,8 +44,7 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options) {
             // TODO add selective updating
-            this.listenTo(window.DirtyListener, 'equipChange', this.render);
-            this.listenTo(window.DirtyListener, 'skillchainChange', this.render);
+            this.listenTo(window.DirtyListener, 'computeAttrs', this.render);
         },
 
         render: function() {
@@ -158,8 +157,8 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#info-box-template').html()),
 
         initialize: function() {
-            this.listenTo(window.UIEvents, 'hoverover', this.show);
-            this.listenTo(window.UIEvents, 'hoverout', this.hide);
+            this.listenTo(window.UIEvents, 'mouseover', this.show);
+            this.listenTo(window.UIEvents, 'mouseout', this.hide);
         },
 
         show: function(view) {
@@ -200,11 +199,11 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
-            window.UIEvents.trigger('hoverover', this);
+            window.UIEvents.trigger('mouseover', this);
         },
 
         onMouseout: function() {
-            window.UIEvents.trigger('hoverout');
+            window.UIEvents.trigger('mouseout');
         },
 
         initialize: function(options, loc, slot) {
@@ -247,9 +246,10 @@ namespace.module('bot.views', function (exports, require) {
                 inventory: []
             };
 
-            this.listenTo(window.DirtyListener, 'inventory:new', this.render.bind(this));
-            this.listenTo(window.DirtyListener, 'equipChange', this.render);
-            this.listenTo(window.DirtyListener, 'skillchainChange', this.render);
+            this.listenTo(window.DirtyListener, 'inventory:new', this.render);
+
+            this.listenTo(window.DirtyListener, 'computeAttrs', this.render);
+            this.listenTo(window.DirtyListener, 'skillComputeAttrs', this.render);
         },
 
         onClick: function(itemSlot) {
@@ -270,6 +270,7 @@ namespace.module('bot.views', function (exports, require) {
                 if (this.selected) {
                     this.selected.unselect();
                     if (this[itemSlot.loc].equip(this.selected.model, itemSlot.slot)) {
+                        window.DirtyQueue.mark('equipChange');
                         log.info('Successfully equipped item %s', this.selected.name);
                         // selected is always from the inventory
                         itemSlot.fill(this.selected.model);
@@ -280,6 +281,7 @@ namespace.module('bot.views', function (exports, require) {
                     this.selected = undefined;
                 } else {
                     this[itemSlot.loc].equip(undefined, itemSlot.slot);
+                    window.DirtyQueue.mark('equipChange');
                     var unequippingModel = itemSlot.model;
                     itemSlot.empty();
                     this.addItemSlot(unequippingModel, 'inventory');
@@ -391,11 +393,11 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
-            window.UIEvents.trigger('hoverover', this);
+            window.UIEvents.trigger('mouseover', this);
         },
 
         onMouseout: function() {
-            window.UIEvents.trigger('hoverout');
+            window.UIEvents.trigger('mouseout');
         },
 
         select: function() { this.$el.addClass('selected'); },
@@ -418,8 +420,10 @@ namespace.module('bot.views', function (exports, require) {
 
             this.views = [];
             this.listenTo(window.DirtyListener, 'cards:new', this.render);
+
+            this.listenTo(window.DirtyListener, 'computeAttrs', this.render);  // should this be more specific?
+            this.listenTo(window.DirtyListener, 'skillComputeAttrs', this.render);  // should this be more specific?
             this.listenTo(window.DirtyListener, 'equipChange', this.hardRender);
-            this.listenTo(window.DirtyListener, 'skillchainChange', this.hardRender);
         },
 
         onClick: function(clickedView) {
@@ -459,8 +463,6 @@ namespace.module('bot.views', function (exports, require) {
                     this.selectedCard = clickedView;
                     this.render();
                     return;
-                } else {
-                    // nothing, you hover
                 }
             } else {
                 throw('shit');
@@ -566,16 +568,32 @@ namespace.module('bot.views', function (exports, require) {
                 this.listenTo(view, 'click', this.onClick);
             }, this);
 
-            // for each slot in equipped, make cardslot view
-            // for each slot in skillchain, make cardslot view
-            // for each cardtypemodel in cards:
-            //     for (var i = 0; i < ctm.amts.length; i++):
-            //         if (ctm.amts[i] > 0 && ctm.equipped[i] === 0) { make cardslot view }
-            // when making, listen to click events triggered on views
-            // this.selectedCard
-            // this.selectedSlot
+            return this;
+        },
+    });
 
-            // click handler
+    var HeroFooterView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'hero',
+        template: _.template($('#hero-footer-template').html()),
+
+        initialize: function() {
+            this.listenTo(window.DirtyListener, 'hero:hp', this.hpChange);
+            this.listenTo(window.DirtyListener, 'hero:mana', this.manaChange);
+        },
+
+        hpChange: function() {
+            this.$hp.html(this.model.hp);
+        },
+
+        manaChange: function() {
+            this.$mana.html(this.model.mana);
+        },
+
+        render: function() {
+            this.$el.html(this.template(this.model));
+            this.$hp = this.$('.hp');
+            this.$mana = this.$('.mana');
             return this;
         },
     });
@@ -590,8 +608,11 @@ namespace.module('bot.views', function (exports, require) {
 
             this.zone = game.zone;
             this.hero = this.zone.hero;
-            this.skills = this.hero.skills;
-            this.skillchain = this.hero.spec.skillchain;
+
+            this.heroBodyView = new HeroFooterView({model: this.hero});
+            /*this.skillchainView = new SkillchainFooterView({}, this.hero.skills, this.hero.spec.skillchain);
+            this.zoneView = new ZoneFooterView({}, this.zone);
+            this.buttons = new FooterButtonsView({});*/
         },
 
         resize: function() {
@@ -603,6 +624,12 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         render: function() {
+            var frag = document.createDocumentFragment();
+            frag.appendChild(this.heroBodyView.render().el);
+            /*frag.appendChild(this.skillchainView.render().el);
+            frag.appendChild(this.zoneView.render().el);
+            frag.appendChild(this.buttons.render().el);*/
+            this.$el.html(frag);
             return this;
         },
     });
@@ -683,7 +710,6 @@ namespace.module('bot.views', function (exports, require) {
         ctx.fillText(body.spec.name, coords[0], coords[1] + 10);
 
         var pctHp = body.hp / body.spec.maxHp;
-        //console.log(pctHp);
         ctx.fillStyle = "#A00";
         ctx.fillRect(coords[0] - 15,coords[1]- 20, pctHp * 30, 5);
 
@@ -691,8 +717,6 @@ namespace.module('bot.views', function (exports, require) {
 
         ctx.rect(coords[0] - 15,coords[1]- 20,30,5);
         ctx.stroke();
-        
-        console.log(body);
     }
 
     function circle(ctx, pos, color) {

@@ -51,7 +51,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.rooms = rooms;
             this.rooms[0].hero = this.hero;
             this.initialized = true;
-            window.DirtyQueue.mark('zone:newZone');
+            window.DirtyQueue.mark('zone:new');
         },
 
         ensureRoom: function() {
@@ -351,7 +351,8 @@ namespace.module('bot.zone', function (exports, require) {
 
     var HeroBody = EntityBody.extend({
         initialize: function(spec) {
-            this.listenTo(window.ItemEvents, 'skillchainChange', this.updateSkillchain);
+            this.listenTo(spec, 'skillComputeAttrs', this.updateSkillchain);
+            this.listenTo(spec, 'computeAttrs', this.updateSkillchain);
             EntityBody.prototype.initialize.call(this, spec);
         },
 
@@ -391,6 +392,16 @@ namespace.module('bot.zone', function (exports, require) {
         onDeath: function() {
             log.warning('your hero died');
         },
+
+        modifyHp: function(added) {
+            EntityBody.prototype.modifyHp.call(this, added);
+            window.DirtyQueue.mark('hero:hp');
+        },
+
+        modifyMana: function(added) {
+            EntityBody.prototype.modifyMana.call(this, added);
+            window.DirtyQueue.mark('hero:mana');
+        }
     });
 
     window.monsterSpecs = {};

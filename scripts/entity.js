@@ -64,6 +64,8 @@ namespace.module('bot.entity', function (exports, require) {
             this.computeSkillAttrs();
 
             this.nextLevelXp = this.getNextLevelXp();
+
+            window.DirtyQueue.mark('computeAttrs');
         },
 
         computeSkillAttrs: function() {
@@ -125,11 +127,8 @@ namespace.module('bot.entity', function (exports, require) {
             this.nextAction = window.time;
             this.computeAttrs();
 
-            // TODO, should be listening to window.ItemEvents
-            // this.listenTo(window.ItemEvents, 'equipSuccess', this.computeAttrs);
-            //this.listenTo(this.inv, 'equipClick', this.equipClick);
-            this.listenTo(window.ItemEvents, 'equipChange', this.computeAttrs);
-            this.listenTo(window.ItemEvents, 'skillchainChange', this.computeSkillAttrs);
+            this.listenTo(this.skillchain, 'change', this.computeSkillAttrs);
+            this.listenTo(this.equipped, 'change', this.computeAttrs);
         },
 
         getMods: function() {
@@ -146,8 +145,8 @@ namespace.module('bot.entity', function (exports, require) {
                 this.level += 1;
                 this.xp -= this.nextLevelXp;
                 this.nextLevelXp = this.getNextLevelXp();
-                this.computeAttrs();
             }
+            this.computeAttrs();
         },
 
         /*

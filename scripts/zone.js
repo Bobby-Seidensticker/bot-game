@@ -154,6 +154,8 @@ namespace.module('bot.zone', function (exports, require) {
             this.lastManaFullTime = window.time;
             this.manaRegened = 0;
             this.initPos();
+
+            window.DirtyQueue.mark('revive');
         },
 
         initPos: function() {

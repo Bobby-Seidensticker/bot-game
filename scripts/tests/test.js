@@ -69,41 +69,41 @@ namespace.module('bot.test', function (exports, require) {
             var skill = new inv.SkillModel('basic melee');
 
             var dmgKeys = namespace.bot.entity.dmgKeys;
-
+            var actualDmgKeys = namespace.bot.entity.actualDmgKeys;
             // add 2
             utils.addMod(dmgStats, 'physDmg added 2', 1);
             assert.equal(dmgStats.physDmg.added, 2, 'physDmg added 2');
-            skill.computeAttrs(dmgStats, dmgKeys);
+            skill.computeAttrs(dmgStats, "melee", dmgKeys, actualDmgKeys);
             assert.equal(skill.physDmg, 2, 'Skill\'s physDmg is equal to 2 after added 2');
 
             // more 50
             utils.addMod(dmgStats, 'physDmg more 50', 1);
             assert.equal(dmgStats.physDmg.more, 1.5, 'physDmg more 1.5');
-            skill.computeAttrs(dmgStats, dmgKeys);
+            skill.computeAttrs(dmgStats, "melee", dmgKeys, actualDmgKeys);
             assert.equal(skill.physDmg, 3, 'Skill\'s physDmg is equal to 3 after more 50');
 
             // 50 pct phys to lightning
             utils.addMod(dmgStats, 'physDmg converted 50 lightDmg', 1);
             assert.equal(dmgStats.physDmg.converted.lightDmg, 50, 'physDmg converted 50 lightDmg');
-            skill.computeAttrs(dmgStats, dmgKeys);
+            skill.computeAttrs(dmgStats, "melee", dmgKeys, actualDmgKeys);
             assert.equal(skill.physDmg, 1.5, 'Skill physDmg is equal to 1.5 after half phys to light');
             assert.equal(skill.lightDmg, 1.5, 'Skill lightDmg is equal to 1.5 after half phys to light');
 
             // more lightning
             utils.addMod(dmgStats, 'lightDmg more 100', 1);
-            skill.computeAttrs(dmgStats, dmgKeys);
+            skill.computeAttrs(dmgStats, "melee", dmgKeys, actualDmgKeys);
             assert.equal(skill.lightDmg, 3, 'Skill\'s lightDmg is equal to 3 after phys to lightning and more 100');
 
             // more lightning
             utils.addMod(dmgStats, 'lightDmg gainedas 50 fireDmg', 1);
-            skill.computeAttrs(dmgStats, dmgKeys);
+            skill.computeAttrs(dmgStats, "melee", dmgKeys, actualDmgKeys);
             assert.equal(skill.fireDmg, 1.5, 'Half of lightDmg gained as fireDmg');
 
             // add 2
             var mod = {def: 'coldDmg added 2 perLevel', type: 'dmg'};
             utils.addMod(dmgStats, utils.applyPerLevel(mod, 10).def);
             assert.equal(dmgStats.coldDmg.added, 20, 'coldDmg added 2 * 10');
-            skill.computeAttrs(dmgStats, dmgKeys);
+            skill.computeAttrs(dmgStats, "melee", dmgKeys, actualDmgKeys);
             assert.equal(skill.coldDmg, 20, 'Skill\'s coldDmg is equal to 20 after added 2 perLevel by 10 levels');
         });
 

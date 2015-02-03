@@ -326,7 +326,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             window.MessageEvents.trigger(
                 'message',
-                newZoneMessage(Math.floor(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500)
+                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500)
             );
             return totalDmg;
         },

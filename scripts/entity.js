@@ -30,11 +30,12 @@ namespace.module('bot.entity', function (exports, require) {
         computeAttrs: function() {
             log.error('compute attrs');
 
-            this.weaponType = 'melee'
-            if (this.team === TEAM_HERO && this.equipped.weapon) {
-                this.weaponType = this.equipped.weapon.type
+            if(this.team === TEAM_HERO) {
+                this.weaponType = 'melee'
+                if (this.team === TEAM_HERO && this.equipped.weapon) {
+                    this.weaponType = this.equipped.weapon.type
+                }
             }
-
             var all = {};
 
             all.def = utils.newBaseStatsDict(defKeys);

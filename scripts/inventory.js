@@ -155,10 +155,20 @@ namespace.module('bot.inv', function (exports, require) {
 
             log.debug('Skill compute attrs');
 
+            //remove added baseDmg amounts from spells (they can only be modified by cards on skill or by more increases)
+            if (this.class === "spell") {
+                _.each(actualDmgKeys, function(dmgType) {        
+                    this.dmgStats[dmgType].added = 0;
+                }, this);
+            }
+
+            
             var mods = this.getMods();
             _.each(mods, function(mod) {
                 utils.addMod(this.dmgStats, mod.def);
             }, this);
+
+            
 
             var arr = ['meleeDmg', 'rangeDmg', 'spellDmg'];
 

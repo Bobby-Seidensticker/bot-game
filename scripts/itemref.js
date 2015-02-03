@@ -38,12 +38,11 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "spell": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg more 1 perLevel', type: 'dmg'}
+                    {def: 'spellDmg added 10', type: 'dmg'},
+                    {def: 'spellDmg added 3 perLevel', type: 'dmg'},
                 ],
                 "getClassMods": function(classLevel) {
-                    return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
+                    return [{def: 'spellDmg added ' + Math.floor(Math.pow(3 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
                 "names": ["shitty wand", "crappy wand", "compound wand"]
@@ -210,6 +209,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
             "super smash": {
@@ -344,8 +345,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 50', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
-                    {def: 'fireDmg more -60', type: 'dmg'},
-                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg added 2', type: 'dmg'},
+                    {def: 'fireDmg added 2 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
                 ]
             },
@@ -358,8 +359,10 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
+                    {def: 'fireDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg added 3', type: 'dmg'},
+                    //{def: 'physDmg more -100', type: 'dmg'} //kind of a hack to prevent weapon dmg from flowing into spell dmg
                 ]
             },
             "ice ball": {

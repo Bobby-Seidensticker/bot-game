@@ -89,9 +89,9 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'dexterity gainedas 50 dodge', type: 'def'},
 
                 //TODO - add str/dex/wis attacktype bonuses here once impemented
-                //{def: 'strength gainedas 100 meleeDmg', type: 'dmg'},
-                //{def: 'dexterity gainedas 100 rangeDmg', type: 'dmg'},
-                //{def: 'wisdom gainedas 100 spellDmg', type: 'dmg'},                
+                //{def: 'strength gainedas 1 meleeDmg', type: 'dmg'},
+                //{def: 'dexterity gainedas 1 rangeDmg', type: 'dmg'},
+                //{def: 'wisdom gainedas 1 spellDmg', type: 'dmg'},                
                 
                 {def: 'eleResistAll added 1', type: 'def'},
 

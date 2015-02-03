@@ -148,8 +148,9 @@ namespace.module('bot.inv', function (exports, require) {
             _.extend(this, itemref.expand('skill', this.name));
         },
 
-        computeAttrs: function(baseDmgStats, dmgKeys) {
-            this.baseDmgStats = baseDmgStats;  // please don't modify this
+        computeAttrs: function(baseDmgStats, weaponType, dmgKeys, actualDmgKeys) {
+            this.weaponType = weaponType;  // please don't modify this
+            this.baseDmgStats = baseDmgStats;
             this.dmgStats = $.extend(true, {}, baseDmgStats);
 
             log.debug('Skill compute attrs');
@@ -159,9 +160,35 @@ namespace.module('bot.inv', function (exports, require) {
                 utils.addMod(this.dmgStats, mod.def);
             }, this);
 
+            var arr = ['meleeDmg', 'rangeDmg', 'spellDmg'];
+
+            var typeMoreMod = 1;
+            if (this.class !== 'spell' && this.class !== weaponType) {
+                typeMoreMod = 0;
+            }
+
+            _.each(arr, function(stat) {
+                this[stat] = utils.computeStat(this.dmgStats, stat);
+                if (this.class + "Dmg" == stat) {
+                    typeMoreMod *= 1 + (this[stat] / 100); //attackType modifiers are percentage based
+                }
+            }, this);
+
             _.each(dmgKeys, function(stat) {
+                if (actualDmgKeys.indexOf(stat) !== -1) {
+                    this.dmgStats[stat].more *= typeMoreMod;
+                }
+                if (arr.indexOf(stat) !== -1) {
+                    return;
+                }
                 this[stat] = utils.computeStat(this.dmgStats, stat);
             }, this);
+
+            var totalDmg = 0;
+            _.each(actualDmgKeys, function(stat) {
+                totalDmg += this[stat];
+            }, this);
+            this.disabled = totalDmg === 0;
         },
     });
 
@@ -172,6 +199,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         equip: function(skill, slot) {
+            log.info('skillchain equip');
             if (skill === undefined) {
                 if (this.skills[slot]) {
                     this.skills[slot].equipped = false;
@@ -206,16 +234,19 @@ namespace.module('bot.inv', function (exports, require) {
             this.furthest = ranges.max();
         },
 
-        computeAttrs: function(dmgStats, dmgOrder) {
+        computeAttrs: function(dmgStats, weaponType) {
+            var dmgKeys = namespace.bot.entity.dmgKeys;
+            var actualDmgKeys = namespace.bot.entity.actualDmgKeys;
             log.debug('skill chain compute attrs');
 
             this.lastDmgStats = dmgStats;
             _.each(this.skills, function(skill) {
                 if (skill !== undefined) {
-                    skill.computeAttrs(dmgStats, dmgOrder);
+                    skill.computeAttrs(dmgStats, weaponType, dmgKeys, actualDmgKeys);
                 }
             });
 
+            this.trigger('skillComputeAttrs');
             window.DirtyQueue.mark('skillComputeAttrs');
         },
 
@@ -242,7 +273,7 @@ namespace.module('bot.inv', function (exports, require) {
         propChange: function() { this.trigger('change'); },
 
         equip: function(item, slot) {
-            //log.debug('EquippedGearModel.equip item %s in slot %s', item.name, slot);
+            log.info('equipped gear model equip');
 
             /*
               Slot empty, filling with item: fill slot

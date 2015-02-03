@@ -218,12 +218,15 @@ namespace.module('bot.views', function (exports, require) {
         empty: function() { this.model = undefined; this.render(); },
         fill: function(model) { this.model = model; this.render(); },
 
-        lookup: function() {
-            return {model: this.model, loc: this.loc, slot: this.slot};
-        },
-
         render: function() {
             this.$el.html(this.template(this));
+            if (this.model) {
+                if (this.model.disabled) {
+                    this.$el.addClass('disabled');
+                } else {
+                    this.$el.removeClass('disabled');
+                }
+            }
             return this;
         }
     });

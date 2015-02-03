@@ -68,15 +68,7 @@ namespace.module('bot.test', function (exports, require) {
 
             var skill = new inv.SkillModel('basic melee');
 
-            var dmgKeys = [
-                'physDmg',
-                'lightDmg',
-                'coldDmg',
-                'fireDmg',
-                'poisDmg',
-                'range',
-                'speed'
-            ];
+            var dmgKeys = namespace.bot.entity.dmgKeys;
 
             // add 2
             utils.addMod(dmgStats, 'physDmg added 2', 1);

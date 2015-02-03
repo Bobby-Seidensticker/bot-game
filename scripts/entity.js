@@ -15,8 +15,11 @@ namespace.module('bot.entity', function (exports, require) {
     var defKeys = ['strength', 'vitality', 'wisdom', 'dexterity', 'maxHp', 'maxMana', 'armor',
                    'dodge', 'eleResistAll', 'hpRegen', 'manaRegen'];
     var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
-    var dmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech',
-                   'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed', 'manaCost'];
+    var dmgKeys = [
+        'meleeDmg', 'rangeDmg', 'spellDmg',
+        'physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech',
+        'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed', 'manaCost'];
+    var actualDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg'];
 
     var EntitySpec = window.Model.extend({
         initialize: function() {
@@ -26,6 +29,12 @@ namespace.module('bot.entity', function (exports, require) {
 
         computeAttrs: function() {
             log.error('compute attrs');
+
+            this.weaponType = 'melee'
+            if (this.team === TEAM_HERO && this.equipped.weapon) {
+                this.weaponType = this.equipped.weapon.type
+            }
+
             var all = {};
 
             all.def = utils.newBaseStatsDict(defKeys);
@@ -69,7 +78,8 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         computeSkillAttrs: function() {
-            this.skillchain.computeAttrs(this.baseDmg, dmgKeys);
+            log.info('entity computeSkillAttrs');
+            this.skillchain.computeAttrs(this.baseDmg, this.weaponType);
         },
 
         getMods: function() {
@@ -185,6 +195,14 @@ namespace.module('bot.entity', function (exports, require) {
             this.mods = _.flatten(this.mods);
             this.mods = this.mods.concat(utils.expandSourceCards(this.sourceCards));
 
+            this.weaponType = 'melee'
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i][0] === 'weapon') {
+                    this.weaponType = this.items[i][1];
+                    break;
+                }
+            }
+
             this.droppableCards = _.filter(this.sourceCards, function(card) { if (card[0].slice(0, 5) !== 'proto') { return true; } }, this);
 
             this.skillchain = new inventory.Skillchain();
@@ -253,7 +271,8 @@ namespace.module('bot.entity', function (exports, require) {
         MonsterSpec: MonsterSpec,
         defKeys: defKeys,
         eleResistKeys: eleResistKeys,
-        dmgKeys: dmgKeys
+        dmgKeys: dmgKeys,
+        actualDmgKeys: actualDmgKeys
     });
 
 });

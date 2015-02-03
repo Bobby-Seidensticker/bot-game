@@ -351,12 +351,13 @@ namespace.module('bot.zone', function (exports, require) {
 
     var HeroBody = EntityBody.extend({
         initialize: function(spec) {
-            this.listenTo(spec, 'skillComputeAttrs', this.updateSkillchain);
+            this.listenTo(spec.skillchain, 'skillComputeAttrs', this.updateSkillchain);
             this.listenTo(spec, 'computeAttrs', this.updateSkillchain);
             EntityBody.prototype.initialize.call(this, spec);
         },
 
         updateSkillchain: function() {
+            log.warning('updateSkillchain');
             var s = this.spec.skillchain;
 
             var lookup = {};

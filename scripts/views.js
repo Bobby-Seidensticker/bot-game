@@ -691,8 +691,6 @@ namespace.module('bot.views', function (exports, require) {
 
         ctx.rect(coords[0] - 15,coords[1]- 20,30,5);
         ctx.stroke();
-        
-        console.log(body);
     }
 
     function circle(ctx, pos, color) {

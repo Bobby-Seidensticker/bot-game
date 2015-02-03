@@ -52,7 +52,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "head": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'},
+                    //{def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -65,7 +65,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "chest": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'},
+                    //{def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -73,12 +73,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 2,
-                "names": ["smelly cod piece", "foamcore tunic", "steel breastplate"]
+                "names": ["t-shirt", "foamcore tunic", "steel breastplate"]
             },
             "legs": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'},
+                    //{def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -91,7 +91,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "hands": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'},
+                    //{def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -234,6 +234,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },

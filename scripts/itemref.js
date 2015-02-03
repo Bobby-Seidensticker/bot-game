@@ -220,7 +220,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'physDmg more 10', type: 'dmg'},
-                    {def: 'physDmg added 5 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ]
             },
             "fire slash": {
@@ -231,7 +231,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
-                    {def: 'fireDmg more 100', type: 'dmg'},
+                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },
@@ -243,7 +243,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
-                    {def: 'coldDmg more 100', type: 'dmg'},
+                    {def: 'coldDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 coldDmg', type: 'dmg'}
                 ]
             },
@@ -255,7 +255,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
-                    {def: 'lightDmg more 100', type: 'dmg'},
+                    {def: 'lightDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 lightDmg', type: 'dmg'}
                 ]
             },
@@ -267,7 +267,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
-                    {def: 'poisDmg more 100', type: 'dmg'},
+                    {def: 'poisDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 poisDmg', type: 'dmg'}
                 ]
             },
@@ -291,7 +291,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'fireDmg more 50', type: 'dmg'},
+                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 fireDmg', type: 'dmg'}
                 ]
             },
@@ -304,7 +304,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'coldDmg more 50', type: 'dmg'},
+                    {def: 'coldDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 coldDmg', type: 'dmg'}
                 ]
             },
@@ -317,7 +317,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'lightDmg more 50', type: 'dmg'},
+                    {def: 'lightDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 lightDmg', type: 'dmg'}
                 ]
             },
@@ -330,7 +330,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'poisDmg more 50', type: 'dmg'},
+                    {def: 'poisDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 poisDmg', type: 'dmg'}
                 ]
             },
@@ -341,9 +341,10 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 1', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 100', type: 'dmg'},
+                    {def: 'speed added 50', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
-                    {def: 'fireDmg more -50', type: 'dmg'},
+                    {def: 'fireDmg more -60', type: 'dmg'},
+                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
                 ]
             },
@@ -354,9 +355,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'fireDmg more 50', type: 'dmg'},
+                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
                 ]
             },
@@ -367,9 +368,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'coldDmg more 50', type: 'dmg'},
+                    {def: 'coldDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 coldDmg', type: 'dmg'}
                 ]
             },
@@ -380,9 +381,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'lightDmg more 50', type: 'dmg'},
+                    {def: 'lightDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 lightDmg', type: 'dmg'}
                 ]
             },
@@ -393,9 +394,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'poisDmg more 50', type: 'dmg'},
+                    {def: 'poisDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 poisDmg', type: 'dmg'}
                 ]
             },

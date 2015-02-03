@@ -165,10 +165,10 @@
 
   <script id="hero-footer-template" type="text/template">
     <div>
-      <span class="hp"><%= hp %></span> / <%= spec.hpMax %>
+      <span class="hp"><% print(Math.ceil(hp)) %></span> / <%= spec.maxHp %>
     </div>
     <div>
-      <span class="mana"><%= mana %></span> / <%= spec.manaMax %>
+      <span class="mana"><% print(Math.ceil(mana)) %></span> / <%= spec.maxMana %>
     </div>
   </script>
 

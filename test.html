@@ -123,6 +123,15 @@
     <% }); %>
   </script>
 
+  <script id="hero-footer-template" type="text/template">
+    <div>
+      <span class="hp"><% print(Math.ceil(hp)) %></span> / <%= spec.maxHp %>
+    </div>
+    <div>
+      <span class="mana"><% print(Math.ceil(mana)) %></span> / <%= spec.maxMana %>
+    </div>
+  </script>
+
   <script id="map-tab-template" type="text/template">
     <div class="mapcontent">
       Mappy<br><br>

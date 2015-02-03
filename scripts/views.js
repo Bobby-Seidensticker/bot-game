@@ -580,14 +580,15 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function() {
             this.listenTo(window.DirtyListener, 'hero:hp', this.hpChange);
             this.listenTo(window.DirtyListener, 'hero:mana', this.manaChange);
+            this.listenTo(window.DirtyListener, 'revive', this.render);
         },
 
         hpChange: function() {
-            this.$hp.html(this.model.hp);
+            this.$hp.html(Math.ceil(this.model.hp));
         },
 
         manaChange: function() {
-            this.$mana.html(this.model.mana);
+            this.$mana.html(Math.ceil(this.model.mana));
         },
 
         render: function() {
@@ -726,9 +727,6 @@ namespace.module('bot.views', function (exports, require) {
         ctx.fill();
         ctx.closePath();
     }
-
-
-
 
     exports.extend({
         GameView: GameView,

@@ -154,8 +154,6 @@ namespace.module('bot.zone', function (exports, require) {
             this.lastManaFullTime = window.time;
             this.manaRegened = 0;
             this.initPos();
-
-            window.DirtyQueue.mark('revive');
         },
 
         initPos: function() {
@@ -403,7 +401,12 @@ namespace.module('bot.zone', function (exports, require) {
         modifyMana: function(added) {
             EntityBody.prototype.modifyMana.call(this, added);
             window.DirtyQueue.mark('hero:mana');
-        }
+        },
+
+        revive: function() {
+            EntityBody.prototype.revive.call(this);
+            window.DirtyQueue.mark('revive');
+        },
     });
 
     window.monsterSpecs = {};

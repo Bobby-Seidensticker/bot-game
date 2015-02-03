@@ -82,10 +82,17 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'vitality added 2 perLevel', type: 'def'},
 
                 {def: 'vitality gainedas 200 maxHp', type: 'def'},
+                {def: 'vitality gainedas 100 maxMana', type: 'def'},                
                 {def: 'wisdom gainedas 200 maxMana', type: 'def'},
 
                 {def: 'strength gainedas 50 armor', type: 'def'},
                 {def: 'dexterity gainedas 50 dodge', type: 'def'},
+
+                //TODO - add str/dex/wis attacktype bonuses here once impemented
+                //{def: 'strength gainedas 100 meleeDmg', type: 'dmg'},
+                //{def: 'dexterity gainedas 100 rangeDmg', type: 'dmg'},
+                //{def: 'wisdom gainedas 100 spellDmg', type: 'dmg'},                
+                
                 {def: 'eleResistAll added 1', type: 'def'},
 
                 {def: 'maxHp added 10 perLevel', type: 'def'},

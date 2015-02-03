@@ -220,6 +220,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'physDmg more 10', type: 'dmg'},
+                    {def: 'physDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ]
             },

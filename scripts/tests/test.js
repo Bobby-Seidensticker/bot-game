@@ -24,8 +24,6 @@ namespace.module('bot.test', function (exports, require) {
 
         log.info('onReady');
 
-        window.gevents = _.extend({}, Backbone.Events);
-
         var gameModel = new main.GameModel();
         //console.log('gameModel', gameModel);
 
@@ -182,9 +180,9 @@ namespace.module('bot.test', function (exports, require) {
 
             hero.attackTarget(mon, hero.skills[0]);
             assert.ok(mon.hp < mon.spec.maxHp, 'After attack, monster\'s hp decreased to ' + mon.hp);
-            assert.ok(hero.skills[0].coolAt === window.time + skill.speed + skill.cooldownTime,
+            assert.ok(hero.skills[0].coolAt === gl.time + skill.speed + skill.cooldownTime,
                       'skill\'s cooldown set to cooldownTime + speed after attack');
-            assert.ok(hero.nextAction === window.time + skill.speed, 'Hero\'s next action skill\'s speed after attack');
+            assert.ok(hero.nextAction === gl.time + skill.speed, 'Hero\'s next action skill\'s speed after attack');
             
             hero.revive();
             assert.equal(hero.hp, hero.spec.maxHp, 'Hero HP maxed for taking hit at ' + hero.hp);
@@ -194,9 +192,9 @@ namespace.module('bot.test', function (exports, require) {
 
             mon.attackTarget(hero, skill);
             assert.ok(hero.hp < hero.spec.maxHp, 'Hero\'s hp decreased from attack to ' + hero.hp);
-            assert.equal(skill.coolAt, skill.spec.cooldownTime + skill.spec.speed + window.time,
+            assert.equal(skill.coolAt, skill.spec.cooldownTime + skill.spec.speed + gl.time,
                          'skill\'s cooldown set to cooldownTime + speed + windowtime after attack');
-            assert.equal(mon.nextAction, skill.spec.speed + window.time,
+            assert.equal(mon.nextAction, skill.spec.speed + gl.time,
                          'Mon\'s nextAction set to window time and skill\'s speed after attack');
         });
 
@@ -376,7 +374,7 @@ namespace.module('bot.test', function (exports, require) {
             // console.log(skill.attributes);
         }
 
-        //var gameView = new namespace.bot.window.GameView();
+        //var gameView = new namespace.bot.gl.GameView();
         //var m = new menu.TabView();
 
         //var invMenuView = new inv.InvMenuView({model: gameModel.inv});

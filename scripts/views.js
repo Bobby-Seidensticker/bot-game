@@ -640,21 +640,42 @@ namespace.module('bot.views', function (exports, require) {
         calc: function() {
             var SIZE = 90;
             var useWidth = 0;
-            if (this.hero.nextAction > window.time) {
-                useWidth = (this.hero.nextAction - window.time) / this.hero.lastDuration * SIZE;
-            }
+
             for (var i = 0; i < this.data.length; i++) {
                 var d = this.data[i];
-                d.useWidth = useWidth;
+                d.useWidth = 0;
 
-                if (d.skill.coolAt < window.time) {
+                if (d.skill.coolAt <= window.time) {
                     d.cdHeight = 0;
+                    //d.useWidth = 0;
                 } else {
+                    if (d.skill.spec.cooldownTime === 0) {
+                        d.cdHeight = 1;
+                    }
                     d.cdHeight = (d.skill.coolAt - window.time) / d.skill.spec.cooldownTime;
                     if (d.cdHeight > 1) {
                         d.cdHeight = 1;
                     }
                     d.cdHeight *= SIZE;
+
+                    /*
+                    var durPct = (this.hero.nextAction - window.time) / this.hero.lastDuration;
+
+                    // cooling down but doesn't have cooldown, must be last used
+                    if (d.skill.spec.cooldownTime === 0) {
+                        d.useWidth = durPct;  // grep in use wipe while being in use
+                        d.cdHeight = 0;       // red no cooldown wipe
+                    } else {
+                        d.cdHeight = (d.skill.coolAt - window.time) / d.skill.spec.cooldownTime;
+                        if (d.cdHeight > 1) {  // if in use and has cooldown, cap cooldown wipe height, grey in use wipe
+                            d.useWidth = durPct;
+                            d.cdHeight = 1;
+                        } else {
+                            d.useWidth = 0;  // if just cooling down, no in use wipe
+                        }
+                    }
+                    d.useWidth *= SIZE;
+                    d.cdHeight *= SIZE;*/
                 }
             }
         },
@@ -664,7 +685,7 @@ namespace.module('bot.views', function (exports, require) {
 
             _.each(this.data, function(d) {
                 d.$cd.css('height', d.cdHeight);
-                d.$use.css('width', d.useWidth);
+                //d.$use.css('height', d.useWidth);
             });
         },
 

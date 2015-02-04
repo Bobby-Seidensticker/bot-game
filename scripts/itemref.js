@@ -511,6 +511,15 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "legs",
                 "levels": 10
             },
+            "compression shorts": {
+                "mods": [
+                    {"def": "moveSpeed added 50", "type": "def"},
+                    {"def": "moveSpeed added 20 perLevel", "type": "def"},
+                ],
+                "slot": "legs",
+                "levels": 10
+            },
+
             "asbestos lining": {
                 "mods": [
                     {"def": "fireResist more -5 perLevel", "type": "eleResist"}
@@ -551,13 +560,14 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "monster": {
             "skeleton" : {
-                "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0]],
+                "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
                 "skills": ["basic melee"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
                     ["proto-grunt", 0],
                     ["sharpened", 1],
-                    ["hard head", 1]
+                    ["hard head", 1],
+                    ["compression shorts", 1],
                 ]
             },
             "fire skeleton": {

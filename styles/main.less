@@ -103,8 +103,8 @@ body .stats {
     position: absolute;
     left: 0;
     height: 150px;
-    background-color: @color-primary-4;
-    border-top: 5px solid @color-primary-2;
+    background-color: @color-secondary-1-0;
+    border-top: 5px solid @color-secondary-1-2;
 
     .hero {
         float: left;
@@ -166,7 +166,6 @@ body .stats {
                 }
             }
         }
-
     }
 
     .zone {
@@ -174,6 +173,45 @@ body .stats {
         height: 140px;
         margin: 5px;
         font-size: 16px;
+    }
+
+    .buttons {
+        font-size: 16px;
+        float: right;
+        /* full size, margins handled in buttons */
+        height: 150px;
+        width: 150px;
+
+        /*
+          150 px size:
+          5 px margin
+          2 px border
+          div
+          2 px border
+          5px margin
+          2 px border
+          div
+          2px border
+          5px margin
+          */
+
+        > div {
+            background-color: @color-secondary-1-4;
+            border-radius: 5px;
+            border-top: 2px solid #333;
+            border-left: 2px solid #333;
+            border-right: 2px solid #111;
+            border-bottom: 2px solid #111;
+            margin: 5px 0 0 5px;
+
+            float: left;
+            height: 63px;  /* 4 border + 6 margin + 65 height = 150 / 2 */
+            width: 63px;
+            font-size: 18px;
+            line-height: 63px;
+            text-align: center;
+            
+        }
     }
 }
 

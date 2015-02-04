@@ -240,9 +240,9 @@ namespace.module('bot.zone', function (exports, require) {
             var minIndex = distances.minIndex();
             var minDist = distances[minIndex];
             // TODO: make this work:
-            for (var si = 0; si < this.skills.length; si++) {       // use first skill that:
+            for (var si = 0; si < this.skills.length; si++) {      // use first skill that:
                 if (this.skills[si] && 
-                    this.skills[si].coolAt <= gl.time &&        // is cool
+                    this.skills[si].coolAt <= gl.time &&           // is cool
                     this.skills[si].spec.manaCost <= this.mana &&  // has enough mana
                     this.skills[si].spec.range >= minDist) {       // is in range
                     this.attackTarget(enemies[minIndex], this.skills[si]);

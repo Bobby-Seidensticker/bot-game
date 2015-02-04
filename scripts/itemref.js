@@ -225,6 +225,14 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ]
             },
+            "quick hit": {
+                "prototype": ["basic melee"],
+                "baseMods": [
+                    {def: 'manaCost added 5', type: 'dmg'},
+                    {def: 'speed added 250', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 0.6, type: 'dmg'},
+                ]
+            },
             "fire slash": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
@@ -370,7 +378,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 3', type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
-                ]
+                ],
+                "flavor": "goodness gracious, these balls are great"
             },
             "ice ball": {
                 "prototype": ["basic"],
@@ -433,10 +442,16 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more -30", "type": "dmg"},                    
                 ],
             }, 
-                "proto-boss": {
+            "proto-boss": {
                 "mods": [
                     {"def": "physDmg more 100", "type": "dmg"},
                     {"def": "maxHp more 1000", "type": "def"}
+                ],
+            },
+            "proto-elf": {
+                "mods": [
+                    {"def": "speed more -20", "type": "dmg"},
+                    {"def": "dexterity added 50", "type": "def"}
                 ],
             },
             "sharpened": {
@@ -556,7 +571,45 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "head",
                 "levels": 10
             },
-            
+            "nimble": {
+                "mods": [
+                    {"def": "dodge added 5 perLevel", "type": "def"},
+                    {"def": "dodge added 20", "type": "def"}
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "bloodsucker": {
+                "mods": [
+                    {"def": "physDmg gainedas 10 hpLeech", "type": "dmg"},
+                    {"def": "physDmg added 1 perLevel", "type": "dmg"}
+                ],
+                "slot": "head",
+                "levels": 10
+            },
+            "strong back": {
+                "mods": [
+                    {"def": "strength added 5 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "thwomping": {
+                "mods": [
+                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "moveSpeed more -5 perLevel", "type": "def"},
+                    {"def": "moveSpeed added -100", "type": "def"},
+                ],
+                "slot": "legs",
+                "levels": 10
+            },
+            "dexterous hands": {
+                "mods": [
+                    {"def": "dexterity added 5 perLevel", "type": "def"},
+                ],
+                "slot": "hands",
+                "levels": 10
+            },
         },
         "monster": {
             "skeleton" : {
@@ -605,6 +658,48 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["hot sword", 1]
                 ]
             },
+            "wolf" : {
+                "items": [["weapon", "melee", 0]],
+                "skills": ["quick hit", "basic melee"],
+                "sourceCards": [
+                    ["nimble", 1],
+                    ["compression shorts", 3]
+                ]
+            },
+            "bat" : {
+                "items": [["weapon", "melee", 0]],
+                "skills": ["quick hit", "basic melee"],
+                "sourceCards": [
+                    ["nimble", 1],
+                    ["bloodsucker", 1]
+                ]
+            },
+            "ent" : {
+                "items": [["weapon", "melee", 0]],
+                "skills": ["quick hit", "basic melee"],
+                "sourceCards": [
+                    ["strong back", 2],
+                    ["thwomping", 2]
+                ]
+            },
+            "elf" : {
+                "items": [["weapon", "range", 1]],
+                "skills": ["poison arrow", "basic range"],
+                "sourceCards": [
+                    ["dexterous hands", 1],
+                    ["proto-elf", 0]
+                ]
+            },
+            "elf king" : {
+                "items": [["weapon", "range", 2]],
+                "skills": ["quick hit", "basic melee"],
+                "sourceCards": [
+                    ["proto-boss", 0],
+                    ["proto-elf", 0],
+                    ["dexterous hands", 2]
+                ],
+                "flavor": "He knows you've been naughty, and he's killing you twice"
+            },
         },
         "zone": {
             "spooky dungeon": {
@@ -613,6 +708,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "skeleton king",
                 "roomCount": 20,
                 "quantity": [1, 1, 3]
+            },
+            "dark forest": {
+                "choices": ["wolf", "bat", "elf", "ent"],
+                "weights": [20, 15, 15, 5],
+                "boss": "elf king",
+                "roomCount": 20,
+                "quantity": [2,2,3]
             }
         },
         "test": {

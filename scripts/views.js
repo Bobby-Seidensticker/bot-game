@@ -708,6 +708,21 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
+    var FooterButtonsView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'buttons',
+        template: _.template($('#buttons-footer-template').html()),
+
+        initialize: function(options) {
+            
+        },
+
+        render: function() {
+            this.$el.html(this.template(this.zone));
+            return this;
+        },
+    });
+
     var FooterView = Backbone.View.extend({
         tagName: 'div',
         className: 'footer',
@@ -722,7 +737,7 @@ namespace.module('bot.views', function (exports, require) {
             this.heroBodyView = new HeroFooterView({model: this.hero});
             this.zoneView = new ZoneFooterView({}, this.zone);
             this.skillchainView = new SkillchainFooterView({}, this.hero);
-            //this.buttons = new FooterButtonsView({});
+            this.buttons = new FooterButtonsView({});
         },
 
         resize: function() {
@@ -738,7 +753,7 @@ namespace.module('bot.views', function (exports, require) {
             frag.appendChild(this.heroBodyView.render().el);
             frag.appendChild(this.zoneView.render().el);
             frag.appendChild(this.skillchainView.render().el);
-            //frag.appendChild(this.buttons.render().el);
+            frag.appendChild(this.buttons.render().el);
             this.$el.html(frag);
             return this;
         },

@@ -28,10 +28,11 @@ namespace.module('bot.main', function (exports, require) {
             var SPACE = 32;
             var EKEY = 69;
             //var DKEY = 68;
-            var SKEY = 84;
+            var TKEY = 84;
             var UP = 38;
             var DN = 40;
-            var C = 67;
+            var CKEY = 67;
+            var PKEY = 80;
             var key = event.keyCode;
             if (key == SPACE) {
                 window.GameEvents.trigger('togglePause');
@@ -39,7 +40,7 @@ namespace.module('bot.main', function (exports, require) {
                 //Cheat for adding 1000xp (for easier testing)
                 log.warning("XP Cheat!");                
                 gameModel.hero.applyXp(1000);
-            } else if (key == SKEY) {
+            } else if (key == TKEY) {
                 log.warning("Time Cheat!");
                 gameModel.lastTime -= 1000 * 60 * 5;
             } else if (key === UP) {
@@ -48,7 +49,7 @@ namespace.module('bot.main', function (exports, require) {
             } else if (key === DN) {
                 gameModel.timeCoefficient /= 2;
                 log.error('Time coefficient now %.2f', gameModel.timeCoefficient);
-            } else if (key === C) {
+            } else if (key === CKEY) {
                 log.error('Equipment cheat');
                 var drops = [];
                 _.each([['heart juice', 4], ['brain juice', 4], ['hot sword', 4]], function(card) {
@@ -67,6 +68,15 @@ namespace.module('bot.main', function (exports, require) {
                 gameModel.cardInv.addDrops(drops);
                 gameModel.autoEquip();
                 gameModel.autoEquip();
+            } else if (key === PKEY) {
+                log.warning('Time Test / Cheat!');
+                var start = new Date().getTime();
+                gameModel.lastTime -= 1000 * 60 * 20;
+                setTimeout(function() {
+                    var elapsed = new Date().getTime() - start;
+                    console.log('20 mins of game time took ' + elapsed + ' ms ');
+                    console.log((1000 * 60 * 20 / elapsed).toFixed(3), 'x speed');
+                }, 100);
             }
         });
     }

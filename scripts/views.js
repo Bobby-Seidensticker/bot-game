@@ -630,7 +630,7 @@ namespace.module('bot.views', function (exports, require) {
 
         getEls: function() {
             var $cds = this.$('.cooldown');
-            var $uses = this.$('.use');
+            var $uses = this.$('.use-bar');
             for (var i = 0; i < this.data.length; i++) {
                 this.data[i].$cd = $($cds[i]);
                 this.data[i].$use = $($uses[i]);
@@ -647,18 +647,8 @@ namespace.module('bot.views', function (exports, require) {
 
                 if (d.skill.coolAt <= gl.time) {
                     d.cdHeight = 0;
-                    //d.useWidth = 0;
+                    d.useWidth = 0;
                 } else {
-                    if (d.skill.spec.cooldownTime === 0) {
-                        d.cdHeight = 1;
-                    }
-                    d.cdHeight = (d.skill.coolAt - gl.time) / d.skill.spec.cooldownTime;
-                    if (d.cdHeight > 1) {
-                        d.cdHeight = 1;
-                    }
-                    d.cdHeight *= SIZE;
-
-                    /*
                     var durPct = (this.hero.nextAction - gl.time) / this.hero.lastDuration;
 
                     // cooling down but doesn't have cooldown, must be last used
@@ -675,7 +665,7 @@ namespace.module('bot.views', function (exports, require) {
                         }
                     }
                     d.useWidth *= SIZE;
-                    d.cdHeight *= SIZE;*/
+                    d.cdHeight *= SIZE;
                 }
             }
         },
@@ -685,7 +675,7 @@ namespace.module('bot.views', function (exports, require) {
 
             _.each(this.data, function(d) {
                 d.$cd.css('height', d.cdHeight);
-                //d.$use.css('height', d.useWidth);
+                d.$use.css('width', d.useWidth);
             });
         },
 

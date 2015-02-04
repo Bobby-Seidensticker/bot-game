@@ -123,35 +123,50 @@ body .stats {
             margin-top: 25px;
             margin-left: 10px;
             width: 90px;
-            height: 90px;
-            overflow: hidden;
-            position: relative;
+            height: 110px;
             border-radius: 5px;
 
-            img {
-                position: absolute;
-                top: 0;
-                left: 0;
+            .box {
+                position: relative;
+                height: 90px;
+                width: 90px;
+                border-radius: 5px;
+                overflow: hidden;
+
+                img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+
+                .cooldown {
+                    background-color: @color-secondary-2-2;
+                    opacity: 0.5;
+                    position: absolute;
+                    bottom: 0;
+                    height: 0;
+                    width: 100%;
+                }
             }
 
-            .cooldown {
-                background-color: green;
-                opacity: 0.5;
-                position: absolute;
-                bottom: 0;
-                height: 0;
-                width: 100%;
-            }
+            .use-holder {
+                position: relative;
+                height: 10px;
+                width: 90px;
+                overflow: hidden;
+                margin-top: 5px;
 
-            .use {
-                background-color: #333;
-                opacity: 0.5;
-                position: absolute;
-                top: 0;
-                height: 0;
-                width: 100%;
+                .use-bar {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 0;
+                    height: 100%;
+                    background-color: #333;
+                }
             }
         }
+
     }
 
     .zone {

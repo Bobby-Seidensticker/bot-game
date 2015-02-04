@@ -182,7 +182,7 @@
           <td>Level</td><td><%= level %></td>
         </tr>
         <tr>
-          <td>Room</td><td><%= heroPos %> / <% print(rooms.length) %></td>
+          <td>Room</td><td><% print(heroPos + 1) %> / <% print(rooms.length) %></td>
         </tr>
         <tr>
           <td>Monsters</td><td><% print(liveMons().length) %> / <% print(ensureRoom().monsters.length) %></td>
@@ -195,9 +195,11 @@
   <script id="skillchain-footer-template" type="text/template">
     <% _.each(data, function(skill) { %>
     <div class="skill">
-      <img src="assets/<%= skill.name %>.svg" />
-      <div class="cooldown"></div>
-      <div class="use"></div>
+      <div class="box">
+        <img src="assets/<%= skill.name %>.svg" />
+        <div class="cooldown"></div>
+      </div>
+      <div class="use-holder"><div class="use-bar"></div></div>
     </div>
     <% }); %>
   </script>

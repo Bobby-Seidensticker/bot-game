@@ -659,8 +659,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "wolf" : {
-                "items": [["weapon", "melee", 0]],
-                "skills": ["quick hit", "basic melee"],
+                "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
+                "skills": ["basic melee"],
                 "sourceCards": [
                     ["nimble", 1],
                     ["compression shorts", 3]
@@ -692,7 +692,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "elf king" : {
                 "items": [["weapon", "range", 2]],
-                "skills": ["quick hit", "basic melee"],
+                "skills": ["quick hit", "basic range"],
                 "sourceCards": [
                     ["proto-boss", 0],
                     ["proto-elf", 0],
@@ -710,8 +710,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "quantity": [1, 1, 3]
             },
             "dark forest": {
-                "choices": ["wolf", "bat", "elf", "ent"],
-                "weights": [20, 15, 15, 5],
+                "choices": ["wolf"],// "bat", "elf", "ent"],
+                "weights": [20],// 15, 15, 5],
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2,2,3]

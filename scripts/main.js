@@ -52,7 +52,7 @@ namespace.module('bot.main', function (exports, require) {
             } else if (key === CKEY) {
                 log.error('Equipment cheat');
                 var drops = [];
-                _.each([['heart juice', 4], ['brain juice', 4], ['hot sword', 4]], function(card) {
+                _.each([['heart juice', 4], ['brain juice', 4], ['hot sword', 4], ['fear', 1]], function(card) {
                     drops.push({dropType: 'card', data: card});
                 });
                 _.each([['weapon', 'melee', 1], ['armor', 'head', 1], ['armor', 'chest', 1], ['armor', 'hands', 1], ['armor', 'legs', 1]], function(item) {

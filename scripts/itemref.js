@@ -616,14 +616,21 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "moveSpeed added -300", "type": "def"},
                 ],
                 "slot": "head",
-                "levels": 1
+                "levels": 10
+            },
+            "fear" : {
+                "mods": [
+                    {"def": "moveSpeed added -400", "type": "def"},
+                ],
+                "slot": "legs",
+                "levels": 10
             },
             "stinging": {
                 "mods": [
                     {"def": "physDmg added 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 1
+                "levels": 10
             },
         },
         "monster": {

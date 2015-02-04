@@ -63,7 +63,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         getMods: function() {
             var cards = _.compact(this.cards);
-            var mods = _.map(cards, function(card) { return card.model.getMods(card.level); });
+            var mods = _.flatten(_.map(cards, function(card) { return card.model.getMods(card.level); }));
             return mods.concat(utils.applyPerLevels(this.baseMods, this.level));
         },
 

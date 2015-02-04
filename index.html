@@ -172,6 +172,26 @@
     </table>
   </script>
 
+  <script id="zone-footer-template" type="text/template">
+    <table>
+      <tbody>
+        <tr>
+          <td>Zone</td><td><%= name %></td>
+        </tr>
+        <tr>
+          <td>Level</td><td><%= level %></td>
+        </tr>
+        <tr>
+          <td>Room</td><td><%= heroPos %> / <% print(rooms.length) %></td>
+        </tr>
+        <tr>
+          <td>Monsters</td><td><% print(liveMons().length) %> / <% print(ensureRoom().monsters.length) %></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </script>
+
   <script id="skillchain-footer-template" type="text/template">
     <% _.each(data, function(skill) { %>
     <div class="skill">

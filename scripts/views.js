@@ -680,6 +680,23 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
+    var ZoneFooterView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'zone',
+        template: _.template($('#zone-footer-template').html()),
+
+        initialize: function(options, zone) {
+            this.zone = zone;
+            this.listenTo(window.DirtyListener, 'zone', this.render);
+            this.listenTo(window.DirtyListener, 'monsters:death', this.render);
+        },
+
+        render: function() {
+            this.$el.html(this.template(this.zone));
+            return this;
+        },
+    });
+
     var FooterView = Backbone.View.extend({
         tagName: 'div',
         className: 'footer',
@@ -692,9 +709,9 @@ namespace.module('bot.views', function (exports, require) {
             this.hero = this.zone.hero;
 
             this.heroBodyView = new HeroFooterView({model: this.hero});
+            this.zoneView = new ZoneFooterView({}, this.zone);
             this.skillchainView = new SkillchainFooterView({}, this.hero);
-            /*this.zoneView = new ZoneFooterView({}, this.zone);
-            this.buttons = new FooterButtonsView({});*/
+            //this.buttons = new FooterButtonsView({});
         },
 
         resize: function() {
@@ -708,9 +725,9 @@ namespace.module('bot.views', function (exports, require) {
         render: function() {
             var frag = document.createDocumentFragment();
             frag.appendChild(this.heroBodyView.render().el);
+            frag.appendChild(this.zoneView.render().el);
             frag.appendChild(this.skillchainView.render().el);
-            /*frag.appendChild(this.zoneView.render().el);
-            frag.appendChild(this.buttons.render().el);*/
+            //frag.appendChild(this.buttons.render().el);
             this.$el.html(frag);
             return this;
         },

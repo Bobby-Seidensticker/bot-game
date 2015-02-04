@@ -26,6 +26,8 @@ namespace.module('bot.zone', function (exports, require) {
 
             var i, j, rooms, monsters, count, data;
 
+            this.name = name;
+            this.level = level;
             _.extend(this, itemref.expand('zone', name));
             rooms = [];
             for (i = 0; i < this.roomCount; i++) {

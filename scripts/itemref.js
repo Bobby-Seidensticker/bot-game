@@ -38,12 +38,11 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "spell": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg more 1 perLevel', type: 'dmg'}
+                    {def: 'spellDmg added 10', type: 'dmg'},
+                    {def: 'spellDmg added 3 perLevel', type: 'dmg'},
                 ],
                 "getClassMods": function(classLevel) {
-                    return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
+                    return [{def: 'spellDmg added ' + Math.floor(Math.pow(3 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
                 "names": ["shitty wand", "crappy wand", "compound wand"]
@@ -53,7 +52,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "head": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'},
+                    //{def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -66,7 +65,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "chest": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'},
+                    //{def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -74,12 +73,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 2,
-                "names": ["smelly cod piece", "foamcore tunic", "steel breastplate"]
+                "names": ["t-shirt", "foamcore tunic", "steel breastplate"]
             },
             "legs": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'},
+                    //{def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -92,7 +91,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "hands": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'},
+                    //{def: 'armor more 1 perLevel', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'},
                 ],
                 "getClassMods": function(classLevel) {
@@ -210,6 +209,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
             "super smash": {
@@ -233,6 +234,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },
@@ -245,6 +248,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'coldDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'coldDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                                        
                     {def: 'physDmg converted 60 coldDmg', type: 'dmg'}
                 ]
             },
@@ -257,6 +262,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'lightDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'lightDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                                        
                     {def: 'physDmg converted 60 lightDmg', type: 'dmg'}
                 ]
             },
@@ -269,6 +276,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'poisDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'poisDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                                        
                     {def: 'physDmg converted 60 poisDmg', type: 'dmg'}
                 ]
             },
@@ -277,8 +286,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj"],
                 "baseMods": [
-                    {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'manaCost added 10', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
@@ -344,8 +352,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 50', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
-                    {def: 'fireDmg more -60', type: 'dmg'},
-                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg added 2', type: 'dmg'},
+                    {def: 'fireDmg added 2 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
                 ]
             },
@@ -358,8 +366,10 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'fireDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg added 3', type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
                 ]
             },
             "ice ball": {
@@ -371,8 +381,11 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'coldDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'coldDmg added 3', type: 'dmg'},
                     {def: 'coldDmg more 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg converted 100 coldDmg', type: 'dmg'}
+
                 ]
             },
             "lighting ball": {
@@ -384,8 +397,10 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'lightDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'lightDmg added 3', type: 'dmg'},
                     {def: 'lightDmg more 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg converted 100 lightDmg', type: 'dmg'}
                 ]
             },
             "poison ball": {
@@ -397,8 +412,10 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'poisDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'poisDmg added 3', type: 'dmg'},
                     {def: 'poisDmg more 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg converted 100 poisDmg', type: 'dmg'}
                 ]
             },
         },
@@ -554,7 +571,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "skeleton archer" : {
                 "items": [["weapon", "range", 0], ["armor", "chest", 0], ["armor", "hands", 0]],
-                "skills": ["basic range"],
+                "skills": ["speed shot", "basic range"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
                     ["head of vigor", 1]

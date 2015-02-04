@@ -94,9 +94,9 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'vitality added 10', type: 'def'},
                 {def: 'vitality added 2 perLevel', type: 'def'},
 
-                {def: 'vitality gainedas 200 maxHp', type: 'def'},
-                {def: 'vitality gainedas 100 maxMana', type: 'def'},                
-                {def: 'wisdom gainedas 200 maxMana', type: 'def'},
+                {def: 'vitality gainedas 100 maxHp', type: 'def'},
+                {def: 'vitality gainedas 25 maxMana', type: 'def'},                
+                {def: 'wisdom gainedas 100 maxMana', type: 'def'},
 
                 {def: 'strength gainedas 50 armor', type: 'def'},
                 {def: 'dexterity gainedas 50 dodge', type: 'def'},

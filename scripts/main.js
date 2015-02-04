@@ -31,6 +31,7 @@ namespace.module('bot.main', function (exports, require) {
             var SKEY = 84;
             var UP = 38;
             var DN = 40;
+            var C = 67;
             var key = event.keyCode;
             if (key == SPACE) {
                 window.GameEvents.trigger('togglePause');
@@ -47,6 +48,25 @@ namespace.module('bot.main', function (exports, require) {
             } else if (key === DN) {
                 gameModel.timeCoefficient /= 2;
                 log.error('Time coefficient now %.2f', gameModel.timeCoefficient);
+            } else if (key === C) {
+                log.error('Equipment cheat');
+                var drops = [];
+                _.each([['heart juice', 4], ['brain juice', 4], ['hot sword', 4]], function(card) {
+                    drops.push({dropType: 'card', data: card});
+                });
+                _.each([['weapon', 'melee', 1], ['armor', 'head', 1], ['armor', 'chest', 1], ['armor', 'hands', 1], ['armor', 'legs', 1]], function(item) {
+                    drops.push({dropType: item[0], data: item});
+                });
+                _.each(['super smash', 'fire ball', 'fire slash'], function(skill) {
+                    drops.push({dropType: 'skill', data: skill});
+                });
+                gameModel.inv.addDrops(drops);
+                gameModel.cardInv.addDrops(drops);
+                gameModel.autoEquip();
+                gameModel.inv.addDrops(drops);
+                gameModel.cardInv.addDrops(drops);
+                gameModel.autoEquip();
+                gameModel.autoEquip();
             }
         });
     }
@@ -133,6 +153,32 @@ namespace.module('bot.main', function (exports, require) {
             window.DirtyQueue.triggerAll(window.DirtyListener);
 
             requestAnimFrame(this.tick.bind(this));
+        },
+
+        bestGear: function(itemType, type) {
+            var items = _.where(game.inv.models, {itemType: itemType});
+            items = _.where(items, {type: type});
+            items = _.sortBy(items, function(item) { return item.classLevel; });
+            if (items.length > 0) {
+                return items.pop();
+            }
+            return undefined;
+        },
+
+        autoEquip: function() {
+            this.hero.equipped.equip(this.bestGear('weapon', 'melee'), 'weapon');
+            this.hero.equipped.equip(this.bestGear('armor', 'head'), 'head');
+            this.hero.equipped.equip(this.bestGear('armor', 'chest'), 'chest');
+            this.hero.equipped.equip(this.bestGear('armor', 'hands'), 'hands');
+            this.hero.equipped.equip(this.bestGear('armor', 'legs'), 'legs');
+
+            var skills = _.where(game.inv.models, {itemType: 'skill'});
+            skills = _.sortBy(skills, function(skill) { return -skill.cooldownTime; });
+            log.error('skill names: %s', _.pluck(skills, 'name').join(', '));
+            log.error('skill cooldownTimes: %s', _.pluck(skills, 'cooldownTime').join(', '));
+            _.each(skills, function(skill, i) {
+                this.hero.skillchain.equip(skill, i);
+            }, this);
         },
     });
 

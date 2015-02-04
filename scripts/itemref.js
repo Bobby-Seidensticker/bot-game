@@ -610,6 +610,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "hands",
                 "levels": 10
             },
+            "dummy" : {
+                "mods": [
+                    {"def": "moveSpeed added -300", "type": "def"},
+                ],
+                "slot": "head",
+                "levels": 1
+            }
         },
         "monster": {
             "skeleton" : {
@@ -700,6 +707,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "flavor": "He knows you've been naughty, and he's killing you twice"
             },
+            "dummy": {
+                "items": [],
+                "skills": [],
+                "sourceCards": [
+                    ["dummy", 0]
+                ]
+            }
         },
         "zone": {
             "spooky dungeon": {
@@ -710,11 +724,25 @@ namespace.module('bot.itemref', function (exports, require) {
                 "quantity": [1, 1, 3]
             },
             "dark forest": {
-                "choices": ["wolf"],// "bat", "elf", "ent"],
-                "weights": [20],// 15, 15, 5],
+                "choices": ["wolf", "bat", "elf", "ent"],
+                "weights": [20, 15, 15, 5],
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2,2,3]
+            },
+            "dojo": {
+                "choices": ["dummy"],
+                "weights": [1],
+                "boss": "dummy",
+                "roomCount": 10,
+                "quantity": [1,0,0]
+            },
+            "empty dojo": {
+                "choices": [],
+                "weights": [],
+                "boss": "dummy",
+                "roomCount": 10,
+                "quantity": 1// not sure about the logic, but this escapes adding any monsters to rooms
             }
         },
         "test": {

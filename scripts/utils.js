@@ -157,6 +157,7 @@ namespace.module('bot.utils', function (exports, require) {
 
     // rename this to getItemMods
     function expandSourceItem(itemType, type, itemLevel, classLevel) {
+        itemLevel = parseInt(itemLevel);  //ensure itemLevel is num not string
         var ref = itemref.ref[itemType][type];
         var mods = ref.getClassMods(classLevel).concat(ref.mods);
         return applyPerLevels(mods, itemLevel);

@@ -44,7 +44,7 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options) {
             // TODO add selective updating
-            this.listenTo(window.DirtyListener, 'computeAttrs', this.render);
+            this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
         },
 
         render: function() {
@@ -68,7 +68,7 @@ namespace.module('bot.views', function (exports, require) {
                 _.each(entity.dmgKeys, function(key) {
                     arr.push([key, skill.spec[key].toFixed(2)]);
                 });
-                var coolIn = Math.max(0, skill.coolAt - window.time);
+                var coolIn = Math.max(0, skill.coolAt - gl.time);
                 arr.push(['cool in', coolIn]);
                 data[skill.spec.name] = arr;
             }
@@ -102,7 +102,7 @@ namespace.module('bot.views', function (exports, require) {
             this.monsterViews = [];
             this.render();
 
-            this.listenTo(window.DirtyListener, 'tick', this.render);
+            this.listenTo(gl.DirtyListener, 'tick', this.render);
 
             $(window).on('resize', this.onResize.bind(this));
             
@@ -115,7 +115,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onResize: function() {
-            this.$el.css({width: window.innerWidth / 3});
+            this.$el.css({width: gl.innerWidth / 3});
             this.render();
         },
 
@@ -157,8 +157,8 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#info-box-template').html()),
 
         initialize: function() {
-            this.listenTo(window.UIEvents, 'mouseover', this.show);
-            this.listenTo(window.UIEvents, 'mouseout', this.hide);
+            this.listenTo(gl.UIEvents, 'mouseover', this.show);
+            this.listenTo(gl.UIEvents, 'mouseout', this.hide);
         },
 
         show: function(view) {
@@ -199,11 +199,11 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
-            window.UIEvents.trigger('mouseover', this);
+            gl.UIEvents.trigger('mouseover', this);
         },
 
         onMouseout: function() {
-            window.UIEvents.trigger('mouseout');
+            gl.UIEvents.trigger('mouseout');
         },
 
         initialize: function(options, loc, slot) {
@@ -249,10 +249,10 @@ namespace.module('bot.views', function (exports, require) {
                 inventory: []
             };
 
-            this.listenTo(window.DirtyListener, 'inventory:new', this.render);
+            this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
 
-            this.listenTo(window.DirtyListener, 'computeAttrs', this.render);
-            this.listenTo(window.DirtyListener, 'skillComputeAttrs', this.render);
+            this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
+            this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
         },
 
         onClick: function(itemSlot) {
@@ -273,7 +273,7 @@ namespace.module('bot.views', function (exports, require) {
                 if (this.selected) {
                     this.selected.unselect();
                     if (this[itemSlot.loc].equip(this.selected.model, itemSlot.slot)) {
-                        window.DirtyQueue.mark('equipChange');
+                        gl.DirtyQueue.mark('equipChange');
                         log.info('Successfully equipped item %s', this.selected.name);
                         // selected is always from the inventory
                         itemSlot.fill(this.selected.model);
@@ -284,7 +284,7 @@ namespace.module('bot.views', function (exports, require) {
                     this.selected = undefined;
                 } else {
                     this[itemSlot.loc].equip(undefined, itemSlot.slot);
-                    window.DirtyQueue.mark('equipChange');
+                    gl.DirtyQueue.mark('equipChange');
                     var unequippingModel = itemSlot.model;
                     itemSlot.empty();
                     this.addItemSlot(unequippingModel, 'inventory');
@@ -396,11 +396,11 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
-            window.UIEvents.trigger('mouseover', this);
+            gl.UIEvents.trigger('mouseover', this);
         },
 
         onMouseout: function() {
-            window.UIEvents.trigger('mouseout');
+            gl.UIEvents.trigger('mouseout');
         },
 
         select: function() { this.$el.addClass('selected'); },
@@ -422,11 +422,11 @@ namespace.module('bot.views', function (exports, require) {
             this.cardInv = game.cardInv; // cardTypeCollection;
 
             this.views = [];
-            this.listenTo(window.DirtyListener, 'cards:new', this.render);
+            this.listenTo(gl.DirtyListener, 'cards:new', this.render);
 
-            this.listenTo(window.DirtyListener, 'computeAttrs', this.render);  // should this be more specific?
-            this.listenTo(window.DirtyListener, 'skillComputeAttrs', this.render);  // should this be more specific?
-            this.listenTo(window.DirtyListener, 'equipChange', this.hardRender);
+            this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);  // should this be more specific?
+            this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);  // should this be more specific?
+            this.listenTo(gl.DirtyListener, 'equipChange', this.hardRender);
         },
 
         onClick: function(clickedView) {
@@ -581,9 +581,9 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#hero-footer-template').html()),
 
         initialize: function() {
-            this.listenTo(window.DirtyListener, 'hero:hp', this.hpChange);
-            this.listenTo(window.DirtyListener, 'hero:mana', this.manaChange);
-            this.listenTo(window.DirtyListener, 'revive', this.render);
+            this.listenTo(gl.DirtyListener, 'hero:hp', this.hpChange);
+            this.listenTo(gl.DirtyListener, 'hero:mana', this.manaChange);
+            this.listenTo(gl.DirtyListener, 'revive', this.render);
         },
 
         hpChange: function() {
@@ -609,8 +609,8 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options, hero) {
             this.hero = hero;
-            this.listenTo(window.DirtyListener, 'bodySkillchainUpdated', this.render);
-            this.listenTo(window.DirtyListener, 'tick', this.adjust);
+            this.listenTo(gl.DirtyListener, 'bodySkillchainUpdated', this.render);
+            this.listenTo(gl.DirtyListener, 'tick', this.adjust);
         },
 
         getSkills: function() {
@@ -645,28 +645,28 @@ namespace.module('bot.views', function (exports, require) {
                 var d = this.data[i];
                 d.useWidth = 0;
 
-                if (d.skill.coolAt <= window.time) {
+                if (d.skill.coolAt <= gl.time) {
                     d.cdHeight = 0;
                     //d.useWidth = 0;
                 } else {
                     if (d.skill.spec.cooldownTime === 0) {
                         d.cdHeight = 1;
                     }
-                    d.cdHeight = (d.skill.coolAt - window.time) / d.skill.spec.cooldownTime;
+                    d.cdHeight = (d.skill.coolAt - gl.time) / d.skill.spec.cooldownTime;
                     if (d.cdHeight > 1) {
                         d.cdHeight = 1;
                     }
                     d.cdHeight *= SIZE;
 
                     /*
-                    var durPct = (this.hero.nextAction - window.time) / this.hero.lastDuration;
+                    var durPct = (this.hero.nextAction - gl.time) / this.hero.lastDuration;
 
                     // cooling down but doesn't have cooldown, must be last used
                     if (d.skill.spec.cooldownTime === 0) {
                         d.useWidth = durPct;  // grep in use wipe while being in use
                         d.cdHeight = 0;       // red no cooldown wipe
                     } else {
-                        d.cdHeight = (d.skill.coolAt - window.time) / d.skill.spec.cooldownTime;
+                        d.cdHeight = (d.skill.coolAt - gl.time) / d.skill.spec.cooldownTime;
                         if (d.cdHeight > 1) {  // if in use and has cooldown, cap cooldown wipe height, grey in use wipe
                             d.useWidth = durPct;
                             d.cdHeight = 1;
@@ -708,8 +708,8 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options, zone) {
             this.zone = zone;
-            this.listenTo(window.DirtyListener, 'zone', this.render);
-            this.listenTo(window.DirtyListener, 'monsters:death', this.render);
+            this.listenTo(gl.DirtyListener, 'zone', this.render);
+            this.listenTo(gl.DirtyListener, 'monsters:death', this.render);
         },
 
         render: function() {
@@ -772,7 +772,7 @@ namespace.module('bot.views', function (exports, require) {
             this.zone = game.zone;
 
             this.clear();
-            this.listenTo(window.DirtyListener, 'tick', this.render);
+            this.listenTo(gl.DirtyListener, 'tick', this.render);
         },
 
         clear: function() {
@@ -817,7 +817,7 @@ namespace.module('bot.views', function (exports, require) {
             ctx.textBaseline = 'bottom';
             ctx.font = '14px sans-serif';
             var pos = transpose(msg.pos)
-            ctx.fillText(msg.text, pos[0], pos[1] - (window.time - msg.time) / msg.lifespan * 20);
+            ctx.fillText(msg.text, pos[0], pos[1] - (gl.time - msg.time) / msg.lifespan * 20);
         });
     }
 

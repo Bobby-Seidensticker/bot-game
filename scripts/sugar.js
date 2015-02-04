@@ -1,3 +1,5 @@
+window.gl = {};
+
 Array.prototype.sum = function() {
     var s = 0;
     for (var i = this.length; i--;) {

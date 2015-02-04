@@ -7,7 +7,7 @@ namespace.module('bot.inv', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
 
-    var GearModel = window.Model.extend({
+    var GearModel = gl.Model.extend({
         initialize: function() {
             this.xp = 0;
             this.level = 1;
@@ -86,7 +86,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             // this trigger is exclusively for communication between gear and
             // equipped gear model so egm doesn't have to listenTo and stopListening on every single gear change
-            window.EquipEvents.trigger('change');  
+            gl.EquipEvents.trigger('change');  
             return true;
         },
 
@@ -202,7 +202,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    var Skillchain = window.Model.extend({
+    var Skillchain = gl.Model.extend({
         initialize: function() {
             this.skills = [undefined, undefined, undefined, undefined, undefined];
             // this.on('add remove', this.countChange, this);
@@ -257,7 +257,7 @@ namespace.module('bot.inv', function (exports, require) {
             });
 
             this.trigger('skillComputeAttrs');
-            window.DirtyQueue.mark('skillComputeAttrs');
+            gl.DirtyQueue.mark('skillComputeAttrs');
         },
 
         applyXp: function(xp) {
@@ -267,7 +267,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    var EquippedGearModel = window.Model.extend({
+    var EquippedGearModel = gl.Model.extend({
 
         slots: ['weapon', 'head', 'hands', 'chest', 'legs'],
 
@@ -277,7 +277,7 @@ namespace.module('bot.inv', function (exports, require) {
         initialize: function() {
             // this line and event object is used exclusively for equipment card changes to propogate through here
             // and up to the hero so the egm doesn't have to listen and stop listening every equip
-            this.listenTo(window.EquipEvents, 'change', this.propChange);
+            this.listenTo(gl.EquipEvents, 'change', this.propChange);
         },
 
         propChange: function() { this.trigger('change'); },
@@ -349,7 +349,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    var ItemCollection = window.Model.extend({
+    var ItemCollection = gl.Model.extend({
         initialize: function() {
             this.models = [
                 new WeaponModel(0, 'melee'),
@@ -373,7 +373,7 @@ namespace.module('bot.inv', function (exports, require) {
                 if (drop.dropType === 'weapon' || drop.dropType === 'armor') {
                     var exists = !!(_.findWhere(this.models, {itemType: drop.data[0], type: drop.data[1], classLevel: drop.data[2]}));
                     if (!exists) {
-                        window.DirtyQueue.mark('inventory:new');
+                        gl.DirtyQueue.mark('inventory:new');
                         if (drop.dropType === 'weapon') {
                             this.models.push(new WeaponModel(drop.data[2], drop.data[1]));
                             log.info('Adding %s %s %d to inv', drop.data[0], drop.data[1], drop.data[2]);
@@ -387,7 +387,7 @@ namespace.module('bot.inv', function (exports, require) {
                 } else if (drop.dropType === 'skill') {
                     var exists = !!(_.findWhere(this.models, {name: drop.data}));
                     if (!exists) {
-                        window.DirtyQueue.mark('inventory:new');
+                        gl.DirtyQueue.mark('inventory:new');
                         this.models.push(new SkillModel(drop.data));
                         log.info('Adding skill %s', drop.data);
                     } else {
@@ -398,7 +398,7 @@ namespace.module('bot.inv', function (exports, require) {
         }
     });
 
-    var CardTypeModel = window.Model.extend({
+    var CardTypeModel = gl.Model.extend({
         initialize: function(name) {
             _.extend(this, itemref.expand('card', name));
             this.itemType = 'ctm';
@@ -465,7 +465,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    var CardTypeCollection = window.Model.extend({
+    var CardTypeCollection = gl.Model.extend({
         initialize: function() {
             this.models = [];
         },
@@ -484,7 +484,7 @@ namespace.module('bot.inv', function (exports, require) {
                 }
                 typeModel.addCard(drop.data[1]);
                 log.info('Added card %s level %d to card inv', drop.data[0], drop.data[1]);
-                window.DirtyQueue.mark('cards:new');
+                gl.DirtyQueue.mark('cards:new');
             }
         },
 

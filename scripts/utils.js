@@ -191,18 +191,18 @@ namespace.module('bot.messages', function (exports, require) {
 
     var EXPIRES_IN = 10000;
 
-    var Messages = window.Model.extend({
+    var Messages = gl.Model.extend({
         initialize: function() {
             this.messages = [];
         },
 
         send: function(text) {
-            this.messages.push({text: text, expires: window.time + EXPIRES_IN});
+            this.messages.push({text: text, expires: gl.time + EXPIRES_IN});
         },
 
         prune: function() {
             var i = 0, l = this.messages.length;
-            while (i < l && this.messages[i].expires < window.time) {
+            while (i < l && this.messages[i].expires < gl.time) {
                 i++;
             }
             this.messages.splice(0, i);

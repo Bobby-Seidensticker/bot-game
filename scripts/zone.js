@@ -12,7 +12,7 @@ namespace.module('bot.zone', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var vector = namespace.bot.vector;
 
-    var ZoneManager = window.Model.extend({
+    var ZoneManager = gl.Model.extend({
         initialize: function(hero) {
             this.initialize = false;
             this.level = 1;
@@ -53,7 +53,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.rooms = rooms;
             this.rooms[0].hero = this.hero;
             this.initialized = true;
-            window.DirtyQueue.mark('zone:new');
+            gl.DirtyQueue.mark('zone:new');
         },
 
         ensureRoom: function() {
@@ -69,7 +69,7 @@ namespace.module('bot.zone', function (exports, require) {
                 room = this.rooms[this.heroPos];
                 room.hero = this.hero;
                 this.hero.initPos();
-                window.DirtyQueue.mark('zone:nextRoom');
+                gl.DirtyQueue.mark('zone:nextRoom');
                 log.info('now in room %d', this.heroPos);
             }
             return this.rooms[this.heroPos];
@@ -102,7 +102,7 @@ namespace.module('bot.zone', function (exports, require) {
                     return;
                 }
             }
-            window.DirtyQueue.mark('tick');
+            gl.DirtyQueue.mark('tick');
         },
 
         liveMons: function() {
@@ -134,7 +134,7 @@ namespace.module('bot.zone', function (exports, require) {
         }
     });
 
-    var EntityBody = window.Model.extend({
+    var EntityBody = gl.Model.extend({
         initialize: function(spec) {
             this.spec = spec;
 
@@ -144,16 +144,16 @@ namespace.module('bot.zone', function (exports, require) {
 
         createSkillchain: function() {
             this.skills = _.map(_.compact(this.spec.skillchain.skills), function(skill) {
-                return {spec: skill, coolAt: window.time + skill.cooldownTime};
+                return {spec: skill, coolAt: gl.time + skill.cooldownTime};
             });
         },
 
         revive: function() {
             this.hp = this.spec.maxHp;
             this.mana = this.spec.maxMana;
-            this.lastHpFullTime = window.time;
+            this.lastHpFullTime = gl.time;
             this.hpRegened = 0;
-            this.lastManaFullTime = window.time;
+            this.lastManaFullTime = gl.time;
             this.manaRegened = 0;
             this.initPos();
         },
@@ -180,7 +180,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.hp += added;
             if (this.hp >= this.spec.maxHp) {
                 this.hp = this.spec.maxHp;
-                this.lastHpFullTime = window.time;
+                this.lastHpFullTime = gl.time;
                 this.hpRegened = 0;
             }
         },
@@ -189,20 +189,20 @@ namespace.module('bot.zone', function (exports, require) {
             this.mana += added;
             if (this.mana >= this.spec.maxMana) {
                 this.mana = this.spec.maxMana;
-                this.lastManaFullTime = window.time;
+                this.lastManaFullTime = gl.time;
                 this.manaRegened = 0;
             }
         },
 
         regen: function() {
-            if (window.time > this.lastHpFullTime) {
-                var total = this.spec.hpRegen * (window.time - this.lastHpFullTime) / 1000;
+            if (gl.time > this.lastHpFullTime) {
+                var total = this.spec.hpRegen * (gl.time - this.lastHpFullTime) / 1000;
                 var toAdd = total - this.hpRegened;
                 this.hpRegened = total;
                 this.modifyHp(toAdd);
             }
-            if (window.time > this.lastManaFullTime) {
-                var total = this.spec.manaRegen * (window.time - this.lastManaFullTime) / 1000;
+            if (gl.time > this.lastManaFullTime) {
+                var total = this.spec.manaRegen * (gl.time - this.lastManaFullTime) / 1000;
                 var toAdd = total - this.manaRegened;
                 this.manaRegened = total;
                 this.modifyMana(toAdd);
@@ -240,7 +240,7 @@ namespace.module('bot.zone', function (exports, require) {
             // TODO: make this work:
             for (var si = 0; si < this.skills.length; si++) {       // use first skill that:
                 if (this.skills[si] && 
-                    this.skills[si].coolAt <= window.time &&        // is cool
+                    this.skills[si].coolAt <= gl.time &&        // is cool
                     this.skills[si].spec.manaCost <= this.mana &&  // has enough mana
                     this.skills[si].spec.range >= minDist) {       // is in range
                     this.attackTarget(enemies[minIndex], this.skills[si]);
@@ -250,7 +250,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         takeAction: function(duration) {
-            this.nextAction = window.time + duration;
+            this.nextAction = gl.time + duration;
             this.lastDuration = duration;
         },
 
@@ -259,7 +259,7 @@ namespace.module('bot.zone', function (exports, require) {
             var newPos;
             var curPos = [this.x, this.y];
 
-            var dist = this.spec.moveSpeed * window.lastTimeIncr;
+            var dist = this.spec.moveSpeed * gl.lastTimeIncr;
             var range = 1000;  // range needs to come from somewhere
 
             if (enemies.length === 0) {
@@ -274,7 +274,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         attackTarget: function(target, skill) {
-            skill.coolAt = window.time + skill.spec.speed + skill.spec.cooldownTime;
+            skill.coolAt = gl.time + skill.spec.speed + skill.spec.cooldownTime;
             this.takeAction(skill.spec.speed);
             var dmgDealt = target.takeDamage(skill.spec);
 
@@ -305,7 +305,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
-                window.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', [this.x, this.y], 'rgba(230, 230, 10, 0.5)', 1000));
+                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', [this.x, this.y], 'rgba(230, 230, 10, 0.5)', 1000));
                 return 0;
             }
 
@@ -326,7 +326,7 @@ namespace.module('bot.zone', function (exports, require) {
             log.debug('Team %s taking damage, hit for %s, now has %.2f hp', this.teamString(), totalDmg, this.hp);
             // TODO: Add rolling for dodge in here so we can sometimes return 0;
 
-            window.MessageEvents.trigger(
+            gl.MessageEvents.trigger(
                 'message',
                 newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500)
             );
@@ -334,7 +334,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         busy: function() {
-            return this.nextAction > window.time;
+            return this.nextAction > gl.time;
         },
 
         onKill: function() {},
@@ -362,15 +362,15 @@ namespace.module('bot.zone', function (exports, require) {
             this.skills = _.map(
                 skills,
                 function(skill) {
-                    // TODO do the window.time (fake time) stuff
+                    // TODO do the gl.time (fake time) stuff
                     if (skill.name in lookup) {
                         return {spec: skill, coolAt: lookup[skill.name].coolAt};
                     } else {
-                        return {spec: skill, coolAt: window.time + skill.cooldownTime};
+                        return {spec: skill, coolAt: gl.time + skill.cooldownTime};
                     }
                 }
             );
-            window.DirtyQueue.mark('bodySkillchainUpdated');
+            gl.DirtyQueue.mark('bodySkillchainUpdated');
         },
 
         onKill: function(target) {
@@ -380,7 +380,7 @@ namespace.module('bot.zone', function (exports, require) {
             var drops = target.spec.getDrops();
             this.spec.inv.addDrops(drops);
             this.spec.cardInv.addDrops(drops);
-            window.DirtyQueue.mark('monsters:death');
+            gl.DirtyQueue.mark('monsters:death');
         },
 
         onDeath: function() {
@@ -389,31 +389,31 @@ namespace.module('bot.zone', function (exports, require) {
 
         modifyHp: function(added) {
             EntityBody.prototype.modifyHp.call(this, added);
-            window.DirtyQueue.mark('hero:hp');
+            gl.DirtyQueue.mark('hero:hp');
         },
 
         modifyMana: function(added) {
             EntityBody.prototype.modifyMana.call(this, added);
-            window.DirtyQueue.mark('hero:mana');
+            gl.DirtyQueue.mark('hero:mana');
         },
 
         revive: function() {
             EntityBody.prototype.revive.call(this);
-            window.DirtyQueue.mark('revive');
+            gl.DirtyQueue.mark('revive');
         },
     });
 
-    window.monsterSpecs = {};
+    gl.monsterSpecs = {};
 
     var MonsterBody = EntityBody.extend({
         initialize: function(name, level) {
             var uid = name + '_' + level;
             var spec;
-            if (uid in window.monsterSpecs) {
-                spec = window.monsterSpecs[uid]
+            if (uid in gl.monsterSpecs) {
+                spec = gl.monsterSpecs[uid]
             } else {
                 spec = new entity.MonsterSpec(name, level);
-                window.monsterSpecs[uid] = spec;
+                gl.monsterSpecs[uid] = spec;
             }
             EntityBody.prototype.initialize.call(this, spec);
         }
@@ -426,14 +426,14 @@ namespace.module('bot.zone', function (exports, require) {
             pos: pos,
             color: color,
             lifespan: lifespan,
-            time: window.time,
-            expires: window.time + lifespan
+            time: gl.time,
+            expires: gl.time + lifespan
         };
     }
 
-    var ZoneMessages = window.Model.extend({
+    var ZoneMessages = gl.Model.extend({
         initialize: function() {
-            this.listenTo(window.MessageEvents, 'message', this.addMessage);
+            this.listenTo(gl.MessageEvents, 'message', this.addMessage);
             this.msgs = [];
         },
 
@@ -443,7 +443,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         prune: function() {
-            this.msgs = _.filter(this.msgs, function(msg) { return msg.expires > window.time });
+            this.msgs = _.filter(this.msgs, function(msg) { return msg.expires > gl.time });
         },
     });
 

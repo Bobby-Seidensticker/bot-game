@@ -21,7 +21,7 @@ namespace.module('bot.entity', function (exports, require) {
         'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed', 'manaCost'];
     var actualDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg'];
 
-    var EntitySpec = window.Model.extend({
+    var EntitySpec = gl.Model.extend({
         initialize: function() {
             this.level = 1;
             this.xp = 0;
@@ -75,7 +75,7 @@ namespace.module('bot.entity', function (exports, require) {
 
             this.nextLevelXp = this.getNextLevelXp();
 
-            window.DirtyQueue.mark('computeAttrs');
+            gl.DirtyQueue.mark('computeAttrs');
         },
 
         computeSkillAttrs: function() {

@@ -34,13 +34,13 @@ namespace.module('bot.events', function (exports, require) {
         );
     }
 
-    window.DirtyQueue = new DirtyQueueClass();
+    gl.DirtyQueue = new DirtyQueueClass();
 
-    window.DirtyListener = _.extend({}, Backbone.Events);
+    gl.DirtyListener = _.extend({}, Backbone.Events);
 
-    window.GameEvents = _.extend({}, Backbone.Events);
-    window.ItemEvents = _.extend({}, Backbone.Events);
-    window.EquipEvents = _.extend({}, Backbone.Events);
-    window.UIEvents = _.extend({}, Backbone.Events);
-    window.MessageEvents = _.extend({}, Backbone.Events);
+    gl.GameEvents = _.extend({}, Backbone.Events);
+    gl.ItemEvents = _.extend({}, Backbone.Events);
+    gl.EquipEvents = _.extend({}, Backbone.Events);
+    gl.UIEvents = _.extend({}, Backbone.Events);
+    gl.MessageEvents = _.extend({}, Backbone.Events);
 });

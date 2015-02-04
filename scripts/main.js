@@ -16,10 +16,10 @@ namespace.module('bot.main', function (exports, require) {
         log.info('onReady');
 
         var gameModel = new GameModel();
-        window.game = gameModel;
+        gl.game = gameModel;
 
         var gameView = new views.GameView({}, gameModel);
-        //        var gameView = new namespace.bot.window.GameView(gameModel);
+        //        var gameView = new namespace.bot.gl.GameView(gameModel);
         //$('body').html(gameView.el);
         //var m = new menu.TabView();
 
@@ -35,7 +35,7 @@ namespace.module('bot.main', function (exports, require) {
             var PKEY = 80;
             var key = event.keyCode;
             if (key == SPACE) {
-                window.GameEvents.trigger('togglePause');
+                gl.GameEvents.trigger('togglePause');
             } else if (key == EKEY) {
                 //Cheat for adding 1000xp (for easier testing)
                 log.warning("XP Cheat!");                
@@ -81,16 +81,16 @@ namespace.module('bot.main', function (exports, require) {
         });
     }
 
-    var GameModel = window.Model.extend({
+    var GameModel = gl.Model.extend({
 
         initialize: function() {
-            window.time = 0;
+            gl.time = 0;
             this.timeCoefficient = 1;
 
             this.running = false;
             this.inZone = false;
 
-            window.messages = new namespace.bot.messages.Messages();
+            gl.messages = new namespace.bot.messages.Messages();
 
             this.inv = new inv.ItemCollection();
             this.cardInv = new inv.CardTypeCollection();
@@ -101,9 +101,9 @@ namespace.module('bot.main', function (exports, require) {
             this.zonesCleared = 0;
             this.deaths = 0;
 
-            this.listenTo(window.GameEvents, 'unpause', this.start);
-            this.listenTo(window.GameEvents, 'pause', this.pause);
-            this.listenTo(window.GameEvents, 'togglePause', this.toggle);
+            this.listenTo(gl.GameEvents, 'unpause', this.start);
+            this.listenTo(gl.GameEvents, 'pause', this.pause);
+            this.listenTo(gl.GameEvents, 'togglePause', this.toggle);
 
             this.start();
         },
@@ -147,20 +147,20 @@ namespace.module('bot.main', function (exports, require) {
 
             if (this.running) {
                 for (var i = 0; i < steps; i++) {
-                    window.time += STEP_SIZE;
-                    window.lastTimeIncr = STEP_SIZE;
+                    gl.time += STEP_SIZE;
+                    gl.lastTimeIncr = STEP_SIZE;
                     this.zone.zoneTick();
                 }
                 if (extra > 0) {
-                    window.time += extra;
-                    window.lastTimeIncr = extra;
+                    gl.time += extra;
+                    gl.lastTimeIncr = extra;
                     this.zone.zoneTick();
                 }
             }
 
-            window.DirtyQueue.mark('vis');
+            gl.DirtyQueue.mark('vis');
 
-            window.DirtyQueue.triggerAll(window.DirtyListener);
+            gl.DirtyQueue.triggerAll(gl.DirtyListener);
 
             requestAnimFrame(this.tick.bind(this));
         },

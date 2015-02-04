@@ -617,7 +617,14 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "head",
                 "levels": 1
-            }
+            },
+            "stinging": {
+                "mods": [
+                    {"def": "physDmg added 1 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "levels": 1
+            },
         },
         "monster": {
             "skeleton" : {
@@ -628,7 +635,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-grunt", 0],
                     ["sharpened", 1],
                     ["hard head", 1],
-                    ["compression shorts", 1],
+                    ["stinging", 1]
                 ]
             },
             "fire skeleton": {
@@ -637,7 +644,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["hot sword", 1],
                     ["proto-skeleton", 0],
-                    ["six pack", 1]
+                    ["six pack", 1],
+                    ["compression shorts", 1],                    
                 ]
             },
             "skeleton archer" : {

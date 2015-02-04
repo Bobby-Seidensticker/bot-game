@@ -61,6 +61,9 @@ namespace.module('bot.utils', function (exports, require) {
     // mod restrictions:
     // can only have 4, cannot have a converted or gainedas as perlevel
     function addMod(dict, def) { //str, level) {
+        if(def === undefined) {
+            log.error('addMod called with undefined def');
+        }
         var s = def.split(' ');
         var amt = parseInt(s[2], 10);
         if (s[1] === 'added') {
@@ -151,6 +154,9 @@ namespace.module('bot.utils', function (exports, require) {
     function addAllMods(all, mods) {
         for (var i = 0; i < mods.length; i++) {
             //addMod(all, mods[i]);
+            if(mods[i].def == undefined) {
+                log.error('wtf', mods[i].def);
+            }               
             addMod(all[mods[i].type], mods[i].def);
         }
     }

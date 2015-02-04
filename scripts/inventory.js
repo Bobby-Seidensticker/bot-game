@@ -489,6 +489,9 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getSlotCTMs: function(slot) {
+            if(typeof(slot) == "number") {
+                slot = 'skill';
+            }
             return _.filter(this.models, function(model) { return model.slot === slot; });
         },
     });

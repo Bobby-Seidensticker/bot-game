@@ -230,7 +230,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'speed added 250', type: 'dmg'},
-                    {def: 'range added ' + BASE_MELEE_RANGE * 0.6, type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                 ]
             },
             "fire slash": {
@@ -597,8 +597,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "thwomping": {
                 "mods": [
                     {"def": "physDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 50", "type": "dmg"},
                     {"def": "moveSpeed more -5 perLevel", "type": "def"},
-                    {"def": "moveSpeed added -100", "type": "def"},
+                    {"def": "moveSpeed more -75", "type": "def"},
                 ],
                 "slot": "legs",
                 "levels": 10
@@ -683,7 +684,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "ent" : {
                 "items": [["weapon", "melee", 0]],
-                "skills": ["quick hit", "basic melee"],
+                "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["strong back", 2],
                     ["thwomping", 2]

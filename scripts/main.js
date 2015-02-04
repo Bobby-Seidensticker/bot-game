@@ -118,10 +118,12 @@ namespace.module('bot.main', function (exports, require) {
             if (this.running) {
                 for (var i = 0; i < steps; i++) {
                     window.time += STEP_SIZE;
+                    window.lastTimeIncr = STEP_SIZE;
                     this.zone.zoneTick();
                 }
                 if (extra > 0) {
                     window.time += extra;
+                    window.lastTimeIncr = extra;
                     this.zone.zoneTick();
                 }
             }

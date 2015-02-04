@@ -247,33 +247,33 @@ namespace.module('bot.zone', function (exports, require) {
             }
         },
 
+        takeAction: function(duration) {
+            this.nextAction = window.time + duration;
+            this.lastDuration = duration;
+        },
+
         tryMove: function(enemies, distances, door) {
             if (this.busy()) { return; }
             var newPos;
             var curPos = [this.x, this.y];
 
-            // TODO these need to come from stats:
-            var rate = 10000;
-            var range = 100000;
-            var moveCooldown = 30;
+            var dist = this.spec.moveSpeed * window.lastTimeIncr;
+            var range = 1000;  // range needs to come from somewhere
 
             if (enemies.length === 0) {
-                newPos = vector.closer(curPos, door, rate, 0);
+                newPos = vector.closer(curPos, door, dist, 0);
             } else {
                 var target = enemies[distances.minIndex()];
-                newPos = vector.closer(curPos, [target.x, target.y], rate, range);
+                newPos = vector.closer(curPos, [target.x, target.y], dist, range);
             }
 
-            if (!vector.equal(curPos, newPos)) {
-                this.x = newPos[0];
-                this.y = newPos[1];
-                this.nextAction = window.time + moveCooldown;
-            }
+            this.x = newPos[0];
+            this.y = newPos[1];
         },
 
         attackTarget: function(target, skill) {
             skill.coolAt = window.time + skill.spec.speed + skill.spec.cooldownTime;
-            this.nextAction = window.time + skill.spec.speed;
+            this.takeAction(skill.spec.speed);
             var dmgDealt = target.takeDamage(skill.spec);
 
             if (dmgDealt) {
@@ -336,17 +336,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         onKill: function() {},
-        onDeath: function() {},
-
-        /*
-        update: function(dt) {
-            var skills = this.skillchain;
-            _.each(skills, function(skill) { skill.cooldown -= dt; }, this);
-            this.nextAction -= dt;
-            if (this.isHero()) {
-                window.DirtyQueue.mark('skill:change');
-            }
-        }*/
+        onDeath: function() {}
     });
 
     var HeroBody = EntityBody.extend({
@@ -365,7 +355,7 @@ namespace.module('bot.zone', function (exports, require) {
                 lookup[this.skills[i].spec.name] = this.skills[i];
             }
 
-            var skills = _.filter(s.skills, function (skill) { return skill !== undefined; });
+            var skills = _.filter(s.skills, function (skill) { return skill && !skill.disabled; });
 
             this.skills = _.map(
                 skills,
@@ -378,6 +368,7 @@ namespace.module('bot.zone', function (exports, require) {
                     }
                 }
             );
+            window.DirtyQueue.mark('bodySkillchainUpdated');
         },
 
         onKill: function(target) {

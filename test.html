@@ -124,12 +124,15 @@
   </script>
 
   <script id="hero-footer-template" type="text/template">
-    <div>
-      <span class="hp"><% print(Math.ceil(hp)) %></span> / <%= spec.maxHp %>
-    </div>
-    <div>
-      <span class="mana"><% print(Math.ceil(mana)) %></span> / <%= spec.maxMana %>
-    </div>
+    <table>
+      <tbody>
+        <tr><td>Health</td>  <td class="hp"><% print(Math.ceil(hp)) %></td>      <td>/</td> <td><%= spec.maxHp %></td></tr>
+        <tr><td>Mana</td>    <td class="mana"><% print(Math.ceil(mana)) %></td>  <td>/</td> <td><%= spec.maxMana %></td></tr>
+      </tbody>
+    </table>
+  </script>
+
+  <script id="skillchain-footer-template" type="text/template">
   </script>
 
   <script id="map-tab-template" type="text/template">

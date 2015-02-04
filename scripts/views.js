@@ -602,6 +602,84 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
+    var SkillchainFooterView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'skillchain',
+        template: _.template($('#skillchain-footer-template').html()),
+
+        initialize: function(options, hero) {
+            this.hero = hero;
+            this.listenTo(window.DirtyListener, 'bodySkillchainUpdated', this.render);
+            this.listenTo(window.DirtyListener, 'tick', this.adjust);
+        },
+
+        getSkills: function() {
+            this.data = _.compact(this.hero.skills);
+            for (var i = 0; i < this.data.length; i++) {
+                var s = this.data[i];
+                this.data[i] = {
+                    name: s.spec.name,
+                    skill: s,
+                    cdHeight: 0,
+                    useWidth: 0,
+                    $cd: undefined,
+                    $use: undefined
+                };
+            }
+        },
+
+        getEls: function() {
+            var $cds = this.$('.cooldown');
+            var $uses = this.$('.use');
+            for (var i = 0; i < this.data.length; i++) {
+                this.data[i].$cd = $($cds[i]);
+                this.data[i].$use = $($uses[i]);
+            }
+        },
+
+        calc: function() {
+            var SIZE = 90;
+            var useWidth = 0;
+            if (this.hero.nextAction > window.time) {
+                useWidth = (this.hero.nextAction - window.time) / this.hero.lastDuration * SIZE;
+            }
+            for (var i = 0; i < this.data.length; i++) {
+                var d = this.data[i];
+                d.useWidth = useWidth;
+
+                if (d.skill.coolAt < window.time) {
+                    d.cdHeight = 0;
+                } else {
+                    d.cdHeight = (d.skill.coolAt - window.time) / d.skill.spec.cooldownTime;
+                    if (d.cdHeight > 1) {
+                        d.cdHeight = 1;
+                    }
+                    d.cdHeight *= SIZE;
+                }
+            }
+        },
+
+        adjust: function() {
+            this.calc();
+
+            _.each(this.data, function(d) {
+                d.$cd.css('height', d.cdHeight);
+                d.$use.css('width', d.useWidth);
+            });
+        },
+
+        render: function() {
+            this.getSkills();
+
+            this.$el.html(this.template(this));
+
+            this.getEls();
+
+            this.adjust();
+            return this;
+        },
+    });
+
     var FooterView = Backbone.View.extend({
         tagName: 'div',
         className: 'footer',
@@ -614,8 +692,8 @@ namespace.module('bot.views', function (exports, require) {
             this.hero = this.zone.hero;
 
             this.heroBodyView = new HeroFooterView({model: this.hero});
-            /*this.skillchainView = new SkillchainFooterView({}, this.hero.skills, this.hero.spec.skillchain);
-            this.zoneView = new ZoneFooterView({}, this.zone);
+            this.skillchainView = new SkillchainFooterView({}, this.hero);
+            /*this.zoneView = new ZoneFooterView({}, this.zone);
             this.buttons = new FooterButtonsView({});*/
         },
 
@@ -630,8 +708,8 @@ namespace.module('bot.views', function (exports, require) {
         render: function() {
             var frag = document.createDocumentFragment();
             frag.appendChild(this.heroBodyView.render().el);
-            /*frag.appendChild(this.skillchainView.render().el);
-            frag.appendChild(this.zoneView.render().el);
+            frag.appendChild(this.skillchainView.render().el);
+            /*frag.appendChild(this.zoneView.render().el);
             frag.appendChild(this.buttons.render().el);*/
             this.$el.html(frag);
             return this;

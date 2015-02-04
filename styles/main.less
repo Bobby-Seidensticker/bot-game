@@ -105,6 +105,54 @@ body .stats {
     height: 150px;
     background-color: @color-primary-4;
     border-top: 5px solid @color-primary-2;
+
+    .hero {
+        float: left;
+        font-size: 16px;
+        height: 140px;
+        margin: 5px;
+    }
+
+    .skillchain {
+        float: left;
+        height: 140px;
+        margin: 5px;
+
+        .skill {
+            float: left;
+            margin-top: 25px;
+            margin-left: 10px;
+            width: 90px;
+            height: 90px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 5px;
+
+            img {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .cooldown {
+                background-color: @color-secondary-2-0;
+                opacity: 0.5;
+                position: absolute;
+                bottom: 0;
+                height: 0;
+                width: 100%;
+            }
+
+            .use {
+                background-color: #333;
+                opacity: 0.5;
+                position: absolute;
+                right: 0;
+                width: 0;
+                height: 100%;
+            }
+        }
+    }
 }
 
 

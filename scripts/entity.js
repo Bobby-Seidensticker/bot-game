@@ -13,7 +13,7 @@ namespace.module('bot.entity', function (exports, require) {
     var prob = namespace.bot.prob;
 
     var defKeys = ['strength', 'vitality', 'wisdom', 'dexterity', 'maxHp', 'maxMana', 'armor',
-                   'dodge', 'eleResistAll', 'hpRegen', 'manaRegen'];
+                   'dodge', 'eleResistAll', 'hpRegen', 'manaRegen', 'moveSpeed'];
     var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
     var dmgKeys = [
         'meleeDmg', 'rangeDmg', 'spellDmg',
@@ -101,6 +101,8 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'strength gainedas 50 armor', type: 'def'},
                 {def: 'dexterity gainedas 50 dodge', type: 'def'},
 
+                {def: 'moveSpeed added 300', type: 'def'},
+
                 //TODO - add str/dex/wis attacktype bonuses here once impemented
                 //{def: 'strength gainedas 1 meleeDmg', type: 'dmg'},
                 //{def: 'dexterity gainedas 1 rangeDmg', type: 'dmg'},
@@ -142,7 +144,6 @@ namespace.module('bot.entity', function (exports, require) {
             this.team = TEAM_HERO;
 
             log.info('HeroSpec initialize');
-            this.nextAction = window.time;
             this.computeAttrs();
 
             this.listenTo(this.skillchain, 'change', this.computeSkillAttrs);

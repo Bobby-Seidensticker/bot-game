@@ -166,7 +166,7 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         bestGear: function(itemType, type) {
-            var items = _.where(game.inv.models, {itemType: itemType});
+            var items = _.where(gl.game.inv.models, {itemType: itemType});
             items = _.where(items, {type: type});
             items = _.sortBy(items, function(item) { return item.classLevel; });
             if (items.length > 0) {
@@ -182,7 +182,7 @@ namespace.module('bot.main', function (exports, require) {
             this.hero.equipped.equip(this.bestGear('armor', 'hands'), 'hands');
             this.hero.equipped.equip(this.bestGear('armor', 'legs'), 'legs');
 
-            var skills = _.where(game.inv.models, {itemType: 'skill'});
+            var skills = _.where(gl.game.inv.models, {itemType: 'skill'});
             skills = _.sortBy(skills, function(skill) { return -skill.cooldownTime; });
             log.error('skill names: %s', _.pluck(skills, 'name').join(', '));
             log.error('skill cooldownTimes: %s', _.pluck(skills, 'cooldownTime').join(', '));

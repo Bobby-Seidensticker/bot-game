@@ -19,6 +19,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             this.initialize = false;
             this.hero = new HeroBody(hero);
+
             this.nextZone = 'spooky dungeon';
             this.newZone(this.nextZone);
             this.messages = new ZoneMessages();
@@ -63,7 +64,7 @@ namespace.module('bot.zone', function (exports, require) {
             if (!this.hero.isAlive() || this.done()) {
                 log.info('Getting new zone');
                 this.hero.revive();
-                this.newZone(this.nextZone, this.nextZoneLevel); //this.hero.spec.level);
+                this.newZone(this.nextZone);
             }
             if (this.roomCleared() && this.atDoor()) {
                 var room = this.rooms[this.heroPos];

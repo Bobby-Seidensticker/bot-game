@@ -647,7 +647,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "fire skeleton": {
                 "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
-                "skills": ["fire slash", "super smash"],
+                "skills": ["fire slash", "super smash", "basic melee"],
                 "sourceCards": [
                     ["hot sword", 1],
                     ["proto-skeleton", 0],

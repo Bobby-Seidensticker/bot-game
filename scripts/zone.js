@@ -341,7 +341,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             gl.MessageEvents.trigger(
                 'message',
-                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500)
+                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500, this.height)
             );
             return totalDmg;
         },
@@ -432,13 +432,14 @@ namespace.module('bot.zone', function (exports, require) {
         }
     });
 
-    function newZoneMessage(text, type, pos, color, lifespan) {
+    function newZoneMessage(text, type, pos, color, lifespan, verticalOffset) {
         return {
             text: text,
             type: type,
             pos: pos,
             color: color,
             lifespan: lifespan,
+            verticalOffset: verticalOffset,
             time: gl.time,
             expires: gl.time + lifespan
         };

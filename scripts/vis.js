@@ -65,6 +65,10 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.textBaseline = 'bottom';
             ctx.font = '14px sans-serif';
             var pos = transpose(msg.pos)
+            if(msg.verticalOffset) {
+                console.log('worked');
+                pos[1] -= msg.verticalOffset;
+            }
             ctx.fillText(msg.text, pos[0], pos[1] - (gl.time - msg.time) / msg.lifespan * 20);
         });
     }

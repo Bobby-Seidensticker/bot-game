@@ -867,7 +867,7 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#zone-map-tab-template').html()),
 
         events: {
-            'click': 'onClick'
+            'click': 'onClick',
         },
 
         onClick: function() {
@@ -875,6 +875,9 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         render: function() {
+            if (this.model.running) {
+                this.$el.addClass('running');
+            }
             this.$el.html(this.template(this.model));
             return this;
         },
@@ -914,6 +917,8 @@ namespace.module('bot.views', function (exports, require) {
 
         zoneClick: function(zoneName) {
             this.zone.nextZone = zoneName;
+            this.zone.newZone(zoneName);
+            this.render();
         },
 
         render: function() {
@@ -930,7 +935,7 @@ namespace.module('bot.views', function (exports, require) {
             var data, sub;
 
             _.each(this.zone.allZones, function(zoneRef, name) {
-                data = _.extend({name: name}, zoneRef);
+                data = _.extend({name: name, running: name === this.zone.nextZone}, zoneRef);
                 sub = new ZoneMapView({model: data});
                 this.listenTo(sub, 'click', this.zoneClick);
                 this.subs.push(sub);

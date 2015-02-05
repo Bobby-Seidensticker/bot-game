@@ -57,6 +57,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.rooms = rooms;
             this.rooms[0].hero = this.hero;
             this.initialized = true;
+            this.hero.revive();
             gl.DirtyQueue.mark('zone:new');
         },
 

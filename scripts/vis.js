@@ -144,27 +144,52 @@ namespace.module('bot.vis', function (exports, require) {
 
     function drawBody(ctx, body, color) {
         var coords = transpose([body.x, body.y]);
-        circle(ctx, coords, color);
+        var height = 70;
+        var width = 20;
+        
+        //head
+        circle(ctx, [coords[0], coords[1] - height*11/14], color, height/7);
+
+
+        //draw body, arms, legs
+        ctx.beginPath();
+        ctx.moveTo(coords[0], coords[1] - height*9/14);
+        ctx.lineTo(coords[0], coords[1] - height*3/14);
+        ctx.lineTo(coords[0] + width/2, coords[1]);
+        ctx.moveTo(coords[0], coords[1] - height*3/14);
+        ctx.lineTo(coords[0] - width/2, coords[1]);
+        ctx.moveTo(coords[0], coords[1] - height/2);
+        ctx.lineTo(coords[0] + width/2, coords[1] - height/2);
+        ctx.moveTo(coords[0], coords[1] - height/2);
+        ctx.lineTo(coords[0] - width/2, coords[1] - height/2);
+        ctx.stroke();        
+        
+        // draw name
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         ctx.font = '14px sans-serif';
+        ctx.fillStyle = color;
         ctx.fillText(body.spec.name, coords[0], coords[1] + 10);
 
+        //HP fill
+        var hpCoords = [coords[0] - 15, coords[1] - 10 - height];
         var pctHp = body.hp / body.spec.maxHp;
         ctx.fillStyle = "#A00";
-        ctx.fillRect(coords[0] - 15,coords[1]- 20, pctHp * 30, 5);
+        ctx.fillRect(hpCoords[0], hpCoords[1], pctHp * 30, 5);
 
-        //ctx.fill();
-
-        ctx.rect(coords[0] - 15,coords[1]- 20,30,5);
+        //HP box
+        ctx.beginPath();
+        ctx.strokeStyle = 'black';
+        ctx.rect(hpCoords[0], hpCoords[1], 30, 5);
+        ctx.closePath();
         ctx.stroke();
     }
 
-    function circle(ctx, pos, color) {
+    function circle(ctx, pos, color, radius) {
+        ctx.strokeStyle = color;
         ctx.beginPath();
-        ctx.arc(pos[0], pos[1], 10, 0, 2 * Math.PI, false);
-        ctx.fillStyle = color;
-        ctx.fill();
+        ctx.arc(pos[0], pos[1], radius, 0, 2 * Math.PI, false);
+        ctx.stroke();
         ctx.closePath();
     }
 

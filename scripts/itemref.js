@@ -737,30 +737,35 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 5, 5],
                 "boss": "skeleton king",
                 "roomCount": 20,
-                "quantity": [1, 1, 3]
+                "quantity": [1, 1, 3],
+                "level": 1
             },
             "dark forest": {
                 "choices": ["wolf", "bat", "elf", "ent"],
                 "weights": [20, 15, 15, 5],
                 "boss": "elf king",
                 "roomCount": 20,
-                "quantity": [2,2,3]
+                "quantity": [2, 2, 3],
+                "level": 12,
             },
             "dojo": {
                 "choices": ["dummy"],
                 "weights": [1],
                 "boss": "dummy",
                 "roomCount": 10,
-                "quantity": [1,0,0]
+                "quantity": [1, 0, 0],
+                "level": 1,
             },
             "empty dojo": {
                 "choices": [],
                 "weights": [],
                 "boss": "dummy",
                 "roomCount": 10,
-                "quantity": 1// not sure about the logic, but this escapes adding any monsters to rooms
-            }
+                "quantity": [0, 0, 0],
+                "level": 1,
+            },
         },
+        "zoneProgression": ["spooky dungeon", "dark forest"],
         "test": {
             "hngg": {"a": 10},
             "fwah": {"b": 10},

@@ -8,29 +8,34 @@
   <div id="qunit-fixture"></div>
   <script src="scripts/tests/qunit.js"></script>
 
-
   <script id="equipped-item-slot-template" type="text/template">
-    <div><%= slot %></div>
+    <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
-      <div><%= model.name %></div>
+      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
+      <div>Level <%= model.level %></div>
     <% } else { %>
       <div>Empty</div>
     <% } %>
   </script>
 
   <script id="skillchain-item-slot-template" type="text/template">
-    <div><%= slot %></div>
+    <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
-      <div><%= model.name %></div>
+      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
+      <div>Level <%= model.level %></div>
     <% } else { %>
-      <div>Empty</div>      
+      <div>Empty</div>
     <% } %>
+
   </script>
 
   <script id="inventory-item-slot-template" type="text/template">
+    <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
-      <div><%= model.type %> <%= model.itemType %></div>
-      <div><%= model.name %></div>
+      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
+      <div>Level <%= model.level %></div>
+    <% } else { %>
+      <div>Empty</div>
     <% } %>
   </script>
 
@@ -67,27 +72,41 @@
   </script>
 
   <script id="card-slot-template" type="text/template">
-    <div><%= model.name %></div>
-    <div><%= level %></div>
-    <div><%= model.amts[level] %></div>
-  </script>
-
-  <script id="equipped-cards-item-slot-template" type="text/template">
     <% if (model) { %>
       <div><%= model.name %></div>
-      <div><%= model.level %></div>
+      <div>Level <%= level %></div>
+      <div><%= model.amts[level] - 1 %> / 10</div>
+      <div><%= model.slot %></div>
     <% } %>
   </script>
 
   <script id="info-box-template" type="text/template">
-    <h3><%= name %></h3>
+    <% if (model) { %>
+    <% if (model.itemType && model.itemType !== 'ctm') { %>
+    <h3><%= model.name %> - <%= model.itemType %></h3>
     <div class="mods">
-      <div>Level <%= level %></div>
-      <div>XP <%= xp %> / <% print(getNextLevelXp()); %></div>
-      <% _.each(mods, function(mod) { %>
+      <div>Level <%= model.level %></div>
+      <div>XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
+      <% _.each(namespace.bot.utils.prettifyMods(model.baseMods, model.level), function(mod) { %>
         <div><%= mod.def %></div>
       <% }); %>
     </div>
+    <% } else { %>
+    <h3><%= model.name %> - Card</h3>
+    <div class="mods">
+      <div>Level <%= level %></div>
+      <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(mod) {
+         if (mod.def.split(' ')[3] == "perLevel") {
+         
+         %><div><%= mod.def %></div><%
+         print('collapse me');                              
+         } else {%>
+      <div><%= mod.def %></div>
+      <% } %>
+      <% }); %>
+    </div>
+    <% } %>
+    <% } %>
   </script>
 
   <script id="card-inventory-info-box-template" type="text/template">
@@ -128,22 +147,58 @@
       <tbody>
         <tr><td>Health</td>  <td class="hp"><% print(Math.ceil(hp)) %></td>      <td>/</td> <td><%= spec.maxHp %></td></tr>
         <tr><td>Mana</td>    <td class="mana"><% print(Math.ceil(mana)) %></td>  <td>/</td> <td><%= spec.maxMana %></td></tr>
+        <tr><td>Level</td>    <td class="level"><%= spec.level %></td></tr>
+        <tr><td>Xp</td>    <td class="xp"><% print(Math.floor(spec.xp)) %></td>  <td>/</td> <td><% print(spec.getNextLevelXp()) %></td></tr>
       </tbody>
     </table>
   </script>
 
   <script id="zone-footer-template" type="text/template">
+    <table>
+      <tbody>
+        <tr>
+          <td>Zone</td><td><%= name %></td>
+        </tr>
+        <tr>
+          <td>Level</td><td><%= level %></td>
+        </tr>
+        <tr>
+          <td>Room</td><td><% print(heroPos + 1) %> / <% print(rooms.length) %></td>
+        </tr>
+        <tr>
+          <td>Monsters</td><td><% print(liveMons().length) %> / <% print(ensureRoom().monsters.length) %></td>
+        </tr>
+
+      </tbody>
+    </table>
   </script>
 
   <script id="skillchain-footer-template" type="text/template">
+    <% _.each(data, function(skill) { %>
+    <div class="skill">
+      <div class="box">
+        <img src="assets/<%= skill.name %>.svg" />
+        <div class="cooldown"></div>
+      </div>
+      <div class="use-holder"><div class="use-bar"></div></div>
+    </div>
+    <% }); %>
   </script>
 
-  <script id="map-tab-template" type="text/template">
-    <div class="mapcontent">
-      Mappy<br><br>
-      <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px; height:300px;" />
-      <input id="mapgo" type="button" value="Go" />
-    </div>
+  <script id="buttons-footer-template" type="text/template">
+    <div class="stats-button noselect">Stats</div>
+    <div class="inv-button noselect">Inv</div>
+    <div class="map-button noselect">Map</div>
+    <div class="cards-button noselect">Cards</div>
+  </script>
+
+  <script id="zone-map-tab-template" type="text/template">
+    <img />
+    Zone Name: <%= name %>,
+    Level: <%= level %>
+    <br/>
+    Rooms: <%= roomCount %>,
+    Boss: <%= boss %>,
   </script>
 
   <script id="inv-menu-item-template" type="text/template">
@@ -178,8 +233,7 @@
     <input class="item-button craft" value="Craft" type="button" disabled />
     <input class="item-button scrap" value="Scrap" type="button" />
   </script>
-  
-  
+
   <script id="inv-menu-template" type="text/template">
     <div class="inv-content">
       <% _.each(groups, function(group) { %>

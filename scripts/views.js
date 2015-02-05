@@ -102,16 +102,40 @@ namespace.module('bot.views', function (exports, require) {
             this.monsterViews = [];
             this.render();
 
+            this.hide();
             this.listenTo(gl.DirtyListener, 'tick', this.render);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.toggleVisible);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.hide);
 
             $(window).on('resize', this.onResize.bind(this));
-            
+
             //var zone = new ZoneView({model: this.game.zone});
             /*
             this.headerView = new HeaderView();
             this.menuView = new MenuView();
             this.visView = new VisView({}, options.gameModel);
             this.messagesView = new MessagesView({collection: options.messageCollection});*/
+        },
+
+        show: function() {
+            log.info('Showing StatsTab');
+            this.visible = true;
+            this.$el.removeClass('hidden');
+            this.render();
+        },
+
+        hide: function() {
+            log.info('Hiding ItemTab');
+            this.visible = false;
+            this.$el.addClass('hidden');
+        },
+
+        toggleVisible: function() {
+            if (this.visible) {
+                this.hide();
+            } else {
+                this.show();
+            }
         },
 
         onResize: function() {
@@ -128,6 +152,9 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         render: function() {
+            if (!this.visible) {
+                return this;
+            }
             var diffs = this.diffs();
             var sameEntities = _.every(diffs, function(value, key) { return this.last[key] === value; }, this);
 
@@ -159,6 +186,8 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function() {
             this.listenTo(gl.UIEvents, 'mouseover', this.show);
             this.listenTo(gl.UIEvents, 'mouseout', this.hide);
+
+            this.listenTo(gl.DirtyListener, 'footer:buttons', this.hide);
         },
 
         show: function(view) {
@@ -249,10 +278,33 @@ namespace.module('bot.views', function (exports, require) {
                 inventory: []
             };
 
+            this.hide();
             this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
-
             this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
             this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:inv', this.toggleVisible);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:cards', this.hide);
+        },
+
+        show: function() {
+            log.info('Showing ItemTab');
+            this.visible = true;
+            this.$el.removeClass('hidden');
+            this.render();
+        },
+
+        hide: function() {
+            log.info('Hiding ItemTab');
+            this.visible = false;
+            this.$el.addClass('hidden');
+        },
+
+        toggleVisible: function() {
+            if (this.visible) {
+                this.hide();
+            } else {
+                this.show();
+            }
         },
 
         onClick: function(itemSlot) {
@@ -321,6 +373,9 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         render: function() {
+            if (!this.visible) {
+                return this;
+            }
             this.$el.html(this.template());
 
             _.each(this.subs, function(arr, key) {
@@ -427,6 +482,31 @@ namespace.module('bot.views', function (exports, require) {
             this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);  // should this be more specific?
             this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);  // should this be more specific?
             this.listenTo(gl.DirtyListener, 'equipChange', this.hardRender);
+
+            this.hide();
+            this.listenTo(gl.DirtyListener, 'footer:buttons:cards', this.toggleVisible);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:inv', this.hide);
+        },
+
+        show: function() {
+            log.info('Showing CardTab');
+            this.visible = true;
+            this.$el.removeClass('hidden');
+            this.render();
+        },
+
+        hide: function() {
+            log.info('Hiding CardTab');
+            this.visible = false;
+            this.$el.addClass('hidden');
+        },
+
+        toggleVisible: function() {
+            if (this.visible) {
+                this.hide();
+            } else {
+                this.show();
+            }
         },
 
         onClick: function(clickedView) {
@@ -479,6 +559,9 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         render: function() {
+            if (!this.visible) {
+                return this;
+            }
             // call remove() on all views, and stopListening on all views
             _.each(this.views, function(view) {
                 this.stopListening(view);
@@ -713,9 +796,19 @@ namespace.module('bot.views', function (exports, require) {
         className: 'buttons',
         template: _.template($('#buttons-footer-template').html()),
 
-        initialize: function(options) {
-            
+        events: {
+            'click .stats': 'clickStats',
+            'click .map': 'clickMap',
+            'click .inv': 'clickInv',
+            'click .cards': 'clickCards'
         },
+
+        clickStats: function() { gl.DirtyQueue.mark('footer:buttons:stats'); console.log('stat click'); },
+        clickMap: function() { gl.DirtyQueue.mark('footer:buttons:map'); console.log('map click'); },
+        clickInv: function() { gl.DirtyQueue.mark('footer:buttons:inv'); console.log('inv click'); },
+        clickCards: function() { gl.DirtyQueue.mark('footer:buttons:cards'); console.log('cards click'); },
+
+        initialize: function(options) {},
 
         render: function() {
             this.$el.html(this.template(this.zone));

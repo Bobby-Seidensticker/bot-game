@@ -76,19 +76,31 @@ namespace.module('bot.vis', function (exports, require) {
         
         //head
         circle(ctx, [coords[0], coords[1] - height*11/14], color, height/7);
-
-
-        //draw body, arms, legs
+ 
+        //draw body, legs
+        var legFrame = 0;
+        if(body.hasMoved) {
+            legFrame = Math.abs(Math.floor(gl.time % 400 / 20) - 10);
+        }
         ctx.beginPath();
         ctx.moveTo(coords[0], coords[1] - height*9/14);
         ctx.lineTo(coords[0], coords[1] - height*3/14);
-        ctx.lineTo(coords[0] + width/2, coords[1]);
+        ctx.lineTo(coords[0] + width/2 * (10 - legFrame)/10, coords[1]);
         ctx.moveTo(coords[0], coords[1] - height*3/14);
-        ctx.lineTo(coords[0] - width/2, coords[1]);
+        ctx.lineTo(coords[0] - width/2 * (10 - legFrame)/10, coords[1]);
+
+        //arms
+        var rArmFrame = 0; // valid values 0 to 10
+        var lArmFrame = 0;
+        
+        if(body.busy()) {
+            rArmFrame = Math.abs(Math.floor(gl.time % 500 / 25) - 10);
+            lArmFrame = Math.abs(Math.floor((gl.time + 111) % 500 / 25) - 10);
+        }
         ctx.moveTo(coords[0], coords[1] - height/2);
-        ctx.lineTo(coords[0] + width/2, coords[1] - height/2);
+        ctx.lineTo(coords[0] + width/2, coords[1] - height/2 + (1 - (2 * rArmFrame / 10 ))*height/4);
         ctx.moveTo(coords[0], coords[1] - height/2);
-        ctx.lineTo(coords[0] - width/2, coords[1] - height/2);
+        ctx.lineTo(coords[0] - width/2, coords[1] - height/2 + (1 - (2 * lArmFrame / 10 ))*height/4);
         ctx.stroke();        
         
         // draw name

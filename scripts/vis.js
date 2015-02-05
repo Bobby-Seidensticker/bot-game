@@ -72,20 +72,23 @@ namespace.module('bot.vis', function (exports, require) {
     function drawBody(ctx, body, color) {
         var coords = transpose([body.x, body.y]);
         var height = 70;
-
+        var width = 20;
+        
         //head
-        circle(ctx, [coords[0], coords[1] - height + 15], color);
+        circle(ctx, [coords[0], coords[1] - height*11/14], color, height/7);
 
+
+        //draw body, arms, legs
         ctx.beginPath();
-        ctx.moveTo(coords[0], coords[1] - height + 25);
-        ctx.lineTo(coords[0], coords[1] - 15);
-        ctx.lineTo(coords[0] + 10, coords[1]);
-        ctx.moveTo(coords[0], coords[1] - 15);
-        ctx.lineTo(coords[0] - 10, coords[1]);
+        ctx.moveTo(coords[0], coords[1] - height*9/14);
+        ctx.lineTo(coords[0], coords[1] - height*3/14);
+        ctx.lineTo(coords[0] + width/2, coords[1]);
+        ctx.moveTo(coords[0], coords[1] - height*3/14);
+        ctx.lineTo(coords[0] - width/2, coords[1]);
         ctx.moveTo(coords[0], coords[1] - height/2);
-        ctx.lineTo(coords[0] + 15, coords[1] - height/2);
+        ctx.lineTo(coords[0] + width/2, coords[1] - height/2);
         ctx.moveTo(coords[0], coords[1] - height/2);
-        ctx.lineTo(coords[0] - 15, coords[1] - height/2);
+        ctx.lineTo(coords[0] - width/2, coords[1] - height/2);
         ctx.stroke();        
         
         // draw name
@@ -109,10 +112,10 @@ namespace.module('bot.vis', function (exports, require) {
         ctx.stroke();
     }
 
-    function circle(ctx, pos, color) {
+    function circle(ctx, pos, color, radius) {
         ctx.strokeStyle = color;
         ctx.beginPath();
-        ctx.arc(pos[0], pos[1], 10, 0, 2 * Math.PI, false);
+        ctx.arc(pos[0], pos[1], radius, 0, 2 * Math.PI, false);
         ctx.stroke();
         ctx.closePath();
     }

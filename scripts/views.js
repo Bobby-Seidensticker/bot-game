@@ -12,11 +12,13 @@ namespace.module('bot.views', function (exports, require) {
             this.itemTab = new ItemTab({}, game);
             this.cardTab = new CardTab({}, game);
             this.visView = new VisView({}, game);
+            this.mapView = new MapView({}, game);
             this.footerView = new FooterView({}, game);
 
             this.infoBox = new InfoBox();
 
             this.$el.append(this.statsTab.render().el);
+            this.$el.append(this.mapView.render().el);
             this.$el.append(this.itemTab.render().el);
             this.$el.append(this.cardTab.render().el);
             this.$el.append(this.infoBox.el);
@@ -666,6 +668,8 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function() {
             this.listenTo(gl.DirtyListener, 'hero:hp', this.hpChange);
             this.listenTo(gl.DirtyListener, 'hero:mana', this.manaChange);
+            this.listenTo(gl.DirtyListener, 'hero:xp', this.xpChange);
+            this.listenTo(gl.DirtyListener, 'hero:levelup', this.render);
             this.listenTo(gl.DirtyListener, 'revive', this.render);
         },
 
@@ -677,10 +681,15 @@ namespace.module('bot.views', function (exports, require) {
             this.$mana.html(Math.ceil(this.model.mana));
         },
 
+        xpChange: function() {
+            this.$xp.html(Math.floor(this.model.spec.xp));
+        },
+
         render: function() {
             this.$el.html(this.template(this.model));
             this.$hp = this.$('.hp');
             this.$mana = this.$('.mana');
+            this.$xp = this.$('.xp');
             return this;
         },
     });
@@ -797,10 +806,10 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#buttons-footer-template').html()),
 
         events: {
-            'click .stats': 'clickStats',
-            'click .map': 'clickMap',
-            'click .inv': 'clickInv',
-            'click .cards': 'clickCards'
+            'click .stats-button': 'clickStats',
+            'click .map-button': 'clickMap',
+            'click .inv-button': 'clickInv',
+            'click .cards-button': 'clickCards'
         },
 
         clickStats: function() { gl.DirtyQueue.mark('footer:buttons:stats'); console.log('stat click'); },
@@ -850,6 +859,87 @@ namespace.module('bot.views', function (exports, require) {
             this.$el.html(frag);
             return this;
         },
+    });
+
+    var ZoneMapView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'zone noselect',
+        template: _.template($('#zone-map-tab-template').html()),
+
+        events: {
+            'click': 'onClick'
+        },
+
+        onClick: function() {
+            this.trigger('click', this.model.name);
+        },
+
+        render: function() {
+            this.$el.html(this.template(this.model));
+            return this;
+        },
+    });
+
+    var MapView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'map',
+
+        initialize: function(options, game) {
+            this.zone = game.zone;
+            this.hide();
+            this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.toggleVisible);
+        },
+
+        show: function() {
+            log.info('Showing MapView');
+            this.visible = true;
+            this.$el.removeClass('hidden');
+            this.render();
+        },
+
+        hide: function() {
+            log.info('Hiding MapView');
+            this.visible = false;
+            this.$el.addClass('hidden');
+        },
+
+        toggleVisible: function() {
+            if (this.visible) {
+                this.hide();
+            } else {
+                this.show();
+            }
+        },
+
+        zoneClick: function(zoneName) {
+            this.zone.nextZone = zoneName;
+        },
+
+        render: function() {
+            if (!this.visible) {
+                return this;
+            }
+            _.each(this.subs, function(sub) {
+                sub.remove();
+                this.stopListening(sub);
+            }, this);
+            this.subs = [];
+
+            var frag = document.createDocumentFragment();
+            var data, sub;
+
+            _.each(this.zone.allZones, function(zoneRef, name) {
+                data = _.extend({name: name}, zoneRef);
+                sub = new ZoneMapView({model: data});
+                this.listenTo(sub, 'click', this.zoneClick);
+                this.subs.push(sub);
+                frag.appendChild(sub.render().el);
+            }, this);
+
+            this.$el.html(frag);
+            return this;
+        }
     });
 
     function transpose(coords) {

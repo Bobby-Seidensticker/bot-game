@@ -14,34 +14,35 @@ namespace.module('bot.zone', function (exports, require) {
 
     var ZoneManager = gl.Model.extend({
         initialize: function(hero) {
+            this.allZones = itemref.ref.zone;
+            this.zoneProgression = itemref.ref.zoneProgression;  // to be used later for rank increases
+
             this.initialize = false;
-            this.level = 1;
             this.hero = new HeroBody(hero);
-            this.newZone('spooky dungeon', 1);
-            this.messages = new ZoneMessages();
             this.nextZone = 'spooky dungeon';
-            this.nextZoneLevel = '1';
+            this.newZone(this.nextZone);
+            this.messages = new ZoneMessages();
         },
 
-        newZone: function(name, level) {
+        newZone: function(name) {
             this.iuid = _.uniqueId('inst');
 
             var i, j, rooms, monsters, count, data;
 
             this.name = name;
-            this.level = level;
-            _.extend(this, itemref.expand('zone', name));
+            _.extend(this, this.allZones[this.name]);
+
             rooms = [];
             for (i = 0; i < this.roomCount; i++) {
                 count = this.quantity[0] + prob.pProb(this.quantity[1], this.quantity[2]);
 
                 monsters = [];
                 for (var j = 0; j < count; j++) {
-                    monsters.push(new MonsterBody(this.choices[prob.pick(this.weights)], level));
+                    monsters.push(new MonsterBody(this.choices[prob.pick(this.weights)], this.level));
                 }
 
                 if (i === this.roomCount - 1) {
-                    monsters.push(new MonsterBody(this.boss, level));
+                    monsters.push(new MonsterBody(this.boss, this.level));
                 }
 
                 rooms[i] = {

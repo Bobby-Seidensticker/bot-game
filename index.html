@@ -168,6 +168,8 @@
       <tbody>
         <tr><td>Health</td>  <td class="hp"><% print(Math.ceil(hp)) %></td>      <td>/</td> <td><%= spec.maxHp %></td></tr>
         <tr><td>Mana</td>    <td class="mana"><% print(Math.ceil(mana)) %></td>  <td>/</td> <td><%= spec.maxMana %></td></tr>
+        <tr><td>Level</td>    <td class="level"><%= spec.level %></td></tr>
+        <tr><td>Xp</td>    <td class="xp"><% print(Math.floor(spec.xp)) %></td>  <td>/</td> <td><% print(spec.getNextLevelXp()) %></td></tr>
       </tbody>
     </table>
   </script>
@@ -205,18 +207,19 @@
   </script>
 
   <script id="buttons-footer-template" type="text/template">
-    <div class="stats noselect">Stats</div>
-    <div class="inv noselect">Inv</div>
-    <div class="map noselect">Map</div>
-    <div class="cards noselect">Cards</div>
+    <div class="stats-button noselect">Stats</div>
+    <div class="inv-button noselect">Inv</div>
+    <div class="map-button noselect">Map</div>
+    <div class="cards-button noselect">Cards</div>
   </script>
 
-  <script id="map-tab-template" type="text/template">
-    <div class="mapcontent">
-      Mappy<br><br>
-      <img src="http://images.fanpop.com/images/image_uploads/Super-Mario-World-super-mario-world-112617_580_435.jpg" style="width:300px; height:300px;" />
-      <input id="mapgo" type="button" value="Go" />
-    </div>
+  <script id="zone-map-tab-template" type="text/template">
+    <img />
+    Zone Name: <%= name %>,
+    Level: <%= level %>
+    <br/>
+    Rooms: <%= roomCount %>,
+    Boss: <%= boss %>,
   </script>
 
   <script id="inv-menu-item-template" type="text/template">
@@ -251,8 +254,7 @@
     <input class="item-button craft" value="Craft" type="button" disabled />
     <input class="item-button scrap" value="Scrap" type="button" />
   </script>
-  
-  
+
   <script id="inv-menu-template" type="text/template">
     <div class="inv-content">
       <% _.each(groups, function(group) { %>

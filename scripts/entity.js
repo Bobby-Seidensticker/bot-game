@@ -157,6 +157,7 @@ namespace.module('bot.entity', function (exports, require) {
 
         applyXp: function(xp) {
             // TODO needs to do this to the skillchain as well
+            gl.DirtyQueue.mark('hero:xp');
             this.equipped.applyXp(xp);
             this.skillchain.applyXp(xp);
             this.xp += xp;
@@ -164,6 +165,7 @@ namespace.module('bot.entity', function (exports, require) {
                 this.level += 1;
                 this.xp -= this.nextLevelXp;
                 this.nextLevelXp = this.getNextLevelXp();
+                gl.DirtyQueue.mark('hero:levelup');
             }
             this.computeAttrs();
         },

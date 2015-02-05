@@ -339,7 +339,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         busy: function() {
-            return this.nextAction > gl.time;
+            return this.nextAction >= gl.time;
         },
 
         onKill: function() {},

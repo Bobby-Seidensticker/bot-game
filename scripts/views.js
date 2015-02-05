@@ -18,12 +18,13 @@ namespace.module('bot.views', function (exports, require) {
 
             this.infoBox = new InfoBox();
 
+            this.$el.append(this.visView.render().el);
+
             this.$el.append(this.statsTab.render().el);
             this.$el.append(this.mapView.render().el);
             this.$el.append(this.itemTab.render().el);
             this.$el.append(this.cardTab.render().el);
             this.$el.append(this.infoBox.el);
-            this.$el.append(this.visView.render().el);
             this.$el.append(this.footerView.render().el);
         }
     });

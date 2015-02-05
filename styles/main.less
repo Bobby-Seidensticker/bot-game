@@ -250,6 +250,31 @@ body .stats {
     }
 }
 
+.vis {
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .bg {
+        z-index: -30;
+    }
+
+    .entity {
+        z-index: -20;
+    }
+
+    .proj {
+        z-index: -10;
+    }
+}
+
 canvas.vis {
     border: 1px solid black;
 }

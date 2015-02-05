@@ -1,6 +1,55 @@
 namespace.module('bot.vis', function (exports, require) {
 
+    /*
+      TODO:
+      Vis view's el is a div
+      Make BackgroundView its own el=canvas view
+      Make EntityView its own el=canvas view
+      Make canvas full screen, abs positioned
+      OnResize adjust namespace global RATIO, REAL_SIZE so the max dimension is the min size of the screen
+    */
+
+
     var log = namespace.bot.log;
+
+    var VisView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'vis',
+
+        // this needs to get all zones, when game model changes, probably should get all of gameModel
+        initialize: function(options, game) {
+            log.warning('visview init');
+            this.zone = game.zone;
+
+            this.bg = new BackgroundView({}, game);
+            this.entity = new EntityView({}, game);
+
+            $(window).on('resize', this.resize.bind(this));
+            this.resize();
+
+            this.$el.append(this.bg.render().el);
+            this.$el.append(this.entity.render().el);
+            
+            this.listenTo(gl.DirtyListener, 'tick', this.render);
+        },
+
+        resize: function() {
+            this.size = [window.innerWidth, window.innerHeight - 155];
+            this.$el.css({
+                width: this.size[0],
+                height: this.size[1]
+            });
+            this.bg.resize();
+            this.entity.resize();
+        },
+
+        render: function() {
+            this.bg.render();
+            this.entity.render();
+            return this;
+        },
+    });
+
 
     function transpose(coords) {
         return [coords[0] * RATIO, coords[1] * RATIO];
@@ -10,34 +59,58 @@ namespace.module('bot.vis', function (exports, require) {
     var SIZE = 1000 * 1000;
     var RATIO = REAL_SIZE / SIZE;
 
-    var VisView = Backbone.View.extend({
-        tagName: 'canvas',
-        className: 'vis',
 
-        // this needs to get all zones, when game model changes, probably shoudl get all of gameModel
+    var BackgroundView = Backbone.View.extend({
+        tagName: 'canvas',
+        className: 'bg',
+
+        initialize: function(options, game) {
+            log.warning('bg view init');
+            this.zone = game.zone;
+
+            this.resize();
+            this.listenTo(gl.DirtyListener, 'tick', this.render);
+        },
+
+        resize: function() {
+            this.size = [window.innerWidth, window.innerHeight - 155];
+            this.$el.attr({
+                width: this.size[0],
+                height: this.size[1]
+            });
+        },
+
+        render: function() {
+            this.resize();
+            return this;
+        },
+    });
+
+    var EntityView = Backbone.View.extend({
+        tagName: 'canvas',
+        className: 'entity',
+
         initialize: function(options, game) {
             log.warning('visview init');
             this.zone = game.zone;
 
-            this.clear();
+            this.resize();
             this.listenTo(gl.DirtyListener, 'tick', this.render);
         },
 
-        clear: function() {
+        resize: function() {
+            this.size = [window.innerWidth, window.innerHeight - 155];
             this.$el.attr({
-                width: REAL_SIZE,
-                height: REAL_SIZE
+                width: this.size[0],
+                height: this.size[1]
             });
-            /*this.$canvas.css({
-                top: this.$el.height() / 2 - REAL_SIZE / 2 - 1,
-                left: this.$el.width() / 2 - REAL_SIZE / 2 - 1
-            });*/
         },
 
         render: function() {
+            this.resize();
+
             this.zone.messages.prune();
             var msgs = this.zone.messages.msgs;
-            this.clear();
             var ctx = this.el.getContext('2d');
 
             // draw all mons

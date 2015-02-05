@@ -71,27 +71,49 @@ namespace.module('bot.vis', function (exports, require) {
 
     function drawBody(ctx, body, color) {
         var coords = transpose([body.x, body.y]);
-        circle(ctx, coords, color);
+        var height = 70;
+
+        //head
+        circle(ctx, [coords[0], coords[1] - height + 15], color);
+
+        ctx.beginPath();
+        ctx.moveTo(coords[0], coords[1] - height + 25);
+        ctx.lineTo(coords[0], coords[1] - 15);
+        ctx.lineTo(coords[0] + 10, coords[1]);
+        ctx.moveTo(coords[0], coords[1] - 15);
+        ctx.lineTo(coords[0] - 10, coords[1]);
+        ctx.moveTo(coords[0], coords[1] - height/2);
+        ctx.lineTo(coords[0] + 15, coords[1] - height/2);
+        ctx.moveTo(coords[0], coords[1] - height/2);
+        ctx.lineTo(coords[0] - 15, coords[1] - height/2);
+        ctx.stroke();        
+        
+        // draw name
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         ctx.font = '14px sans-serif';
+        ctx.fillStyle = color;
         ctx.fillText(body.spec.name, coords[0], coords[1] + 10);
 
+        //HP fill
+        var hpCoords = [coords[0] - 15, coords[1] - 10 - height];
         var pctHp = body.hp / body.spec.maxHp;
         ctx.fillStyle = "#A00";
-        ctx.fillRect(coords[0] - 15,coords[1]- 20, pctHp * 30, 5);
+        ctx.fillRect(hpCoords[0], hpCoords[1], pctHp * 30, 5);
 
-        //ctx.fill();
-
-        ctx.rect(coords[0] - 15,coords[1]- 20,30,5);
+        //HP box
+        ctx.beginPath();
+        ctx.strokeStyle = 'black';
+        ctx.rect(hpCoords[0], hpCoords[1], 30, 5);
+        ctx.closePath();
         ctx.stroke();
     }
 
     function circle(ctx, pos, color) {
+        ctx.strokeStyle = color;
         ctx.beginPath();
         ctx.arc(pos[0], pos[1], 10, 0, 2 * Math.PI, false);
-        ctx.fillStyle = color;
-        ctx.fill();
+        ctx.stroke();
         ctx.closePath();
     }
 

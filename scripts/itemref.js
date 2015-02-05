@@ -60,7 +60,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 1,
-                "names": ["balsa helmet", "oak helmet", "steel helmet"]
+                "names": ["balsa helmet", "collander", "bucket"]
             },
             "chest": {
                 "mods": [

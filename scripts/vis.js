@@ -75,8 +75,9 @@ namespace.module('bot.vis', function (exports, require) {
 
     function drawBody(ctx, body, color) {
         var coords = transpose([body.x, body.y]);
-        var height = 70;
-        var width = 20;
+        height = body.height;;
+        width = body.width;
+        ctx.lineWidth = 2;
         
         //head
         circle(ctx, [coords[0], coords[1] - height*11/14], color, height/7);
@@ -106,6 +107,8 @@ namespace.module('bot.vis', function (exports, require) {
         ctx.moveTo(coords[0], coords[1] - height/2);
         ctx.lineTo(coords[0] - width/2, coords[1] - height/2 + (1 - (2 * lArmFrame / 10 ))*height/4);
         ctx.stroke();        
+
+        ctx.lineWidth = 1;
         
         // draw name
         ctx.textAlign = 'center';

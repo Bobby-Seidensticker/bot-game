@@ -11,15 +11,18 @@ namespace.module('bot.vis', function (exports, require) {
 
 
     var log = namespace.bot.log;
+    var vvs = {};  // vis vars
+    var SIZE = 1000 * 1000;
 
     var VisView = Backbone.View.extend({
         tagName: 'div',
         className: 'vis',
 
         // this needs to get all zones, when game model changes, probably should get all of gameModel
-        initialize: function(options, game) {
+        initialize: function(options, game, gameView) {
             log.warning('visview init');
             this.zone = game.zone;
+            this.gameView = gameView;
 
             this.bg = new BackgroundView({}, game);
             this.entity = new EntityView({}, game);
@@ -29,63 +32,58 @@ namespace.module('bot.vis', function (exports, require) {
 
             this.$el.append(this.bg.render().el);
             this.$el.append(this.entity.render().el);
-            
+
             this.listenTo(gl.DirtyListener, 'tick', this.render);
+            this.listenTo(gl.DirtyListener, 'hero:move', this.updateConstants);
+            this.listenTo(gl.DirtyListener, 'footer:buttons', this.force);
+        },
+
+        updateConstants: function() {
+            vvs.center = this.gameView.getCenter();
+            vvs.heroCoords = [this.zone.hero.x, this.zone.hero.y];
+
+            vvs.cart = [vvs.heroCoords[0] * vvs.ratio, vvs.heroCoords[1] * vvs.ratio];
+
+            vvs.iso = [vvs.cart[0] - vvs.cart[1], (vvs.cart[0] + vvs.cart[1]) / 2 - SIZE / 2];
+
+            vvs.actual = [vvs.iso[0] + vvs.center[0], vvs.iso[1] + vvs.center[1]];
         },
 
         resize: function() {
-            this.size = [window.innerWidth, window.innerHeight - 155];
+            var ss = [window.innerWidth, window.innerHeight - 155];
+            vvs.ss = ss;
+
+            if (ss[0] / 2 > ss[1]) {  // if height is the limiting factor
+                vvs.realSize = ss[1];
+            } else {
+                vvs.realSize = ss[0] / 2;
+            }
+            vvs.ratio = vvs.realSize / SIZE;
+
+            this.updateConstants();
+
             this.$el.css({
-                width: this.size[0],
-                height: this.size[1]
+                width: ss[0],
+                height: ss[1]
             });
-            this.bg.resize();
-            this.entity.resize();
+        },
+
+        force: function() {
+            this.updateConstants();
+            this.bg.force();
         },
 
         render: function() {
-            this.bg.render();
-            this.entity.render();
             return this;
         },
     });
 
-    var CENTER;
-    var CART;
-    var ISO;
-    var ACTUAL;
-
-    function updateConstants(gameCoords) {
-        CENTER = [gl.visLeft + Math.floor(gl.visWidth / 2), Math.floor((window.innerHeight - 155) / 2)];
-
-        CART = [gameCoords[0] * RATIO, gameCoords[1] * RATIO];
-
-        ISO = [CART[0] - CART[1], (CART[0] + CART[1]) / 2 - SIZE / 2];
-
-        ACTUAL = [ISO[0] + CENTER[0], ISO[1] + CENTER[1]];
-    }
-
-    if (!gl.visLeft) {
-        gl.visLeft = 0;
-    }
-    if (!gl.visWidth) {
-        gl.visWidth = window.innerWidth;
-    }
-    updateConstants([0, 500000]);
-
     function transpose(coords) {
-        var cart = [coords[0] * RATIO, coords[1] * RATIO];
+        var cart = [coords[0] * vvs.ratio, coords[1] * vvs.ratio];
         var iso = [cart[0] - cart[1], (cart[0] + cart[1]) / 2 - SIZE / 2];
-        iso = [iso[0] - ISO[0] + CENTER[0], iso[1] - ISO[1] + CENTER[1]];
+        iso = [iso[0] - vvs.iso[0] + vvs.center[0], iso[1] - vvs.iso[1] + vvs.center[1]];
         return iso;
-
-        //return [REAL_SIZE + (coords[0] - coords[1]) * RATIO, (coords[0] + coords[1]) / 2 * RATIO];
     }
-
-    var REAL_SIZE = 600;
-    var SIZE = 1000 * 1000;
-    var RATIO = REAL_SIZE / SIZE;
-
 
     var BackgroundView = Backbone.View.extend({
         tagName: 'canvas',
@@ -117,6 +115,11 @@ namespace.module('bot.vis', function (exports, require) {
             this.redraw = true;
         },
 
+        force: function() {
+            this.redraw = true;
+            this.render();
+        },
+
         render: function() {
             if (this.redraw) {
                 this.clear();
@@ -137,17 +140,20 @@ namespace.module('bot.vis', function (exports, require) {
         drawBg: function() {
             log.error('draw bg');
 
+            var s = vvs.realSize;
+            var h = s / 2;
+
             this.ctx.fillStyle = '#777';
-            this.ctx.fillRect(0, 0, 600, 600);
+            this.ctx.fillRect(0, 0, s, s);
 
             this.ctx.font = '16px sans-serif';
             this.ctx.fillStyle = '#fff';
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
-            this.ctx.fillText('North', 300, -25);
-            this.ctx.fillText('West', -25, 300);
-            this.ctx.fillText('East', 625, 300);
-            this.ctx.fillText('South', 300, 625);
+            this.ctx.fillText('North', h, -25);
+            this.ctx.fillText('West', -25, h);
+            this.ctx.fillText('East', s + 25, h);
+            this.ctx.fillText('South', h, s + 25);
         },
     });
 
@@ -190,8 +196,6 @@ namespace.module('bot.vis', function (exports, require) {
             }, this);
 
             // draw hero
-            updateConstants([this.zone.hero.x, this.zone.hero.y]);
-            
             drawBody(ctx, this.zone.hero, 'rgba(30, 20, 240, 1)');
 
             drawMessages(ctx, msgs);
@@ -294,7 +298,6 @@ namespace.module('bot.vis', function (exports, require) {
     }
 
     exports.extend({
-        VisView: VisView,
-        updateConstants: updateConstants
+        VisView: VisView
     });    
 });

@@ -8,26 +8,74 @@ namespace.module('bot.views', function (exports, require) {
         el: $('body'),
 
         initialize: function(options, game) {
+            log.info('GameView initialize');
+
             this.statsTab = new StatsTab({}, game);
-            //this.statsTab.onResize();
             this.itemTab = new ItemTab({}, game);
             this.cardTab = new CardTab({}, game);
-            this.visView = new VisView({}, game);
-            this.mapView = new MapView({}, game);
+            this.mapTab = new MapTab({}, game);
             this.footerView = new FooterView({}, game);
-
             this.infoBox = new InfoBox();
 
+            this.visView = new VisView({}, game, this);
             this.$el.append(this.visView.render().el);
 
             this.$el.append(this.statsTab.render().el);
-            this.$el.append(this.mapView.render().el);
+            this.$el.append(this.mapTab.render().el);
             this.$el.append(this.itemTab.render().el);
             this.$el.append(this.cardTab.render().el);
             this.$el.append(this.infoBox.el);
             this.$el.append(this.footerView.render().el);
-        }
+        },
+
+        getCenter: function() {
+            var left, right;
+            if (this.statsTab.visible) {
+                left = this.statsTab.$el.width();
+            } else if (this.mapTab.visible) {
+                left = this.mapTab.$el.width();
+            } else {
+                left = 0;
+            }
+
+            if (this.itemTab.visible) {
+                right = this.itemTab.$el.width();
+            } else if (this.cardTab.visible) {
+                right = this.cardTab.$el.width();
+            } else {
+                right = 0;
+            }
+
+            return [
+                (window.innerWidth - left - right) / 2 + left,
+                (window.innerHeight - 155) / 2
+            ];
+        },
     });
+
+    var MenuTabMixin = {
+        // Mixing class needs to set a "name" string property for these logs to make sense
+        show: function() {
+            log.info('Showing %s tab', this.name);
+            this.visible = true;
+            this.$el.removeClass('hidden');
+            this.render();
+        },
+
+        hide: function() {
+            log.info('Hiding %s tab', this.name);
+            this.visible = false;
+            this.$el.addClass('hidden');
+        },
+
+        toggleVisible: function() {
+            if (this.visible) {
+                this.hide();
+            } else {
+                this.show();
+            }
+        }
+    };
 
     function ceilRatio(a, b) {
         return Math.ceil(a) + ' / ' + Math.ceil(b);
@@ -97,59 +145,19 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function(options, game) {
             log.info('GameView initialize');
 
-            //var specKeys = entity.attrKeys.concat(entity.defKeys).concat(entity.eleResistKeys).concat(entity.dmgKeys);
-            //specKeys = ['name', 'level', 'team', 'xp', 'nextLevelXp'].concat(specKeys);
-
             this.zone = game.zone;
             this.last = {};
             this.heroView = new EntityView({model: this.zone.hero});
             this.monsterViews = [];
             this.render();
-
-            this.hide();
             this.listenTo(gl.DirtyListener, 'tick', this.render);
+
+            // Related to MenuTabMixin
+            this.name = 'Stats';
+            this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.toggleVisible);
             this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.hide);
-
-            //$(window).on('resize', this.onResize.bind(this));
-
-            //var zone = new ZoneView({model: this.game.zone});
-            /*
-            this.headerView = new HeaderView();
-            this.menuView = new MenuView();
-            this.visView = new VisView({}, options.gameModel);
-            this.messagesView = new MessagesView({collection: options.messageCollection});*/
         },
-
-        show: function() {
-            log.info('Showing StatsTab');
-            this.visible = true;
-            this.$el.removeClass('hidden');
-            this.render();
-        },
-
-        hide: function() {
-            log.info('Hiding StatsTab');
-            this.visible = false;
-            this.$el.addClass('hidden');
-        },
-
-        toggleVisible: function() {
-            if (this.visible) {
-                this.hide();
-                gl.visLeft = 0;
-                gl.visWidth = window.innerWidth;
-            } else {
-                this.show();
-                gl.visLeft = this.$el.width();
-                gl.visWidth = window.innerWidth - this.$el.width();
-            }
-        },
-
-        /*onResize: function() {
-            this.$el.css({width: gl.innerWidth / 3});
-            this.render();
-        },*/
 
         diffs: function() {
             return {
@@ -184,7 +192,7 @@ namespace.module('bot.views', function (exports, require) {
             }
             return this;
         },
-    });
+    }).extend(MenuTabMixin);
 
     var InfoBox = Backbone.View.extend({
         tagName: 'div',
@@ -199,26 +207,24 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         show: function(view) {
-            this.$el.css('display', 'block');
-            this.$el.html(this.template(_.extend({}, {model: undefined, level: 'hngg'}, view)));
+            this.view = view;
         },
 
         hide: function() {
-            this.$el.css('display', 'none');
-            this.$el.empty();
+            this.view = undefined;
         },
 
-        /*
-        render: function(view) {
-            if (model) {
+        render: function() {
+            if (this.view) {
                 this.$el.css('display', 'block');
-                this.$el.html(this.template(model));
+                // Avoid crashes due to undefineds
+                this.$el.html(this.template(_.extend({model: undefined, level: 'hngg'}, this.view)));
             } else {
                 this.$el.css('display', 'none');
-                this.$el.empty();
             }
+
             return this;
-        },*/
+        }
     });
 
     var ItemSlot = Backbone.View.extend({
@@ -286,37 +292,15 @@ namespace.module('bot.views', function (exports, require) {
                 inventory: []
             };
 
-            this.hide();
             this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
             this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
             this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
+
+            // Related to MenuTabMixin
+            this.name = 'Items';
+            this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:inv', this.toggleVisible);
             this.listenTo(gl.DirtyListener, 'footer:buttons:cards', this.hide);
-        },
-
-        show: function() {
-            log.info('Showing ItemTab');
-            this.visible = true;
-            this.$el.removeClass('hidden');
-            this.render();
-        },
-
-        hide: function() {
-            log.info('Hiding ItemTab');
-            this.visible = false;
-            this.$el.addClass('hidden');
-        },
-
-        toggleVisible: function() {
-            if (this.visible) {
-                this.hide();
-                gl.visLeft = 0;
-                gl.visWidth = window.innerWidth;
-            } else {
-                this.show();
-                gl.visLeft = 0;
-                gl.visWidth = window.innerWidth - this.$el.width();
-            }
         },
 
         onClick: function(itemSlot) {
@@ -438,7 +422,7 @@ namespace.module('bot.views', function (exports, require) {
 
             return this;
         },
-    });
+    }).extend(MenuTabMixin);
 
     var CardSlot = Backbone.View.extend({
         tagName: 'div',
@@ -495,34 +479,10 @@ namespace.module('bot.views', function (exports, require) {
             this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);  // should this be more specific?
             this.listenTo(gl.DirtyListener, 'equipChange', this.hardRender);
 
+            this.name = 'Cards';
             this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:cards', this.toggleVisible);
             this.listenTo(gl.DirtyListener, 'footer:buttons:inv', this.hide);
-        },
-
-        show: function() {
-            log.info('Showing CardTab');
-            this.visible = true;
-            this.$el.removeClass('hidden');
-            this.render();
-        },
-
-        hide: function() {
-            log.info('Hiding CardTab');
-            this.visible = false;
-            this.$el.addClass('hidden');
-        },
-
-        toggleVisible: function() {
-            if (this.visible) {
-                this.hide();
-                gl.visLeft = 0;
-                gl.visWidth = window.innerWidth;
-            } else {
-                this.show();
-                gl.visLeft = 0;
-                gl.visWidth = window.innerWidth - this.$el.width();
-            }
         },
 
         onClick: function(clickedView) {
@@ -672,7 +632,7 @@ namespace.module('bot.views', function (exports, require) {
 
             return this;
         },
-    });
+    }).extend(MenuTabMixin);
 
     var HeroFooterView = Backbone.View.extend({
         tagName: 'div',
@@ -875,7 +835,7 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
-    var ZoneMapView = Backbone.View.extend({
+    var ZoneMapTab = Backbone.View.extend({
         tagName: 'div',
         className: 'zone noselect',
         template: _.template($('#zone-map-tab-template').html()),
@@ -897,26 +857,28 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
-    var MapView = Backbone.View.extend({
+    var MapTab = Backbone.View.extend({
         tagName: 'div',
         className: 'map',
 
         initialize: function(options, game) {
             this.zone = game.zone;
+
+            this.name = 'Map';
             this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.hide);
             this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.toggleVisible);
         },
 
         show: function() {
-            log.info('Showing MapView');
+            log.info('Showing MapTab');
             this.visible = true;
             this.$el.removeClass('hidden');
             this.render();
         },
 
         hide: function() {
-            log.info('Hiding MapView');
+            log.info('Hiding MapTab');
             this.visible = false;
             this.$el.addClass('hidden');
         },
@@ -954,7 +916,7 @@ namespace.module('bot.views', function (exports, require) {
 
             _.each(this.zone.allZones, function(zoneRef, name) {
                 data = _.extend({name: name, running: name === this.zone.nextZone}, zoneRef);
-                sub = new ZoneMapView({model: data});
+                sub = new ZoneMapTab({model: data});
                 this.listenTo(sub, 'click', this.zoneClick);
                 this.subs.push(sub);
                 frag.appendChild(sub.render().el);
@@ -963,7 +925,7 @@ namespace.module('bot.views', function (exports, require) {
             this.$el.html(frag);
             return this;
         }
-    });
+    }).extend(MenuTabMixin);
 
     exports.extend({
         GameView: GameView,

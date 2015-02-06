@@ -231,7 +231,7 @@ namespace.module('bot.entity', function (exports, require) {
                     });
                 }
             }
-            if (Math.random() < 0.001 * 50) {
+            if (Math.random() < 1) { //0.001 * 50) {
                 if (this.items.length) {
                     var sel = this.items[prob.pyRand(0, this.items.length)];
                     drops.push({
@@ -240,7 +240,7 @@ namespace.module('bot.entity', function (exports, require) {
                     });
                 }
             }
-            if (Math.random() < 0.001 * 50) {
+            if (Math.random() < 1) { //0.001 * 50) {
                 if (this.skills.length) {
                     drops.push({
                         dropType: 'skill',

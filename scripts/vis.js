@@ -113,7 +113,7 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         clear: function() {
-            this.ctx.clearRect(-100, -100, this.size[0], this.size[1]);
+            this.ctx.clearRect(-200, -200, this.size[0] + 400, this.size[1] + 400);
             this.redraw = true;
         },
 

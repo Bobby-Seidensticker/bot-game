@@ -9,7 +9,7 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options, game) {
             this.statsTab = new StatsTab({}, game);
-            this.statsTab.onResize();
+            //this.statsTab.onResize();
             this.itemTab = new ItemTab({}, game);
             this.cardTab = new CardTab({}, game);
             this.visView = new VisView({}, game);
@@ -111,7 +111,7 @@ namespace.module('bot.views', function (exports, require) {
             this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.toggleVisible);
             this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.hide);
 
-            $(window).on('resize', this.onResize.bind(this));
+            //$(window).on('resize', this.onResize.bind(this));
 
             //var zone = new ZoneView({model: this.game.zone});
             /*
@@ -129,7 +129,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         hide: function() {
-            log.info('Hiding ItemTab');
+            log.info('Hiding StatsTab');
             this.visible = false;
             this.$el.addClass('hidden');
         },
@@ -137,15 +137,19 @@ namespace.module('bot.views', function (exports, require) {
         toggleVisible: function() {
             if (this.visible) {
                 this.hide();
+                gl.visLeft = 0;
+                gl.visWidth = window.innerWidth;
             } else {
                 this.show();
+                gl.visLeft = this.$el.width();
+                gl.visWidth = window.innerWidth - this.$el.width();
             }
         },
 
-        onResize: function() {
+        /*onResize: function() {
             this.$el.css({width: gl.innerWidth / 3});
             this.render();
-        },
+        },*/
 
         diffs: function() {
             return {
@@ -306,8 +310,12 @@ namespace.module('bot.views', function (exports, require) {
         toggleVisible: function() {
             if (this.visible) {
                 this.hide();
+                gl.visLeft = 0;
+                gl.visWidth = window.innerWidth;
             } else {
                 this.show();
+                gl.visLeft = 0;
+                gl.visWidth = window.innerWidth - this.$el.width();
             }
         },
 
@@ -508,8 +516,12 @@ namespace.module('bot.views', function (exports, require) {
         toggleVisible: function() {
             if (this.visible) {
                 this.hide();
+                gl.visLeft = 0;
+                gl.visWidth = window.innerWidth;
             } else {
                 this.show();
+                gl.visLeft = 0;
+                gl.visWidth = window.innerWidth - this.$el.width();
             }
         },
 
@@ -912,8 +924,12 @@ namespace.module('bot.views', function (exports, require) {
         toggleVisible: function() {
             if (this.visible) {
                 this.hide();
+                gl.visLeft = 0;
+                gl.visWidth = window.innerWidth;
             } else {
                 this.show();
+                gl.visLeft = this.$el.width();
+                gl.visWidth = window.innerWidth - this.$el.width();
             }
         },
 

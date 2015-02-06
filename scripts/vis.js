@@ -50,9 +50,36 @@ namespace.module('bot.vis', function (exports, require) {
         },
     });
 
+    var CENTER;
+    var CART;
+    var ISO;
+    var ACTUAL;
+
+    function updateConstants(gameCoords) {
+        CENTER = [gl.visLeft + Math.floor(gl.visWidth / 2), Math.floor((window.innerHeight - 155) / 2)];
+
+        CART = [gameCoords[0] * RATIO, gameCoords[1] * RATIO];
+
+        ISO = [CART[0] - CART[1], (CART[0] + CART[1]) / 2 - SIZE / 2];
+
+        ACTUAL = [ISO[0] + CENTER[0], ISO[1] + CENTER[1]];
+    }
+
+    if (!gl.visLeft) {
+        gl.visLeft = 0;
+    }
+    if (!gl.visWidth) {
+        gl.visWidth = window.innerWidth;
+    }
+    updateConstants([0, 500000]);
 
     function transpose(coords) {
-        return [REAL_SIZE + (coords[0] - coords[1]) * RATIO, (coords[0] + coords[1]) / 2 * RATIO];
+        var cart = [coords[0] * RATIO, coords[1] * RATIO];
+        var iso = [cart[0] - cart[1], (cart[0] + cart[1]) / 2 - SIZE / 2];
+        iso = [iso[0] - ISO[0] + CENTER[0], iso[1] - ISO[1] + CENTER[1]];
+        return iso;
+
+        //return [REAL_SIZE + (coords[0] - coords[1]) * RATIO, (coords[0] + coords[1]) / 2 * RATIO];
     }
 
     var REAL_SIZE = 600;
@@ -113,7 +140,9 @@ namespace.module('bot.vis', function (exports, require) {
             a = 2; b = 1;
             c = -2; d = 1;
 
-            e = 600*2; f = 0;
+            var coords = transpose([0, 0]);
+
+            e = coords[0] * 2; f = coords[1] * 2;
 
             s = .5;
 
@@ -161,6 +190,9 @@ namespace.module('bot.vis', function (exports, require) {
         render: function() {
             this.resize();
 
+            gl.heroPos = this.zone
+
+
             this.zone.messages.prune();
             var msgs = this.zone.messages.msgs;
             var ctx = this.el.getContext('2d');
@@ -174,14 +206,20 @@ namespace.module('bot.vis', function (exports, require) {
             }, this);
 
             // draw hero
-            var cpos = transpose([this.zone.hero.x, this.zone.hero.y]);
+            updateConstants([this.zone.hero.x, this.zone.hero.y]);
+            
             drawBody(ctx, this.zone.hero, 'rgba(30, 20, 240, 1)');
 
             drawMessages(ctx, msgs);
 
-            circle(ctx, transpose([0, 500000]), '#fff', 3, true);
+            var pos;
+            pos = transpose([0, 500000])
+            pos[1] -= 5;
+            circle(ctx, pos, '#fff', 5, true);
 
-            circle(ctx, transpose([1000000, 500000]), '#fff', 3, true);
+            pos = transpose([1000000, 500000])
+            pos[1] -= 5;
+            circle(ctx, pos, '#fff', 5, true);
 
             return this;
         },
@@ -272,6 +310,7 @@ namespace.module('bot.vis', function (exports, require) {
     }
 
     exports.extend({
-        VisView: VisView
+        VisView: VisView,
+        updateConstants: updateConstants
     });    
 });

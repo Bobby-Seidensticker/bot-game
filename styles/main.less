@@ -39,13 +39,14 @@ body {
 }
 
 body .stats {
+    background-color: @color-primary-0;
     font-size: 10px;
     height: 100%;
 
     float: left;
     top: 0;
     left: 0;
-    width: 600px;
+    width: 400px;
 
     table {
         width: 200px;
@@ -54,6 +55,7 @@ body .stats {
 }
 
 .itemTab {
+    background-color: @color-primary-0;
     width: 405px;
     margin: 0 10px;
     float: right;
@@ -99,6 +101,7 @@ body .stats {
 }
 
 .infoBox {
+    background-color: @color-primary-0;
     width: 200px;
     height: 300px;
     margin: 10px;
@@ -224,9 +227,11 @@ body .stats {
 }
 
 .map {
+    background-color: @color-primary-0;
     float: left;
     height: 100%;
     width: 380px;
+    overflow: hidden;
 
     .zone {
         width: 360px;
@@ -255,6 +260,7 @@ body .stats {
     left: 0;
     top: 0;
     overflow: hidden;
+    z-index: -1;
 
     canvas {
         position: absolute;

@@ -143,6 +143,10 @@ namespace.module('bot.zone', function (exports, require) {
         initialize: function(spec) {
             this.spec = spec;
 
+            this.height = this.spec.height ? this.spec.height : 70;
+            this.width = this.spec.width ? this.spec.width : 30;
+
+            
             this.createSkillchain();
             this.revive();
         },
@@ -154,6 +158,8 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         revive: function() {
+            this.hasMoved = false;
+
             this.hp = this.spec.maxHp;
             this.mana = this.spec.maxMana;
             this.lastHpFullTime = gl.time;
@@ -216,6 +222,7 @@ namespace.module('bot.zone', function (exports, require) {
 
         tryDoStuff: function(room, livingEnemies) {
             this.regen();
+            this.hasMoved = false;
 
             if (!this.isAlive() || this.busy()) {
                 return;
@@ -261,6 +268,7 @@ namespace.module('bot.zone', function (exports, require) {
 
         tryMove: function(enemies, distances, door) {
             if (this.busy()) { return; }
+            this.hasMoved = true;
             var newPos;
             var curPos = [this.x, this.y];
 
@@ -333,7 +341,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             gl.MessageEvents.trigger(
                 'message',
-                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500)
+                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500, this.height)
             );
             return totalDmg;
         },
@@ -424,13 +432,14 @@ namespace.module('bot.zone', function (exports, require) {
         }
     });
 
-    function newZoneMessage(text, type, pos, color, lifespan) {
+    function newZoneMessage(text, type, pos, color, lifespan, verticalOffset) {
         return {
             text: text,
             type: type,
             pos: pos,
             color: color,
             lifespan: lifespan,
+            verticalOffset: verticalOffset,
             time: gl.time,
             expires: gl.time + lifespan
         };

@@ -138,31 +138,50 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.textBaseline = 'bottom';
             ctx.font = '14px sans-serif';
             var pos = transpose(msg.pos)
+            if(msg.verticalOffset) {
+                console.log('worked');
+                pos[1] -= msg.verticalOffset;
+            }
             ctx.fillText(msg.text, pos[0], pos[1] - (gl.time - msg.time) / msg.lifespan * 20);
         });
     }
 
     function drawBody(ctx, body, color) {
         var coords = transpose([body.x, body.y]);
-        var height = 70;
-        var width = 20;
+        height = body.height;;
+        width = body.width;
+        ctx.lineWidth = 2;
         
         //head
         circle(ctx, [coords[0], coords[1] - height*11/14], color, height/7);
-
-
-        //draw body, arms, legs
+ 
+        //draw body, legs
+        var legFrame = 0;
+        if(body.hasMoved) {
+            legFrame = Math.abs(Math.floor(gl.time % 400 / 20) - 10);
+        }
         ctx.beginPath();
         ctx.moveTo(coords[0], coords[1] - height*9/14);
         ctx.lineTo(coords[0], coords[1] - height*3/14);
-        ctx.lineTo(coords[0] + width/2, coords[1]);
+        ctx.lineTo(coords[0] + width/2 * (10 - legFrame)/10, coords[1]);
         ctx.moveTo(coords[0], coords[1] - height*3/14);
-        ctx.lineTo(coords[0] - width/2, coords[1]);
+        ctx.lineTo(coords[0] - width/2 * (10 - legFrame)/10, coords[1]);
+
+        //arms
+        var rArmFrame = 0; // valid values 0 to 10
+        var lArmFrame = 0;
+        
+        if(body.busy()) {
+            rArmFrame = Math.abs(Math.floor(gl.time % 500 / 25) - 10);
+            lArmFrame = Math.abs(Math.floor((gl.time + 111) % 500 / 25) - 10);
+        }
         ctx.moveTo(coords[0], coords[1] - height/2);
-        ctx.lineTo(coords[0] + width/2, coords[1] - height/2);
+        ctx.lineTo(coords[0] + width/2, coords[1] - height/2 + (1 - (2 * rArmFrame / 10 ))*height/4);
         ctx.moveTo(coords[0], coords[1] - height/2);
-        ctx.lineTo(coords[0] - width/2, coords[1] - height/2);
+        ctx.lineTo(coords[0] - width/2, coords[1] - height/2 + (1 - (2 * lArmFrame / 10 ))*height/4);
         ctx.stroke();        
+
+        ctx.lineWidth = 1;
         
         // draw name
         ctx.textAlign = 'center';

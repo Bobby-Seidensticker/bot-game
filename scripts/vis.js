@@ -231,7 +231,8 @@ namespace.module('bot.vis', function (exports, require) {
         var coords = transpose([body.x, body.y]);
         height = body.height;
         width = body.width;
-        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 3;
         
         //head
         circle(ctx, [coords[0], coords[1] - height * 11 / 14], color, height/7);

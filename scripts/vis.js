@@ -111,34 +111,22 @@ namespace.module('bot.vis', function (exports, require) {
             this.resize();
             this.ctx = this.el.getContext('2d');
 
-            this.drawBg();
+            if (this.drawnOnce) {
+                this.transform();
+                this.drawBg();
+            } else {
+                this.drawBg();
+            }
+
             return this;
         },
 
-        drawBg: function() {
-            var an = Math.sin(Math.PI / 4);
-
+        transform: function() {
             var a, b, c, d, e, f;
 
-            a = 1; b = 0; c = 0;
-            d = 1; e = 0; f = 0;
-
-            /*
-              0, 0 -> 600, 0
-              0, 300 -> 300, 150
-              0, 600 -> 0, 300
-
-              300, 300 -> 600, 300
-
-              ix = cx - cy + 600
-              iy = (cx + cy) / 2
-
-            */
-
-            //a = 2*an; b = an;
-            //c = -2*an; d = an;
             a = 2; b = 1;
             c = -2; d = 1;
+            e = 0; f = 0;
 
             var coords = transpose([0, 0]);
 
@@ -147,9 +135,11 @@ namespace.module('bot.vis', function (exports, require) {
             s = .5;
 
             this.ctx.setTransform(s * a, s * b, s * c, s * d, s * e, s * f);
+        },
 
-            this.ctx.fillStyle = '#333';
-            this.ctx.fillRect(-5000, -5000, 10000, 10000);
+        drawBg: function() {
+            //this.ctx.fillStyle = '#333';
+            //this.ctx.fillRect(-5000, -5000, 10000, 10000);
 
             this.ctx.fillStyle = '#777';
             this.ctx.fillRect(0, 0, 600, 600);
@@ -164,6 +154,7 @@ namespace.module('bot.vis', function (exports, require) {
             this.ctx.fillText('South', 300, 625);
             //this.ctx.fillStyle = '#787';
             //this.ctx.fillRect(100, -200, 400, 400);
+            this.drawnOnce = true;
         },
     });
 

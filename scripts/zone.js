@@ -403,13 +403,11 @@ namespace.module('bot.zone', function (exports, require) {
                     dropStr = drop.dropType + ": " + drop.data;
                 } else {
                     dropStr = drop.dropType + ": " + itemref.ref[drop.dropType][drop.data[1]].names[drop.data[2]];
-                    console.log("!!!!!",drop);
                 }
                 gl.MessageEvents.trigger(
                     'message',
                     newZoneMessage(dropStr, 'dmg', [target.x, target.y], 'rgba(255, 100, 0, 0.8)', 1000, target.height/2 + index*20)
                 );
-                console.log(drop);
             });
             this.spec.inv.addDrops(drops);
             this.spec.cardInv.addDrops(drops);

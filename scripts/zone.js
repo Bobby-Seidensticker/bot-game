@@ -284,6 +284,10 @@ namespace.module('bot.zone', function (exports, require) {
 
             this.x = newPos[0];
             this.y = newPos[1];
+
+            if (this.isHero()) {
+                gl.DirtyQueue.mark('hero:move');
+            }
         },
 
         attackTarget: function(target, skill) {

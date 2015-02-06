@@ -52,10 +52,10 @@ namespace.module('bot.vis', function (exports, require) {
 
 
     function transpose(coords) {
-        return [coords[0] * RATIO, coords[1] * RATIO];
+        return [REAL_SIZE + (coords[0] - coords[1]) * RATIO, (coords[0] + coords[1]) / 2 * RATIO];
     }
 
-    var REAL_SIZE = 300;
+    var REAL_SIZE = 600;
     var SIZE = 1000 * 1000;
     var RATIO = REAL_SIZE / SIZE;
 
@@ -82,7 +82,59 @@ namespace.module('bot.vis', function (exports, require) {
 
         render: function() {
             this.resize();
+            this.ctx = this.el.getContext('2d');
+
+            this.drawBg();
             return this;
+        },
+
+        drawBg: function() {
+            var an = Math.sin(Math.PI / 4);
+
+            var a, b, c, d, e, f;
+
+            a = 1; b = 0; c = 0;
+            d = 1; e = 0; f = 0;
+
+            /*
+              0, 0 -> 600, 0
+              0, 300 -> 300, 150
+              0, 600 -> 0, 300
+
+              300, 300 -> 600, 300
+
+              ix = cx - cy + 600
+              iy = (cx + cy) / 2
+
+            */
+
+            //a = 2*an; b = an;
+            //c = -2*an; d = an;
+            a = 2; b = 1;
+            c = -2; d = 1;
+
+            e = 600*2; f = 0;
+
+            s = .5;
+
+            this.ctx.setTransform(s * a, s * b, s * c, s * d, s * e, s * f);
+
+            this.ctx.fillStyle = '#333';
+            this.ctx.fillRect(-5000, -5000, 10000, 10000);
+
+            this.ctx.fillStyle = '#777';
+            this.ctx.fillRect(0, 0, 600, 600);
+
+            this.ctx.font = '16px sans-serif';
+            this.ctx.fillStyle = '#fff';
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+            this.ctx.fillText('North', 300, -25);
+            this.ctx.fillText('West', -25, 300);
+            this.ctx.fillText('East', 625, 300);
+            this.ctx.fillText('South', 300, 625);
+            //this.ctx.fillStyle = '#787';
+            //this.ctx.fillRect(100, -200, 400, 400);
         },
     });
 
@@ -127,6 +179,10 @@ namespace.module('bot.vis', function (exports, require) {
 
             drawMessages(ctx, msgs);
 
+            circle(ctx, transpose([0, 500000]), '#fff', 3, true);
+
+            circle(ctx, transpose([1000000, 500000]), '#fff', 3, true);
+
             return this;
         },
     });
@@ -139,7 +195,6 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.font = '14px sans-serif';
             var pos = transpose(msg.pos)
             if(msg.verticalOffset) {
-                console.log('worked');
                 pos[1] -= msg.verticalOffset;
             }
             ctx.fillText(msg.text, pos[0], pos[1] - (gl.time - msg.time) / msg.lifespan * 20);
@@ -148,16 +203,16 @@ namespace.module('bot.vis', function (exports, require) {
 
     function drawBody(ctx, body, color) {
         var coords = transpose([body.x, body.y]);
-        height = body.height;;
+        height = body.height;
         width = body.width;
         ctx.lineWidth = 2;
         
         //head
-        circle(ctx, [coords[0], coords[1] - height*11/14], color, height/7);
+        circle(ctx, [coords[0], coords[1] - height * 11 / 14], color, height/7);
  
         //draw body, legs
         var legFrame = 0;
-        if(body.hasMoved) {
+        if (body.hasMoved) {
             legFrame = Math.abs(Math.floor(gl.time % 400 / 20) - 10);
         }
         ctx.beginPath();
@@ -171,7 +226,7 @@ namespace.module('bot.vis', function (exports, require) {
         var rArmFrame = 0; // valid values 0 to 10
         var lArmFrame = 0;
         
-        if(body.busy()) {
+        if (body.busy()) {
             rArmFrame = Math.abs(Math.floor(gl.time % 500 / 25) - 10);
             lArmFrame = Math.abs(Math.floor((gl.time + 111) % 500 / 25) - 10);
         }
@@ -204,12 +259,16 @@ namespace.module('bot.vis', function (exports, require) {
         ctx.stroke();
     }
 
-    function circle(ctx, pos, color, radius) {
+    function circle(ctx, pos, color, radius, fill) {
         ctx.strokeStyle = color;
         ctx.beginPath();
         ctx.arc(pos[0], pos[1], radius, 0, 2 * Math.PI, false);
         ctx.stroke();
         ctx.closePath();
+        if (fill) {
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
     }
 
     exports.extend({

@@ -95,8 +95,11 @@ namespace.module('bot.vis', function (exports, require) {
             log.warning('bg view init');
             this.zone = game.zone;
 
+            this.redraw = true;
+
             this.resize();
             this.listenTo(gl.DirtyListener, 'tick', this.render);
+            this.listenTo(gl.DirtyListener, 'hero:move', function() { this.redraw = true; });
         },
 
         resize: function() {
@@ -105,51 +108,34 @@ namespace.module('bot.vis', function (exports, require) {
                 width: this.size[0],
                 height: this.size[1]
             });
+            this.ctx = this.el.getContext('2d');
+            this.redraw = true;
+        },
+
+        clear: function() {
+            this.ctx.clearRect(-100, -100, this.size[0], this.size[1]);
+            this.redraw = true;
         },
 
         render: function() {
-            this.resize();
-            this.ctx = this.el.getContext('2d');
+            if (this.redraw) {
+                this.clear();
+                this.transform();
+                this.drawBg();
+                this.redraw = false;
+            }
 
-            this.drawBg();
             return this;
         },
 
-        drawBg: function() {
-            var an = Math.sin(Math.PI / 4);
-
-            var a, b, c, d, e, f;
-
-            a = 1; b = 0; c = 0;
-            d = 1; e = 0; f = 0;
-
-            /*
-              0, 0 -> 600, 0
-              0, 300 -> 300, 150
-              0, 600 -> 0, 300
-
-              300, 300 -> 600, 300
-
-              ix = cx - cy + 600
-              iy = (cx + cy) / 2
-
-            */
-
-            //a = 2*an; b = an;
-            //c = -2*an; d = an;
-            a = 2; b = 1;
-            c = -2; d = 1;
-
+        transform: function() {
+            var a = 1, b = 0.5, c = -1, d = 0.5;
             var coords = transpose([0, 0]);
+            this.ctx.setTransform(a, b, c, d, coords[0], coords[1]);
+        },
 
-            e = coords[0] * 2; f = coords[1] * 2;
-
-            s = .5;
-
-            this.ctx.setTransform(s * a, s * b, s * c, s * d, s * e, s * f);
-
-            this.ctx.fillStyle = '#333';
-            this.ctx.fillRect(-5000, -5000, 10000, 10000);
+        drawBg: function() {
+            log.error('draw bg');
 
             this.ctx.fillStyle = '#777';
             this.ctx.fillRect(0, 0, 600, 600);
@@ -162,8 +148,6 @@ namespace.module('bot.vis', function (exports, require) {
             this.ctx.fillText('West', -25, 300);
             this.ctx.fillText('East', 625, 300);
             this.ctx.fillText('South', 300, 625);
-            //this.ctx.fillStyle = '#787';
-            //this.ctx.fillRect(100, -200, 400, 400);
         },
     });
 

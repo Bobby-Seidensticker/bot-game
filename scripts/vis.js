@@ -237,6 +237,7 @@ namespace.module('bot.vis', function (exports, require) {
         var coords = transpose([body.x, body.y]);
         height = body.height;
         width = body.width;
+        ctx.lineCap = 'round';
         ctx.lineWidth = 2;
         
         //head

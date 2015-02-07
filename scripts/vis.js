@@ -24,6 +24,8 @@ namespace.module('bot.vis', function (exports, require) {
             this.zone = game.zone;
             this.gameView = gameView;
 
+            this.updateConstants();
+
             this.bg = new BackgroundView({}, game);
             this.entity = new EntityView({}, game);
 
@@ -66,6 +68,10 @@ namespace.module('bot.vis', function (exports, require) {
                 width: ss[0],
                 height: ss[1]
             });
+
+            this.updateConstants();
+            this.bg.resize();
+            this.entity.resize();
         },
 
         force: function() {
@@ -107,7 +113,7 @@ namespace.module('bot.vis', function (exports, require) {
                 height: this.size[1]
             });
             this.ctx = this.el.getContext('2d');
-            this.redraw = true;
+            this.force();
         },
 
         clear: function() {

@@ -107,7 +107,6 @@ namespace.module('bot.zone', function (exports, require) {
                     return;
                 }
             }
-            gl.DirtyQueue.mark('tick');
         },
 
         liveMons: function() {

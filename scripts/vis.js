@@ -48,7 +48,7 @@ namespace.module('bot.vis', function (exports, require) {
 
             vvs.iso = [vvs.cart[0] - vvs.cart[1], (vvs.cart[0] + vvs.cart[1]) / 2 - SIZE / 2];
 
-            vvs.actual = [vvs.iso[0] + vvs.center[0], vvs.iso[1] + vvs.center[1]];
+            vvs.diff = [vvs.center[0] - vvs.iso[0], vvs.center[1] - vvs.iso[1]];
         },
 
         resize: function() {
@@ -85,10 +85,9 @@ namespace.module('bot.vis', function (exports, require) {
     });
 
     function transpose(coords) {
-        var cart = [coords[0] * vvs.ratio, coords[1] * vvs.ratio];
-        var iso = [cart[0] - cart[1], (cart[0] + cart[1]) / 2 - SIZE / 2];
-        iso = [iso[0] - vvs.iso[0] + vvs.center[0], iso[1] - vvs.iso[1] + vvs.center[1]];
-        return iso;
+        var c0 = coords[0] * vvs.ratio;
+        var c1 = coords[1] * vvs.ratio;
+        return [c0 - c1 + vvs.diff[0], (c0 + c1) / 2 - SIZE / 2 + vvs.diff[1]];
     }
 
     var BackgroundView = Backbone.View.extend({
@@ -185,9 +184,6 @@ namespace.module('bot.vis', function (exports, require) {
 
         render: function() {
             this.resize();
-
-            gl.heroPos = this.zone
-
 
             this.zone.messages.prune();
             var msgs = this.zone.messages.msgs;

@@ -159,7 +159,7 @@ namespace.module('bot.main', function (exports, require) {
                 }
             }
 
-            gl.DirtyQueue.mark('vis');
+            gl.DirtyQueue.mark('tick');
 
             gl.DirtyQueue.triggerAll(gl.DirtyListener);
 

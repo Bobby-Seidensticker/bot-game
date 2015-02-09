@@ -102,6 +102,17 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
+    function getSortKey(model) {
+        var num = 0;
+        if (model.itemType === 'weapon') {
+            return 'a' + {melee: 'a', range: 'b', spell: 'c'}[model.type] + model.classLevel.toString();
+        } else if (model.itemType === 'armor') {
+            return 'b' + {head: 'a', chest: 'b', legs: 'c', hands: 'd'}[model.type] + model.classLevel.toString();
+        } else if (model.itemType === 'skill') {
+            return 'c' + model.name.toLowerCase();
+        }
+    }
+
     var ArmorModel = GearModel.extend({
         initialize: function(classLevel, type) {
             GearModel.prototype.initialize.call(this)
@@ -114,6 +125,8 @@ namespace.module('bot.inv', function (exports, require) {
             //this.slotFormula = ref.slotFormula;
             this.weight = ref.weight;
             this.name = ref.names[this.classLevel];
+
+            this.key = getSortKey(this);
 
             // might go away forever? this.ensureCardArray(this.slotFormula(this.classLevel, this.level));
             log.debug('Made a new armor cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
@@ -132,6 +145,8 @@ namespace.module('bot.inv', function (exports, require) {
             //this.slotFormula = ref.slotFormula;
             this.name = ref.names[this.classLevel];
 
+            this.key = getSortKey(this);
+
             // might go away forever? this.ensureCardArray(this.slotFormula(this.classLevel, this.level));
             log.debug('Made a new weapon cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
         }
@@ -146,6 +161,8 @@ namespace.module('bot.inv', function (exports, require) {
             // might go away forever? this.ensureCardArray(1);
             log.debug('loading skill %s from file', this.name);
             _.extend(this, itemref.expand('skill', this.name));
+
+            this.key = getSortKey(this);
         },
 
         computeAttrs: function(baseDmgStats, weaponType, dmgKeys, actualDmgKeys) {
@@ -162,13 +179,10 @@ namespace.module('bot.inv', function (exports, require) {
                 }, this);
             }
 
-            
             var mods = this.getMods();
             _.each(mods, function(mod) {
                 utils.addMod(this.dmgStats, mod.def);
             }, this);
-
-            
 
             var arr = ['meleeDmg', 'rangeDmg', 'spellDmg'];
 
@@ -356,10 +370,19 @@ namespace.module('bot.inv', function (exports, require) {
                 new SkillModel('basic melee'),
                 new ArmorModel(0, 'head'),
             ];
+            this.sort();
         },
 
         byId: function(id) {
             return _.findWhere(this.models, {id: id});
+        },
+
+        sort: function() {
+            this.models.sort(function(a, b) {
+                if (a.key < b.key) { return -1; }
+                if (a.key > b.key) { return 1; }
+                return 0;
+            });
         },
 
         addDrops: function(drops) {
@@ -376,9 +399,11 @@ namespace.module('bot.inv', function (exports, require) {
                         gl.DirtyQueue.mark('inventory:new');
                         if (drop.dropType === 'weapon') {
                             this.models.push(new WeaponModel(drop.data[2], drop.data[1]));
+                            this.sort();
                             log.info('Adding %s %s %d to inv', drop.data[0], drop.data[1], drop.data[2]);
                         } else if (drop.dropType === 'armor') {
                             this.models.push(new ArmorModel(drop.data[2], drop.data[1]));
+                            this.sort();
                             log.info('Adding %s %s %d to inv', drop.data[0], drop.data[1], drop.data[2]);
                         }
                     } else {
@@ -389,6 +414,7 @@ namespace.module('bot.inv', function (exports, require) {
                     if (!exists) {
                         gl.DirtyQueue.mark('inventory:new');
                         this.models.push(new SkillModel(drop.data));
+                        this.sort();
                         log.info('Adding skill %s', drop.data);
                     } else {
                         log.info('Already have skill %s', drop.data);

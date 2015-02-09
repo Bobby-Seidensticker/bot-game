@@ -29,6 +29,20 @@
   <div class="messages"></div>
   -->
 
+  <script id="item-slot-template" type="text/template">
+    <% if (slot) { %>
+      <div style="text-align: right"><%= slot %></div>
+    <% } %>
+    <% if (model) { %>
+      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
+      <div>Level <%= model.level %></div>
+    <% } else { %>
+      <div>Empty</div>
+    <% } %>
+  </script>
+
+
+
   <script id="equipped-item-slot-template" type="text/template">
     <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
@@ -138,20 +152,6 @@
         <div><%= mod.def %></div>
       <% }); %>
     </div>
-  </script>
-
-  <script id="item-slot-template" type="text/template">
-    <% if (location === 'inventory') { %>
-    <div><%= model.type %> <%= model.itemType %></div>
-    <div><%= model.name %></div>
-    <% } else { %>
-      <% if (model === undefined) { %>
-        <div><%= location %></div>
-      <% } else { %>
-        <div><%= model.type %> <%= model.itemType %></div>
-        <div><%= model.name %></div>
-      <% } %>
-    <% } %>
   </script>
 
   <script id="kv-table-template" type="text/template">

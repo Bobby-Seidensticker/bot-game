@@ -43,11 +43,8 @@ namespace.module('bot.vis', function (exports, require) {
         updateConstants: function() {
             vvs.center = this.gameView.getCenter();
             vvs.heroCoords = [this.zone.hero.x, this.zone.hero.y];
-
             vvs.cart = [vvs.heroCoords[0] * vvs.ratio, vvs.heroCoords[1] * vvs.ratio];
-
             vvs.iso = [vvs.cart[0] - vvs.cart[1], (vvs.cart[0] + vvs.cart[1]) / 2 - SIZE / 2];
-
             vvs.diff = [vvs.center[0] - vvs.iso[0], vvs.center[1] - vvs.iso[1]];
         },
 
@@ -180,9 +177,12 @@ namespace.module('bot.vis', function (exports, require) {
             });
         },
 
-        render: function() {
-            this.resize();
+        clear: function() {
+            this.el.getContext('2d').clearRect(0, 0, this.size[0], this.size[1]);
+        },
 
+        render: function() {
+            this.clear();
             this.zone.messages.prune();
             var msgs = this.zone.messages.msgs;
             var ctx = this.el.getContext('2d');
@@ -220,7 +220,7 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.textBaseline = 'bottom';
             ctx.font = '14px sans-serif';
             var pos = transpose(msg.pos)
-            if(msg.verticalOffset) {
+            if (msg.verticalOffset) {
                 pos[1] -= msg.verticalOffset;
             }
             ctx.fillText(msg.text, pos[0], pos[1] - (gl.time - msg.time) / msg.lifespan * 20);
@@ -235,7 +235,7 @@ namespace.module('bot.vis', function (exports, require) {
         ctx.lineWidth = 2;
         
         //head
-        circle(ctx, [coords[0], coords[1] - height * 11 / 14], color, height/7);
+        circle(ctx, [coords[0], coords[1] - height * 11 / 14], color, height / 7);
  
         //draw body, legs
         var legFrame = 0;
@@ -243,11 +243,11 @@ namespace.module('bot.vis', function (exports, require) {
             legFrame = Math.abs(Math.floor(gl.time % 400 / 20) - 10);
         }
         ctx.beginPath();
-        ctx.moveTo(coords[0], coords[1] - height*9/14);
-        ctx.lineTo(coords[0], coords[1] - height*3/14);
-        ctx.lineTo(coords[0] + width/2 * (10 - legFrame)/10, coords[1]);
-        ctx.moveTo(coords[0], coords[1] - height*3/14);
-        ctx.lineTo(coords[0] - width/2 * (10 - legFrame)/10, coords[1]);
+        ctx.moveTo(coords[0], coords[1] - height * 9 / 14);
+        ctx.lineTo(coords[0], coords[1] - height * 3 / 14);
+        ctx.lineTo(coords[0] + width / 2 * (10 - legFrame) / 10, coords[1]);
+        ctx.moveTo(coords[0], coords[1] - height * 3 / 14);
+        ctx.lineTo(coords[0] - width / 2 * (10 - legFrame) / 10, coords[1]);
 
         //arms
         var rArmFrame = 0; // valid values 0 to 10
@@ -257,10 +257,10 @@ namespace.module('bot.vis', function (exports, require) {
             rArmFrame = Math.abs(Math.floor(gl.time % 500 / 25) - 10);
             lArmFrame = Math.abs(Math.floor((gl.time + 111) % 500 / 25) - 10);
         }
-        ctx.moveTo(coords[0], coords[1] - height/2);
-        ctx.lineTo(coords[0] + width/2, coords[1] - height/2 + (1 - (2 * rArmFrame / 10 ))*height/4);
-        ctx.moveTo(coords[0], coords[1] - height/2);
-        ctx.lineTo(coords[0] - width/2, coords[1] - height/2 + (1 - (2 * lArmFrame / 10 ))*height/4);
+        ctx.moveTo(coords[0], coords[1] - height / 2);
+        ctx.lineTo(coords[0] + width/2, coords[1] - height / 2 + (1 - (2 * rArmFrame / 10)) * height / 4);
+        ctx.moveTo(coords[0], coords[1] - height / 2);
+        ctx.lineTo(coords[0] - width/2, coords[1] - height / 2 + (1 - (2 * lArmFrame / 10)) * height / 4);
         ctx.stroke();        
 
         ctx.lineWidth = 1;

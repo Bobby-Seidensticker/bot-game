@@ -74,6 +74,7 @@ namespace.module('bot.views', function (exports, require) {
             } else {
                 this.show();
             }
+            gl.DirtyQueue.mark('centerChange');
         }
     };
 
@@ -150,13 +151,29 @@ namespace.module('bot.views', function (exports, require) {
             this.heroView = new EntityView({model: this.zone.hero});
             this.monsterViews = [];
             this.render();
-            this.listenTo(gl.DirtyListener, 'tick', this.render);
+            this.listenTo(gl.DirtyListener, 'zoneTick', this.render);
 
             // Related to MenuTabMixin
             this.name = 'Stats';
             this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.toggleVisible);
             this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.hide);
+
+            this.$el.append('<div class="holder"></div>');
+            this.$holder = this.$('.holder');
+
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+        },
+
+        resize: function() {
+            var size = [window.innerWidth, window.innerHeight - 155];
+            this.$el.css({
+                height: size[1]
+            });
+            this.$('.holder').css({
+                height: size[1]
+            });
         },
 
         diffs: function() {
@@ -188,7 +205,7 @@ namespace.module('bot.views', function (exports, require) {
                     this.monsterViews.push(new EntityView({model: livingMons[i]}));
                     frag.appendChild(this.monsterViews[i].render().el);
                 }
-                this.$el.html(frag);
+                this.$holder.html(frag);
             }
             return this;
         },
@@ -309,6 +326,17 @@ namespace.module('bot.views', function (exports, require) {
             this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:inv', this.toggleVisible);
             this.listenTo(gl.DirtyListener, 'footer:buttons:cards', this.hide);
+
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+        },
+
+        resize: function() {
+            var size = [window.innerWidth, window.innerHeight - 155];
+            this.$el.css({
+                left: size[0] - 405,
+                height: size[1]
+            });
         },
 
         onClick: function(itemSlot) {
@@ -502,6 +530,17 @@ namespace.module('bot.views', function (exports, require) {
             this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:cards', this.toggleVisible);
             this.listenTo(gl.DirtyListener, 'footer:buttons:inv', this.hide);
+
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+        },
+
+        resize: function() {
+            var size = [window.innerWidth, window.innerHeight - 155];
+            this.$el.css({
+                left: size[0] - 405,
+                height: size[1]
+            });
         },
 
         onClick: function(clickedView) {
@@ -887,6 +926,21 @@ namespace.module('bot.views', function (exports, require) {
             this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.hide);
             this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.toggleVisible);
+
+            this.$el.html('<div class="holder"></div>');
+            this.$holder = this.$('.holder');
+
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+        },
+
+        resize: function() {
+            this.$el.css({
+                height: window.innerHeight - 155
+            });
+            this.$holder.css({
+                height: window.innerHeight - 155
+            });
         },
 
         show: function() {
@@ -941,7 +995,7 @@ namespace.module('bot.views', function (exports, require) {
                 frag.appendChild(sub.render().el);
             }, this);
 
-            this.$el.html(frag);
+            this.$holder.html(frag);
             return this;
         }
     }).extend(MenuTabMixin);

@@ -37,13 +37,12 @@ namespace.module('bot.vis', function (exports, require) {
 
             this.listenTo(gl.DirtyListener, 'tick', this.render);
             this.listenTo(gl.DirtyListener, 'hero:move', this.updateConstants);
-            this.listenTo(gl.DirtyListener, 'footer:buttons', this.force);
+            this.listenTo(gl.DirtyListener, 'centerChange', this.force);
         },
 
         updateConstants: function() {
             vvs.center = this.gameView.getCenter();
-            vvs.heroCoords = [this.zone.hero.x, this.zone.hero.y];
-            vvs.cart = [vvs.heroCoords[0] * vvs.ratio, vvs.heroCoords[1] * vvs.ratio];
+            vvs.cart = [this.zone.hero.x * vvs.ratio, this.zone.hero.y * vvs.ratio];
             vvs.iso = [vvs.cart[0] - vvs.cart[1], (vvs.cart[0] + vvs.cart[1]) / 2 - SIZE / 2];
             vvs.diff = [vvs.center[0] - vvs.iso[0], vvs.center[1] - vvs.iso[1]];
         },

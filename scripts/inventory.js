@@ -227,6 +227,8 @@ namespace.module('bot.inv', function (exports, require) {
             if (skill === undefined) {
                 if (this.skills[slot]) {
                     this.skills[slot].equipped = false;
+                    this.skills[slot].disabled = false;
+                    this.skills[slot].unequipCards();
                 }
                 this.skills[slot] = undefined;
             } else {
@@ -235,6 +237,8 @@ namespace.module('bot.inv', function (exports, require) {
                 }
                 if (this.skills[slot]) {
                     this.skills[slot].equipped = false;
+                    this.skills[slot].disabled = false;
+                    this.skills[slot].unequipCards();
                 }
                 skill.equipped = true;
                 this.skills[slot] = skill;

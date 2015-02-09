@@ -207,8 +207,10 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         show: function(view) {
-            this.view = view;
-            this.render();
+            if(view.model !== undefined) {
+                this.view = view;
+                this.render();
+            }
         },
 
         hide: function() {
@@ -254,7 +256,11 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function(options, loc, slot) {
             this.loc = loc;
             this.slot = slot;
+            this.selected = options.selected;
             this.template = _.template($('#' + loc + '-item-slot-template').html());
+            if(this.selected) {
+                this.select();
+            }
             this.render();
         },
         select: function() { this.$el.addClass('selected'); },
@@ -324,7 +330,7 @@ namespace.module('bot.views', function (exports, require) {
                     this.selected.unselect();
                     if (this[itemSlot.loc].equip(this.selected.model, itemSlot.slot)) {
                         gl.DirtyQueue.mark('equipChange');
-                        log.info('Successfully equipped item %s', this.selected.name);
+                        log.info('Successfully equipped item %s', this.selected.model.name);
                         // selected is always from the inventory
                         itemSlot.fill(this.selected.model);
                         this.selected.empty();
@@ -357,8 +363,9 @@ namespace.module('bot.views', function (exports, require) {
             this.subs.inventory = this.subs.inventory.slice(0, views.length);
         },
 
-        newItemSlot: function(model, loc, slot) {
-            var view = new ItemSlot({model: model}, loc, slot);
+        newItemSlot: function(model, loc, slot, selected) {
+            var selected = selected ? true : false;
+            var view = new ItemSlot({model: model, selected: selected}, loc, slot);
             this.listenTo(view, 'click', this.onClick);
             this.subs[loc].push(view);
             return view;
@@ -373,6 +380,10 @@ namespace.module('bot.views', function (exports, require) {
         render: function() {
             if (!this.visible) {
                 return this;
+            }
+            var selectedId = undefined;
+            if(this.selected) {
+                selectedId = this.selected.model.id;
             }
             this.$el.html(this.template());
 
@@ -394,11 +405,17 @@ namespace.module('bot.views', function (exports, require) {
                 return model.equipped === false;
             });
             _.each(invOnly, function(model) {
-                this.newItemSlot(model, 'inventory');
+                if(selectedId != undefined && model.id == selectedId) {
+                    this.newItemSlot(model, 'inventory', undefined, true);
+                } else {
+                    this.newItemSlot(model, 'inventory');
+                }
             }, this);
             this.rerenderInv();
 
-            this.selected = undefined;
+
+            console.log(this.selected);
+            //this.selected = undefined;
             this.rendered = true;
 
             var $eq = this.$('.equipped');

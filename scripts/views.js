@@ -208,10 +208,12 @@ namespace.module('bot.views', function (exports, require) {
 
         show: function(view) {
             this.view = view;
+            this.render();
         },
 
         hide: function() {
             this.view = undefined;
+            this.render();
         },
 
         render: function() {

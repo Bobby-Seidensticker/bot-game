@@ -143,8 +143,6 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         drawBg: function() {
-            log.error('draw bg');
-
             var s = vvs.realSize;
             var h = s / 2;
 

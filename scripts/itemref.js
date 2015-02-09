@@ -191,6 +191,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
             "basic range": {
@@ -200,6 +201,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
                 ]
             },
             "basic spell": {

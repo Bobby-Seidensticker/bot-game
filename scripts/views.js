@@ -207,8 +207,10 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         show: function(view) {
-            this.view = view;
-            this.render();
+            if(view.model !== undefined) {
+                this.view = view;
+                this.render();
+            }
         },
 
         hide: function() {
@@ -324,7 +326,7 @@ namespace.module('bot.views', function (exports, require) {
                     this.selected.unselect();
                     if (this[itemSlot.loc].equip(this.selected.model, itemSlot.slot)) {
                         gl.DirtyQueue.mark('equipChange');
-                        log.info('Successfully equipped item %s', this.selected.name);
+                        log.info('Successfully equipped item %s', this.selected.model.name);
                         // selected is always from the inventory
                         itemSlot.fill(this.selected.model);
                         this.selected.empty();

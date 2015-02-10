@@ -117,36 +117,29 @@
 
   <script id="info-box-template" type="text/template">
     <% if (model) { %>
-    <% if (model.itemType && model.itemType !== 'ctm') { %>
-    <div class="titlebox"><h3><%= namespace.bot.utils.firstCap(model.name) %></h3></div>
-    <div class="infoitem"><%= namespace.bot.utils.firstCap(model.itemType) %></div>
-    <div class="infoitem">Level <%= model.level %></div>
-    <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
-    <div class="mods">
-      
-      <% _.each(namespace.bot.utils.prettifyMods(model.baseMods, model.level), function(mod) { %>
-        <div class="mod"><%= mod.def %></div>
-      <% }); %>
-    </div>
-    <% } else { %>
-    <div class="titlebox"><h3><%= namespace.bot.utils.firstCap(model.name) %></h3></div>
-    <div class="infoitem">Card</div>
-    <div class="infoitem">Level <%= level %></div>    
-    <div class="mods">
-      <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(mod) {
-         if (mod.def.split(' ')[3] == "perLevel") {
-         
-         %><div class="mod"><%= mod.def %></div><%
-         print('collapse me');                              
-         } else {%>
-      <div class="mod"><%= mod.def %></div>
+      <% if (model.itemType && model.itemType !== 'ctm') { %>
+        <div class="titlebox"><h3><%= namespace.bot.utils.firstCap(model.name) %></h3></div>
+        <div class="infoitem"><%= namespace.bot.utils.firstCap(model.itemType) %></div>
+        <div class="infoitem">Level <%= model.level %></div>
+        <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
+        <div class="mods">
+        <% _.each(namespace.bot.utils.prettifyMods(model.baseMods, model.level), function(modstr) { %>
+          <div class="mod"><%= modstr %></div>
+        <% }); %>
+        </div>
+      <% } else { %>
+        <div class="titlebox"><h3><%= namespace.bot.utils.firstCap(model.name) %></h3></div>
+        <div class="infoitem">Card</div>
+        <div class="infoitem">Level <%= level %></div>    
+        <div class="mods">
+        <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(modstr) {%>
+          <div class="mod"><%= modstr %></div>
+         <% }); %>
+        </div>
       <% } %>
-      <% }); %>
-    </div>
-    <% } %>
-    <% if (model.flavor) { %>
-    <div class="infoitem flavor"><%= model.flavor %></div>
-    <% } %>
+      <% if (model.flavor) { %>
+      <div class="infoitem flavor"><%= model.flavor %></div>
+      <% } %>
     <% } %>
   </script>
 

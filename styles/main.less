@@ -108,13 +108,29 @@ body .stats {
 .infoBox {
     position: absolute;
     width: 200px;
-    height: 300px;
+/*    height: 300px;*/
     top: 5px;
     right: 410px;
 
-    background-color: @color-primary-0;
+    color: grey;
+    background-color: rgba(0,0,0,0.4);/*@color-primary-0;*/
     display: none;
-    border: 1px solid black;
+    border: 1px solid grey;;
+    text-align: center;
+
+    .titlebox {
+        border-bottom: 1px solid grey;
+    }
+    .infoitem {
+        margin-top: 5px;
+    }
+    .mod {
+        margin-top: 5px;
+        color: #4850B8;
+    }
+    .mods {
+        margin-bottom: 10px;
+    }
 }
 
 .footer {

@@ -118,25 +118,28 @@
   <script id="info-box-template" type="text/template">
     <% if (model) { %>
     <% if (model.itemType && model.itemType !== 'ctm') { %>
-    <h3><%= model.name %> - <%= model.itemType %></h3>
+    <div class="titlebox"><h3><%= namespace.bot.utils.firstCap(model.name) %></h3></div>
+    <div class="infoitem"><%= namespace.bot.utils.firstCap(model.itemType) %></div>
+    <div class="infoitem">Level <%= model.level %></div>
+    <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
     <div class="mods">
-      <div>Level <%= model.level %></div>
-      <div>XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
+      
       <% _.each(namespace.bot.utils.prettifyMods(model.baseMods, model.level), function(mod) { %>
-        <div><%= mod.def %></div>
+        <div class="mod"><%= mod.def %></div>
       <% }); %>
     </div>
     <% } else { %>
-    <h3><%= model.name %> - Card</h3>
+    <div class="titlebox"><h3><%= namespace.bot.utils.firstCap(model.name) %></h3></div>
+    <div class="infoitem">Card</div>
+    <div class="infoitem">Level <%= level %></div>    
     <div class="mods">
-      <div>Level <%= level %></div>
       <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(mod) {
          if (mod.def.split(' ')[3] == "perLevel") {
          
-         %><div><%= mod.def %></div><%
+         %><div class="mod"><%= mod.def %></div><%
          print('collapse me');                              
          } else {%>
-      <div><%= mod.def %></div>
+      <div class="mod"><%= mod.def %></div>
       <% } %>
       <% }); %>
     </div>

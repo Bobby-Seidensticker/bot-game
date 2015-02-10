@@ -141,6 +141,14 @@ namespace.module('bot.utils', function (exports, require) {
         return res;
     }
 
+    function firstCap(str) {
+        var words = str.split(' ');
+        _.each(words, function(word, i) {
+            words[i] = word[0].toUpperCase() + word.slice(1);
+        });
+        return words.join(" ");
+    }
+
     /*
     // this should also work for the mod object on an item (same fmt)
     function addModStats(all, mod) {
@@ -187,7 +195,8 @@ namespace.module('bot.utils', function (exports, require) {
         //addAllCards: addAllCards,
         addAllMods: addAllMods,
         addMod: addMod,
-        computeStat: computeStat
+        computeStat: computeStat,
+        firstCap: firstCap
     });
 
 });

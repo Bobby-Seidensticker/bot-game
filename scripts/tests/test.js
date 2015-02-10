@@ -271,12 +271,11 @@ namespace.module('bot.test', function (exports, require) {
             var rooms = gameModel.zone.generator();
             
             assert.ok(rooms, 'rooms exists, no errors on generator');
-            console.log('\n\n\n\n');
+            console.log('\n');
             for (var i = 0; i < rooms.length; i++) {
                 console.log('room %d, %s', i, JSON.stringify(rooms[i]));
             }
-
-            console.log('\n\n\n\n');
+            console.log('\n');
         });
 
         function validateWeapon(assert, item) {

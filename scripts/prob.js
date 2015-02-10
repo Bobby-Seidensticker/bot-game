@@ -4,6 +4,7 @@ namespace.module('bot.prob', function (exports, require) {
         pyRand: pyRand,
         rootRand: rootRand,
         binProb: binProb,
+        middle50: middle50,
         pProb: pProb,
         test: test,
         pick: pick,
@@ -48,6 +49,11 @@ namespace.module('bot.prob', function (exports, require) {
         }
     }
 
+    function middle50(s) {
+        var a = Math.floor(s / 4);
+        var b = Math.ceil(s * 3 / 4);
+        return rand(a, b);
+    }
 
     // lambda is expected value of the function.  aka:
     //   If we ran this function a 1M times we would get around 1M * lambda

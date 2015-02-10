@@ -61,6 +61,93 @@ namespace.module('bot.zone', function (exports, require) {
             gl.DirtyQueue.mark('zone:new');
         },
 
+        generator: function() {
+            // windyness
+            // lrange
+            // hrange
+            // scale
+
+            var lrange = [10, 20];
+            var hrange = [7, 10];
+            var scale = 100000;
+            var weights;
+            var dir = 1;  // [up, right, down, left], just like margins/padding in css
+            var width, height;
+
+            var rooms = [];
+            var room, nextRoom;
+
+            var size, pos, ent, exit, absEnt;
+
+            size = [prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1])];
+            pos = [0, 0];
+            ent = [0, prob.middle50(size[1])];
+
+            room = {
+                size: size,
+                pos: pos,
+                ent: ent
+            };
+
+            rooms.push(room);
+
+            while (rooms.length < this.roomCount * 2 - 1) {
+                // Pick a new direction
+                dir = prob.rand(0, 1);
+
+                // get a width + height, swap height and len ranges if we aren't going right, so the l/w ranges
+                //   stay the same wrt the player
+                // set the abs exit for the old room 
+                if (dir === 0) {
+                    room.exit = [prob.middle50(room.size[0]), 0];
+                } else {
+                    room.exit = [room.size[0], prob.middle50(room.size[1])];
+                }
+                // old room is done
+                // make corridor in the dir chosen
+
+                absEnt = vector.sum(room.pos, room.exit);
+                if (dir === 0) {
+                    size = [2, 5];
+                    ent = [1, 5];
+                    pos = vector.sub(absEnt, ent);
+                    exit = [1, 0];
+                } else {
+                    size = [5, 2];
+                    ent = [0, 1];
+                    pos = vector.sub(absEnt, ent);
+                    exit = [5, 1];
+                }
+                room = {
+                    size: size,
+                    pos: pos,
+                    ent: ent,
+                    exit: exit
+                };
+                rooms.push(room);
+
+                size = [prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1])];
+                absEnt = vector.sum(room.pos, room.exit);
+
+                if (dir === 0) {
+                    size.reverse();
+                    ent = [prob.middle50(size[0]), size[1]];
+                    pos = vector.sub(absEnt, ent);
+                } else {
+                    ent = [0, prob.middle50(size[1])];
+                    pos = vector.sub(absEnt, ent);
+                }
+                room = {
+                    size: size,
+                    pos: pos,
+                    ent: ent
+                };
+                rooms.push(room);
+            }
+
+            return rooms;
+        },
+
         ensureRoom: function() {
             if (!this.hero.isAlive() || this.done()) {
                 log.info('Getting new zone');

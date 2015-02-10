@@ -267,6 +267,18 @@ namespace.module('bot.test', function (exports, require) {
             assert.equal(dist, 0);
         });
 
+        QUnit.test('Zone generator', function(assert) {
+            var rooms = gameModel.zone.generator();
+            
+            assert.ok(rooms, 'rooms exists, no errors on generator');
+            console.log('\n\n\n\n');
+            for (var i = 0; i < rooms.length; i++) {
+                console.log('room %d, %s', i, JSON.stringify(rooms[i]));
+            }
+
+            console.log('\n\n\n\n');
+        });
+
         function validateWeapon(assert, item) {
             validateItem(assert, item);
             

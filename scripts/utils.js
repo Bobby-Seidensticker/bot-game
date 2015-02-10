@@ -31,11 +31,21 @@ namespace.module('bot.vector', function (exports, require) {
         return [Math.round(cur[0] + diff[0] * ratio), Math.round(cur[1] + diff[1] * ratio)];
     }
 
+    function sum(a, b) {
+        return [a[0] + b[0], a[1] + b[1]];
+    }
+
+    function sub(a, b) {
+        return [a[0] - b[0], a[1] - b[1]];
+    }
+
     exports.extend({
         getDistances: getDistances,
         dist: dist,
         equal: equal,
-        closer: closer
+        closer: closer,
+        sum: sum,
+        sub: sub
     });
 });
 

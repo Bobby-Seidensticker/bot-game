@@ -18,6 +18,9 @@
 @color-secondary-2-3: #CC4120;
 @color-secondary-2-4: #9C341B;
 
+@menu-text: rgba(170,170,160,1);
+@button-border: rgba(190,190,180,0.3);
+
 
 body {
     height: 100%;
@@ -27,7 +30,6 @@ body {
     position: relative;
     font-family: sans-serif;
     background-color: #333;
-    font-size: 12px;
 
     cursor: default;
     -webkit-touch-callout: none;
@@ -39,9 +41,12 @@ body {
 }
 
 body .stats {
-    background-color: @color-primary-0;
-    font-size: 10px;
-
+    /*background-color: @color-primary-0;*/
+    background-image: url("../assets/bg.png");
+    background-repeat: repeat;
+    font-size: 12px;
+    line-height: 130%;
+    color: @menu-text;
     position: absolute;
     top: 0;
     left: 0;
@@ -53,6 +58,8 @@ body .stats {
         overflow: auto;
 
         table {
+            margin-left:5px;
+            margin-top:5px;
             width: 200px;
             float: left;
         }
@@ -64,9 +71,12 @@ body .stats {
     top: 0;
     width: 425px;
 
-    background-color: @color-primary-0;
+    background-image: url("../assets/bg.png");
+    background-repeat: repeat;
+    /*background-color: @color-primary-0;*/
     overflow: auto;
-    font-size: 10px;
+    font-size: 12px;
+    color: @menu-text;
 
     .container {
         width: 405px;
@@ -74,15 +84,17 @@ body .stats {
 
         .header {
             width: 393px;
-            border: 1px solid #112;
+            border: 1px solid @button-border;
             border-radius: 3px;
             margin: 10px 5px 5px 5px;
+            padding: 3px;
             font-weight: bold;
             text-align: center;
         }
 
         .itemSlot {
-            border: 1px solid #224;
+            background-color: rgba(19,19,18,0.1);
+            border: 1px solid @button-border;
             border-radius: 3px;
             margin: 5px 0 0 5px;
             width: 73px;
@@ -91,16 +103,16 @@ body .stats {
             cursor: pointer;
 
             > div {
-                margin: 2px 2px;
+                margin: 5px 5px;
             }
         }
 
         .itemSlot.selected {
-            background-color: @color-secondary-2-0;
+            background-color: rgba(244, 184, 39, 0.3);/*@color-secondary-2-0;*/
         }
 
         .itemSlot.disabled {
-            background-color: @color-secondary-2-1;
+            background-color: rgba(255, 0, 0, 0.3);
         }
     }
 }
@@ -108,21 +120,41 @@ body .stats {
 .infoBox {
     position: absolute;
     width: 200px;
-    height: 300px;
+/*    height: 300px;*/
     top: 5px;
     right: 410px;
-
-    background-color: @color-primary-0;
+    
+    font-size:12px;
+    color: grey;
+    background-color: rgba(0,0,0,0.4);/*@color-primary-0;*/
     display: none;
-    border: 1px solid black;
+    border: 1px solid grey;;
+    text-align: center;
+
+    .titlebox {
+        border-bottom: 1px solid grey;
+    }
+    .infoitem {
+        margin-top: 5px;
+    }
+    .mod {
+        margin-top: 5px;
+        color: #4850B8;
+    }
+    .mods {
+        margin-bottom: 10px;
+    }
 }
 
 .footer {
     position: absolute;
     left: 0;
     height: 150px;
-    background-color: @color-secondary-1-0;
-    border-top: 5px solid @color-secondary-1-2;
+    background-image: url("../assets/bg.png");
+    background-repeat: repeat;
+    /*background-color: @color-secondary-1-0;*/
+    border-top: 5px solid rgba(20,20,30,0.5);
+    color: @menu-text;
 
     .hero {
         float: left;
@@ -214,12 +246,13 @@ body .stats {
           */
 
         > div {
-            background-color: @color-secondary-1-4;
+            background-color: rgba(0,0,0,0.2);/*@color-secondary-1-4;*/
+            border: 2px solid @button-border;
             border-radius: 5px;
-            border-top: 2px solid #333;
+            /*border-top: 2px solid #333;
             border-left: 2px solid #333;
             border-right: 2px solid #111;
-            border-bottom: 2px solid #111;
+            border-bottom: 2px solid #111;*/
             margin: 5px 0 0 5px;
 
             float: left;
@@ -233,7 +266,9 @@ body .stats {
 }
 
 .map {
-    background-color: @color-primary-0;
+    /*background-color: @color-primary-0;*/
+    background-image: url("../assets/bg.png");
+    background-repeat: repeat;
     float: left;
     height: 100%;
     width: 380px;
@@ -249,6 +284,7 @@ body .stats {
             margin: 10px;
             font-size: 14px;
             line-height: 25px;
+            border-radius: 5px;
 
             img {
                 margin-right: 5px;
@@ -259,10 +295,10 @@ body .stats {
         }
     }
     .zone:hover {
-        background-color: @color-primary-1;
+        background-color: rgba(190,190,180,0.4);/*@color-primary-1;*/
     }
     .zone.running {
-        background-color: @color-secondary-1-1;
+        background-color: rgba(190,190,180,0.2);/*@color-secondary-1-1;*/
     }
 }
 

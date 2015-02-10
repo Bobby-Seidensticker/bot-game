@@ -717,7 +717,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "elf king" : {
                 "items": [["weapon", "range", 2]],
-                "skills": ["quick hit", "basic range"],
+                "skills": ["speed shot", "poison arrow", "basic range"],
                 "sourceCards": [
                     ["proto-boss", 0],
                     ["proto-elf", 0],

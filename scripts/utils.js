@@ -120,7 +120,19 @@ namespace.module('bot.utils', function (exports, require) {
     function prettifyMods(mods, level) {
         var res = [];
         _.each(mods, function(mod, i) {
-            res.push(applyPerLevel(mod, level));
+            var finalmod = "";
+            var flatmod = applyPerLevel(mod, level);
+            var spl = flatmod.def.split(' ');
+            if(spl.length == 3) {
+                if(spl[1] == "added") {
+                    finalmod = "+" + spl[2] + " " + namespace.bot.itemref.ref.statnames[spl[0]];
+                } else if(spl[1] == "more") {
+                    finalmod = spl[2] + "% More " + namespace.bot.itemref.ref.statnames[spl[0]];
+                }
+            } else {
+                finalmod = flatmod.def + " unimplemented";
+            }
+            res.push(finalmod);
         });
         return res;
     }

@@ -784,8 +784,41 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["hi", "foo"],
                 "c": 10
             }
-        }
+        },
         // it goes: [hngg, fwah, hi, hngg, buh, foo, harf]: c: 10, b: 12, a: 15
+        "statnames": {
+            "strength": "Strength",
+            "dexterity": "Dexterity",
+            "wisdom": "Wisdom",
+            "vitality": "Vitality",
+            "maxHp": "Maximum Health",
+            "maxMana": "Maximum Mana",
+            "armor": "Armor",
+            "dodge": "Dodge",
+            "eleResistAll": "All Elemental Resistance",
+            "hpRegen": "Health Regenerated per Second",
+            "manaRegen": "Mana Regenerated per Second",
+            "moveSpeed": "Movement Speed",
+            "fireResist": "Fire Resistance",
+            "coldResist": "Cold Resistance",
+            "lightResist": "Lightning Resistance",
+            "poisResist": "Poison Resistance",
+            "meleeDmg": "Melee Damage",
+            "rangeDmg": "Ranged Damage",
+            "spellDmg": "Spell Damage",
+            "physDmg": "Physical Damage",
+            "fireDmg": "Fire Damage",
+            "coldDmg": "Cold Damage",
+            "lightDmg": "Lightning Damage",
+            "poisDmg": "Poison Damange",
+            "hpOnHit": "Health Gained on Hit",
+            "manaOnHit": "Mana Gained on Hit",
+            "cooldownTime": "Cooldown Length",
+            "range": "Skill Range",
+            "speed": "Skill Speed",
+            "manaCost": "Mana Cost"
+        }
+
     };
 
     /*

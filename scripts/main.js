@@ -140,21 +140,33 @@ namespace.module('bot.main', function (exports, require) {
         tick: function() {
             log.debug('begin tick');
             var thisTime = new Date().getTime();
+
             var dt = (thisTime - this.lastTime) * this.timeCoefficient;
             this.lastTime = thisTime;
 
-            var steps = Math.floor(dt / STEP_SIZE);
-            var extra = dt % STEP_SIZE;
+            //var steps = Math.floor(dt / STEP_SIZE);
+            //var extra = dt % STEP_SIZE;
 
             if (this.running) {
-                for (var i = 0; i < steps; i++) {
-                    gl.time += STEP_SIZE;
-                    gl.lastTimeIncr = STEP_SIZE;
-                    this.zone.zoneTick();
-                }
-                if (extra > 0) {
-                    gl.time += extra;
-                    gl.lastTimeIncr = extra;
+                var incBy;
+                while (dt > 0) {
+                    var maxStep = this.zone.maxStep();
+                    if (maxStep <= 0) {
+                        if (dt >= STEP_SIZE) {
+                            incBy = STEP_SIZE;
+                        } else {
+                            incBy = dt;
+                        }
+                    } else {
+                        if (maxStep > dt) {
+                            incBy = dt;
+                        } else {
+                            incBy = maxStep;
+                        }
+                    }
+                    gl.time += incBy;
+                    gl.lastTimeIncr = incBy;
+                    dt -= incBy;
                     this.zone.zoneTick();
                 }
             }
@@ -187,7 +199,7 @@ namespace.module('bot.main', function (exports, require) {
             skills = _.sortBy(skills, function(skill) { return -skill.cooldownTime; });
             log.error('skill names: %s', _.pluck(skills, 'name').join(', '));
             log.error('skill cooldownTimes: %s', _.pluck(skills, 'cooldownTime').join(', '));
-            _.each(skills, function(skill, i) {
+            _.each(skills.slice(0, 5), function(skill, i) {
                 this.hero.skillchain.equip(skill, i);
             }, this);
         },

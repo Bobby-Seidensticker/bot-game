@@ -172,7 +172,7 @@ namespace.module('bot.zone', function (exports, require) {
                 this.hero.initPos(room);
                 _.each(room.monsters, function(mon) { mon.initPos(room); });
                 gl.DirtyQueue.mark('zone:nextRoom');
-                log.info('now in room %d', this.heroPos);
+                log.debug('now in room %d', this.heroPos);
             }
             return this.rooms[this.heroPos];
         },
@@ -206,6 +206,18 @@ namespace.module('bot.zone', function (exports, require) {
             }
 
             gl.DirtyQueue.mark('zoneTick');
+        },
+
+        maxStep: function() {
+            var room, mons, min, i;
+            room = this.ensureRoom();
+            mons = room.monsters;
+
+            min = this.hero.nextAction;
+            for (i = mons.length; i--;) {
+                ml = Math.min(mons[i].nextAction, min);
+            }
+            return min - gl.time;
         },
 
         liveMons: function() {
@@ -248,6 +260,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.revive();
             this.x = 0;
             this.y = 0;
+            this.nextAction = 0;
         },
 
         createSkillchain: function() {

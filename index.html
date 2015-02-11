@@ -118,7 +118,7 @@
   <script id="info-box-template" type="text/template">
     <% if (model) { %>
       <% if (model.itemType && model.itemType !== 'ctm') { %>
-        <div class="titlebox"><h3><%= namespace.bot.utils.firstCap(model.name) %></h3></div>
+        <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
         <div class="infoitem"><%= namespace.bot.utils.firstCap(model.itemType) %></div>
         <div class="infoitem">Level <%= model.level %></div>
         <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
@@ -128,7 +128,7 @@
         <% }); %>
         </div>
       <% } else { %>
-        <div class="titlebox"><h3><%= namespace.bot.utils.firstCap(model.name) %></h3></div>
+        <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
         <div class="infoitem">Card</div>
         <div class="infoitem">Level <%= level %></div>    
         <div class="mods">

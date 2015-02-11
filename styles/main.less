@@ -122,20 +122,26 @@ body .stats {
 .infoBox {
     position: absolute;
     width: 200px;
-/*    height: 300px;*/
+
     top: 5px;
     right: 410px;
     
     font-size:12px;
     color: grey;
-    background-color: rgba(0,0,0,0.6);/*@color-primary-0;*/
+    background-color: rgba(0,0,0,0.7);/*@color-primary-0;*/
     display: none;
     border: 1px solid grey;
     border-radius: 5px;
     text-align: center;
 
     .titlebox {
+        font-size: 14px;
+        padding-top: 5px;
+        padding-bottom: 3px;
         border-bottom: 1px solid grey;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        background-color: rgba(30,30,100, 0.8);
     }
     .infoitem {
         margin-top: 5px;
@@ -161,7 +167,7 @@ body .stats {
     background-image: url("../assets/bg.png");
     background-repeat: repeat;
     /*background-color: @color-secondary-1-0;*/
-    border-top: 5px solid rgba(20,20,30,0.5);
+    border-top: 3px solid rgba(0,0,10,0.7);
     color: @menu-text;
 
     .hero {

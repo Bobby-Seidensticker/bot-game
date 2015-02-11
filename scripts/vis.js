@@ -14,6 +14,8 @@ namespace.module('bot.vis', function (exports, require) {
     var vvs = {};  // vis vars
     var SIZE = 1000 * 1000;
 
+    var vector = namespace.bot.vector;
+
     var VisView = Backbone.View.extend({
         tagName: 'div',
         className: 'vis',
@@ -86,6 +88,40 @@ namespace.module('bot.vis', function (exports, require) {
         return [c0 - c1 + vvs.diff[0], (c0 + c1) / 2 - SIZE / 2 + vvs.diff[1]];
     }
 
+    var BackgroundTiles = window.Model.extend({
+        initialize: function(filename, canvasSize, imgSize, scale) {
+            this.canvas = document.createElement('canvas');
+            this.img = new Image();
+            this.img.src = filename;
+            this.img.onload = this.cache.bind(this);
+            this.canvasSize = canvasSize;
+            this.imgSize = imgSize;
+            this.scale = scale;
+        },
+
+        cache: function() {
+            $(this.canvas).attr({
+                width: this.canvasSize[0],
+                height: this.canvasSize[1]
+            });
+
+            var scaled = [this.imgSize[0] * this.scale, this.imgSize[1] * this.scale];
+            $(this.img).attr({ width: scaled[0], height: scaled[1] });
+
+            var iMax = this.canvasSize[0] / scaled[0];
+            var jMax = this.canvasSize[1] / scaled[1]
+
+            var ctx = this.canvas.getContext('2d');
+
+            //ctx.drawImage(this.img, 0, 0, scaled[0], scaled[1]);
+            for (var i = 0; i < this.canvasSize[0]; i += scaled[0]) {
+                for (var j = 0; j < this.canvasSize[1]; j += scaled[1]) {
+                    ctx.drawImage(this.img, i, j, scaled[0], scaled[1]);
+                }
+            }
+        }
+    });
+
     var BackgroundView = Backbone.View.extend({
         tagName: 'canvas',
         className: 'bg',
@@ -107,12 +143,16 @@ namespace.module('bot.vis', function (exports, require) {
                 width: this.size[0],
                 height: this.size[1]
             });
+
+            this.tiles = new BackgroundTiles('assets/floor.jpg', [2000, 2000], [256, 256], 0.25);
+
             this.ctx = this.el.getContext('2d');
             this.force();
         },
 
         clear: function() {
-            this.ctx.clearRect(-200, -200, this.size[0] + 400, this.size[1] + 400);
+            //this.ctx.clearRect(-200, -200, this.size[0] + 400, this.size[1] + 400);
+            this.$el.attr('width', this.size[0]);
             this.redraw = true;
         },
 
@@ -139,7 +179,7 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         drawBg: function() {
-            var s = vvs.realSize;
+            /*var s = vvs.realSize;
             var h = s / 2;
 
             this.ctx.fillStyle = '#777';
@@ -152,7 +192,38 @@ namespace.module('bot.vis', function (exports, require) {
             this.ctx.fillText('North', h, -25);
             this.ctx.fillText('West', -25, h);
             this.ctx.fillText('East', s + 25, h);
-            this.ctx.fillText('South', h, s + 25);
+            this.ctx.fillText('South', h, s + 25);*/
+
+            var cur = this.zone.getCurrentRoom();
+            var start = this.zone.heroPos - 4;
+            var end = this.zone.heroPos + 4;
+            if (start < 0) { start = 0; }
+            if (end >= this.zone.rooms.length) { end = this.zone.rooms.length - 1; }
+
+            for (var i = start; i <= end; i++) {
+                var room = this.zone.rooms[i];
+                var pos = vector.sub(room.pos, cur.pos);
+
+                var s = vvs.realSize;
+                var h = s / 2;
+
+                var left, top, width, height;
+                left = pos[0] * vvs.ratio;
+                top = pos[1] * vvs.ratio;
+                width = room.size[0] * vvs.ratio;
+                height = room.size[1] * vvs.ratio;
+
+
+                this.ctx.drawImage(this.tiles.canvas, 0, 0, width, height, left, top, width, height);
+                //this.ctx.fillStyle = '#777';
+                //this.ctx.fillRect(left - 2, top - 2, width + 4, height + 4);
+
+                this.ctx.font = '20px sans-serif';
+                this.ctx.fillStyle = '#eee';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillText(i, left + width / 2, top + 25);
+            }
         },
     });
 
@@ -200,13 +271,16 @@ namespace.module('bot.vis', function (exports, require) {
             drawMessages(ctx, msgs);
 
             var pos;
-            pos = transpose([0, 500000])
+            pos = transpose(this.zone.getCurrentRoom().ent)
             pos[1] -= 5;
-            circle(ctx, pos, '#fff', 5, true);
+            circle(ctx, pos, '#f00', 5, true);
 
-            pos = transpose([1000000, 500000])
-            pos[1] -= 5;
-            circle(ctx, pos, '#fff', 5, true);
+            var exit = this.zone.getCurrentRoom().exit;
+            if (exit) {
+                pos = transpose(exit);
+                pos[1] -= 5;
+                circle(ctx, pos, '#0f0', 5, true);
+            }
 
             return this;
         },

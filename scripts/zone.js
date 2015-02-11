@@ -33,31 +33,27 @@ namespace.module('bot.zone', function (exports, require) {
             this.name = name;
             _.extend(this, this.allZones[this.name]);
 
-            rooms = [];
-            for (i = 0; i < this.roomCount; i++) {
-                count = this.quantity[0] + prob.pProb(this.quantity[1], this.quantity[2]);
-
+            this.rooms = this.generator();
+            for (i = 0; i < this.rooms.length; i++) {
                 monsters = [];
-                for (var j = 0; j < count; j++) {
-                    monsters.push(new MonsterBody(this.choices[prob.pick(this.weights)], this.level));
+                if (i % 2 === 0) {  // if this is not a corridor
+                    count = this.quantity[0] + prob.pProb(this.quantity[1], this.quantity[2]);
+                    for (var j = 0; j < count; j++) {
+                        monsters.push(new MonsterBody(this.choices[prob.pick(this.weights)], this.level));
+                    }
+                    if (i === this.rooms.length - 1) {
+                        monsters.push(new MonsterBody(this.boss, this.level));
+                    }
                 }
-
-                if (i === this.roomCount - 1) {
-                    monsters.push(new MonsterBody(this.boss, this.level));
-                }
-
-                rooms[i] = {
-                    monsters: monsters,
-                    door: [1000000, 500000],
-                    hero: undefined
-                };
+                _.extend(this.rooms[i], {monsters: monsters, hero: undefined});
+                _.each(this.rooms[i].monsters, function(mon) { mon.initPos(this.rooms[i]); }, this);
             }
 
             this.heroPos = 0;
-            this.rooms = rooms;
             this.rooms[0].hero = this.hero;
             this.initialized = true;
             this.hero.revive();
+            this.hero.initPos(this.rooms[0]);
             gl.DirtyQueue.mark('zone:new');
         },
 
@@ -145,6 +141,19 @@ namespace.module('bot.zone', function (exports, require) {
                 rooms.push(room);
             }
 
+            for (var i = 0; i < rooms.length; i++) {
+                rooms[i].size[0] *= scale;
+                rooms[i].size[1] *= scale;
+                rooms[i].pos[0] *= scale;
+                rooms[i].pos[1] *= scale;
+                rooms[i].ent[0] *= scale;
+                rooms[i].ent[1] *= scale;
+                if (rooms[i].exit) {
+                    rooms[i].exit[0] *= scale;
+                    rooms[i].exit[1] *= scale;
+                }
+            }
+
             return rooms;
         },
 
@@ -154,22 +163,23 @@ namespace.module('bot.zone', function (exports, require) {
                 this.hero.revive();
                 this.newZone(this.nextZone);
             }
-            if (this.roomCleared() && this.atDoor()) {
+            if (this.roomCleared() && this.atExit()) {
                 var room = this.rooms[this.heroPos];
                 room.hero = undefined;
                 this.heroPos += 1;
                 room = this.rooms[this.heroPos];
                 room.hero = this.hero;
-                this.hero.initPos();
+                this.hero.initPos(room);
+                _.each(room.monsters, function(mon) { mon.initPos(room); });
                 gl.DirtyQueue.mark('zone:nextRoom');
                 log.info('now in room %d', this.heroPos);
             }
             return this.rooms[this.heroPos];
         },
 
-        atDoor: function() {
+        atExit: function() {
             var room = this.rooms[this.heroPos];
-            return this.hero.x === room.door[0] && this.hero.y === room.door[1];
+            return this.hero.x === room.exit[0] && this.hero.y === room.exit[1];
         },
 
         zoneTick: function() {
@@ -234,9 +244,10 @@ namespace.module('bot.zone', function (exports, require) {
             this.height = this.spec.height ? this.spec.height : 50;
             this.width = this.spec.width ? this.spec.width : 15;
 
-            
             this.createSkillchain();
             this.revive();
+            this.x = 0;
+            this.y = 0;
         },
 
         createSkillchain: function() {
@@ -254,16 +265,15 @@ namespace.module('bot.zone', function (exports, require) {
             this.hpRegened = 0;
             this.lastManaFullTime = gl.time;
             this.manaRegened = 0;
-            this.initPos();
         },
 
-        initPos: function() {
+        initPos: function(room) {
             if (this.isHero()) {
-                this.x = 0;
-                this.y = 500000;
+                this.x = room.ent[0];
+                this.y = room.ent[1];
             } else if (this.isMonster()) {
-                this.x = 800000 + prob.rand(0, 100000);
-                this.y = 500000 + prob.rand(-100000, 100000);
+                this.x = prob.rand(0, room.size[0]);
+                this.y = prob.rand(0, room.size[1]);
             }
         },
 
@@ -320,7 +330,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             if (livingEnemies.length === 0) {
                 if (this.isHero()) {
-                    this.tryMove(livingEnemies, distances, room.door);
+                    this.tryMove(livingEnemies, distances, room);
                 }
                 return;
             }
@@ -331,7 +341,7 @@ namespace.module('bot.zone', function (exports, require) {
             );
 
             this.tryAttack(livingEnemies, distances);
-            this.tryMove(livingEnemies, distances, room.door);
+            this.tryMove(livingEnemies, distances, room);
         },
 
         tryAttack: function(enemies, distances) {
@@ -354,7 +364,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.lastDuration = duration;
         },
 
-        tryMove: function(enemies, distances, door) {
+        tryMove: function(enemies, distances, room) {
             if (this.busy()) { return; }
             this.hasMoved = true;
             var newPos;
@@ -364,7 +374,7 @@ namespace.module('bot.zone', function (exports, require) {
             var range = 1000;  // range needs to come from somewhere
 
             if (enemies.length === 0) {
-                newPos = vector.closer(curPos, door, dist, 0);
+                newPos = vector.closer(curPos, room.exit, dist, 0);
             } else {
                 var target = enemies[distances.minIndex()];
                 newPos = vector.closer(curPos, [target.x, target.y], dist, range);

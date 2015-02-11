@@ -158,16 +158,20 @@ namespace.module('bot.entity', function (exports, require) {
         applyXp: function(xp) {
             // TODO needs to do this to the skillchain as well
             gl.DirtyQueue.mark('hero:xp');
-            this.equipped.applyXp(xp);
-            this.skillchain.applyXp(xp);
+            var levels = 0;
+            levels += this.equipped.applyXp(xp);
+            levels += this.skillchain.applyXp(xp);
             this.xp += xp;
             while (this.xp >= this.nextLevelXp) {
                 this.level += 1;
                 this.xp -= this.nextLevelXp;
                 this.nextLevelXp = this.getNextLevelXp();
                 gl.DirtyQueue.mark('hero:levelup');
+                levels++;
             }
-            this.computeAttrs();
+            if (levels > 0) {
+                this.computeAttrs();
+            }
         },
 
         /*
@@ -249,7 +253,7 @@ namespace.module('bot.entity', function (exports, require) {
                 }
             }
             if (drops.length > 0) {
-                log.info('%s is dropping %s', this.name, JSON.stringify(drops));
+                log.debug('%s is dropping %s', this.name, JSON.stringify(drops));
             }
             return drops;
         }

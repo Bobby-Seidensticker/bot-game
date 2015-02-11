@@ -19,10 +19,13 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         applyXp: function(xp) {
+            var levels = 0;
             this.xp += xp;
             if (this.canLevel()) {
                 this.levelUp();
+                levels++;
             }
+            return levels;
         },
 
         canLevel: function() {
@@ -279,9 +282,11 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         applyXp: function(xp) {
+            var levels = 0;
             _.each(_.compact(this.skills), function (skill) {
-                skill.applyXp(xp);
+                levels += skill.applyXp(xp);
             });
+            return levels;
         },
     });
 
@@ -359,11 +364,13 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         applyXp: function(xp) {
+            var levels = 0;
             _.each(this.slots, function(slot) {
                 if (this[slot] !== undefined) {
-                    this[slot].applyXp(xp);
+                    levels += this[slot].applyXp(xp);
                 }
             }, this);
+            return levels;
         },
     });
 
@@ -513,7 +520,7 @@ namespace.module('bot.inv', function (exports, require) {
                     this.models.push(typeModel);
                 }
                 typeModel.addCard(drop.data[1]);
-                log.info('Added card %s level %d to card inv', drop.data[0], drop.data[1]);
+                log.debug('Added card %s level %d to card inv', drop.data[0], drop.data[1]);
                 gl.DirtyQueue.mark('cards:new');
             }
         },

@@ -271,6 +271,7 @@ namespace.module('bot.zone', function (exports, require) {
             if (this.isHero()) {
                 this.x = room.ent[0];
                 this.y = room.ent[1];
+                gl.DirtyQueue.mark('hero:move');
             } else if (this.isMonster()) {
                 this.x = prob.rand(0, room.size[0]);
                 this.y = prob.rand(0, room.size[1]);

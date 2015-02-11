@@ -144,7 +144,7 @@ namespace.module('bot.vis', function (exports, require) {
                 height: this.size[1]
             });
 
-            this.tiles = new BackgroundTiles('assets/floor.jpg', [2000, 2000], [256, 256], 0.25);
+            this.tiles = new BackgroundTiles('assets/floor.jpg', [4000, 4000], [256, 256], 0.25);
 
             this.ctx = this.el.getContext('2d');
             this.force();

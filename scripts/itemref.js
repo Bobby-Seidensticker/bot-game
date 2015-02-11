@@ -381,7 +381,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'fireDmg added 3', type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                 ],
-                "flavor": "goodness gracious, these balls are great"
+                "flavor": "Goodness gracious, these balls are great!"
             },
             "ice ball": {
                 "prototype": ["basic"],
@@ -654,7 +654,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["hot sword", 1],
                     ["proto-skeleton", 0],
                     ["six pack", 1],
-                    ["compression shorts", 1],                    
+                    ["compression shorts", 1],
+                    ["asbestos lining", 1]
                 ]
             },
             "skeleton archer" : {
@@ -795,14 +796,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "maxMana": "Maximum Mana",
             "armor": "Armor",
             "dodge": "Dodge",
-            "eleResistAll": "All Elemental Resistance",
+            "eleResistAll": "Elemental Damage Taken",
             "hpRegen": "Health Regenerated per Second",
             "manaRegen": "Mana Regenerated per Second",
             "moveSpeed": "Movement Speed",
-            "fireResist": "Fire Resistance",
-            "coldResist": "Cold Resistance",
-            "lightResist": "Lightning Resistance",
-            "poisResist": "Poison Resistance",
+            "fireResist": "Fire Damage Taken",
+            "coldResist": "Cold Damage Taken",
+            "lightResist": "Lightning Damage Taken",
+            "poisResist": "Poison Damage Taken",
             "meleeDmg": "Melee Damage",
             "rangeDmg": "Ranged Damage",
             "spellDmg": "Spell Damage",

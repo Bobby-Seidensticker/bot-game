@@ -120,14 +120,28 @@ namespace.module('bot.utils', function (exports, require) {
     function prettifyMods(mods, level) {
         var res = [];
         _.each(mods, function(mod, i) {
+            res[i] = applyPerLevel(mod, level);
+        });
+        
+        var flatModDefs = flattenSameMods(res);
+        res = [];
+
+        _.each(flatModDefs, function(flatmod) {
             var finalmod = "";
-            var flatmod = applyPerLevel(mod, level);
-            var spl = flatmod.def.split(' ');
+            var spl = flatmod.split(' ');
             if(spl.length == 3) {
                 if(spl[1] == "added") {
-                    finalmod = "+" + spl[2] + " " + namespace.bot.itemref.ref.statnames[spl[0]];
+                    if(spl[2] >= 0) {
+                        finalmod = "+" + spl[2] + " " + namespace.bot.itemref.ref.statnames[spl[0]];
+                    } else {
+                        finalmod = spl[2] + " " + namespace.bot.itemref.ref.statnames[spl[0]];
+                    }
                 } else if(spl[1] == "more") {
-                    finalmod = spl[2] + "% More " + namespace.bot.itemref.ref.statnames[spl[0]];
+                    if(spl[2] >= 0) {
+                        finalmod = spl[2] + "% More " + namespace.bot.itemref.ref.statnames[spl[0]];
+                    } else {
+                        finalmod = Math.abs(spl[2]) + "% Less " + namespace.bot.itemref.ref.statnames[spl[0]];
+                    }
                 }
             } else {
                 finalmod = flatmod.def + " unimplemented";
@@ -137,6 +151,36 @@ namespace.module('bot.utils', function (exports, require) {
         return res;
     }
 
+    function flattenSameMods(mods) {
+        var fin = [];
+        _.each(mods, function(mod) {
+            var spl = mod.def.split(' ');
+            var found = false;
+            if (spl.length == 4) {
+                fin.push(mod.def);
+            } else if (spl.length == 3){
+                found = false;
+                for(var i = 0; i < fin.length; i++) {
+                    var fspl = fin[i].split(' ');
+                    if(fspl.length == 3 && fspl[0] == spl[0] && fspl[1] == spl[1]) {
+                        if(fspl[1] == "added") {
+                            fin[i] = fspl[0] + " " + fspl[1] + " " + (parseInt(fspl[2]) + parseInt(spl[2]));
+                        } else if (fspl[1] == "more") {
+                            fin[i] = fspl[0] + " " + fspl[1] + " " + (fspl[2] * spl[2]);
+                        }
+                        found = true;
+                    }
+                }
+                if (! found) {
+                    fin.push(mod.def);
+                }
+            } else {
+                throw('weird mods in utils.flattenSameMods');
+            }
+        });
+        return fin;
+    }
+    
     function computeStat(section, stat) {
         var stat, obj, res;
 

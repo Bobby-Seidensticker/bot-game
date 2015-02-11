@@ -119,9 +119,18 @@
     <% if (model) { %>
       <% if (model.itemType && model.itemType !== 'ctm') { %>
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
-        <div class="infoitem"><%= namespace.bot.utils.firstCap(model.itemType) %></div>
+        <% if (model.itemType == "armor") { %>
+          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.type) %> Armor</div>
+        <% } else if (model.itemType == "weapon") { %>
+          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.type) %> Weapon</div>
+        <% } else if (model.itemType == "skill") { %>
+        <div class="infoitem"><%= namespace.bot.utils.firstCap(model.class) %> Skill</div>
+        <% } %>
         <div class="infoitem">Level <%= model.level %></div>
         <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
+        <% if (model.disabled) { %>
+        <div class="infoitem disabled">Skill Cannot Be Used Because Wrong Weapon Type Equipped</div>
+        <% } %>
         <div class="mods">
         <% _.each(namespace.bot.utils.prettifyMods(model.baseMods, model.level), function(modstr) { %>
           <div class="mod"><%= modstr %></div>

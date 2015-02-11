@@ -82,7 +82,7 @@
 
     <div class="container skillchain">
       <div class="header">Equipped Skills</div>
-      <img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/>      
+      <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->      
     </div>
 
     <div class="container inventory">
@@ -93,10 +93,12 @@
   <script id="card-tab-template" type="text/template">
     <div class="container equipped">
       <div class="header">Equipped Gear</div>
+      <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>      
     </div>
 
     <div class="container skillchain">
       <div class="header">Equipped Skills</div>
+      <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->            
     </div>
 
     <div class="container equipped-cards">
@@ -140,7 +142,7 @@
         </div>
       <% } else { %>
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
-        <div class="infoitem">Card</div>
+        <div class="infoitem"><%= namespace.bot.utils.firstCap(model.slot) %> Card</div>
         <div class="infoitem">Level <%= level %></div>    
         <div class="mods">
         <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(modstr) {%>

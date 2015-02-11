@@ -166,7 +166,9 @@ namespace.module('bot.utils', function (exports, require) {
                         if(fspl[1] == "added") {
                             fin[i] = fspl[0] + " " + fspl[1] + " " + (parseInt(fspl[2]) + parseInt(spl[2]));
                         } else if (fspl[1] == "more") {
-                            fin[i] = fspl[0] + " " + fspl[1] + " " + (fspl[2] * spl[2]);
+                            var prod = ((1 +(parseInt(fspl[2])*0.01)) * (1 +(parseInt(spl[2])*0.01)) - 1) * 100;
+                            console.log(mod.def, spl[2], fspl[2], prod);
+                            fin[i] = fspl[0] + " " + fspl[1] + " " + (prod);
                         }
                         found = true;
                     }

@@ -10,7 +10,7 @@
    viewBox="0 0 512 512"
    id="svg18229"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.48.5 r10040"
    width="100%"
    height="100%"
    sodipodi:docname="latex gloves.svg">
@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -37,31 +37,24 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="2560"
-     inkscape:window-height="1378"
+     inkscape:window-width="1280"
+     inkscape:window-height="697"
      id="namedview18253"
      showgrid="false"
-     inkscape:zoom="1.3037281"
-     inkscape:cx="436.60897"
-     inkscape:cy="149.51922"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:zoom="0.65186405"
+     inkscape:cx="344.56524"
+     inkscape:cy="180.20046"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg18229" />
   <path
-     d="m0,0h512v512h-512z"
-     id="path18231" />
-  <path
-     inkscape:connector-curvature="0"
-     id="path18237"
-     d="m 260.89276,150.64204 45.92157,353.38797 h -91.84502 z" />
-  <path
-     inkscape:connector-curvature="0"
-     d="m 512.9554,511.81162 0,-511.99999938 -512.0000011,0 0,511.99999938 z"
-     id="path18950" />
+     d="M -15.340622,-6.136249 H 533.47688 V 531.94281 H -15.340622 z"
+     id="path18231"
+     inkscape:connector-curvature="0" />
   <g
      id="g3002-1"
-     transform="matrix(-0.56118517,0,0,1.0064685,278.08394,-5.8079252)"
+     transform="matrix(-0.56118517,0,0,0.8278911,281.15206,11.202166)"
      style="fill:#ffeeaa">
     <path
        id="path18952-7"
@@ -81,7 +74,7 @@
   </g>
   <g
      id="g3002-1-9"
-     transform="matrix(0.56118517,0,0,1.0064685,215.50057,-3.5068359)"
+     transform="matrix(0.56118517,0,0,0.81779182,213.96651,31.277562)"
      style="fill:#ffeeaa">
     <path
        id="path18952-7-4"

@@ -320,6 +320,7 @@ namespace.module('bot.views', function (exports, require) {
             };
 
             this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
+            this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
             this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
             this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
 

@@ -59,24 +59,20 @@
   </script>
 
   <script id="skillchain-item-slot-template" type="text/template">
-    <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
-      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
-      <div>Level <%= model.level %></div>
-    <% } else { %>
-      <div>Empty</div>
+    <div class="levelnum" style="float:right"><%= model.level %></div>
+    <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
     <% } %>
+
 
   </script>
 
   <script id="inventory-item-slot-template" type="text/template">
-    <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
-      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
-      <div>Level <%= model.level %></div>
-    <% } else { %>
-      <div>Empty</div>
+    <div class="levelnum" style="float:right"><%= model.level %></div>
+    <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
     <% } %>
+
   </script>
 
   <script id="item-tab-template" type="text/template">

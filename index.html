@@ -63,8 +63,6 @@
     <div class="levelnum" style="float:right"><%= model.level %></div>
     <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
     <% } %>
-
-
   </script>
 
   <script id="inventory-item-slot-template" type="text/template">
@@ -72,7 +70,6 @@
     <div class="levelnum" style="float:right"><%= model.level %></div>
     <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
     <% } %>
-
   </script>
 
   <script id="item-tab-template" type="text/template">
@@ -113,10 +110,8 @@
 
   <script id="card-slot-template" type="text/template">
     <% if (model) { %>
-      <div><%= model.name %></div>
-      <div>Level <%= level %></div>
-      <div><%= model.amts[level] - 1 %> / 10</div>
-      <div><%= model.slot %></div>
+    <div class="levelnum" style="float:right"><%= level %></div>
+    <div class="xpbar" style="width:<%= 63 * (model.amts[level]-1) / 10 %>px;"></div>
     <% } %>
   </script>
 

@@ -288,7 +288,9 @@ namespace.module('bot.views', function (exports, require) {
 
         render: function() {
             this.$el.html(this.template(this));
+
             if (this.model) {
+                this.$el.css({"background-image": "url('assets/" + this.model.name +".svg')"});
                 if (this.model.disabled) {
                     this.$el.addClass('disabled');
                 } else {

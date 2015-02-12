@@ -44,13 +44,18 @@
 
 
   <script id="equipped-item-slot-template" type="text/template">
+    <% if (model) { %>
+    <div class="levelnum" style="float:right"><%= model.level %></div>
+    <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
+    <% } %>
+    <!--<img src="assets/wooden sword.svg" style="border: 0px; border-radius:3px;">
     <div style="text-align: right"><%= slot %></div>
     <% if (model) { %>
       <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
       <div>Level <%= model.level %></div>
     <% } else { %>
       <div>Empty</div>
-    <% } %>
+    <% } %>-->
   </script>
 
   <script id="skillchain-item-slot-template" type="text/template">

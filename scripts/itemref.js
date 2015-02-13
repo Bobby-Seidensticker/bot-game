@@ -485,7 +485,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "levels": 10
             },
 
-            "hard head": {
+            "breadhat": {
                 "mods": [
                     {"def": "armor added 4 perLevel", "type": "def"}
                 ],
@@ -643,7 +643,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-skeleton", 0],
                     ["proto-grunt", 0],
                     ["sharpened", 1],
-                    ["hard head", 1],
+                    ["breadhat", 1],
                     ["stinging", 1]
                 ]
             },

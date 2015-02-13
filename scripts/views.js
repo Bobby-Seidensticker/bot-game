@@ -508,6 +508,9 @@ namespace.module('bot.views', function (exports, require) {
 
         render: function() {
             this.$el.html(this.template(_.extend({model: this.model}, this)));
+            if(this.model) {
+                this.$el.css({"background-image": "url('assets/" + this.model.name +".svg')"});
+            }
             return this;
         }
     });

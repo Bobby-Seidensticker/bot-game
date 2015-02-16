@@ -45,7 +45,7 @@
 
   <script id="equipped-item-slot-template" type="text/template">
     <% if (model) { %>
-    <div class="levelnum" style="float:right"><%= model.level %></div>
+    <div class="levelnum" style="float:right"><span><%= model.level %></span></div>
     <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
     <% } %>
     <!--<img src="assets/wooden sword.svg" style="border: 0px; border-radius:3px;">
@@ -60,14 +60,14 @@
 
   <script id="skillchain-item-slot-template" type="text/template">
     <% if (model) { %>
-    <div class="levelnum" style="float:right"><%= model.level %></div>
+    <div class="levelnum" style="float:right"><span><%= model.level %></span></div>
     <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
     <% } %>
   </script>
 
   <script id="inventory-item-slot-template" type="text/template">
     <% if (model) { %>
-    <div class="levelnum" style="float:right"><%= model.level %></div>
+    <div class="levelnum" style="float:right"><span><%= model.level %></span></div>
     <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
     <% } %>
   </script>
@@ -110,7 +110,7 @@
 
   <script id="card-slot-template" type="text/template">
     <% if (model) { %>
-    <div class="levelnum" style="float:right"><%= level %></div>
+    <div class="levelnum" style="float:right"><span><%= level %></span></div>
     <div class="xpbar" style="width:<%= 63 * (model.amts[level]-1) / 10 %>px;"></div>
     <% } %>
   </script>

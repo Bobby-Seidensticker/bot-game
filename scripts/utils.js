@@ -129,8 +129,8 @@ namespace.module('bot.utils', function (exports, require) {
         _.each(flatModDefs, function(flatmod) {
             var finalmod = "";
             var spl = flatmod.split(' ');
+            var val = parseFloat(spl[2]);                
             if(spl.length == 3) {
-                var val = parseFloat(spl[2]);                
                 if(spl[1] == "added") {
                     if(spl[2] >= 0) {
                         finalmod = "+" + val + " " + namespace.bot.itemref.ref.statnames[spl[0]];
@@ -145,7 +145,15 @@ namespace.module('bot.utils', function (exports, require) {
                     }
                 }
             } else {
-                finalmod = flatmod.def + " unimplemented";
+                if(spl[1] == "gainedas") {
+                    finalmod = val + "% of " + namespace.bot.itemref.ref.statnames[spl[0]] + " Gained As " + namespace.bot.itemref.ref.statnames[spl[3]];
+                } else if (spl[1] == "converted") {
+                    finalmod = val + "% of " + namespace.bot.itemref.ref.statnames[spl[0]] + " Converted To " + namespace.bot.itemref.ref.statnames[spl[3]];
+                } else {
+                    log.error("infobox display not configured for : " + flatmod);
+                    console.log("wat", flatmod);
+                    finalmod = flatmod + " unimplemented";
+                }
             }
             res.push(finalmod);
         });
@@ -168,7 +176,7 @@ namespace.module('bot.utils', function (exports, require) {
                             fin[i] = fspl[0] + " " + fspl[1] + " " + (parseInt(fspl[2]) + parseInt(spl[2]));
                         } else if (fspl[1] == "more") {
                             var prod = parseFloat((((1 +(parseInt(fspl[2])*0.01)) * (1 +(parseInt(spl[2])*0.01)) - 1) * 100).toFixed(2));
-                            console.log(mod.def, spl[2], fspl[2], prod);
+                            //console.log(mod.def, spl[2], fspl[2], prod);
                             fin[i] = fspl[0] + " " + fspl[1] + " " + (prod);
                         }
                         found = true;

@@ -548,7 +548,6 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         tryAddValid: function(hovered) {
-            console.log(hovered,this);
             if(hovered.slot != undefined) {
                 return;
             }

@@ -817,7 +817,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "cooldownTime": "Cooldown Length",
             "range": "Skill Range",
             "speed": "Skill Speed",
-            "manaCost": "Mana Cost"
+            "manaCost": "Mana Cost",
+            "hpLeech": "Leeched Health",
+            "manaLeech": "Leeched Mana"
         }
 
     };

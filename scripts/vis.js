@@ -266,7 +266,7 @@ namespace.module('bot.vis', function (exports, require) {
             }, this);
 
             // draw hero
-            drawBody(ctx, this.zone.hero, 'rgba(30, 20, 240, 1)');
+            drawBody(ctx, this.zone.hero, 'rgba(0, 150, 240, 1)');
 
             drawMessages(ctx, msgs);
 
@@ -291,7 +291,7 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.fillStyle = msg.color;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
-            ctx.font = '14px sans-serif';
+            ctx.font = '12px Source Code Pro';
             var pos = transpose(msg.pos)
             if (msg.verticalOffset) {
                 pos[1] -= msg.verticalOffset;
@@ -341,7 +341,7 @@ namespace.module('bot.vis', function (exports, require) {
         // draw name
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        ctx.font = '14px sans-serif';
+        ctx.font = '14px Source Code Pro';
         ctx.fillStyle = color;
         ctx.fillText(body.spec.name, coords[0], coords[1] + 10);
 

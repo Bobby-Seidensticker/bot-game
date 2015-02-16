@@ -130,17 +130,18 @@ namespace.module('bot.utils', function (exports, require) {
             var finalmod = "";
             var spl = flatmod.split(' ');
             if(spl.length == 3) {
+                var val = parseFloat(spl[2]);                
                 if(spl[1] == "added") {
                     if(spl[2] >= 0) {
-                        finalmod = "+" + spl[2] + " " + namespace.bot.itemref.ref.statnames[spl[0]];
+                        finalmod = "+" + val + " " + namespace.bot.itemref.ref.statnames[spl[0]];
                     } else {
-                        finalmod = spl[2] + " " + namespace.bot.itemref.ref.statnames[spl[0]];
+                        finalmod = val + " " + namespace.bot.itemref.ref.statnames[spl[0]];
                     }
                 } else if(spl[1] == "more") {
                     if(spl[2] >= 0) {
-                        finalmod = spl[2] + "% More " + namespace.bot.itemref.ref.statnames[spl[0]];
+                        finalmod = val + "% More " + namespace.bot.itemref.ref.statnames[spl[0]];
                     } else {
-                        finalmod = Math.abs(spl[2]) + "% Less " + namespace.bot.itemref.ref.statnames[spl[0]];
+                        finalmod = Math.abs(val) + "% Less " + namespace.bot.itemref.ref.statnames[spl[0]];
                     }
                 }
             } else {
@@ -166,7 +167,7 @@ namespace.module('bot.utils', function (exports, require) {
                         if(fspl[1] == "added") {
                             fin[i] = fspl[0] + " " + fspl[1] + " " + (parseInt(fspl[2]) + parseInt(spl[2]));
                         } else if (fspl[1] == "more") {
-                            var prod = ((1 +(parseInt(fspl[2])*0.01)) * (1 +(parseInt(spl[2])*0.01)) - 1) * 100;
+                            var prod = parseFloat((((1 +(parseInt(fspl[2])*0.01)) * (1 +(parseInt(spl[2])*0.01)) - 1) * 100).toFixed(2));
                             console.log(mod.def, spl[2], fspl[2], prod);
                             fin[i] = fspl[0] + " " + fspl[1] + " " + (prod);
                         }

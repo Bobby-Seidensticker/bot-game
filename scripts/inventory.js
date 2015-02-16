@@ -219,7 +219,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
         
         getTotalDmg: function() {
-            console.log(this);
             return (this.physDmg + this.fireDmg + this.coldDmg + this.lightDmg + this.poisDmg).toFixed(2);
         },
         

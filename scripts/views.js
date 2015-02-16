@@ -292,14 +292,15 @@ namespace.module('bot.views', function (exports, require) {
         empty: function() { this.model = undefined; this.render(); },
         fill: function(model) { this.model = model; this.render(); },
 
-        tryAddValid: function(hovered) {
+        tryAddValid: function(hovered) {            
             if(hovered.slot != undefined) {
                 return;
             }
             if((hovered.model.itemType == "skill" && this.loc=="skillchain") ||
                (hovered.model.itemType == "weapon" && this.slot == "weapon") ||
-               (hovered.model.itemType == "armor" && hovered.model.type == this.slot)) {
-                console.log("!!!!!!!!!!!!!", hovered, this);
+               (hovered.model.itemType == "armor" && hovered.model.type == this.slot) ||
+               (hovered.model.itemType == "ctm" && hovered.model.slot == "skill" && this.loc == "skillchain") ||
+               (hovered.model.itemType == "ctm" && hovered.model.slot == this.slot )) {
                 this.isValidSlot = true;
                 this.$el.addClass('validSlot');
             }
@@ -444,7 +445,7 @@ namespace.module('bot.views', function (exports, require) {
             var selectedId = undefined;
             if(this.selected) {
                 selectedId = this.selected.model.id;
-                console.log(this.selected.model);
+                //console.log(this.selected.model);
             }
             this.$el.html(this.template());
 

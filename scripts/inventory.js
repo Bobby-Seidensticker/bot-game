@@ -217,6 +217,15 @@ namespace.module('bot.inv', function (exports, require) {
             }, this);
             this.disabled = totalDmg === 0;
         },
+        
+        getTotalDmg: function() {
+            console.log(this);
+            return (this.physDmg + this.fireDmg + this.coldDmg + this.lightDmg + this.poisDmg).toFixed(2);
+        },
+        
+        getDps: function() {
+            return (this.getTotalDmg() / this.speed * 1000).toFixed(2);
+        }
     });
 
     var Skillchain = gl.Model.extend({

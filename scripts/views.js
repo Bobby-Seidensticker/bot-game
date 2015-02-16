@@ -515,6 +515,8 @@ namespace.module('bot.views', function (exports, require) {
             this.loc = loc;                //this.loc = 'card-inventory';
             this.slot = slot;
             this.render();
+            this.listenTo(gl.UIEvents, 'mouseover', this.tryAddValid);
+            this.listenTo(gl.UIEvents, 'mouseout', this.wipeValid);
         },
 
         events: {
@@ -543,7 +545,23 @@ namespace.module('bot.views', function (exports, require) {
                 this.$el.css({"background-image": "url('assets/" + this.model.name +".svg')"});
             }
             return this;
-        }
+        },
+
+        tryAddValid: function(hovered) {
+            console.log(hovered,this);
+            if(hovered.slot != undefined) {
+                return;
+            }
+            if(this.loc == "equipped-cards" && hovered.slot == undefined) {
+                this.isValidSlot = true;
+                this.$el.addClass('validSlot');
+            }
+        },
+
+        wipeValid: function() {
+            this.isValidSlot = false;
+            this.$el.removeClass('validSlot');
+        },
     });
 
     var CardTab = Backbone.View.extend({

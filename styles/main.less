@@ -122,11 +122,19 @@ body .stats {
         }
 
         .itemSlot.selected {
-            box-shadow: inset 0 0 0 1000px rgba(244,184,38,0.2);
+            /*box-shadow: inset 0 0 0 1000px rgba(244,184,38,0.2);*/
+            border-color: rgba(244,184,38,1);
+            border-width:3px;
+            width:69px;
+            height:69px;
         }
 
         .itemSlot.disabled {
             box-shadow: inset 0 0 0 1000px rgba(255,0,0,0.3);        
+        }
+
+        .itemSlot.validSlot {
+            box-shadow: inset 0 0 0 1000px rgba(244,184,38,0.3);
         }
     }
 }

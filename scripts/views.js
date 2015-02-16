@@ -274,20 +274,49 @@ namespace.module('bot.views', function (exports, require) {
             this.loc = loc;
             this.slot = slot;
             this.selected = options.selected;
+            this.isValidSlot = options.validSlot;
             this.template = _.template($('#' + loc + '-item-slot-template').html());
             if(this.selected) {
                 this.select();
             }
             this.render();
+            this.listenTo(gl.UIEvents, 'mouseover', this.tryAddValid);
+            this.listenTo(gl.UIEvents, 'mouseout', this.wipeValid);
         },
-        select: function() { this.$el.addClass('selected'); },
-        unselect: function() { this.$el.removeClass('selected'); },
+        select: function() { this.selected = true; this.$el.addClass('selected');  },
+        unselect: function() {
+            this.selected = false;
+            //console.log("TODO: unselecting does not always happen properly", this.model.name);
+            this.$el.removeClass('selected'); },
         toggleSelect: function() { this.$el.toggleClass('selected'); },
         empty: function() { this.model = undefined; this.render(); },
         fill: function(model) { this.model = model; this.render(); },
 
+        tryAddValid: function(hovered) {
+            if(hovered.slot != undefined) {
+                return;
+            }
+            if((hovered.model.itemType == "skill" && this.loc=="skillchain") ||
+               (hovered.model.itemType == "weapon" && this.slot == "weapon") ||
+               (hovered.model.itemType == "armor" && hovered.model.type == this.slot)) {
+                console.log("!!!!!!!!!!!!!", hovered, this);
+                this.isValidSlot = true;
+                this.$el.addClass('validSlot');
+            }
+        },
+
+        wipeValid: function() {
+            this.isValidSlot = false;
+            this.$el.removeClass('validSlot');
+        },
+        
         render: function() {
             this.$el.html(this.template(this));
+            if(this.isValidSlot) {
+                this.$el.addClass('validSlot');
+            } else {
+                this.$el.removeClass('validSlot');
+            }
 
             if (this.model) {
                 this.$el.css({"background-image": "url('assets/" + this.model.name +".svg')"});
@@ -350,12 +379,12 @@ namespace.module('bot.views', function (exports, require) {
                 if (this.selected) {
                     this.selected.unselect();
                     this.selected = undefined;
-                } else {
-                    if (itemSlot.model !== undefined) {
-                        itemSlot.select();
-                        this.selected = itemSlot;
-                    }
                 }
+                if (itemSlot.model !== undefined) {
+                    itemSlot.select();
+                    this.selected = itemSlot;
+                }
+
             } else {
                 if (this.selected) {
                     this.selected.unselect();
@@ -415,6 +444,7 @@ namespace.module('bot.views', function (exports, require) {
             var selectedId = undefined;
             if(this.selected) {
                 selectedId = this.selected.model.id;
+                console.log(this.selected.model);
             }
             this.$el.html(this.template());
 
@@ -445,7 +475,7 @@ namespace.module('bot.views', function (exports, require) {
             this.rerenderInv();
 
 
-            console.log(this.selected);
+            //console.log(this.selected);
             //this.selected = undefined;
             this.rendered = true;
 

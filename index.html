@@ -129,6 +129,7 @@
         <% } %>
         <div class="infoitem">Level <%= model.level %></div>
         <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
+        <div class="xpbox"><div class="xpearned" style="width:<%= (model.xp / model.getNextLevelXp())*100 %>px"></div></div>
         <% if (model.disabled) { %>
         <div class="infoitem disabled">Skill Cannot Be Used Because Wrong Weapon Type Equipped</div>
         <% } %>

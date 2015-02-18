@@ -579,6 +579,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "maxHp more 1000", "type": "def"}
                 ],
             },
+            "proto-rofl": {
+                "mods": [
+                    {"def": "height more -50", "type": "vis"},                    
+                    {"def": "width more 300", "type": "vis"},
+                ]
+            },
             "proto-elf": {
                 "mods": [
                     {"def": "speed more -20", "type": "dmg"},
@@ -971,7 +977,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "buff": {
                 "mods": [
                     {"def": "width more 30", "type": "vis"},
-                    {"def": "lineWidth added 1", "type": "vis"},
+                    {"def": "lineWidth added 3", "type": "vis"},
                     {"def": "strength added 5 perLevel", "type": "def"},
                     {"def": "meleeDmg more 3 perLevel", "type": "dmg"},
                     {"def": "rangeDmg more 3 perLevel", "type": "dmg"},                    
@@ -1117,7 +1123,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["sharpened", 1],
                     ["breadhat", 1],
                     ["stinging", 1]
-                ]
+                ],
             },
             "fire skeleton": {
                 "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
@@ -1252,6 +1258,15 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["small stature", 1],
                     ["keen wit", 1],
                     ["electrified", 1],
+                ],
+            },
+            "roflcopter" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["pressure wave", "quick hit", "basic melee"],
+                "sourceCards": [
+                    ["flying", 1],
+                    ["nimble", 1],
+                    ["proto-rofl", 1]
                 ],
             },
             "harpy" : {
@@ -1553,8 +1568,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "level": 4,
             },
             "clockwork ruins": {
-                "choices": ["gnome", "gnome electrician", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
-                "weights": [20, 10, 10, 5, 5, 5, 0],
+                "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
+                "weights": [20, 10, 10, 10, 5, 5, 5, 0],
                 "boss": "sir mechs-a-lot",
                 "roomCount": 20,
                 "quantity": [2,2,3],

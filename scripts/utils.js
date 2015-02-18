@@ -58,7 +58,7 @@ namespace.module('bot.vector', function (exports, require) {
         var pangle = Math.atan(pvect[1] / pvect[0]);
         var tangle = Math.atan(tvect[1] / tvect[0]);
 
-        var adiff = Math.abs(tangle - pangle);
+        var adiff = tangle - pangle;
         var psdist = Math.hypot(start[0] - target[0], start[1] - target[1]);//dist(start, target);
         //var psdist = dist(start, target);
 
@@ -66,7 +66,7 @@ namespace.module('bot.vector', function (exports, require) {
 
         var closest = Math.sin(adiff) * psdist;
 
-        if (closest < rad) {
+        if (Math.abs(closest) < rad) {
             //console.log('closest is', closest, 'hit!');
             return true;
         } else {
@@ -97,6 +97,85 @@ namespace.module('bot.vector', function (exports, require) {
         hit: hit,
         velocity: velocity,
         meleeVelocity: meleeVelocity
+    });
+});
+
+namespace.module('bot.vectorutils', function (exports, require) {
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    Point.prototype.clone = function(p) {
+        return new Point(p.x, p.y);
+    }
+
+    Point.prototype.add = function(p) {
+        return new Point(this.x + p.x, this.y + p.y);
+    }
+
+    Point.prototype.sub = function(p) {
+        return new Point(this.x - p.x, this.y - p.y);
+    }
+
+    Point.prototype.mult = function(scalar) {
+        return new Point(Math.round(this.x * scalar), Math.round(this.y * scalar));
+    }
+
+    Point.prototype.dist = function(p) {
+        return Math.round(Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2)));
+    }
+
+    Point.prototype.rawDist = function(p) {
+        return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
+    }
+
+    Point.prototype.equal = function(p) {
+        return this.x == p.x && this.y == p.y;
+    }
+
+    Point.prototype.angle = function() {
+        return Math.atan(this.y / this.x);
+    }
+
+    Point.prototype.velocity = function(end, rate) {
+        var s = end.sub(this);
+        var fact = rate / end.rawDist(start);
+        return s.mult(fact);
+    }
+
+    Point.prototype.closer = function(dest, rate, stop) {
+        var diff = this.sub(dest);
+        var distance = this.dist(dest);
+        if (distance - rate < stop) {
+            rate = distance - stop;
+        }
+        var ratio = 1 - (distance - rate) / distance;
+        return this.add(diff.mult(ratio));
+    }
+
+    Point.prototype.pctCloser = function(dest, pct) {
+        return this.add(dest.sub(this).mult(scalar));
+    }
+
+    function hit(start, end, target, tradius, pradius) {
+        var radius = tradius + pradius;
+        var projVector = end.sub(start);
+        var targetVector = target.sub(start);
+
+        var angleDiff = targetVector.angle() - projVector.angle();
+        var closest = Math.sin(angleDiff) * start.rawDist(target);
+
+        if (Math.abs(closest) < radius) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    exports.extend({
+        Point: Point,
+        hit: hit
     });
 });
 

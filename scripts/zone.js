@@ -11,6 +11,7 @@ namespace.module('bot.zone', function (exports, require) {
     var prob = namespace.bot.prob;
     var itemref = namespace.bot.itemref;
     var vector = namespace.bot.vector;
+    var vu = namespace.bot.vectorutils;
 
     var ZoneManager = gl.Model.extend({
         initialize: function(hero) {

@@ -34,7 +34,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
-                "names": ["shitty bow", "crappy bow", "compound bow"]
+                "names": ["shitty bow", "wooden bow", "compound bow"]
             },
             "spell": {
                 "mods": [
@@ -273,6 +273,17 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ]
             },
+            "masterful strike": {
+                "prototype": ["basic melee"],
+                "baseMods": [
+                    {def: 'manaCost added 12', type: 'dmg'},
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
+                    {def: 'physDmg more 20', type: 'dmg'},
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 5 perLevel', type: 'dmg'}
+                ]
+            },
             "quick hit": {
                 "prototype": ["basic melee"],
                 "baseMods": [
@@ -427,6 +438,17 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 50 poisDmg', type: 'dmg'}
                 ]
             },
+            "headshot": {
+                "prototype": ["basic"],
+                "class": "range",
+                "types": ["proj"],
+                "baseMods": [
+                    {def: 'manaCost added 6', type: 'dmg'},
+                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
+                    {def: 'physDmg more 10 perLevel', type: 'dmg'}
+                ]
+            },
             "incinerate": {                
                 "prototype": ["basic spell"],
                 "class": "spell",
@@ -476,7 +498,8 @@ namespace.module('bot.itemref', function (exports, require) {
 
                 ]
             },
-            "lighting ball": {
+
+            "lightning ball": {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "lightning", "spell"],
@@ -525,6 +548,108 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'coldDmg more 1 perLevel', type: 'dmg'},
                 ]
             },
+            "pressure wave": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "types": ["proj", "spell"],
+                "baseMods": [
+                    {def: 'manaCost added 10', type: 'dmg'},
+                    {def: 'cooldownTime added 500', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 5 perLevel', type: 'dmg'},
+                ]
+            },
+            "shadow dagger": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "types": ["proj", "spell"],
+                "baseMods": [
+                    {def: 'manaCost added 10', type: 'dmg'},
+                    {def: 'cooldownTime added 500', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 5 perLevel', type: 'dmg'},
+                ]
+            },
+            "health suck": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "types": ["proj", "spell"],
+                "baseMods": [
+                    {def: 'manaCost added 1', type: 'dmg'},
+                    {def: 'speed added 150', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg gainedas 100 hpLeech', type: 'dmg'}
+                ]
+            },
+            "ice blast": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "types": ["proj", "aoecone" , "spell"],
+                "baseMods": [
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'coldDmg added 3 perLevel', type: 'dmg'},
+                ]
+            },
+            "nova": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "types": ["proj", "aoecircle" , "spell"],
+                "baseMods": [
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'lightDmg added 3 perLevel', type: 'dmg'},
+                ]
+            },
+            "fire nova": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "types": ["proj", "aoecircle" , "spell"],
+                "baseMods": [
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'fireDmg added 3 perLevel', type: 'dmg'},
+                ]
+            },
+            "ice nova": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "types": ["proj", "aoecircle" , "spell"],
+                "baseMods": [
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'coldDmg added 3 perLevel', type: 'dmg'},
+                ]
+            },
+            "poison nova": {
+                "prototype": ["basic"],
+                "class": "spell",
+                "types": ["proj", "aoecircle" , "spell"],
+                "baseMods": [
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'poisDmg added 3 perLevel', type: 'dmg'},
+                ]
+            },
+            "flame cone": {
+                "prototype": ["basic"],
+                "class": "melee",
+                "types": ["aoecone" , "melee"],
+                "baseMods": [
+                    {def: 'manaCost added 5', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'fireDmg added 3 perLevel', type: 'dmg'},
+                ]
+            },
         },
         "card": {
             "proto-skeleton": {
@@ -562,6 +687,13 @@ namespace.module('bot.itemref', function (exports, require) {
             "hot sword": {
                 "mods": [
                     {"def": "fireDmg added 2 perLevel", "type": "dmg"}
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
+            "cold sword": {
+                "mods": [
+                    {"def": "coldDmg added 2 perLevel", "type": "dmg"}
                 ],
                 "slot": "weapon",
                 "levels": 10
@@ -730,6 +862,335 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "skill",
                 "levels": 10
             },
+            "ignited": {
+                "mods": [
+                    {"def": "physDmg converted 20 fireDmg", "type": "dmg"},
+                    {"def": "fireDmg more 2 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
+            "frosted": {
+                "mods": [
+                    {"def": "physDmg converted 20 coldDmg", "type": "dmg"},
+                    {"def": "coldDmg more 2 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
+            "charged": {
+                "mods": [
+                    {"def": "physDmg converted 20 lightDmg", "type": "dmg"},
+                    {"def": "lightDmg more 2 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
+            "putrified": {
+                "mods": [
+                    {"def": "physDmg converted 20 poisDmg", "type": "dmg"},
+                    {"def": "poisDmg more 2 perLevel", "type": "dmg"},
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
+            "heart of granite": {
+                "mods": [
+                    {"def": "armor added 5 perLevel", "type": "def"},
+                    {"def": "armor more 3 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "heart of granite": {
+                "mods": [
+                    {"def": "armor added 5 perLevel", "type": "def"},
+                    {"def": "armor more 3 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "small stature": {
+                "mods": [
+                    //TODO{"def": "height more -20", "type": "def"},
+                    {"def": "moveSpeed more 3 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "keen wit": {
+                "mods": [
+                    {"def": "wisdom added 5 perLevel", "type": "def"},
+                ],
+                "slot": "head",
+                "levels": 10
+            },
+            "electrified": {
+                "mods": [
+                    {"def": "lightDmg more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
+            "flying": {
+                "mods": [
+                    {"def": "dodge added 95", "type": "def"},
+                    {"def": "dodge added 5 perLevel", "type": "def"},
+                    //TODO - flying vis stuff
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "clawed": {
+                "mods": [
+                    {"def": "physDmg added 5 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 10", "type": "dmg"},
+                ],
+                "slot": "hands",
+                "levels": 10
+            },
+            "riveted": {
+                "mods": [
+                    {"def": "armor more 5 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "clockwork": {
+                "mods": [
+                    {"def": "physDmg more 4 perLevel", "type": "dmg"},
+                    {"def": "speed more -15", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "mecha heart": {
+                "mods": [
+                    {"def": "maxHp added 5 perLevel", "type": "def"},
+                    {"def": "hpRegen added 2 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "steam powered": {
+                "mods": [
+                    {"def": "manaRegen added 5 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "goblin toe": {
+                "mods": [
+                    {"def": "armor added 10 perLevel", "type": "def"},
+                    {"def": "physDmg more 25", "type":"dmg"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "berserking": {
+                "mods": [
+                    {"def": "physDmg more 25", "type": "dmg"},
+                    {"def": "speed more -1 perLevel", "type": "dmg"},                     
+                    {"def": "maxHp more -50", "type": "def"},
+                ],
+                "slot": "head",
+                "levels": 10
+            },
+            "simple minded": {
+                "mods": [
+                    {"def": "spellDmg more -50", "type": "dmg"},
+                    {"def": "strength more 2 perLevel", "type": "def"},
+                    {"def": "meleeDmg more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "head",
+                "levels": 10
+            },
+            "explosive bolts": {
+                "mods": [
+                    {"def": "fireDmg more 3 perLevel", "type": "dmg"},
+                    {"def": "physDmg converted 25 fireDmg", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "types": ["range"],
+                "levels": 10
+            },
+            "shambling": {
+                "mods": [
+                    {"def": "moveSpeed more -20", "type": "def"},
+                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "unwashed hands": {
+                "mods": [
+                    {"def": "physDmg converted 25 poisDmg", "type": "dmg"},
+                    {"def": "poisDmg more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "hands",
+                "levels": 10
+            },
+            "indigenous toxins": {
+                "mods": [
+                    {"def": "poisDmg added 5 perLevel", "type": "dmg"},
+                    {"def": "poisDmg more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "non-newtownian fluid": {
+                "mods": [
+                    {"def": "armor added 10 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "big": {
+                "mods": [
+                    // TODO add vis stuff height + width
+                    {"def": "maxHp added 10 perLevel", "type": "def"},
+                    {"def": "maxHp more 2 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "buff": {
+                "mods": [
+                    //todo add width vis
+                    {"def": "strength added 5 perLevel", "type": "def"},
+                    {"def": "meleeDmg more 3 perLevel", "type": "dmg"},
+                    {"def": "rangeDmg more 3 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "vampyric touch": {
+                "mods": [
+                    {"def": "physDmg gainedas 5 hpLeech", "type": "dmg"},
+                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                ],
+                "slot": "hands",
+                "levels": 10
+            },
+            "vampyric embrace": {
+                "mods": [
+                    {"def": "physDmg gainedas 5 hpLeech", "type": "dmg"},
+                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "soulsucker": {
+                "mods": [
+                    {"def": "physDmg gainedas 5 manaLeech", "type": "dmg"},
+                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                ],
+                "slot": "head",
+                "levels": 10
+            },
+            "alabaster": {
+                "mods": [
+                    {"def": "armor more 5 perLevel", "type": "def"},
+                    {"def": "armor added 100", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "vest pockets": {
+                "mods": [
+                    {"def": "speed added -1 perLevel", "type": "dmg"},
+                    {"def": "speed more -1 perLevel", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "precise": {
+                "mods": [
+                    {"def": "speed more -20", "type": "dmg"},
+                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
+            "fleece lining": {
+                "mods": [
+                    {"def": "coldResist more -10", "type": "eleResist"},
+                    {"def": "coldResist more -1 perLevel", "type": "eleResist"},
+                ],
+                "slot": "hands",
+                "levels": 10
+            },
+            "fur hat": {
+                "mods": [
+                    {"def": "coldResist more -10", "type": "eleResist"},
+                    {"def": "coldResist more -1 perLevel", "type": "eleResist"},
+                ],
+                "slot": "head",
+                "levels": 10
+            },
+            "chinchilla lining": {
+                "mods": [
+                    {"def": "coldResist more -10", "type": "eleResist"},
+                    {"def": "coldResist more -1 perLevel", "type": "eleResist"},
+                ],
+                "slot": "legs",
+                "levels": 10
+            },
+            "yeti fur": {
+                "mods": [
+                    {"def": "coldResist more -20", "type": "eleResist"},
+                    {"def": "coldResist more -1 perLevel", "type": "eleResist"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "ice plating": {
+                "mods": [
+                    {"def": "armor more 3 perLevel", "type": "def"},
+                    {"def": "fireResist more -1 perLevel", "type": "eleResist"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "shadow walker": {
+                "mods": [
+                    {"def": "dodge added 20 perLevel", "type": "def"},
+                ],
+                "slot": "legs",
+                "levels": 10
+            },
+            "full plating": {
+                "mods": [
+                    {"def": "armor added 20 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+                "levels": 10
+            },
+            "hateful blade": {
+                "mods": [
+                    {"def": "physDmg gainedas -5 hpLeech", "type": "dmg"},
+                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
+                ],
+                "slot": "weapon",
+                "levels": 10
+            },
+            "ethereal": {
+                "mods": [
+                    {"def": "dodge more 2 perLevel", "type": "def"},
+                    {"def": "dodge added 100", "type": "def"},
+                ],
+                "slot": "hands",
+                "levels": 10
+            },
+            "pyromania": {
+                "mods": [
+                    {"def": "fireDmg more 8", "type": "dmg"},
+                    {"def": "fireDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "fireDmg gainedas -5 hpLeech", "type":"dmg"}
+                ],
+                "slot": "head",
+                "levels": 10
+            },
         },
         "monster": {
             "skeleton" : {
@@ -780,7 +1241,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["hot sword", 1]
                 ]
             },
-            "wolf" : {
+            "wood nymph" : {
                 "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
                 "skills": ["basic melee"],
                 "sourceCards": [
@@ -820,7 +1281,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-elf", 0],
                     ["dexterous hands", 2]
                 ],
-                "flavor": "He knows you've been naughty, and he's killing you twice"
+                "flavor": "He knows you've been naughty"
             },
             "dummy": {
                 "items": [],
@@ -828,7 +1289,335 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["dummy", 0]
                 ]
-            }
+            },
+            "fire golem" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["heart of granite", 0],
+                    ["ignited", 1]
+                ],
+            },
+            "ice golem" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["heart of granite", 0],
+                    ["frosted", 1]
+                ],
+            },
+            "shock golem" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["heart of granite", 0],
+                    ["charged", 1]
+                ],
+            },
+            "toxic golem" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["heart of granite", 0],
+                    ["putrified", 1]
+                ],
+            },
+            "gnome" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["quick hit", "basic melee"],
+                "sourceCards": [
+                    ["small stature", 1],
+                    ["keen wit", 1]
+                ],
+            },
+            "gnome electrician" : {
+                "items": [["weapon", "spell", 2]],
+                "skills": ["lightning ball", "nova", "basic melee"],
+                "sourceCards": [
+                    ["small stature", 1],
+                    ["keen wit", 1],
+                    ["electrified", 1],
+                ],
+            },
+            "harpy" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["pressure wave", "quick hit", "basic melee"],
+                "sourceCards": [
+                    ["flying", 1],
+                    ["nimble", 1],
+                    ["clawed", 1],
+                ],
+            },
+            "mechcinerator" : {
+                "items": [["weapon", "spell", 2]],
+                "skills": ["incinerate", "fire nova", "basic melee"],
+                "sourceCards": [
+                    ["riveted", 1],
+                    ["clockwork", 1],
+                    ["mecha heart", 1],
+                    ["ignited", 1],
+                    ["steam powered", 1]
+                ],
+            },
+            "mechfridgerator": {
+                "items": [["weapon", "spell", 2]],
+                "skills": ["ice blast", "ice nova", "basic melee"],
+                "sourceCards": [
+                    ["riveted", 1],
+                    ["clockwork", 1],
+                    ["mecha heart", 1],
+                    ["frosted", 1],
+                    ["steam powered", 1]
+                ],
+            },
+            "mecha watt" : {
+                "items": [["weapon", "spell", 2]],
+                "skills": ["lightning ball", "nova", "basic melee"],
+                "sourceCards": [
+                    ["riveted", 1],
+                    ["clockwork", 1],
+                    ["mecha heart", 1],
+                    ["charged", 1],
+                    ["steam powered", 1]
+                ],
+            },
+            "sir mechs-a-lot" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["flame cone", "lightning ball", "ice nova", "basic melee"],
+                "sourceCards": [
+                    ["riveted", 1],
+                    ["clockwork", 1],
+                    ["mecha heart", 1],
+                    ["charged", 1],
+                    ["steam powered", 1],
+                    ["frosted", 1],
+                    ["ignited", 1]
+                ],
+            },
+            "goblin" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["flame cone", "basic melee"],
+                "sourceCards": [
+                    ["goblin toe", 1],
+                    ["berserking", 1],
+                    ["simple minded", 1],
+                ],
+            },
+            "goblin priest" : {
+                "items": [["weapon", "spell", 2]],
+                "skills": ["fire ball", "incinerate", "basic spell"],
+                "sourceCards": [
+                    ["goblin toe", 1],
+                    ["berserking", 1],
+                    ["simple minded", 1],
+                    ["pyromania", 1]
+                ],
+            },
+            "goblin artillery" : {
+                "items": [["weapon", "range", 2]],
+                "skills": ["basic range"],
+                "sourceCards": [
+                    ["goblin toe", 1],
+                    ["berserking", 1],
+                    ["simple minded", 1],
+                    ["explosive bolts", 1]
+                ],
+            },
+            "flame dragon" : {
+                "items": [["weapon", "spell", 2]],
+                "skills": ["incinerate", "basic spell"],
+                "sourceCards": [
+                    ["ignited", 1],
+                    ["proto-boss", 1],
+                    ["pyromania", 1],
+                    ["keen wit", 1],
+                    ["brain juice", 1]
+                ],
+            },
+            
+            "zombie" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["poison slash", "basic melee"],
+                "sourceCards": [
+                    ["unwashed hands", 1],
+                    ["shambling", 1],
+                    ["simple minded", 1],
+                ],
+            },
+            "angry imp" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["poison slash", "quick hit", "basic melee"],
+                "sourceCards": [
+                    ["berserking", 1],
+                    ["small stature", 1],
+                    ["simple minded", 1],
+                    ["indigenous toxins", 1],
+                ],
+            },
+            "dart imp" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["poison arrow", "speed shot", "basic range"],
+                "sourceCards": [
+                    ["berserking", 1],
+                    ["small stature", 1],
+                    ["simple minded", 1],
+                    ["indigenous toxins", 1],
+                    ["putrified", 1]
+                ],
+            },
+            "imp shaman": {
+                "items": [["weapon", "spell", 2]],
+                "skills": ["poison ball", "poison nova", "basic spell"],
+                "sourceCards": [
+                    ["berserking", 1],
+                    ["small stature", 1],
+                    ["simple minded", 1],
+                    ["indigenous toxins", 1],
+                ],
+            },
+            "marshwalker": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["poison slash", "poison nova", "basic melee"],
+                "sourceCards": [
+                    ["indigenous toxins", 1],
+                    ["putrified", 1],
+                    ["non-newtownian fluid", 1]
+                ],
+            },
+            "mad ape": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["big", 1],
+                    ["berserking", 1],
+                    ["buff", 1]
+                ],
+            },
+            "scalp collector": {
+                "items": [["weapon", "range", 2]],
+                "skills": ["headshot", "basic range"],
+                "sourceCards": [
+                    ["indigenous toxins", 1],
+                    ["putrified", 1],
+                    ["precise", 1],
+                    ["vest pockets", 1],
+                ],
+            },
+            "frost skeleton": {
+                "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
+                "skills": ["ice slash", "basic melee"],
+                "sourceCards": [
+                    ["cold sword", 1],
+                    ["proto-skeleton", 0],
+                    ["six pack", 1],
+                    ["compression shorts", 1],
+                    ["fleece lining", 1]
+                ]
+            },
+            "frost mage": {
+                "items": [["weapon", "spell", 2]],
+                "skills": ["ice blast", "ice nova", "ice ball", "basic range"],
+                "sourceCards": [
+                    ["fleece lining", 1],
+                    ["frosted", 1],
+                    ["keen wit", 1],
+                    ["fur hat", 1],
+                ],
+            },
+            "frozen warrior": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["ice slash", "basic melee"],
+                "sourceCards": [
+                    ["fleece lining", 1],
+                    ["frosted", 1],
+                    ["chinchilla lining", 1],
+                    ["ice plating", 1],
+                ],
+            },
+            "yeti": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["fleece lining", 1],
+                    ["frosted", 1],
+                    ["chinchilla lining", 1],
+                    ["clawed", 1],
+                    ["yeti fur", 1]
+                ],
+            },
+            "shadow knight": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["masterful strike", "basic melee", "shadow dagger"],
+                "sourceCards": [
+                    ["shadow walker", 1],
+                    ["full plating", 1],
+                    ["sharpened", 1],
+                    ["hateful blade", 1],
+                    ["ethereal", 1]
+                ],
+            },
+            "ghoul": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["shambling", 1],
+                    ["simple minded", 1],
+                    ["bloodsucker", 1],
+                ],
+            },
+            "vampire": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["health suck", "super smash", "basic melee"],
+                "sourceCards": [
+                    ["vampyric touch", 1],
+                    ["vampyric embrace", 1],
+                    ["bloodsucker", 1],
+                    ["soulsucker", 1],
+                    ["shadow walker", 1],
+                    ["flying", 1]
+                ],
+            },
+            "living statue": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["heart of granite", 1],
+                    ["simple minded", 1],
+                    ["alabaster", 1],
+                ],
+            },
+            "gargoyle": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["heart of granite", 1],
+                    ["simple minded", 1],
+                    ["alabaster", 1],
+                    ["clawed", 1],
+                    ["flying", 1]                    
+                ],
+            },
+            "minotaur": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["super smash", "basic melee"],
+                "sourceCards": [
+                    ["simple minded", 1],
+                    ["big", 1],
+                    ["buff", 1]
+                ],
+            },
+            "wraith": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["ice slash", "basic melee"],
+                "sourceCards": [
+                    ["berserking", 1],
+                    ["flying", 1],
+                    ["ethereal", 1],
+                ],
+            },
+
+          
+            
         },
         "zone": {
             "spooky dungeon": {
@@ -840,12 +1629,68 @@ namespace.module('bot.itemref', function (exports, require) {
                 "level": 1
             },
             "dark forest": {
-                "choices": ["wolf", "bat", "elf", "ent"],
+                "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
                 "weights": [20, 15, 15, 5],
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2, 2, 3],
                 "level": 12,
+            },
+            "clockwork ruins": {
+                "choices": ["gnome", "gnome electrician", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
+                "weights": [20, 10, 10, 5, 5, 5, 0],
+                "boss": "sir mechs-a-lot",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 15,
+            },
+            "aggro crag": {
+                "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
+                "weights": [20, 10, 10, 10, 10, 0],
+                "boss":"flame dragon",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 17,
+            },
+            "hostile marsh": {
+                "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
+                "weights": [20, 10, 10, 10, 10, 10, 0, 10 ,10],
+                "boss":"scalp collector",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 17,
+            },
+            "icy tunnel": {
+                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "frow djinn"],
+                "weights": [20, 10, 10, 10 ,10, 0],
+                "boss": "yeti",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 17,
+            },
+            "gothic castle": {
+                "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
+                "weights": [20, 10, 10, 10, 10, 10, 10],
+                "boss": "shadow knight",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 17,
+            },
+            "demonic laboroatory": {
+                "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],
+                "weights": [20, 10, 10],
+                "boss": "pigbearman",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 17,
+            },
+            "scarred plains": {
+                "choices": ["troll", "cyclops", "harpy", "bandit", "giant", "frost giant"],
+                "weights": [20, 10, 10],
+                "boss": "pigbearman",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 17,
             },
             "dojo": {
                 "choices": ["dummy"],
@@ -913,7 +1758,9 @@ namespace.module('bot.itemref', function (exports, require) {
             "cooldownTime": "Cooldown Length",
             "range": "Skill Range",
             "speed": "Skill Speed",
-            "manaCost": "Mana Cost"
+            "manaCost": "Mana Cost",
+            "hpLeech": "Leeched Health",
+            "manaLeech": "Leeched Mana"
         }
 
     };

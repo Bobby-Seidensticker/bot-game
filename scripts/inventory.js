@@ -243,9 +243,13 @@ namespace.module('bot.inv', function (exports, require) {
             this.specs = $.extend({}, this.specs);
             _.each(this.specs, this.calcAttack, this);
         },
-
-        getAttacks: function(attacker, target) {
-            return attacks.genAttacks(this, attacker, target);
+        
+        getTotalDmg: function() {
+            return (this.physDmg + this.fireDmg + this.coldDmg + this.lightDmg + this.poisDmg).toFixed(2);
+        },
+        
+        getDps: function() {
+            return (this.getTotalDmg() / this.speed * 1000).toFixed(2);
         }
     });
 

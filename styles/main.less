@@ -23,7 +23,7 @@
 @button-bg: rgba(0,0,10,0.2);
 @flavor-text: rgba(170,80,23,1);
 @error-text: rgba(190,10,0,1);
-
+@skill-dmg: rgba(50,255,90,1);
 
 body {
     height: 100%;
@@ -31,7 +31,7 @@ body {
     margin: 0;
     overflow: hidden;
     position: relative;
-    font-family: sans-serif;
+    font-family: 'Source Code Pro', sans-serif;
     background-color: #333;
 
     cursor: default;
@@ -78,6 +78,7 @@ body .stats {
     background-repeat: repeat;
     /*background-color: @color-primary-0;*/
     overflow: auto;
+
     font-size: 11px;
     color: @menu-text;
 
@@ -112,22 +113,38 @@ body .stats {
             > div {
                 margin: 5px 5px;
             }
+            
+            span {
+              background-color: rgba(0,0,0,0.6);
+              padding: 3px;
+              border-radius: 3px;
+            }
+            
             .xpbar {
                 margin-top: 65px;
                 height: 5px;
 
-                background: linear-gradient(to right, #AAAA00, #FFFF00, #AAAA00);
+                background: linear-gradient(to bottom, #AAAA00, #FFFF00, #AAAA00);
                 opacity:0.7;
             }
         }
 
         .itemSlot.selected {
-            box-shadow: inset 0 0 0 1000px rgba(244,184,38,0.2);
+            /*box-shadow: inset 0 0 0 1000px rgba(244,184,38,0.2);*/
+            border-color: rgba(244,184,38,1);
+            border-width:3px;
+            width:69px;
+            height:69px;
         }
 
         .itemSlot.disabled {
             box-shadow: inset 0 0 0 1000px rgba(255,0,0,0.3);        
         }
+
+        .itemSlot.validSlot {
+            box-shadow: inset 0 0 0 1000px rgba(244,184,38,0.3);
+        }
+       
     }
 }
 
@@ -173,6 +190,11 @@ body .stats {
     .flavor {
         color: @flavor-text;
         margin-bottom:10px;
+    }
+
+    .skilldmg {
+        color: @skill-dmg;
+        margin-bottom: 10px;
     }
 }
 

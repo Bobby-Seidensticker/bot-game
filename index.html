@@ -141,7 +141,9 @@
       <% } else { %>
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
         <div class="infoitem"><%= namespace.bot.utils.firstCap(model.slot) %> Card</div>
-        <div class="infoitem">Level <%= level %></div>    
+        <div class="infoitem">Level <%= level %></div>
+        <div class="infoitem"><%= model.amts[level] %>/10 to Level Up</div>
+        <div class="xpbox"><div class="xpearned" style="width:<%= (model.amts[level]) * 10 %>px"></div></div>
         <div class="mods">
         <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(modstr) {%>
           <div class="mod"><%= modstr %></div>

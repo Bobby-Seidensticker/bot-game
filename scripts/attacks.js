@@ -4,86 +4,6 @@ namespace.module('bot.attacks', function (exports, require) {
     var log = namespace.bot.log;
     var vector = namespace.bot.vector;
 
-    /*
-      inventory.js skill computeAttrs needs to generate an attack spec from which to generate attack objects
-
-      zone.js zone.zoneTick needs to advance all projectiles
-
-      zone.js attackTarget in EntityBody needs to create a projectile object and put it on the room
-      
-      
-      All attacks:
-      create an Attack object, push it on the end of the attacks array
-
-      notation: 0 = time 0, h = half time, t = time
-      Attack types:
-      Things that always hit:
-        melee only
-        0: starts moving
-        h: hits and removes self, attacker deals with nextAction on its own
-        can spawn ranged, cones, and circles. ranged and cones use the same vector, circles don't need anything other than ending position
-
-      Things that are aimed at a target, but not guaranteed to hit:
-        range, cones, aoe
-        0: proj created, not moving
-        h: starts moving, attacker deals with next action on its own
-        
-
-
-
-        melee: makes attack:
-        needs:
-        type: 'melee',
-        angle: undefined,
-        attacker: attacker
-        target: target
-        start: attacker's current pos
-        pos: current pos
-        end: target's initial pos
-        startTime: now
-        lastTime: last time updated
-        team: team
-        onHit: [specs]
-        onKill: [specs]
-
-        melee spec:
-        type: 'melee',
-        dmg: damage object,
-        onHit: [specs],
-        onKill: [specs],
-        onRemove: [specs],
-
-        range spec:
-        type: 'proj',
-        count: 1,
-        angle: 0,
-        rate: #,
-        dmg: damage object,
-        onHit: [specs],
-        onKill: [specs],
-        onRemove: [specs],
-
-        aoecone:
-        type: 'cone',
-        angle: 30,
-        radius: #,
-        dmg: damage object,
-        onHit: [specs],
-        onKill: [specs],
-        onRemove: [specs],
-
-        aoecircle:
-        type: 'circle',
-        radius: #,
-        dmg: damage object,
-        onHit: [specs],
-        onKill: [specs],
-        onRemove: [specs],
-
-
-     */
-
-
     var AttackManager = gl.Model.extend({
         initialize: function(options) {
             this.attacks = [];
@@ -120,9 +40,6 @@ namespace.module('bot.attacks', function (exports, require) {
             var i;
             for (i = 0; i < this.attacks.length; i++) {
                 var enemies = livingBodies[this.attacks[i].target.spec.team];
-                if (enemies === undefined) {
-                    throw('shit');
-                }
                 this.attacks[i].tick(enemies);
             }
             i = 0;
@@ -192,7 +109,18 @@ namespace.module('bot.attacks', function (exports, require) {
                     }
                 }, this);
             }
-        }
+        },
+
+        hit: function(enemy) {
+            var dmgDealt = enemy.takeDamage(this);
+            this.attacker.handleHit(enemy, this.leech);
+            this.handle('hit');
+            if (!enemy.isAlive()) {
+                this.handle('kill');
+            }
+            this.handle('remove');
+            this.done = true;
+        },
     });
 
     var ProjAttack = Attack.extend({
@@ -209,6 +137,7 @@ namespace.module('bot.attacks', function (exports, require) {
 
             this.curTime = gl.time;
             this.fireTime = gl.time + spec.speed / 2;
+            log.warning('projectile created, pos: %d %d, velocity %d %d', this.pos[0], this.pos[1], this.velocity[0], this.velocity[1]);
         },
 
         tick: function(enemies) {
@@ -216,24 +145,18 @@ namespace.module('bot.attacks', function (exports, require) {
                 this.curTime = gl.time;
                 return;
             }
-            var dt = gl.time - this.curTime;
-            var nextPos = [this.pos[0] + this.velocity[0] * dt, this.pos[1] + this.velocity[1] * dt];
+            var travelTime = gl.time - this.fireTime;
+            var nextPos = [this.start[0] + this.velocity[0] * travelTime, this.start[1] + this.velocity[1] * travelTime];
 
             for (var i = 0; i < enemies.length; i++) {
                 var didHit = vector.hit(this.pos, nextPos, [enemies[i].x, enemies[i].y], 200, 200);
                 if (didHit && enemies[i].isAlive()) {
                     this.pos = nextPos;
-                    var dmgDealt = this.target.takeDamage(this);
-                    this.attacker.handleHit(enemies[i], this.leech);
-                    this.handle('hit');
-                    if (!enemies[i].isAlive()) {
-                        this.handle('kill');
-                    }
-                    this.handle('remove');
-                    this.done = true;
+                    this.hit(enemies[i]);
                     break;
                 }
             }
+            //log.info('projectile moving, from pos: %d %d to %d %d', this.pos[0], this.pos[1], nextPos[0], nextPos[1]);
             this.pos = nextPos;
             this.curTime = gl.time;
         },
@@ -264,14 +187,7 @@ namespace.module('bot.attacks', function (exports, require) {
                 this.pos = vector.pctCloser(this.start, [this.target.x, this.target.y], pct);
             } else {
                 this.pos = [this.target.x, this.target.y];
-                var dmgDealt = this.target.takeDamage(this);
-                this.attacker.handleHit(this.target, this.leech);
-                this.handle('hit');
-                if (!this.target.isAlive()) {
-                    this.handle('kill');
-                }
-                this.handle('remove');
-                this.done = true;
+                this.hit(this.target);
             }
         },
     });

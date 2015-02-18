@@ -307,7 +307,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj"],
                 "baseMods": [
-                    {def: 'manaCost added 10', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
@@ -380,8 +380,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "spell",
                 "types": ["proj", "fire", "spell"],
                 "baseMods": [
-                    {def: 'manaCost added 1', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'speed added 50', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
                     {def: 'fireDmg added 2', type: 'dmg'},
@@ -483,6 +482,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1', type: 'dmg'},
                     {def: 'speed added 150', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 9', type:'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg gainedas 100 hpLeech', type: 'dmg'}
                 ]
@@ -940,7 +940,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "poisDmg added 5 perLevel", "type": "dmg"},
                     {"def": "poisDmg more 3 perLevel", "type": "dmg"},
                 ],
-                "slot": "chest",
+                "slot": "skill",
                 "levels": 10
             },
             "non-newtownian fluid": {
@@ -1011,7 +1011,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "precise": {
                 "mods": [
-                    {"def": "speed more -20", "type": "dmg"},
+                    {"def": "speed more 20", "type": "dmg"},
                     {"def": "physDmg more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
@@ -1091,7 +1091,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireDmg more 8", "type": "dmg"},
                     {"def": "fireDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "fireDmg gainedas -5 hpLeech", "type":"dmg"}
+                    {"def": "fireDmg gainedas 1 hpLeech", "type":"dmg"}
                 ],
                 "slot": "head",
                 "levels": 10
@@ -1290,6 +1290,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "melee", 2]],
                 "skills": ["flame cone", "lightning ball", "ice nova", "basic melee"],
                 "sourceCards": [
+                    ["proto-boss", 1],
                     ["riveted", 1],
                     ["clockwork", 1],
                     ["mecha heart", 1],
@@ -1539,7 +1540,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2, 2, 3],
-                "level": 12,
+                "level": 4,
             },
             "clockwork ruins": {
                 "choices": ["gnome", "gnome electrician", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
@@ -1547,7 +1548,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "sir mechs-a-lot",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 15,
+                "level": 7,
             },
             "aggro crag": {
                 "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
@@ -1555,7 +1556,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"flame dragon",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 10,
             },
             "hostile marsh": {
                 "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
@@ -1563,7 +1564,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"scalp collector",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 13,
             },
             "icy tunnel": {
                 "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "frow djinn"],
@@ -1571,7 +1572,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "yeti",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 16,
             },
             "gothic castle": {
                 "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
@@ -1579,7 +1580,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "shadow knight",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 19,
             },
             "demonic laboroatory": {
                 "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],

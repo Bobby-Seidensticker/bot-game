@@ -150,7 +150,7 @@
       <% if (model.flavor) { %>
       <div class="infoitem flavor"><%= model.flavor %></div>
       <% } %>
-      <% if (model.itemType == "skill") { %>
+      <% if (model.itemType == "skill" && model.equipped) { %>
       <div class="infoitem skilldmg">Total Damage: <%= model.getTotalDmg() %></div>
       <div class="infoitem skilldmg">DPS: <%= model.getDps() %></div>      
       <% } %>

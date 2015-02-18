@@ -20,8 +20,11 @@ namespace.module('bot.zone', function (exports, require) {
             this.initialize = false;
             this.hero = new HeroBody(hero);
 
+            this.attacks = new namespace.bot.attacks.AttackManager();
+
             this.nextZone = 'spooky dungeon';
             this.newZone(this.nextZone);
+
             this.messages = new ZoneMessages();
         },
 
@@ -45,7 +48,7 @@ namespace.module('bot.zone', function (exports, require) {
                         monsters.push(new MonsterBody(this.boss, this.level));
                     }
                 }
-                _.extend(this.rooms[i], {monsters: monsters, hero: undefined});
+                _.extend(this.rooms[i], {monsters: monsters, hero: undefined, attacks: []});
                 _.each(this.rooms[i].monsters, function(mon) { mon.initPos(this.rooms[i]); }, this);
             }
 
@@ -54,6 +57,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.initialized = true;
             this.hero.revive();
             this.hero.initPos(this.rooms[0]);
+            this.attacks.nextRoom(this.rooms[0]);
             gl.DirtyQueue.mark('zone:new');
         },
 
@@ -71,7 +75,7 @@ namespace.module('bot.zone', function (exports, require) {
             var width, height;
 
             var rooms = [];
-            var room, nextRoom;
+            var room;
 
             var size, pos, ent, exit, absEnt;
 
@@ -171,10 +175,13 @@ namespace.module('bot.zone', function (exports, require) {
                 room.hero = this.hero;
                 this.hero.initPos(room);
                 _.each(room.monsters, function(mon) { mon.initPos(room); });
+                this.attacks.nextRoom(this.rooms[this.heroPos]);
                 gl.DirtyQueue.mark('zone:nextRoom');
                 log.debug('now in room %d', this.heroPos);
             }
-            return this.rooms[this.heroPos];
+            var room = this.rooms[this.heroPos];
+            room.attacks = this.attacks;
+            return room;
         },
 
         atExit: function() {
@@ -204,6 +211,8 @@ namespace.module('bot.zone', function (exports, require) {
                     return;
                 }
             }
+
+            this.attacks.tick([this.livingEnemies(1), this.livingEnemies(0)]);
 
             gl.DirtyQueue.mark('zoneTick');
         },
@@ -246,7 +255,7 @@ namespace.module('bot.zone', function (exports, require) {
 
         done: function() {
             return this.roomCleared() && this.heroPos === this.rooms.length - 1;
-        }
+        },
     });
 
     var EntityBody = gl.Model.extend({
@@ -354,11 +363,11 @@ namespace.module('bot.zone', function (exports, require) {
                 _.map(livingEnemies, function(e) { return [e.x, e.y]; })
             );
 
-            this.tryAttack(livingEnemies, distances);
+            this.tryAttack(livingEnemies, distances, room);
             this.tryMove(livingEnemies, distances, room);
         },
 
-        tryAttack: function(enemies, distances) {
+        tryAttack: function(enemies, distances, room) {
             var minIndex = distances.minIndex();
             var minDist = distances[minIndex];
             // TODO: make this work:
@@ -367,7 +376,7 @@ namespace.module('bot.zone', function (exports, require) {
                     this.skills[si].coolAt <= gl.time &&           // is cool
                     this.skills[si].spec.manaCost <= this.mana &&  // has enough mana
                     this.skills[si].spec.range >= minDist) {       // is in range
-                    this.attackTarget(enemies[minIndex], this.skills[si]);
+                    this.attackTarget(enemies[minIndex], this.skills[si], room);
                     return;
                 }
             }
@@ -402,49 +411,47 @@ namespace.module('bot.zone', function (exports, require) {
             }
         },
 
-        attackTarget: function(target, skill) {
+        attackTarget: function(target, skill, room) {
             skill.coolAt = gl.time + skill.spec.speed + skill.spec.cooldownTime;
             this.takeAction(skill.spec.speed);
-            var dmgDealt = target.takeDamage(skill.spec);
-
-            if (dmgDealt) {
-                log.debug('dmg dealt, hponhit: %.2f, hpLeech: %.2f', skill.spec.hpOnHit, skill.spec.hpLeech);
-                var hpGain = skill.spec.hpOnHit + skill.spec.hpLeech;
-                var manaGain = skill.spec.manaOnHit + skill.spec.manaLeech;
-                if (hpGain) {
-                    log.info('hp on hit: %.2f, hpleech: %.2f', skill.spec.hpOnHit, skill.spec.hpLeech);
-                    this.modifyHp(hpGain);
-                }
-                if (manaGain) {
-                    log.info('mana on hit: %.2f, manaleech: %.2f', skill.spec.manaOnHit, skill.spec.manaLeech);
-                    this.modifyMana(manaGain);
-                }
-            }
-
-            if (!target.isAlive()) {
-                this.onKill(target, skill);
-                target.onDeath();
-            }
-
             this.mana -= skill.spec.manaCost;
+            room.attacks.addAttack(skill, this, target);
         },
 
-        takeDamage: function(skill) {
+        handleHit: function(target, leech) {
+            this.handleLeech(leech);
+            if (!target.isAlive()) {
+                this.onKill(target);
+                target.onDeath();
+            }
+        },
+
+        handleLeech: function(leech) {
+            if (leech.hp) {
+                this.modifyHp(leech.hp);
+            }
+            if (leech.mana) {
+                this.modifyMana(leech.mana);
+            }
+        },
+
+        takeDamage: function(attack) {
             var dodgeChance = Math.pow(0.998, this.spec.dodge);
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
-                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', [this.x, this.y], 'rgba(230, 230, 10, 0.5)', 1000));
+                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', [this.x, this.y], 'rgba(230, 230, 10, 0.7)', 1000));
                 return 0;
             }
 
-            var physDmg = skill.physDmg;
+            var dmg = attack.dmg;
+            var physDmg = dmg.physDmg;
 
             var totalDmg = physDmg * physDmg / (physDmg + this.spec.armor) +
-                skill.lightDmg * this.spec.lightResist +
-                skill.coldDmg * this.spec.coldResist +
-                skill.fireDmg * this.spec.fireResist +
-                skill.poisDmg * this.spec.poisResist;
+                dmg.lightDmg * this.spec.lightResist +
+                dmg.coldDmg * this.spec.coldResist +
+                dmg.fireDmg * this.spec.fireResist +
+                dmg.poisDmg * this.spec.poisResist;
 
             if (this.spec.team === TEAM_HERO) {
                 log.debug('Team Hero taking %.2f damage', -totalDmg);
@@ -457,7 +464,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             gl.MessageEvents.trigger(
                 'message',
-                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.5)', 500, this.height)
+                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(96, 0, 0, 0.7)', 500, this.height)
             );
             return totalDmg;
         },

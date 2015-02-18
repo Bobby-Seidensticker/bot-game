@@ -6,6 +6,7 @@ namespace.module('bot.inv', function (exports, require) {
     var utils = namespace.bot.utils;
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
+    var attacks = namespace.bot.attacks;
 
     var GearModel = gl.Model.extend({
         initialize: function() {
@@ -176,7 +177,7 @@ namespace.module('bot.inv', function (exports, require) {
             log.debug('Skill compute attrs');
 
             //remove added baseDmg amounts from spells (they can only be modified by cards on skill or by more increases)
-            if (this.class === "spell") {
+            if (this.class === 'spell') {
                 _.each(actualDmgKeys, function(dmgType) {        
                     this.dmgStats[dmgType].added = 0;
                 }, this);
@@ -216,7 +217,36 @@ namespace.module('bot.inv', function (exports, require) {
                 totalDmg += this[stat];
             }, this);
             this.disabled = totalDmg === 0;
+
+            this.leech = {hp: this.hpOnHit + this.hpLeech, mana: this.manaOnHit + this.manaLeech};
+
+            this.calcAttacks();
         },
+
+        calcAttack: function(spec, index, specs) {
+            if (spec.mods && spec.mods.length) {
+                spec.dmg = utils.applyAttackMods(this, spec.mods);
+            } else {
+                spec.dmg = utils.applyAttackMods(this, []);
+            }
+            spec.speed = this.speed;
+            spec.leech = this.leech;
+            var arrs = ['onHit', 'onKill', 'onRemove'];
+            _.each(arrs, function(arr) {
+                if (spec[arr] && spec[arr].length) {
+                    _.each(spec[arr], this.calcAttack, this);
+                }
+            }, this);
+        },
+
+        calcAttacks: function() {
+            this.specs = $.extend({}, this.specs);
+            _.each(this.specs, this.calcAttack, this);
+        },
+
+        getAttacks: function(attacker, target) {
+            return attacks.genAttacks(this, attacker, target);
+        }
     });
 
     var Skillchain = gl.Model.extend({

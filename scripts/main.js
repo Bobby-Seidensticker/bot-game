@@ -150,7 +150,9 @@ namespace.module('bot.main', function (exports, require) {
             if (this.running) {
                 var incBy;
                 while (dt > 0) {
-                    var maxStep = this.zone.maxStep();
+                    // If this functionality is to be retained, zone.maxStep will need to be modified to accomidate projectiles
+                    // var maxStep = this.zone.maxStep();
+                    var maxStep = 0;
                     if (maxStep <= 0) {
                         if (dt >= STEP_SIZE) {
                             incBy = STEP_SIZE;

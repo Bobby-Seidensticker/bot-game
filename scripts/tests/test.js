@@ -25,7 +25,20 @@ namespace.module('bot.test', function (exports, require) {
         log.info('onReady');
 
         var gameModel = new main.GameModel();
-        //console.log('gameModel', gameModel);
+
+        console.time('shit');
+        var hit = namespace.bot.vector.hit;
+        var x;
+        for (var i = 0; i < 1000; i++) {
+            for (var j = 0; j < 1000; j++) {
+                x = hit([0, 0], [i, j], [10, 10], 1, 0);
+            }
+        }
+        console.timeEnd('shit');
+
+        namespace.bot.vector.hit([2, 2], [5, 5], [4, 4.5], .25, .25);
+        namespace.bot.vector.hit([0, 0], [2, 0], [1, 1], 1, 0);
+        namespace.bot.vector.hit([0, 0], [2, 0], [1, .999], 1, 0);
 
         QUnit.test('gameModel initialized', function(assert) {
             assert.ok(gameModel.hero, 'initialized with hero');

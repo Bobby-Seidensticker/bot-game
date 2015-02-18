@@ -88,7 +88,7 @@ namespace.module('bot.vis', function (exports, require) {
         return [c0 - c1 + vvs.diff[0], (c0 + c1) / 2 - SIZE / 2 + vvs.diff[1]];
     }
 
-    var BackgroundTiles = window.Model.extend({
+    var BackgroundTiles = gl.Model.extend({
         initialize: function(filename, canvasSize, imgSize, scale) {
             this.canvas = document.createElement('canvas');
             this.img = new Image();
@@ -280,6 +280,14 @@ namespace.module('bot.vis', function (exports, require) {
                 pos = transpose(exit);
                 pos[1] -= 5;
                 circle(ctx, pos, '#0f0', 5, true);
+            }
+
+            var atk;
+            for (var i = 0; i < this.zone.attacks.attacks.length; i++) {
+                atk = this.zone.attacks.attacks[i];
+                pos = transpose(atk.pos)
+                pos[1] -= 5;
+                circle(ctx, pos, '#f00', 5, true);
             }
 
             return this;

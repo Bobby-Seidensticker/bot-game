@@ -31,6 +31,14 @@ namespace.module('bot.vector', function (exports, require) {
         return [Math.round(cur[0] + diff[0] * ratio), Math.round(cur[1] + diff[1] * ratio)];
     }
 
+    function pctCloser(start, end, pct) {
+        var res = [
+            Math.round(start[0] + (end[0] - start[0]) * pct),
+            Math.round(start[1] + (end[1] - start[1]) * pct),
+        ];
+        return res;
+    }
+
     function sum(a, b) {
         return [a[0] + b[0], a[1] + b[1]];
     }
@@ -39,13 +47,56 @@ namespace.module('bot.vector', function (exports, require) {
         return [a[0] - b[0], a[1] - b[1]];
     }
 
+    function hit(start, end, target, trad, prad) {
+        var rad = trad + prad;
+        var pvect = sub(end, start);
+        var tvect = sub(target, start);
+
+        //console.log('from', start, 'to', end);
+        //console.log('hitting target', target, 'with combined radius of', rad);
+
+        var pangle = Math.atan(pvect[1] / pvect[0]);
+        var tangle = Math.atan(tvect[1] / tvect[0]);
+
+        var adiff = Math.abs(tangle - pangle);
+        var psdist = Math.hypot(start[0] - target[0], start[1] - target[1]);//dist(start, target);
+        //var psdist = dist(start, target);
+
+        //console.log('angle diff', adiff, 'pstart to target dist', psdist);
+
+        var closest = Math.sin(adiff) * psdist;
+
+        if (closest < rad) {
+            //console.log('closest is', closest, 'hit!');
+            return true;
+        } else {
+            //console.log('closest is', closest, 'miss.');
+            return false;
+        }
+    }
+
+    function velocity(start, end, speed) {
+        var s = sub(end, start);
+        var fact = speed / dist(end, start);
+        return [s[0] * fact, s[1] * fact];
+    }
+
+    function meleeVelocity(start, end, dt) {
+        var s = sub(end, start);
+        return [s[0] / dt, s[1] / dt];
+    }
+
     exports.extend({
         getDistances: getDistances,
         dist: dist,
         equal: equal,
         closer: closer,
+        pctCloser: pctCloser,
         sum: sum,
-        sub: sub
+        sub: sub,
+        hit: hit,
+        velocity: velocity,
+        meleeVelocity: meleeVelocity
     });
 });
 
@@ -237,6 +288,20 @@ namespace.module('bot.utils', function (exports, require) {
         }
     }
 
+    function applyAttackMods(dmg, mods) {
+        var adk = namespace.bot.entity.actualDmgKeys;
+        var result = {};
+        var i;
+        for (i = adk.length; i--;) {
+            result[adk[i]] = dmg[adk[i]];
+        }
+        for (i = mods.length; i--;) {
+            var split = mods[i].split(' ');
+            result[split[0]] *= (parseInt(split[2], 10) + 100) / 100;
+        }
+        return result;
+    }
+
     // rename this to getItemMods
     function expandSourceItem(itemType, type, itemLevel, classLevel) {
         itemLevel = parseInt(itemLevel);  //ensure itemLevel is num not string
@@ -264,7 +329,8 @@ namespace.module('bot.utils', function (exports, require) {
         addAllMods: addAllMods,
         addMod: addMod,
         computeStat: computeStat,
-        firstCap: firstCap
+        firstCap: firstCap,
+        applyAttackMods: applyAttackMods
     });
 
 });

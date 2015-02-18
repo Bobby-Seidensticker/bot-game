@@ -305,7 +305,7 @@ namespace.module('bot.vis', function (exports, require) {
         height = body.height;
         width = body.width;
         ctx.lineCap = 'round';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = body.lineWidth;;
         
         //head
         circle(ctx, [coords[0], coords[1] - height * 11 / 14], color, height / 7);

@@ -572,6 +572,9 @@ namespace.module('bot.itemref', function (exports, require) {
             }, 
             "proto-boss": {
                 "mods": [
+                    {"def": "lineWidth added 1", "type": "vis"},
+                    {"def": "width more 100", "type": "vis"},
+                    {"def": "height more 100", "type": "vis"},                                        
                     {"def": "physDmg more 100", "type": "dmg"},
                     {"def": "maxHp more 1000", "type": "def"}
                 ],
@@ -627,6 +630,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },            
             "six pack": {
                 "mods": [
+                    {"def": "lineWidth added 1", "type": "vis"},                                        
                     {"def": "armor added 8 perLevel", "type": "def"}
                 ],
                 "slot": "chest",
@@ -817,8 +821,10 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "small stature": {
                 "mods": [
-                    //TODO{"def": "height more -20", "type": "def"},
+                    {"def": "height more -30", "type": "vis"},
+                    {"def": "width more -30", "type": "vis"},
                     {"def": "moveSpeed more 3 perLevel", "type": "def"},
+                    {"def": "dodge more 3 perLevel", "type": "def"},                    
                 ],
                 "slot": "chest",
                 "levels": 10
@@ -854,8 +860,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "hands",
                 "levels": 10
             },
-            "riveted": {
+            "riveted": {               
                 "mods": [
+                    {"def": "lineWidth added 1", "type": "vis"},                    
                     {"def": "armor more 5 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
@@ -871,6 +878,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "mecha heart": {
                 "mods": [
+                    {"def": "lineWidth added 1", "type": "vis"},                    
                     {"def": "maxHp added 5 perLevel", "type": "def"},
                     {"def": "hpRegen added 2 perLevel", "type": "def"},
                 ],
@@ -952,7 +960,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "big": {
                 "mods": [
-                    // TODO add vis stuff height + width
+                    {"def": "height more 30", "type": "vis"},
+                    {"def": "width more 30", "type": "vis"},                    
                     {"def": "maxHp added 10 perLevel", "type": "def"},
                     {"def": "maxHp more 2 perLevel", "type": "def"},
                 ],
@@ -961,7 +970,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "buff": {
                 "mods": [
-                    //todo add width vis
+                    {"def": "width more 30", "type": "vis"},
+                    {"def": "lineWidth added 1", "type": "vis"},
                     {"def": "strength added 5 perLevel", "type": "def"},
                     {"def": "meleeDmg more 3 perLevel", "type": "dmg"},
                     {"def": "rangeDmg more 3 perLevel", "type": "dmg"},                    

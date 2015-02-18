@@ -255,6 +255,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             this.height = this.spec.height ? this.spec.height : 50;
             this.width = this.spec.width ? this.spec.width : 15;
+            this.lineWidth = this.spec.lineWidth ? this.spec.lineWidth : 15;
 
             this.createSkillchain();
             this.revive();

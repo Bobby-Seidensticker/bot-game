@@ -221,6 +221,7 @@ namespace.module('bot.views', function (exports, require) {
             this.listenTo(gl.UIEvents, 'mouseout', this.hide);
 
             this.listenTo(gl.DirtyListener, 'footer:buttons', this.hide);
+            this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
         },
 
         show: function(view) {

@@ -160,6 +160,14 @@ namespace.module('bot.utils', function (exports, require) {
         return res;
     }
 
+    function prettifyPerLvlMods(mods) {
+        mods = _.filter(mods, function(mod) {
+            var spl = mod.def.split(' ');
+            return spl[spl.length-1] == "perLevel";
+        });
+        return prettifyMods(mods, 1);
+    }
+
     function flattenSameMods(mods) {
         var fin = [];
         _.each(mods, function(mod) {
@@ -269,6 +277,7 @@ namespace.module('bot.utils', function (exports, require) {
         expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
         prettifyMods: prettifyMods,
+        prettifyPerLvlMods: prettifyPerLvlMods,        
         //addAllCards: addAllCards,
         addAllMods: addAllMods,
         addMod: addMod,

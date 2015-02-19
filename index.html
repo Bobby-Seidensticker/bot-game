@@ -137,6 +137,10 @@
         <% _.each(namespace.bot.utils.prettifyMods(model.baseMods, model.level), function(modstr) { %>
           <div class="mod"><%= modstr %></div>
         <% }); %>
+        <div class="infoitem">Next Level: </div>
+        <% _.each(namespace.bot.utils.prettifyPerLvlMods(model.baseMods), function(modstr) {%>
+        <div class="perLvlMod"><%= modstr %></div>
+        <% }); %>
         </div>
       <% } else { %>
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
@@ -148,6 +152,10 @@
         <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(modstr) {%>
           <div class="mod"><%= modstr %></div>
          <% }); %>
+          <div class="infoitem">Next Level: </div>
+          <% _.each(namespace.bot.utils.prettifyPerLvlMods(model.mods, level), function(modstr) {%>
+          <div class="perLvlMod"><%= modstr %></div>
+          <% }); %>
         </div>
       <% } %>
       <% if (model.flavor) { %>

@@ -260,10 +260,6 @@ namespace.module('bot.zone', function (exports, require) {
         initialize: function(spec) {
             this.spec = spec;
 
-            this.height = this.spec.height ? this.spec.height : 50;
-            this.width = this.spec.width ? this.spec.width : 15;
-            this.lineWidth = this.spec.lineWidth ? this.spec.lineWidth : 15;
-
             this.createSkillchain();
             this.revive();
             this.pos = new Point(0, 0);
@@ -279,6 +275,7 @@ namespace.module('bot.zone', function (exports, require) {
         revive: function() {
             this.hasMoved = false;
 
+            this.takeAction(0);
             this.hp = this.spec.maxHp;
             this.mana = this.spec.maxMana;
             this.lastHpFullTime = gl.time;
@@ -453,7 +450,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             gl.MessageEvents.trigger(
                 'message',
-                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', this.pos, 'rgba(190, 0, 0, 1)', 500, this.height)
+                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', this.pos, 'rgba(190, 0, 0, 1)', 500, this.spec.height)
             );
             return totalDmg;
         },
@@ -524,7 +521,7 @@ namespace.module('bot.zone', function (exports, require) {
                         dropStr = drop.dropType + ": " + drop.name;
                         gl.MessageEvents.trigger(
                             'message',
-                            newZoneMessage(dropStr, 'dmg', target.pos, 'rgba(255, 100, 0, 0.8)', 1000, target.height / 2 + index * 20)
+                            newZoneMessage(dropStr, 'dmg', target.pos, 'rgba(255, 100, 0, 0.8)', 1000, target.spec.height / 2 + index * 20)
                         );
                         return true;
                     }                        

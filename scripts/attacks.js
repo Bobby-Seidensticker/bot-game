@@ -131,6 +131,8 @@ namespace.module('bot.attacks', function (exports, require) {
             this.attacker = attacker;
             this.target = target;
 
+            this.radius = spec.radius ? spec.radius : Math.pow(2, 16);
+
             this.start = attacker.pos.clone();
             this.pos = attacker.pos.clone();
             this.end = target.pos.clone();
@@ -138,6 +140,10 @@ namespace.module('bot.attacks', function (exports, require) {
 
             this.curTime = gl.time;
             this.fireTime = gl.time + spec.speed / 2;
+
+            this.z = attacker.spec.height / 2;
+            this.color = spec.color ? spec.color : '#fff';
+
             log.debug('projectile created, pos: %s, end: %s', this.pos, this.end);
         },
 
@@ -149,7 +155,7 @@ namespace.module('bot.attacks', function (exports, require) {
             var nextPos = this.start.pctCloser(this.end, elapsedTime / this.travelTime);
 
             for (var i = 0; i < enemies.length; i++) {
-                var didHit = vu.hit(this.pos, nextPos, enemies[i].pos, 200, 200);
+                var didHit = vu.hit(this.pos, nextPos, enemies[i].pos, enemies[i].spec.width, this.radius);
                 if (didHit) {
                     log.debug('projectile hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
                     this.hit(enemies[i]);
@@ -177,6 +183,9 @@ namespace.module('bot.attacks', function (exports, require) {
             this.startTime = gl.time;
             this.endTime = gl.time + spec.speed / 2;
             this.totalTime = spec.speed / 2;
+
+            this.z = attacker.spec.height / 2;
+            this.color = spec.color ? spec.color : '#fff';
         },
 
         tick: function() {

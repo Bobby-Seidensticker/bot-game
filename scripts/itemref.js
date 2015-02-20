@@ -222,8 +222,6 @@ namespace.module('bot.itemref', function (exports, require) {
             }
         },
 
-
-
         "skill": {
             "basic": {
             },
@@ -231,7 +229,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "melee",
                 "types": ["melee"],
-                "specs": [{ type: 'melee', mods: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'melee', radius: 10000, color: '#777', mods: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
@@ -242,7 +240,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', radius: 10000, rate: 1000, mods: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 1000, mods: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -253,7 +251,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "spell",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', radius: 10000, rate: 1000, mods: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 1000, mods: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},

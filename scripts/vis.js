@@ -261,17 +261,21 @@ namespace.module('bot.vis', function (exports, require) {
                 circle(ctx, pos, '#0f0', 5, true);
             }
 
-            var atk;
-            for (var i = 0; i < this.zone.attacks.attacks.length; i++) {
-                atk = this.zone.attacks.attacks[i];
-                pos = transpose(atk.pos)
-                pos.y -= 5;
-                circle(ctx, pos, '#f00', 5, true);
-            }
+            drawAttacks(ctx, this.zone.attacks.attacks);
 
             return this;
         },
     });
+
+    function drawAttacks(ctx, attacks) {
+        var atk;
+        for (var i = 0; i < attacks.length; i++) {
+            atk = attacks[i];
+            pos = transpose(atk.pos)
+            pos.y -= attacks[i].z * vvs.ratio;
+            circle(ctx, pos, atk.color, atk.radius * vvs.ratio, true);
+        }
+    }
 
     function drawMessages(ctx, msgs) {
         _.each(msgs, function(msg) {
@@ -281,7 +285,7 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.font = '12px Source Code Pro';
             var pos = transpose(msg.pos)
             if (msg.verticalOffset) {
-                pos.y -= msg.verticalOffset;
+                pos.y -= msg.verticalOffset * vvs.ratio;
             }
             ctx.fillText(msg.text, pos.x, pos.y - (gl.time - msg.time) / msg.lifespan * 20);
         });
@@ -290,10 +294,10 @@ namespace.module('bot.vis', function (exports, require) {
     function drawBody(ctx, body, color) {
         var coords = transpose(body.pos);
         var p;
-        height = body.height;
-        width = body.width;
+        height = body.spec.height * vvs.ratio;
+        width = body.spec.width * vvs.ratio;
         ctx.lineCap = 'round';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = body.spec.lineWidth * vvs.ratio;
 
         // head
         circle(ctx, coords.sub(new Point(0, height * 11 / 14)), color, height / 7);
@@ -315,23 +319,34 @@ namespace.module('bot.vis', function (exports, require) {
               coords.sub(new Point(width / 2 * (10 - legFrame) / 10, 0))
              );
 
-        //arms
-        var rArmFrame = 0; // valid values 0 to 10
-        var lArmFrame = 0;
-        
+        // arms
+        var rArm;
+        var lArm;
+
         if (body.busy()) {
-            rArmFrame = Math.abs(Math.floor(gl.time % 500 / 25) - 10);
-            lArmFrame = Math.abs(Math.floor((gl.time + 111) % 500 / 25) - 10);
+            var ra = ((body.nextAction - gl.time) / body.lastDuration + .1) * 1.3 * Math.PI * 2;
+            var mra = Math.PI / 4 * Math.sin(ra);
+
+            var la = ((body.nextAction - gl.time) / body.lastDuration) * Math.PI * 2;
+            var mla = Math.PI / 4 * Math.sin(la);
+
+            rArm = new Point(Math.cos(mra) * width / 2, Math.sin(mra) * width / 2);
+            lArm = new Point(Math.cos(mla + Math.PI) * width / 2, Math.sin(mla + Math.PI) * width / 2);
+        } else {
+            rArm = new Point(width / 2, 0);
+            lArm = new Point(-width / 2, 0);
         }
 
+        var armBase = coords.sub(new Point(0, height / 2));
+
         lines(ctx,
-              coords.sub(new Point(0, height / 2)),
-              coords.add(new Point(width / 2, -(height / 2 + (1 - (2 * rArmFrame / 10)) * height / 4)))
+              armBase,
+              armBase.add(rArm)
              );
 
         lines(ctx,
-              coords.sub(new Point(0, height / 2)),
-              coords.sub(new Point(width / 2, (height / 2 + (1 - (2 * lArmFrame / 10)) * height / 4)))
+              armBase,
+              armBase.add(lArm)
              );
 
         ctx.stroke();        

@@ -1010,9 +1010,9 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "simple minded": {
                 "mods": [
-                    {"def": "spellDmg more -50", "type": "dmg"},
+                    {"def": "spellDmg added -30", "type": "dmg"},
                     {"def": "strength more 2 perLevel", "type": "def"},
-                    {"def": "meleeDmg more 3 perLevel", "type": "dmg"},
+                    {"def": "meleeDmg added 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "head",
                 "levels": 10

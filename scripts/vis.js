@@ -206,6 +206,10 @@ namespace.module('bot.vis', function (exports, require) {
         },
     });
 
+    /*function BodyWrapper(body) {
+        this.body = body;
+    }*/
+
     var EntityView = Backbone.View.extend({
         tagName: 'canvas',
         className: 'entity',
@@ -216,6 +220,8 @@ namespace.module('bot.vis', function (exports, require) {
 
             this.resize();
             this.listenTo(gl.DirtyListener, 'tick', this.render);
+            this.tempCanvas = document.createElement('canvas');
+            this.tctx = this.tempCanvas.getContext('2d');
         },
 
         resize: function() {
@@ -241,18 +247,16 @@ namespace.module('bot.vis', function (exports, require) {
             var mons = this.zone.liveMons();
 
             _.each(mons, function(mon) {
-                drawBody(ctx, mon, 'rgba(240, 20, 30, 1)');
+                drawBody(ctx, mon, 'rgba(240, 20, 30, 1)', this.tempCanvas);
             }, this);
 
             // draw hero
-            drawBody(ctx, this.zone.hero, 'rgba(0, 150, 240, 1)');
-
-            drawMessages(ctx, msgs);
+            drawBody(ctx, this.zone.hero, 'rgba(0, 150, 240, 1)', this.tempCanvas);
 
             var pos;
             pos = transpose(this.zone.getCurrentRoom().ent)
-            pos.y -= 5;
-            circle(ctx, pos, '#f00', 5, true);
+            pos.y -= 2;
+            circle(ctx, pos, '#f00', 2, true);
 
             var exit = this.zone.getCurrentRoom().exit;
             if (exit) {
@@ -262,6 +266,10 @@ namespace.module('bot.vis', function (exports, require) {
             }
 
             drawAttacks(ctx, this.zone.attacks.attacks);
+
+
+
+            drawMessages(ctx, msgs);
 
             return this;
         },
@@ -291,16 +299,27 @@ namespace.module('bot.vis', function (exports, require) {
         });
     }
 
-    function drawBody(ctx, body, color) {
+    function drawBody(ctx, body, color, tempCanvas) {
         var coords = transpose(body.pos);
         var p;
-        height = body.spec.height * vvs.ratio;
-        width = body.spec.width * vvs.ratio;
+        var height = body.spec.height * vvs.ratio;
+        var width = body.spec.width * vvs.ratio;
         ctx.lineCap = 'round';
         ctx.lineWidth = body.spec.lineWidth * vvs.ratio;
 
+        height *= 3 / 4
+
+        var headPos = new Point(0, height * 67 / 72);
+        var headSize = height * 10 / 72;
+        var crotch = new Point(0, height * 23 / 72);
+        var legSize = height * 23 / 72;
+        var armPos = new Point(0, height * 45 / 72);
+        var armSize = height * 28 / 72;
+        var bodyPos = [headPos, new Point(0, legSize)]; 
+
         // head
-        circle(ctx, coords.sub(new Point(0, height * 11 / 14)), color, height / 7);
+        circle(ctx, coords.sub(headPos), color, headSize, true);
+        //isoCircle(ctx, coords.sub(headPos), color, headSize, headSize, true);
 
         // draw body, legs
         var legFrame = 0;
@@ -309,13 +328,13 @@ namespace.module('bot.vis', function (exports, require) {
         }
         ctx.beginPath();
         lines(ctx,
-              coords.sub(new Point(0, height * 9 / 14)),
-              coords.sub(new Point(0, height * 3 / 14)),
+              coords.sub(bodyPos[0]),
+              coords.sub(bodyPos[1]),
               coords.add(new Point(width / 2 * (10 - legFrame) / 10, 0))
              );
 
         lines(ctx,
-              coords.sub(new Point(0, height * 3 / 14)),
+              coords.sub(bodyPos[1]),
               coords.sub(new Point(width / 2 * (10 - legFrame) / 10, 0))
              );
 
@@ -337,7 +356,7 @@ namespace.module('bot.vis', function (exports, require) {
             lArm = new Point(-width / 2, 0);
         }
 
-        var armBase = coords.sub(new Point(0, height / 2));
+        var armBase = coords.sub(armPos);
 
         lines(ctx,
               armBase,
@@ -351,15 +370,11 @@ namespace.module('bot.vis', function (exports, require) {
 
         ctx.stroke();        
 
-        ctx.lineWidth = 1;
-        
-        // draw name
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        ctx.font = '14px Source Code Pro';
-        ctx.fillStyle = color;
-        ctx.fillText(body.spec.name, coords.x, coords.y + 10);
+        drawNameHealth(ctx, tempCanvas, body.spec.name, coords.sub(new Point(0, height)), body.hp / body.spec.maxHp);
 
+
+        /*
+        ctx.lineWidth = 1;
         //HP fill
         var hpCoords = coords.add(new Point(-15, -10 - height));
         var pctHp = body.hp / body.spec.maxHp;
@@ -371,7 +386,7 @@ namespace.module('bot.vis', function (exports, require) {
         ctx.strokeStyle = 'black';
         ctx.rect(hpCoords.x, hpCoords.y, 30, 5);
         ctx.closePath();
-        ctx.stroke();
+        ctx.stroke();*/
     }
 
     function lines(ctx, p) {
@@ -381,6 +396,33 @@ namespace.module('bot.vis', function (exports, require) {
         for (var i = 2; i < arguments.length; i++) {
             ctx.lineTo(arguments[i].x, arguments[i].y);
         }
+    }
+
+    function drawNameHealth(ctx, tcanvas, text, pos, hpPct) {
+        text = text.toUpperCase();
+
+        var fontHeight = Math.floor(vvs.ratio * 17000);
+
+        ctx.fillStyle = '#111';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.font = fontHeight + 'px Source Code Pro';
+        ctx.fillText(text, pos.x, pos.y - fontHeight * 1.75);
+
+        var tctx = tcanvas.getContext('2d');
+
+        var textWidth = tctx.measureText(text).width;
+
+        tctx.clearRect(0, 0, textWidth, fontHeight);
+
+        tctx.fillStyle = '#e12';
+        tctx.textAlign = 'left';
+        tctx.textBaseline = 'top';
+        tctx.font = fontHeight + 'px Source Code Pro';
+        tctx.fillText(text, 0, 0);
+
+        tctx.clearRect(textWidth * hpPct, 0, textWidth, fontHeight);
+        ctx.drawImage(tcanvas, 0, 0, textWidth, fontHeight, pos.x - textWidth / 2, pos.y - fontHeight * 1.75, textWidth, fontHeight);
     }
 
     function circle(ctx, pos, color, radius, fill) {
@@ -393,6 +435,39 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.fillStyle = color;
             ctx.fill();
         }
+    }
+
+    function isoCircle(ctx, pos, color, width, height, fill) {
+        ctx.strokeStyle = color;
+        drawEllipseByCenter(ctx, pos.x, pos.y, width * 2, height * 2);
+        ctx.closePath();
+        if (fill) {
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+    }
+
+    function drawEllipseByCenter(ctx, cx, cy, w, h) {
+        drawEllipse(ctx, cx - w/2.0, cy - h/2.0, w, h);
+    }
+
+    function drawEllipse(ctx, x, y, w, h) {
+        var kappa = .5522848,
+        ox = (w / 2) * kappa, // control point offset horizontal
+        oy = (h / 2) * kappa, // control point offset vertical
+        xe = x + w,           // x-end
+        ye = y + h,           // y-end
+        xm = x + w / 2,       // x-middle
+        ym = y + h / 2;       // y-middle
+
+        ctx.beginPath();
+        ctx.moveTo(x, ym);
+        ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+        ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+        ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+        ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+        //ctx.closePath(); // not used correctly, see comments (use to close off open path)
+        ctx.stroke();
     }
 
     exports.extend({

@@ -109,9 +109,9 @@ namespace.module('bot.entity', function (exports, require) {
 
                 {def: 'moveSpeed added 300', type: 'def'},
 
-                {def: 'height added 70000', type:'vis'},
-                {def: 'width added 25000', type:'vis'},
-                {def: 'lineWidth added 2500', type:'vis'},
+                {def: 'height added 100000', type: 'vis'},
+                {def: 'width added 30000', type: 'vis'},
+                {def: 'lineWidth added 3000', type: 'vis'},
                 
                 //TODO - add str/dex/wis attacktype bonuses here once impemented
                 //{def: 'strength gainedas 1 meleeDmg', type: 'dmg'},
@@ -122,10 +122,6 @@ namespace.module('bot.entity', function (exports, require) {
 
                 {def: 'maxHp added 10 perLevel', type: 'def'},
                 {def: 'maxMana added 5 perLevel', type: 'def'},
-                //{def: 'maxHp gainedas 2 hpRegen', type: 'def'},
-
-                //{def: 'physDmg gainedas 100 hpOnHit', type: 'dmg'},
-                //{def: 'physDmg gainedas 10 hpLeech', type: 'dmg'},
 
                 {def: 'maxMana gainedas 2 manaRegen', type: 'def'}
             ];

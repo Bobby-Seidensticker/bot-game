@@ -138,7 +138,6 @@ namespace.module('bot.attacks', function (exports, require) {
             this.end = target.pos.clone();
             this.travelTime = this.start.dist(this.end) / this.rate;
 
-            this.curTime = gl.time;
             this.fireTime = gl.time + spec.speed / 2;
 
             this.z = attacker.spec.height / 2;

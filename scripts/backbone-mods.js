@@ -1,3 +1,5 @@
+// TODO wrap this in a closure
+
 var Model = gl.Model = function() {
     this.id = _.uniqueId('m');
     this.initialize.apply(this, arguments);

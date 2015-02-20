@@ -31,6 +31,14 @@ namespace.module('bot.vector', function (exports, require) {
         return [Math.round(cur[0] + diff[0] * ratio), Math.round(cur[1] + diff[1] * ratio)];
     }
 
+    function pctCloser(start, end, pct) {
+        var res = [
+            Math.round(start[0] + (end[0] - start[0]) * pct),
+            Math.round(start[1] + (end[1] - start[1]) * pct),
+        ];
+        return res;
+    }
+
     function sum(a, b) {
         return [a[0] + b[0], a[1] + b[1]];
     }
@@ -39,13 +47,213 @@ namespace.module('bot.vector', function (exports, require) {
         return [a[0] - b[0], a[1] - b[1]];
     }
 
+    function hit(start, end, target, trad, prad) {
+        var rad = trad + prad;
+        var pvect = sub(end, start);
+        var tvect = sub(target, start);
+
+        //console.log('from', start, 'to', end);
+        //console.log('hitting target', target, 'with combined radius of', rad);
+
+        var pangle = Math.atan(pvect[1] / pvect[0]);
+        var tangle = Math.atan(tvect[1] / tvect[0]);
+
+        var adiff = tangle - pangle;
+        var psdist = Math.hypot(start[0] - target[0], start[1] - target[1]);//dist(start, target);
+        //var psdist = dist(start, target);
+
+        //console.log('angle diff', adiff, 'pstart to target dist', psdist);
+
+        var closest = Math.sin(adiff) * psdist;
+
+        if (Math.abs(closest) < rad) {
+            //console.log('closest is', closest, 'hit!');
+            return true;
+        } else {
+            //console.log('closest is', closest, 'miss.');
+            return false;
+        }
+    }
+
+    function velocity(start, end, speed) {
+        var s = sub(end, start);
+        var fact = speed / dist(end, start);
+        return [s[0] * fact, s[1] * fact];
+    }
+
+    function meleeVelocity(start, end, dt) {
+        var s = sub(end, start);
+        return [s[0] / dt, s[1] / dt];
+    }
+
     exports.extend({
         getDistances: getDistances,
         dist: dist,
         equal: equal,
         closer: closer,
+        pctCloser: pctCloser,
         sum: sum,
-        sub: sub
+        sub: sub,
+        hit: hit,
+        velocity: velocity,
+        meleeVelocity: meleeVelocity
+    });
+});
+
+namespace.module('bot.vectorutils', function (exports, require) {
+    var PI = Math.PI;
+    var TAU = Math.PI * 2;
+
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    Point.prototype.clone = function() {
+        return new Point(this.x, this.y);
+    }
+
+    Point.prototype.add = function(p) {
+        return new Point(this.x + p.x, this.y + p.y);
+    }
+
+    Point.prototype.dadd = function(p) {
+        this.x += p.x;
+        this.y += p.y;
+        return this;
+    }
+
+    Point.prototype.sub = function(p) {
+        return new Point(this.x - p.x, this.y - p.y);
+    }
+
+    Point.prototype.dsub = function(p) {
+        this.x -= p.x;
+        this.y -= p.y;
+        return this;
+    }
+
+    Point.prototype.flip = function() {
+        return new Point(this.y, this.x);
+    }
+
+    Point.prototype.dflip = function() {
+        var t = this.x;
+        this.x = this.y;
+        this.y = t;
+        return this;
+    }
+
+    Point.prototype.mult = function(scalar) {
+        return new Point(Math.round(this.x * scalar), Math.round(this.y * scalar));
+    }
+
+    Point.prototype.rawMult = function(scalar) {
+        return new Point(Math.round(this.x * scalar), Math.round(this.y * scalar));
+    }
+
+    Point.prototype.dmult = function(scalar) {
+        this.x = Math.round(this.x * scalar);
+        this.y = Math.round(this.y * scalar);
+        return this;
+    }
+
+    Point.prototype.dist = function(p) {
+        return Math.round(Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2)));
+    }
+
+    Point.prototype.len = function() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+
+    Point.prototype.len2 = function() {
+        return this.x * this.x + this.y * this.y;
+    }
+
+    Point.prototype.rawDist = function(p) {
+        return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
+    }
+
+    Point.prototype.equal = function(p) {
+        return this.x == p.x && this.y == p.y;
+    }
+
+    Point.prototype.angle = function() {
+        return Math.atan2(this.y, this.x);
+    }
+
+    Point.prototype.velocity = function(end, rate) {
+        var res = end.sub(this);
+        var fact = rate / end.rawDist(start);
+        res.dmult(fact);
+        return res;
+    }
+
+    Point.prototype.closer = function(dest, rate, stop) {
+        var diff = dest.sub(this);
+        var distance = this.dist(dest);
+        if (distance - rate < stop) {
+            rate = distance - stop;
+        }
+        var ratio = 1 - (distance - rate) / distance;
+        diff.dmult(ratio);
+        return this.add(diff);
+    }
+
+    Point.prototype.pctCloser = function(dest, pct) {
+        return this.add(dest.sub(this).mult(pct));
+    }
+
+    Point.prototype.toIso = function() {
+        return new Point(this.x - this.y, (this.x + this.y) / 2);
+    }
+
+    Point.prototype.toString = function() {
+        return '(' + this.x + ', ' + this.y + ')';
+    }
+
+    Point.prototype.dot = function(v) {
+        return this.x * v.x + this.y * v.y;
+    }
+
+    function hit(s, e, t, r1, r2) {
+        var r = r1 + r2;
+        var r2 = r * r;
+
+        var st = t.sub(s);
+        var et = t.sub(e);
+        var se = e.sub(s);
+
+        if (st.len2() < r2 || et.len2() < r2) {
+            return true;
+        }
+
+        var sd = st.dot(se);
+        var ed = et.dot(se);
+
+        if (sd < 0 || ed > 0) {
+            return false;
+        }
+
+        var closest = Math.sin(Math.acos(sd / (st.len() * se.len()))) * st.len();
+        if (closest <= r) {
+            return true;
+        }
+        return false;
+    }
+
+    function degrees(x) {
+        return x / Math.PI * 180;
+    }
+
+    function getDistances(p1, p2s) {
+        return _.map(p2s, function(p2) { return p1.dist(p2); });
+    }
+
+    exports.extend({
+        Point: Point,
+        hit: hit,
+        getDistances: getDistances
     });
 });
 
@@ -254,6 +462,20 @@ namespace.module('bot.utils', function (exports, require) {
         }
     }
 
+    function applyAttackMods(dmg, mods) {
+        var adk = namespace.bot.entity.actualDmgKeys;
+        var result = {};
+        var i;
+        for (i = adk.length; i--;) {
+            result[adk[i]] = dmg[adk[i]];
+        }
+        for (i = mods.length; i--;) {
+            var split = mods[i].split(' ');
+            result[split[0]] *= (parseInt(split[2], 10) + 100) / 100;
+        }
+        return result;
+    }
+
     // rename this to getItemMods
     function expandSourceItem(itemType, type, itemLevel, classLevel) {
         itemLevel = parseInt(itemLevel);  //ensure itemLevel is num not string
@@ -282,7 +504,8 @@ namespace.module('bot.utils', function (exports, require) {
         addAllMods: addAllMods,
         addMod: addMod,
         computeStat: computeStat,
-        firstCap: firstCap
+        firstCap: firstCap,
+        applyAttackMods: applyAttackMods
     });
 
 });

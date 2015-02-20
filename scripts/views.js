@@ -3,6 +3,8 @@ namespace.module('bot.views', function (exports, require) {
     var log = namespace.bot.log;
     var entity = namespace.bot.entity;
     var VisView = namespace.bot.vis.VisView;
+    var vu = namespace.bot.vectorutils;
+    var Point = vu.Point;
 
     var GameView = Backbone.View.extend({
         el: $('body'),
@@ -46,10 +48,10 @@ namespace.module('bot.views', function (exports, require) {
                 right = 0;
             }
 
-            return [
+            return new Point(
                 (window.innerWidth - left - right) / 2 + left,
                 (window.innerHeight - 155) / 2
-            ];
+            );
         },
     });
 
@@ -167,12 +169,12 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         resize: function() {
-            var size = [window.innerWidth, window.innerHeight - 155];
+            var size = new Point(window.innerWidth, window.innerHeight - 155);
             this.$el.css({
-                height: size[1]
+                height: size.y
             });
             this.$('.holder').css({
-                height: size[1]
+                height: size.y
             });
         },
 
@@ -366,10 +368,10 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         resize: function() {
-            var size = [window.innerWidth, window.innerHeight - 155];
+            var size = new Point(window.innerWidth, window.innerHeight - 155);
             this.$el.css({
-                left: size[0] - 405,
-                height: size[1]
+                left: size.x - 405,
+                height: size.y
             });
         },
 
@@ -591,10 +593,10 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         resize: function() {
-            var size = [window.innerWidth, window.innerHeight - 155];
+            var size = new Point(window.innerWidth, window.innerHeight - 155);
             this.$el.css({
-                left: size[0] - 405,
-                height: size[1]
+                left: size.x - 405,
+                height: size.y
             });
         },
 
@@ -930,10 +932,10 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         resize: function() {
-            var s = [window.innerWidth, window.innerHeight];
+            var size = new Point(window.innerWidth, window.innerHeight - 155);
             this.$el.css({
-                width: s[0],
-                top: s[1] - 150 - 5
+                width: size.x,
+                top: size.y
             });
         },
 

@@ -11,6 +11,8 @@ namespace.module('bot.zone', function (exports, require) {
     var prob = namespace.bot.prob;
     var itemref = namespace.bot.itemref;
     var vector = namespace.bot.vector;
+    var vu = namespace.bot.vectorutils;
+    var Point = vu.Point;
 
     var ZoneManager = gl.Model.extend({
         initialize: function(hero) {
@@ -20,8 +22,11 @@ namespace.module('bot.zone', function (exports, require) {
             this.initialize = false;
             this.hero = new HeroBody(hero);
 
+            this.attacks = new namespace.bot.attacks.AttackManager();
+
             this.nextZone = 'spooky dungeon';
             this.newZone(this.nextZone);
+
             this.messages = new ZoneMessages();
         },
 
@@ -45,7 +50,7 @@ namespace.module('bot.zone', function (exports, require) {
                         monsters.push(new MonsterBody(this.boss, this.level));
                     }
                 }
-                _.extend(this.rooms[i], {monsters: monsters, hero: undefined});
+                _.extend(this.rooms[i], {monsters: monsters, hero: undefined, attacks: []});
                 _.each(this.rooms[i].monsters, function(mon) { mon.initPos(this.rooms[i]); }, this);
             }
 
@@ -54,6 +59,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.initialized = true;
             this.hero.revive();
             this.hero.initPos(this.rooms[0]);
+            this.attacks.nextRoom(this.rooms[0]);
             gl.DirtyQueue.mark('zone:new');
         },
 
@@ -71,13 +77,13 @@ namespace.module('bot.zone', function (exports, require) {
             var width, height;
 
             var rooms = [];
-            var room, nextRoom;
+            var room;
 
             var size, pos, ent, exit, absEnt;
 
-            size = [prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1])];
-            pos = [0, 0];
-            ent = [0, prob.middle50(size[1])];
+            size = new Point(prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1]));
+            pos = new Point(0, 0);
+            ent = new Point(0, prob.middle50(size.y));
 
             room = {
                 size: size,
@@ -95,24 +101,24 @@ namespace.module('bot.zone', function (exports, require) {
                 //   stay the same wrt the player
                 // set the abs exit for the old room 
                 if (dir === 0) {
-                    room.exit = [prob.middle50(room.size[0]), 0];
+                    room.exit = new Point(prob.middle50(room.size.x), 0);
                 } else {
-                    room.exit = [room.size[0], prob.middle50(room.size[1])];
+                    room.exit = new Point(room.size.x, prob.middle50(room.size.y));
                 }
                 // old room is done
                 // make corridor in the dir chosen
 
-                absEnt = vector.sum(room.pos, room.exit);
+                absEnt = room.pos.add(room.exit);
                 if (dir === 0) {
-                    size = [2, 5];
-                    ent = [1, 5];
-                    pos = vector.sub(absEnt, ent);
-                    exit = [1, 0];
+                    size = new Point(2, 5);
+                    ent = new Point(1, 5);
+                    pos = absEnt.sub(ent);
+                    exit = new Point(1, 0);
                 } else {
-                    size = [5, 2];
-                    ent = [0, 1];
-                    pos = vector.sub(absEnt, ent);
-                    exit = [5, 1];
+                    size = new Point(5, 2);
+                    ent = new Point(0, 1);
+                    pos = absEnt.sub(ent);
+                    exit = new Point(5, 1);
                 }
                 room = {
                     size: size,
@@ -122,16 +128,16 @@ namespace.module('bot.zone', function (exports, require) {
                 };
                 rooms.push(room);
 
-                size = [prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1])];
-                absEnt = vector.sum(room.pos, room.exit);
+                size = new Point(prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1]));
+                absEnt = room.pos.add(room.exit);
 
                 if (dir === 0) {
-                    size.reverse();
-                    ent = [prob.middle50(size[0]), size[1]];
-                    pos = vector.sub(absEnt, ent);
+                    size.dflip();
+                    ent = new Point(prob.middle50(size.x), size.y);
+                    pos = absEnt.sub(ent);
                 } else {
-                    ent = [0, prob.middle50(size[1])];
-                    pos = vector.sub(absEnt, ent);
+                    ent = new Point(0, prob.middle50(size.y));
+                    pos = absEnt.sub(ent);
                 }
                 room = {
                     size: size,
@@ -142,15 +148,11 @@ namespace.module('bot.zone', function (exports, require) {
             }
 
             for (var i = 0; i < rooms.length; i++) {
-                rooms[i].size[0] *= scale;
-                rooms[i].size[1] *= scale;
-                rooms[i].pos[0] *= scale;
-                rooms[i].pos[1] *= scale;
-                rooms[i].ent[0] *= scale;
-                rooms[i].ent[1] *= scale;
+                rooms[i].size = rooms[i].size.mult(scale);
+                rooms[i].pos = rooms[i].pos.mult(scale);
+                rooms[i].ent = rooms[i].ent.mult(scale);
                 if (rooms[i].exit) {
-                    rooms[i].exit[0] *= scale;
-                    rooms[i].exit[1] *= scale;
+                    rooms[i].exit = rooms[i].exit.mult(scale);
                 }
             }
 
@@ -171,15 +173,18 @@ namespace.module('bot.zone', function (exports, require) {
                 room.hero = this.hero;
                 this.hero.initPos(room);
                 _.each(room.monsters, function(mon) { mon.initPos(room); });
+                this.attacks.nextRoom(this.rooms[this.heroPos]);
                 gl.DirtyQueue.mark('zone:nextRoom');
                 log.debug('now in room %d', this.heroPos);
             }
-            return this.rooms[this.heroPos];
+            var room = this.rooms[this.heroPos];
+            room.attacks = this.attacks;
+            return room;
         },
 
         atExit: function() {
             var room = this.rooms[this.heroPos];
-            return this.hero.x === room.exit[0] && this.hero.y === room.exit[1];
+            return this.hero.pos.equal(room.exit);
         },
 
         zoneTick: function() {
@@ -204,6 +209,8 @@ namespace.module('bot.zone', function (exports, require) {
                     return;
                 }
             }
+
+            this.attacks.tick([this.livingEnemies(1), this.livingEnemies(0)]);
 
             gl.DirtyQueue.mark('zoneTick');
         },
@@ -246,21 +253,16 @@ namespace.module('bot.zone', function (exports, require) {
 
         done: function() {
             return this.roomCleared() && this.heroPos === this.rooms.length - 1;
-        }
+        },
     });
 
     var EntityBody = gl.Model.extend({
         initialize: function(spec) {
             this.spec = spec;
 
-            this.height = this.spec.height ? this.spec.height : 50;
-            this.width = this.spec.width ? this.spec.width : 15;
-            this.lineWidth = this.spec.lineWidth ? this.spec.lineWidth : 15;
-
             this.createSkillchain();
             this.revive();
-            this.x = 0;
-            this.y = 0;
+            this.pos = new Point(0, 0);
             this.nextAction = 0;
         },
 
@@ -273,6 +275,7 @@ namespace.module('bot.zone', function (exports, require) {
         revive: function() {
             this.hasMoved = false;
 
+            this.takeAction(0);
             this.hp = this.spec.maxHp;
             this.mana = this.spec.maxMana;
             this.lastHpFullTime = gl.time;
@@ -283,12 +286,10 @@ namespace.module('bot.zone', function (exports, require) {
 
         initPos: function(room) {
             if (this.isHero()) {
-                this.x = room.ent[0];
-                this.y = room.ent[1];
+                this.pos = room.ent.clone();
                 gl.DirtyQueue.mark('hero:move');
             } else if (this.isMonster()) {
-                this.x = prob.rand(0, room.size[0]);
-                this.y = prob.rand(0, room.size[1]);
+                this.pos = new Point(prob.rand(0, room.size.x), prob.rand(0, room.size.y));
             }
         },
 
@@ -350,16 +351,13 @@ namespace.module('bot.zone', function (exports, require) {
                 return;
             }
 
-            var distances = vector.getDistances(
-                [this.x, this.y],
-                _.map(livingEnemies, function(e) { return [e.x, e.y]; })
-            );
+            var distances = vu.getDistances(this.pos, _.pluck(livingEnemies, 'pos'));
 
-            this.tryAttack(livingEnemies, distances);
+            this.tryAttack(livingEnemies, distances, room);
             this.tryMove(livingEnemies, distances, room);
         },
 
-        tryAttack: function(enemies, distances) {
+        tryAttack: function(enemies, distances, room) {
             var minIndex = distances.minIndex();
             var minDist = distances[minIndex];
             // TODO: make this work:
@@ -368,7 +366,7 @@ namespace.module('bot.zone', function (exports, require) {
                     this.skills[si].coolAt <= gl.time &&           // is cool
                     this.skills[si].spec.manaCost <= this.mana &&  // has enough mana
                     this.skills[si].spec.range >= minDist) {       // is in range
-                    this.attackTarget(enemies[minIndex], this.skills[si]);
+                    this.attackTarget(enemies[minIndex], this.skills[si], room);
                     return;
                 }
             }
@@ -382,70 +380,64 @@ namespace.module('bot.zone', function (exports, require) {
         tryMove: function(enemies, distances, room) {
             if (this.busy()) { return; }
             this.hasMoved = true;
-            var newPos;
-            var curPos = [this.x, this.y];
 
             var dist = this.spec.moveSpeed * gl.lastTimeIncr;
-            var range = 1000;  // range needs to come from somewhere
-
+            var range = 1000;  // TODO range needs to come from somewhere
+            var newPos;
             if (enemies.length === 0) {
-                newPos = vector.closer(curPos, room.exit, dist, 0);
+                newPos = this.pos.closer(room.exit, dist, 0);
             } else {
                 var target = enemies[distances.minIndex()];
-                newPos = vector.closer(curPos, [target.x, target.y], dist, range);
+                newPos = this.pos.closer(target.pos, dist, range);
             }
-
-            this.x = newPos[0];
-            this.y = newPos[1];
+            this.pos = newPos;
 
             if (this.isHero()) {
                 gl.DirtyQueue.mark('hero:move');
             }
         },
 
-        attackTarget: function(target, skill) {
+        attackTarget: function(target, skill, room) {
             skill.coolAt = gl.time + skill.spec.speed + skill.spec.cooldownTime;
             this.takeAction(skill.spec.speed);
-            var dmgDealt = target.takeDamage(skill.spec);
-
-            if (dmgDealt) {
-                log.debug('dmg dealt, hponhit: %.2f, hpLeech: %.2f', skill.spec.hpOnHit, skill.spec.hpLeech);
-                var hpGain = skill.spec.hpOnHit + skill.spec.hpLeech;
-                var manaGain = skill.spec.manaOnHit + skill.spec.manaLeech;
-                if (hpGain) {
-                    log.info('hp on hit: %.2f, hpleech: %.2f', skill.spec.hpOnHit, skill.spec.hpLeech);
-                    this.modifyHp(hpGain);
-                }
-                if (manaGain) {
-                    log.info('mana on hit: %.2f, manaleech: %.2f', skill.spec.manaOnHit, skill.spec.manaLeech);
-                    this.modifyMana(manaGain);
-                }
-            }
-
-            if (!target.isAlive()) {
-                this.onKill(target, skill);
-                target.onDeath();
-            }
-
             this.mana -= skill.spec.manaCost;
+            room.attacks.addAttack(skill, this, target);
         },
 
-        takeDamage: function(skill) {
+        handleHit: function(target, leech) {
+            this.handleLeech(leech);
+            if (!target.isAlive()) {
+                this.onKill(target);
+                target.onDeath();
+            }
+        },
+
+        handleLeech: function(leech) {
+            if (leech.hp) {
+                this.modifyHp(leech.hp);
+            }
+            if (leech.mana) {
+                this.modifyMana(leech.mana);
+            }
+        },
+
+        takeDamage: function(attack) {
             var dodgeChance = Math.pow(0.998, this.spec.dodge);
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
-                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', [this.x, this.y], 'rgba(230, 230, 10, 0.5)', 1000));
+                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', this.pos, 'rgba(230, 230, 10, 0.7)', 1000));
                 return 0;
             }
 
-            var physDmg = skill.physDmg;
+            var dmg = attack.dmg;
+            var physDmg = dmg.physDmg;
 
             var totalDmg = physDmg * physDmg / (physDmg + this.spec.armor) +
-                skill.lightDmg * this.spec.lightResist +
-                skill.coldDmg * this.spec.coldResist +
-                skill.fireDmg * this.spec.fireResist +
-                skill.poisDmg * this.spec.poisResist;
+                dmg.lightDmg * this.spec.lightResist +
+                dmg.coldDmg * this.spec.coldResist +
+                dmg.fireDmg * this.spec.fireResist +
+                dmg.poisDmg * this.spec.poisResist;
 
             if (this.spec.team === TEAM_HERO) {
                 log.debug('Team Hero taking %.2f damage', -totalDmg);
@@ -458,7 +450,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             gl.MessageEvents.trigger(
                 'message',
-                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(190, 0, 0, 1)', 500, this.height)
+                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', this.pos, 'rgba(190, 0, 0, 1)', 500, this.spec.height)
             );
             return totalDmg;
         },
@@ -529,7 +521,7 @@ namespace.module('bot.zone', function (exports, require) {
                         dropStr = drop.dropType + ": " + drop.name;
                         gl.MessageEvents.trigger(
                             'message',
-                            newZoneMessage(dropStr, 'dmg', [target.x, target.y], 'rgba(255, 100, 0, 0.8)', 1000, target.height/2 + index*20)
+                            newZoneMessage(dropStr, 'dmg', target.pos, 'rgba(255, 100, 0, 0.8)', 1000, target.spec.height / 2 + index * 20)
                         );
                         return true;
                     }                        

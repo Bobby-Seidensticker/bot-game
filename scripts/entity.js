@@ -109,9 +109,9 @@ namespace.module('bot.entity', function (exports, require) {
 
                 {def: 'moveSpeed added 300', type: 'def'},
 
-                {def: 'height added 50', type:'vis'},
-                {def: 'width added 15', type:'vis'},
-                {def: 'lineWidth added 2', type:'vis'},
+                {def: 'height added 70000', type:'vis'},
+                {def: 'width added 25000', type:'vis'},
+                {def: 'lineWidth added 2500', type:'vis'},
                 
                 //TODO - add str/dex/wis attacktype bonuses here once impemented
                 //{def: 'strength gainedas 1 meleeDmg', type: 'dmg'},

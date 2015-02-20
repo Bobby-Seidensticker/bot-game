@@ -129,6 +129,7 @@
         <% } %>
         <div class="infoitem">Level <%= model.level %></div>
         <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
+        <div class="xpbox"><div class="xpearned" style="width:<%= (model.xp / model.getNextLevelXp())*100 %>px"></div></div>
         <% if (model.disabled) { %>
         <div class="infoitem disabled">Skill Cannot Be Used Because Wrong Weapon Type Equipped</div>
         <% } %>
@@ -136,21 +137,31 @@
         <% _.each(namespace.bot.utils.prettifyMods(model.baseMods, model.level), function(modstr) { %>
           <div class="mod"><%= modstr %></div>
         <% }); %>
+        <div class="infoitem">Next Level: </div>
+        <% _.each(namespace.bot.utils.prettifyPerLvlMods(model.baseMods), function(modstr) {%>
+        <div class="perLvlMod"><%= modstr %></div>
+        <% }); %>
         </div>
       <% } else { %>
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
         <div class="infoitem"><%= namespace.bot.utils.firstCap(model.slot) %> Card</div>
-        <div class="infoitem">Level <%= level %></div>    
+        <div class="infoitem">Level <%= level %></div>
+        <div class="infoitem"><%= model.amts[level] %>/10 to Level Up</div>
+        <div class="xpbox"><div class="xpearned" style="width:<%= (model.amts[level]) * 10 %>px"></div></div>
         <div class="mods">
         <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(modstr) {%>
           <div class="mod"><%= modstr %></div>
          <% }); %>
+          <div class="infoitem">Next Level: </div>
+          <% _.each(namespace.bot.utils.prettifyPerLvlMods(model.mods, level), function(modstr) {%>
+          <div class="perLvlMod"><%= modstr %></div>
+          <% }); %>
         </div>
       <% } %>
       <% if (model.flavor) { %>
       <div class="infoitem flavor"><%= model.flavor %></div>
       <% } %>
-      <% if (model.itemType == "skill") { %>
+      <% if (model.itemType == "skill" && model.equipped) { %>
       <div class="infoitem skilldmg">Total Damage: <%= model.getTotalDmg() %></div>
       <div class="infoitem skilldmg">DPS: <%= model.getDps() %></div>      
       <% } %>

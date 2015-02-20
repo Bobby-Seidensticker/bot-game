@@ -15,6 +15,7 @@ namespace.module('bot.entity', function (exports, require) {
     var defKeys = ['strength', 'vitality', 'wisdom', 'dexterity', 'maxHp', 'maxMana', 'armor',
                    'dodge', 'eleResistAll', 'hpRegen', 'manaRegen', 'moveSpeed'];
     var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
+    var visKeys = ['height', 'width', 'lineWidth'];
     var dmgKeys = [
         'meleeDmg', 'rangeDmg', 'spellDmg',
         'physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech',
@@ -41,7 +42,8 @@ namespace.module('bot.entity', function (exports, require) {
             all.def = utils.newBaseStatsDict(defKeys);
             all.eleResist = utils.newBaseStatsDict(eleResistKeys);
             all.dmg = utils.newBaseStatsDict(dmgKeys); // utils.newDmgStatsDict();
-
+            all.vis = utils.newBaseStatsDict(visKeys);
+            
             utils.addAllMods(all, this.getMods());
             // Now 'all' has the expanded trie structured mod data
             // Do final multiplication and put on the entity
@@ -68,6 +70,10 @@ namespace.module('bot.entity', function (exports, require) {
                 this[stat] = utils.computeStat(all.eleResist, stat);
             }, this);
 
+            _.each(visKeys, function(stat) {
+                this[stat] = utils.computeStat(all.vis, stat);
+            }, this);
+            
             // Damage is left uncombined, handled in skills
 
             this.baseDmg = all.dmg;
@@ -103,6 +109,10 @@ namespace.module('bot.entity', function (exports, require) {
 
                 {def: 'moveSpeed added 300', type: 'def'},
 
+                {def: 'height added 50', type:'vis'},
+                {def: 'width added 15', type:'vis'},
+                {def: 'lineWidth added 2', type:'vis'},
+                
                 //TODO - add str/dex/wis attacktype bonuses here once impemented
                 //{def: 'strength gainedas 1 meleeDmg', type: 'dmg'},
                 //{def: 'dexterity gainedas 1 rangeDmg', type: 'dmg'},

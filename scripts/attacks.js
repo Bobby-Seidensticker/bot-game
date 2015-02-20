@@ -138,27 +138,25 @@ namespace.module('bot.attacks', function (exports, require) {
 
             this.curTime = gl.time;
             this.fireTime = gl.time + spec.speed / 2;
-            log.info('projectile created, pos: %s, end: %s', this.pos, this.end);
+            log.debug('projectile created, pos: %s, end: %s', this.pos, this.end);
         },
 
         tick: function(enemies) {
             if (gl.time <= this.fireTime) {
-                log.info('not fired');
                 return;
             }
-            log.info('fired');
             var elapsedTime = gl.time - this.fireTime;
             var nextPos = this.start.pctCloser(this.end, elapsedTime / this.travelTime);
 
             for (var i = 0; i < enemies.length; i++) {
                 var didHit = vu.hit(this.pos, nextPos, enemies[i].pos, 200, 200);
                 if (didHit) {
-                    log.info('projectile hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
+                    log.debug('projectile hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
                     this.hit(enemies[i]);
                     break;
                 }
             }
-            log.info('proj moving from %s to %s', this.pos, nextPos);
+            log.debug('proj moving from %s to %s', this.pos, nextPos);
             this.pos = nextPos;
         },
     });

@@ -377,7 +377,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj"],
                 "baseMods": [
-                    {def: 'manaCost added 10', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
@@ -455,8 +455,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj", "fire", "spell"],
                 "anim": ["#f00"],
                 "baseMods": [
-                    {def: 'manaCost added 1', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'speed added 50', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
                     {def: 'fireDmg added 2', type: 'dmg'},
@@ -580,6 +579,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1', type: 'dmg'},
                     {def: 'speed added 150', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 9', type:'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg gainedas 100 hpLeech', type: 'dmg'}
                 ]
@@ -667,9 +667,18 @@ namespace.module('bot.itemref', function (exports, require) {
             }, 
             "proto-boss": {
                 "mods": [
+                    {"def": "lineWidth added 1", "type": "vis"},
+                    {"def": "width more 100", "type": "vis"},
+                    {"def": "height more 100", "type": "vis"},                                        
                     {"def": "physDmg more 100", "type": "dmg"},
                     {"def": "maxHp more 1000", "type": "def"}
                 ],
+            },
+            "proto-rofl": {
+                "mods": [
+                    {"def": "height more -50", "type": "vis"},                    
+                    {"def": "width more 300", "type": "vis"},
+                ]
             },
             "proto-elf": {
                 "mods": [
@@ -722,6 +731,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },            
             "six pack": {
                 "mods": [
+                    {"def": "lineWidth added 1", "type": "vis"},                                        
                     {"def": "armor added 8 perLevel", "type": "def"}
                 ],
                 "slot": "chest",
@@ -912,8 +922,10 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "small stature": {
                 "mods": [
-                    //TODO{"def": "height more -20", "type": "def"},
+                    {"def": "height more -30", "type": "vis"},
+                    {"def": "width more -30", "type": "vis"},
                     {"def": "moveSpeed more 3 perLevel", "type": "def"},
+                    {"def": "dodge more 3 perLevel", "type": "def"},                    
                 ],
                 "slot": "chest",
                 "levels": 10
@@ -949,8 +961,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "hands",
                 "levels": 10
             },
-            "riveted": {
+            "riveted": {               
                 "mods": [
+                    {"def": "lineWidth added 1", "type": "vis"},                    
                     {"def": "armor more 5 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
@@ -966,6 +979,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "mecha heart": {
                 "mods": [
+                    {"def": "lineWidth added 1", "type": "vis"},                    
                     {"def": "maxHp added 5 perLevel", "type": "def"},
                     {"def": "hpRegen added 2 perLevel", "type": "def"},
                 ],
@@ -1035,7 +1049,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "poisDmg added 5 perLevel", "type": "dmg"},
                     {"def": "poisDmg more 3 perLevel", "type": "dmg"},
                 ],
-                "slot": "chest",
+                "slot": "skill",
                 "levels": 10
             },
             "non-newtownian fluid": {
@@ -1047,7 +1061,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "big": {
                 "mods": [
-                    // TODO add vis stuff height + width
+                    {"def": "height more 30", "type": "vis"},
+                    {"def": "width more 30", "type": "vis"},                    
                     {"def": "maxHp added 10 perLevel", "type": "def"},
                     {"def": "maxHp more 2 perLevel", "type": "def"},
                 ],
@@ -1056,7 +1071,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "buff": {
                 "mods": [
-                    //todo add width vis
+                    {"def": "width more 30", "type": "vis"},
+                    {"def": "lineWidth added 3", "type": "vis"},
                     {"def": "strength added 5 perLevel", "type": "def"},
                     {"def": "meleeDmg more 3 perLevel", "type": "dmg"},
                     {"def": "rangeDmg more 3 perLevel", "type": "dmg"},                    
@@ -1106,7 +1122,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "precise": {
                 "mods": [
-                    {"def": "speed more -20", "type": "dmg"},
+                    {"def": "speed more 20", "type": "dmg"},
                     {"def": "physDmg more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
@@ -1186,7 +1202,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireDmg more 8", "type": "dmg"},
                     {"def": "fireDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "fireDmg gainedas -5 hpLeech", "type":"dmg"}
+                    {"def": "fireDmg gainedas 1 hpLeech", "type":"dmg"}
                 ],
                 "slot": "head",
                 "levels": 10
@@ -1202,7 +1218,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["sharpened", 1],
                     ["breadhat", 1],
                     ["stinging", 1]
-                ]
+                ],
             },
             "fire skeleton": {
                 "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
@@ -1339,6 +1355,15 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["electrified", 1],
                 ],
             },
+            "roflcopter" : {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["pressure wave", "quick hit", "basic melee"],
+                "sourceCards": [
+                    ["flying", 1],
+                    ["nimble", 1],
+                    ["proto-rofl", 1]
+                ],
+            },
             "harpy" : {
                 "items": [["weapon", "melee", 2]],
                 "skills": ["pressure wave", "quick hit", "basic melee"],
@@ -1385,6 +1410,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "melee", 2]],
                 "skills": ["flame cone", "lightning ball", "ice nova", "basic melee"],
                 "sourceCards": [
+                    ["proto-boss", 1],
                     ["riveted", 1],
                     ["clockwork", 1],
                     ["mecha heart", 1],
@@ -1634,15 +1660,15 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2, 2, 3],
-                "level": 12,
+                "level": 4,
             },
             "clockwork ruins": {
-                "choices": ["gnome", "gnome electrician", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
-                "weights": [20, 10, 10, 5, 5, 5, 0],
+                "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
+                "weights": [20, 10, 10, 10, 5, 5, 5, 0],
                 "boss": "sir mechs-a-lot",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 15,
+                "level": 7,
             },
             "aggro crag": {
                 "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
@@ -1650,7 +1676,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"flame dragon",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 10,
             },
             "hostile marsh": {
                 "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
@@ -1658,7 +1684,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"scalp collector",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 13,
             },
             "icy tunnel": {
                 "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "frow djinn"],
@@ -1666,7 +1692,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "yeti",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 16,
             },
             "gothic castle": {
                 "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
@@ -1674,7 +1700,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "shadow knight",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 19,
             },
             "demonic laboroatory": {
                 "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],

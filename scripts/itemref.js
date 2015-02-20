@@ -6,9 +6,9 @@ namespace.module('bot.itemref', function (exports, require) {
         return Math.min(Math.floor(1 + classLevel + itemLevel / 10), 10);
     }
 
-    var BASE_MELEE_RANGE = 100000
-    var BASE_RANGE_RANGE = 700000
-    var BASE_SPELL_RANGE = 500000
+    var BASE_MELEE_RANGE = 30000
+    var BASE_RANGE_RANGE = 500000
+    var BASE_SPELL_RANGE = 400000
     
     var ref = {
         "weapon": {

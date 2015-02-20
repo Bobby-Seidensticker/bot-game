@@ -3,6 +3,8 @@ namespace.module('bot.attacks', function (exports, require) {
     var funcs = require('org.startpad.funcs').patch();
     var log = namespace.bot.log;
     var vector = namespace.bot.vector;
+    var vu = namespace.bot.vectorutils;
+    var Point = vu.Point;
 
     var AttackManager = gl.Model.extend({
         initialize: function(options) {
@@ -65,7 +67,6 @@ namespace.module('bot.attacks', function (exports, require) {
         },
 
         addAttack: function(skill, attacker, target) {
-            log.info('adding attacks for skill');
             _.each(skill.spec.specs, function(spec, i, specs) {
                 if (spec.type === 'melee') {
                     // new melee from body
@@ -126,39 +127,39 @@ namespace.module('bot.attacks', function (exports, require) {
     var ProjAttack = Attack.extend({
         initialize: function(spec, attacker, target) {
             this.newAttacks = [];
-            log.info('Adding proj attack');
             _.extend(this, spec);
             this.attacker = attacker;
             this.target = target;
 
-            this.start = [attacker.x, attacker.y];
-            this.pos = [attacker.x, attacker.y];
-            this.velocity = vector.velocity(this.start, [target.x, target.y], this.rate);
+            this.start = attacker.pos.clone();
+            this.pos = attacker.pos.clone();
+            this.end = target.pos.clone();
+            this.travelTime = this.start.dist(this.end) / this.rate;
 
             this.curTime = gl.time;
             this.fireTime = gl.time + spec.speed / 2;
-            log.warning('projectile created, pos: %d %d, velocity %d %d', this.pos[0], this.pos[1], this.velocity[0], this.velocity[1]);
+            log.info('projectile created, pos: %s, end: %s', this.pos, this.end);
         },
 
         tick: function(enemies) {
             if (gl.time <= this.fireTime) {
-                this.curTime = gl.time;
+                log.info('not fired');
                 return;
             }
-            var travelTime = gl.time - this.fireTime;
-            var nextPos = [this.start[0] + this.velocity[0] * travelTime, this.start[1] + this.velocity[1] * travelTime];
+            log.info('fired');
+            var elapsedTime = gl.time - this.fireTime;
+            var nextPos = this.start.pctCloser(this.end, elapsedTime / this.travelTime);
 
             for (var i = 0; i < enemies.length; i++) {
-                var didHit = vector.hit(this.pos, nextPos, [enemies[i].x, enemies[i].y], 200, 200);
-                if (didHit && enemies[i].isAlive()) {
-                    this.pos = nextPos;
+                var didHit = vu.hit(this.pos, nextPos, enemies[i].pos, 200, 200);
+                if (didHit) {
+                    log.info('projectile hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
                     this.hit(enemies[i]);
                     break;
                 }
             }
-            //log.info('projectile moving, from pos: %d %d to %d %d', this.pos[0], this.pos[1], nextPos[0], nextPos[1]);
+            log.info('proj moving from %s to %s', this.pos, nextPos);
             this.pos = nextPos;
-            this.curTime = gl.time;
         },
     });
 
@@ -169,13 +170,12 @@ namespace.module('bot.attacks', function (exports, require) {
     var MeleeAttack = Attack.extend({
         initialize: function(spec, attacker, target) {
             this.newAttacks = [];
-            log.info('Adding melee attack');
             _.extend(this, spec);
             this.attacker = attacker;
             this.target = target;
 
-            this.start = [attacker.x, attacker.y];
-            this.pos = [attacker.x, attacker.y];
+            this.start = attacker.pos.clone();
+            this.pos = attacker.pos.clone();
             this.startTime = gl.time;
             this.endTime = gl.time + spec.speed / 2;
             this.totalTime = spec.speed / 2;
@@ -184,9 +184,9 @@ namespace.module('bot.attacks', function (exports, require) {
         tick: function() {
             var pct = (gl.time - this.startTime) / this.totalTime;
             if (pct < 1) {
-                this.pos = vector.pctCloser(this.start, [this.target.x, this.target.y], pct);
+                this.pos = this.start.pctCloser(this.target.pos, pct);
             } else {
-                this.pos = [this.target.x, this.target.y];
+                this.pos = this.target.pos;
                 this.hit(this.target);
             }
         },

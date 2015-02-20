@@ -26,25 +26,71 @@ namespace.module('bot.test', function (exports, require) {
 
         var gameModel = new main.GameModel();
 
-        console.time('shit');
-        var hit = namespace.bot.vector.hit;
-        var x;
-        for (var i = 0; i < 1000; i++) {
-            for (var j = 0; j < 1000; j++) {
-                x = hit([0, 0], [i, j], [10, 10], 1, 0);
+        function fillarr(sed, r) {
+            var arr = [];
+            var count = 1000;
+            for (var i = 0; i <= count; i++) {
+                arr.push(sed + Math.sqrt(Math.pow(r, 2) + Math.pow(sed * i / count, 2)) + Math.sqrt(Math.pow(r, 2) + Math.pow(sed - sed * i / count, 2)));
             }
+            return arr;
         }
-        console.timeEnd('shit');
+        function fuckarr(a) {
+            var arr = [];
+            for (var i = 0; i < a.length; i++) {
+                arr.push(a[i] / a[Math.floor(a.length / 2)]);
+            }
+            return arr;
+        }
+        window.a1 = fillarr(10, 4);
+        window.a2 = fillarr(100, 40);
+        window.a3 = fillarr(5, 7);
 
-        namespace.bot.vector.hit([2, 2], [5, 5], [4, 4.5], .25, .25);
-        namespace.bot.vector.hit([0, 0], [2, 0], [1, 1], 1, 0);
-        namespace.bot.vector.hit([0, 0], [2, 0], [1, .999], 1, 0);
+        window.b1 = fuckarr(window.a1);
+        window.b2 = fuckarr(window.a2);
+        window.b3 = fuckarr(window.a3);
+
+        
 
         QUnit.test('gameModel initialized', function(assert) {
             assert.ok(gameModel.hero, 'initialized with hero');
             assert.ok(gameModel.inv, 'initialized with inv');
             assert.ok(gameModel.lastTime !== undefined, 'lastTime is defined');
             assert.ok(gameModel.running === true, 'running is true');
+        });
+
+        QUnit.test('Vector tests', function(assert) {
+            var vu = namespace.bot.vectorutils;
+            var Point = vu.Point;
+
+            assert.ok(vu.hit(new Point(0, 0), new Point(10, 0), new Point(2, 0), 1, 1), 'to the right, hit');
+            assert.ok(vu.hit(new Point(0, 0), new Point(0, 10), new Point(0, 2), 1, 1), 'up, hit');
+            assert.ok(vu.hit(new Point(0, 0), new Point(-10, 0), new Point(-2, 0), 1, 1), 'to the left, hit');
+            assert.ok(vu.hit(new Point(0, 0), new Point(0, -10), new Point(0, -2), 1, 1), 'down, hit');
+
+            assert.ok(vu.hit(new Point(0, 0), new Point(10, 0), new Point(2, 1.99), 1, 1), 'graze right');
+
+            for (var i = -10; i <= 10; i += 10) {
+                for (var j = -10; j <= 10; j += 10) {
+
+                    for (var a = -10; a <= 10; a += 10) {
+                        for (var b = -10; b <= 10; b += 10) {
+                            if ((i === 0 && j === 0) || (a === 0 && b === 0)) {
+                                continue
+                            }
+                            if (i === a && j === b) {
+                                assert.equal(vu.hit(new Point(0, 0), new Point(i, j), new Point(a / 2, b / 2), .1, .1), true,
+                                          sprintf('0,0 to %d, %d should hit %d %d', i, j, a / 2, b / 2));
+                            } else {
+                                assert.equal(vu.hit(new Point(0, 0), new Point(i, j), new Point(a / 2, b / 2), .1, .1), false,
+                                          sprintf('0,0 to %d, %d should miss %d %d', i, j, a / 2, b / 2));
+                            }
+                            assert.equal(vu.hit(new Point(0, 0), new Point(i, j), new Point(a * 2, b * 2), .1, .1), false,
+                                         sprintf('0,0 to %d, %d should miss %d %d', i, j, a * 2, b * 2));
+                        }
+                    }
+
+                }
+            }
         });
 
         QUnit.test('Util tests', function(assert) {

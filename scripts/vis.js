@@ -15,6 +15,8 @@ namespace.module('bot.vis', function (exports, require) {
     var SIZE = 1000 * 1000;
 
     var vector = namespace.bot.vector;
+    var vu = namespace.bot.vectorutils;
+    var Point = vu.Point;
 
     var VisView = Backbone.View.extend({
         tagName: 'div',
@@ -44,27 +46,28 @@ namespace.module('bot.vis', function (exports, require) {
 
         updateConstants: function() {
             vvs.center = this.gameView.getCenter();
-            vvs.cart = [this.zone.hero.x * vvs.ratio, this.zone.hero.y * vvs.ratio];
-            vvs.iso = [vvs.cart[0] - vvs.cart[1], (vvs.cart[0] + vvs.cart[1]) / 2 - SIZE / 2];
-            vvs.diff = [vvs.center[0] - vvs.iso[0], vvs.center[1] - vvs.iso[1]];
+            vvs.cart = this.zone.hero.pos.rawMult(vvs.ratio);
+            vvs.iso = vvs.cart.toIso();
+            vvs.iso.y -= SIZE / 2;
+            vvs.diff = vvs.center.sub(vvs.iso);
         },
 
         resize: function() {
-            var ss = [window.innerWidth, window.innerHeight - 155];
-            vvs.ss = ss;
+            var ss = new Point(window.innerWidth, window.innerHeight - 155);
+            vvs.ss = ss.clone();
 
-            if (ss[0] / 2 > ss[1]) {  // if height is the limiting factor
-                vvs.realSize = ss[1];
+            if (ss.x / 2 > ss.y) {  // if height is the limiting factor
+                vvs.realSize = ss.y;
             } else {
-                vvs.realSize = ss[0] / 2;
+                vvs.realSize = ss.x / 2;
             }
             vvs.ratio = vvs.realSize / SIZE;
 
             this.updateConstants();
 
             this.$el.css({
-                width: ss[0],
-                height: ss[1]
+                width: ss.x,
+                height: ss.y
             });
 
             this.updateConstants();
@@ -82,10 +85,11 @@ namespace.module('bot.vis', function (exports, require) {
         },
     });
 
-    function transpose(coords) {
-        var c0 = coords[0] * vvs.ratio;
-        var c1 = coords[1] * vvs.ratio;
-        return [c0 - c1 + vvs.diff[0], (c0 + c1) / 2 - SIZE / 2 + vvs.diff[1]];
+    function transpose(modelPoint) {
+        var viewPoint = modelPoint.rawMult(vvs.ratio);
+        viewPoint = viewPoint.toIso();
+        viewPoint.y -= SIZE / 2;
+        return viewPoint.add(vvs.diff);
     }
 
     var BackgroundTiles = gl.Model.extend({
@@ -101,22 +105,22 @@ namespace.module('bot.vis', function (exports, require) {
 
         cache: function() {
             $(this.canvas).attr({
-                width: this.canvasSize[0],
-                height: this.canvasSize[1]
+                width: this.canvasSize.x,
+                height: this.canvasSize.y
             });
 
-            var scaled = [this.imgSize[0] * this.scale, this.imgSize[1] * this.scale];
-            $(this.img).attr({ width: scaled[0], height: scaled[1] });
+            var scaled = this.imgSize.rawMult(this.scale);
+            $(this.img).attr({ width: scaled.x, height: scaled.y });
 
-            var iMax = this.canvasSize[0] / scaled[0];
-            var jMax = this.canvasSize[1] / scaled[1]
+            var iMax = this.canvasSize.x / scaled.x;
+            var jMax = this.canvasSize.y / scaled.y;
 
             var ctx = this.canvas.getContext('2d');
 
             //ctx.drawImage(this.img, 0, 0, scaled[0], scaled[1]);
-            for (var i = 0; i < this.canvasSize[0]; i += scaled[0]) {
-                for (var j = 0; j < this.canvasSize[1]; j += scaled[1]) {
-                    ctx.drawImage(this.img, i, j, scaled[0], scaled[1]);
+            for (var i = 0; i < this.canvasSize.x; i += scaled.x) {
+                for (var j = 0; j < this.canvasSize.y; j += scaled.y) {
+                    ctx.drawImage(this.img, i, j, scaled.x, scaled.y);
                 }
             }
         }
@@ -138,21 +142,20 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         resize: function() {
-            this.size = [window.innerWidth, window.innerHeight - 155];
+            this.size = new Point(window.innerWidth, window.innerHeight - 155);
             this.$el.attr({
-                width: this.size[0],
-                height: this.size[1]
+                width: this.size.x,
+                height: this.size.y
             });
 
-            this.tiles = new BackgroundTiles('assets/floor.jpg', [4000, 4000], [256, 256], 0.25);
+            this.tiles = new BackgroundTiles('assets/floor.jpg', new Point(4000, 4000), new Point(256, 256), 0.25);
 
             this.ctx = this.el.getContext('2d');
             this.force();
         },
 
         clear: function() {
-            //this.ctx.clearRect(-200, -200, this.size[0] + 400, this.size[1] + 400);
-            this.$el.attr('width', this.size[0]);
+            this.$el.attr('width', this.size.x);
             this.redraw = true;
         },
 
@@ -174,27 +177,11 @@ namespace.module('bot.vis', function (exports, require) {
 
         transform: function() {
             var a = 1, b = 0.5, c = -1, d = 0.5;
-            var coords = transpose([0, 0]);
-            this.ctx.setTransform(a, b, c, d, coords[0], coords[1]);
+            var coords = transpose(new Point(0, 0));
+            this.ctx.setTransform(a, b, c, d, coords.x, coords.y);
         },
 
         drawBg: function() {
-            /*var s = vvs.realSize;
-            var h = s / 2;
-
-            this.ctx.fillStyle = '#777';
-            this.ctx.fillRect(0, 0, s, s);
-
-            this.ctx.font = '16px sans-serif';
-            this.ctx.fillStyle = '#fff';
-            this.ctx.textAlign = 'center';
-            this.ctx.textBaseline = 'middle';
-            this.ctx.fillText('North', h, -25);
-            this.ctx.fillText('West', -25, h);
-            this.ctx.fillText('East', s + 25, h);
-            this.ctx.fillText('South', h, s + 25);*/
-
-            var cur = this.zone.getCurrentRoom();
             var start = this.zone.heroPos - 4;
             var end = this.zone.heroPos + 4;
             if (start < 0) { start = 0; }
@@ -202,27 +189,19 @@ namespace.module('bot.vis', function (exports, require) {
 
             for (var i = start; i <= end; i++) {
                 var room = this.zone.rooms[i];
-                var pos = vector.sub(room.pos, cur.pos);
+                var pos = room.pos.sub(this.zone.getCurrentRoom().pos);
+                var size;
 
-                var s = vvs.realSize;
-                var h = s / 2;
+                pos = pos.rawMult(vvs.ratio);
+                size = room.size.rawMult(vvs.ratio);
 
-                var left, top, width, height;
-                left = pos[0] * vvs.ratio;
-                top = pos[1] * vvs.ratio;
-                width = room.size[0] * vvs.ratio;
-                height = room.size[1] * vvs.ratio;
-
-
-                this.ctx.drawImage(this.tiles.canvas, 0, 0, width, height, left, top, width, height);
-                //this.ctx.fillStyle = '#777';
-                //this.ctx.fillRect(left - 2, top - 2, width + 4, height + 4);
+                this.ctx.drawImage(this.tiles.canvas, 0, 0, size.x, size.y, pos.x, pos.y, size.x, size.y);
 
                 this.ctx.font = '20px sans-serif';
                 this.ctx.fillStyle = '#eee';
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
-                this.ctx.fillText(i, left + width / 2, top + 25);
+                this.ctx.fillText(i, pos.x + size.x / 2, pos.y + 25);
             }
         },
     });
@@ -240,15 +219,15 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         resize: function() {
-            this.size = [window.innerWidth, window.innerHeight - 155];
+            this.size = new Point(window.innerWidth, window.innerHeight - 155);
             this.$el.attr({
-                width: this.size[0],
-                height: this.size[1]
+                width: this.size.x,
+                height: this.size.y
             });
         },
 
         clear: function() {
-            this.el.getContext('2d').clearRect(0, 0, this.size[0], this.size[1]);
+            this.el.getContext('2d').clearRect(0, 0, this.size.x, this.size.y);
         },
 
         render: function() {
@@ -272,13 +251,13 @@ namespace.module('bot.vis', function (exports, require) {
 
             var pos;
             pos = transpose(this.zone.getCurrentRoom().ent)
-            pos[1] -= 5;
+            pos.y -= 5;
             circle(ctx, pos, '#f00', 5, true);
 
             var exit = this.zone.getCurrentRoom().exit;
             if (exit) {
                 pos = transpose(exit);
-                pos[1] -= 5;
+                pos.y -= 5;
                 circle(ctx, pos, '#0f0', 5, true);
             }
 
@@ -286,7 +265,7 @@ namespace.module('bot.vis', function (exports, require) {
             for (var i = 0; i < this.zone.attacks.attacks.length; i++) {
                 atk = this.zone.attacks.attacks[i];
                 pos = transpose(atk.pos)
-                pos[1] -= 5;
+                pos.y -= 5;
                 circle(ctx, pos, '#f00', 5, true);
             }
 
@@ -302,33 +281,39 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.font = '12px Source Code Pro';
             var pos = transpose(msg.pos)
             if (msg.verticalOffset) {
-                pos[1] -= msg.verticalOffset;
+                pos.y -= msg.verticalOffset;
             }
-            ctx.fillText(msg.text, pos[0], pos[1] - (gl.time - msg.time) / msg.lifespan * 20);
+            ctx.fillText(msg.text, pos.x, pos.y - (gl.time - msg.time) / msg.lifespan * 20);
         });
     }
 
     function drawBody(ctx, body, color) {
-        var coords = transpose([body.x, body.y]);
+        var coords = transpose(body.pos);
+        var p;
         height = body.height;
         width = body.width;
         ctx.lineCap = 'round';
         ctx.lineWidth = 2;
-        
-        //head
-        circle(ctx, [coords[0], coords[1] - height * 11 / 14], color, height / 7);
- 
-        //draw body, legs
+
+        // head
+        circle(ctx, coords.sub(new Point(0, height * 11 / 14)), color, height / 7);
+
+        // draw body, legs
         var legFrame = 0;
         if (body.hasMoved) {
             legFrame = Math.abs(Math.floor(gl.time % 400 / 20) - 10);
         }
         ctx.beginPath();
-        ctx.moveTo(coords[0], coords[1] - height * 9 / 14);
-        ctx.lineTo(coords[0], coords[1] - height * 3 / 14);
-        ctx.lineTo(coords[0] + width / 2 * (10 - legFrame) / 10, coords[1]);
-        ctx.moveTo(coords[0], coords[1] - height * 3 / 14);
-        ctx.lineTo(coords[0] - width / 2 * (10 - legFrame) / 10, coords[1]);
+        lines(ctx,
+              coords.sub(new Point(0, height * 9 / 14)),
+              coords.sub(new Point(0, height * 3 / 14)),
+              coords.add(new Point(width / 2 * (10 - legFrame) / 10, 0))
+             );
+
+        lines(ctx,
+              coords.sub(new Point(0, height * 3 / 14)),
+              coords.sub(new Point(width / 2 * (10 - legFrame) / 10, 0))
+             );
 
         //arms
         var rArmFrame = 0; // valid values 0 to 10
@@ -338,10 +323,17 @@ namespace.module('bot.vis', function (exports, require) {
             rArmFrame = Math.abs(Math.floor(gl.time % 500 / 25) - 10);
             lArmFrame = Math.abs(Math.floor((gl.time + 111) % 500 / 25) - 10);
         }
-        ctx.moveTo(coords[0], coords[1] - height / 2);
-        ctx.lineTo(coords[0] + width/2, coords[1] - height / 2 + (1 - (2 * rArmFrame / 10)) * height / 4);
-        ctx.moveTo(coords[0], coords[1] - height / 2);
-        ctx.lineTo(coords[0] - width/2, coords[1] - height / 2 + (1 - (2 * lArmFrame / 10)) * height / 4);
+
+        lines(ctx,
+              coords.sub(new Point(0, height / 2)),
+              coords.add(new Point(width / 2, -(height / 2 + (1 - (2 * rArmFrame / 10)) * height / 4)))
+             );
+
+        lines(ctx,
+              coords.sub(new Point(0, height / 2)),
+              coords.sub(new Point(width / 2, (height / 2 + (1 - (2 * lArmFrame / 10)) * height / 4)))
+             );
+
         ctx.stroke();        
 
         ctx.lineWidth = 1;
@@ -351,26 +343,35 @@ namespace.module('bot.vis', function (exports, require) {
         ctx.textBaseline = 'top';
         ctx.font = '14px Source Code Pro';
         ctx.fillStyle = color;
-        ctx.fillText(body.spec.name, coords[0], coords[1] + 10);
+        ctx.fillText(body.spec.name, coords.x, coords.y + 10);
 
         //HP fill
-        var hpCoords = [coords[0] - 15, coords[1] - 10 - height];
+        var hpCoords = coords.add(new Point(-15, -10 - height));
         var pctHp = body.hp / body.spec.maxHp;
         ctx.fillStyle = "#A00";
-        ctx.fillRect(hpCoords[0], hpCoords[1], pctHp * 30, 5);
+        ctx.fillRect(hpCoords.x, hpCoords.y, pctHp * 30, 5);
 
         //HP box
         ctx.beginPath();
         ctx.strokeStyle = 'black';
-        ctx.rect(hpCoords[0], hpCoords[1], 30, 5);
+        ctx.rect(hpCoords.x, hpCoords.y, 30, 5);
         ctx.closePath();
         ctx.stroke();
+    }
+
+    function lines(ctx, p) {
+        if (p) {
+            ctx.moveTo(p.x, p.y);
+        }
+        for (var i = 2; i < arguments.length; i++) {
+            ctx.lineTo(arguments[i].x, arguments[i].y);
+        }
     }
 
     function circle(ctx, pos, color, radius, fill) {
         ctx.strokeStyle = color;
         ctx.beginPath();
-        ctx.arc(pos[0], pos[1], radius, 0, 2 * Math.PI, false);
+        ctx.arc(pos.x, pos.y, radius, 0, 2 * Math.PI, false);
         ctx.stroke();
         ctx.closePath();
         if (fill) {

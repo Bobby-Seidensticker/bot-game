@@ -55,11 +55,11 @@ namespace.module('bot.main', function (exports, require) {
                 _.each([['heart juice', 4], ['brain juice', 4], ['hot sword', 4]], function(card) {
                     drops.push({dropType: 'card', data: card});
                 });
-                _.each([['weapon', 'melee', 1], ['armor', 'head', 1], ['armor', 'chest', 1],
+                _.each([['weapon', 'melee', 1], ['weapon', 'range', 1], ['armor', 'head', 1], ['armor', 'chest', 1],
                         ['armor', 'hands', 1], ['armor', 'legs', 1]], function(item) {
                     drops.push({dropType: item[0], data: item});
                 });
-                _.each(['super smash', 'fire ball', 'fire slash'], function(skill) {
+                _.each(['super smash', 'fire ball', 'fire slash', 'basic range'], function(skill) {
                     drops.push({dropType: 'skill', data: skill});
                 });
                 gameModel.inv.addDrops(drops);

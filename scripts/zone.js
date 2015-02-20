@@ -12,6 +12,7 @@ namespace.module('bot.zone', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var vector = namespace.bot.vector;
     var vu = namespace.bot.vectorutils;
+    var Point = vu.Point;
 
     var ZoneManager = gl.Model.extend({
         initialize: function(hero) {
@@ -80,9 +81,9 @@ namespace.module('bot.zone', function (exports, require) {
 
             var size, pos, ent, exit, absEnt;
 
-            size = [prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1])];
-            pos = [0, 0];
-            ent = [0, prob.middle50(size[1])];
+            size = new Point(prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1]));
+            pos = new Point(0, 0);
+            ent = new Point(0, prob.middle50(size.y));
 
             room = {
                 size: size,
@@ -100,24 +101,24 @@ namespace.module('bot.zone', function (exports, require) {
                 //   stay the same wrt the player
                 // set the abs exit for the old room 
                 if (dir === 0) {
-                    room.exit = [prob.middle50(room.size[0]), 0];
+                    room.exit = new Point(prob.middle50(room.size.x), 0);
                 } else {
-                    room.exit = [room.size[0], prob.middle50(room.size[1])];
+                    room.exit = new Point(room.size.x, prob.middle50(room.size.y));
                 }
                 // old room is done
                 // make corridor in the dir chosen
 
-                absEnt = vector.sum(room.pos, room.exit);
+                absEnt = room.pos.add(room.exit);
                 if (dir === 0) {
-                    size = [2, 5];
-                    ent = [1, 5];
-                    pos = vector.sub(absEnt, ent);
-                    exit = [1, 0];
+                    size = new Point(2, 5);
+                    ent = new Point(1, 5);
+                    pos = absEnt.sub(ent);
+                    exit = new Point(1, 0);
                 } else {
-                    size = [5, 2];
-                    ent = [0, 1];
-                    pos = vector.sub(absEnt, ent);
-                    exit = [5, 1];
+                    size = new Point(5, 2);
+                    ent = new Point(0, 1);
+                    pos = absEnt.sub(ent);
+                    exit = new Point(5, 1);
                 }
                 room = {
                     size: size,
@@ -127,16 +128,16 @@ namespace.module('bot.zone', function (exports, require) {
                 };
                 rooms.push(room);
 
-                size = [prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1])];
-                absEnt = vector.sum(room.pos, room.exit);
+                size = new Point(prob.rand(lrange[0], lrange[1]), prob.rand(hrange[0], hrange[1]));
+                absEnt = room.pos.add(room.exit);
 
                 if (dir === 0) {
-                    size.reverse();
-                    ent = [prob.middle50(size[0]), size[1]];
-                    pos = vector.sub(absEnt, ent);
+                    size.dflip();
+                    ent = new Point(prob.middle50(size.x), size.y);
+                    pos = absEnt.sub(ent);
                 } else {
-                    ent = [0, prob.middle50(size[1])];
-                    pos = vector.sub(absEnt, ent);
+                    ent = new Point(0, prob.middle50(size.y));
+                    pos = absEnt.sub(ent);
                 }
                 room = {
                     size: size,
@@ -147,15 +148,11 @@ namespace.module('bot.zone', function (exports, require) {
             }
 
             for (var i = 0; i < rooms.length; i++) {
-                rooms[i].size[0] *= scale;
-                rooms[i].size[1] *= scale;
-                rooms[i].pos[0] *= scale;
-                rooms[i].pos[1] *= scale;
-                rooms[i].ent[0] *= scale;
-                rooms[i].ent[1] *= scale;
+                rooms[i].size = rooms[i].size.mult(scale);
+                rooms[i].pos = rooms[i].pos.mult(scale);
+                rooms[i].ent = rooms[i].ent.mult(scale);
                 if (rooms[i].exit) {
-                    rooms[i].exit[0] *= scale;
-                    rooms[i].exit[1] *= scale;
+                    rooms[i].exit = rooms[i].exit.mult(scale);
                 }
             }
 
@@ -187,7 +184,7 @@ namespace.module('bot.zone', function (exports, require) {
 
         atExit: function() {
             var room = this.rooms[this.heroPos];
-            return this.hero.x === room.exit[0] && this.hero.y === room.exit[1];
+            return this.hero.pos.equal(room.exit);
         },
 
         zoneTick: function() {
@@ -268,8 +265,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             this.createSkillchain();
             this.revive();
-            this.x = 0;
-            this.y = 0;
+            this.pos = new Point(0, 0);
             this.nextAction = 0;
         },
 
@@ -292,12 +288,10 @@ namespace.module('bot.zone', function (exports, require) {
 
         initPos: function(room) {
             if (this.isHero()) {
-                this.x = room.ent[0];
-                this.y = room.ent[1];
+                this.pos = room.ent.clone();
                 gl.DirtyQueue.mark('hero:move');
             } else if (this.isMonster()) {
-                this.x = prob.rand(0, room.size[0]);
-                this.y = prob.rand(0, room.size[1]);
+                this.pos = new Point(prob.rand(0, room.size.x), prob.rand(0, room.size.y));
             }
         },
 
@@ -359,10 +353,7 @@ namespace.module('bot.zone', function (exports, require) {
                 return;
             }
 
-            var distances = vector.getDistances(
-                [this.x, this.y],
-                _.map(livingEnemies, function(e) { return [e.x, e.y]; })
-            );
+            var distances = vu.getDistances(this.pos, _.pluck(livingEnemies, 'pos'));
 
             this.tryAttack(livingEnemies, distances, room);
             this.tryMove(livingEnemies, distances, room);
@@ -391,21 +382,17 @@ namespace.module('bot.zone', function (exports, require) {
         tryMove: function(enemies, distances, room) {
             if (this.busy()) { return; }
             this.hasMoved = true;
-            var newPos;
-            var curPos = [this.x, this.y];
 
             var dist = this.spec.moveSpeed * gl.lastTimeIncr;
-            var range = 1000;  // range needs to come from somewhere
-
+            var range = 1000;  // TODO range needs to come from somewhere
+            var newPos;
             if (enemies.length === 0) {
-                newPos = vector.closer(curPos, room.exit, dist, 0);
+                newPos = this.pos.closer(room.exit, dist, 0);
             } else {
                 var target = enemies[distances.minIndex()];
-                newPos = vector.closer(curPos, [target.x, target.y], dist, range);
+                newPos = this.pos.closer(target.pos, dist, range);
             }
-
-            this.x = newPos[0];
-            this.y = newPos[1];
+            this.pos = newPos;
 
             if (this.isHero()) {
                 gl.DirtyQueue.mark('hero:move');
@@ -441,7 +428,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
-                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', [this.x, this.y], 'rgba(230, 230, 10, 0.7)', 1000));
+                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', this.pos, 'rgba(230, 230, 10, 0.7)', 1000));
                 return 0;
             }
 
@@ -465,7 +452,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             gl.MessageEvents.trigger(
                 'message',
-                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', [this.x, this.y], 'rgba(190, 0, 0, 1)', 500, this.height)
+                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', this.pos, 'rgba(190, 0, 0, 1)', 500, this.height)
             );
             return totalDmg;
         },
@@ -536,7 +523,7 @@ namespace.module('bot.zone', function (exports, require) {
                         dropStr = drop.dropType + ": " + drop.name;
                         gl.MessageEvents.trigger(
                             'message',
-                            newZoneMessage(dropStr, 'dmg', [target.x, target.y], 'rgba(255, 100, 0, 0.8)', 1000, target.height/2 + index*20)
+                            newZoneMessage(dropStr, 'dmg', target.pos, 'rgba(255, 100, 0, 0.8)', 1000, target.height / 2 + index * 20)
                         );
                         return true;
                     }                        

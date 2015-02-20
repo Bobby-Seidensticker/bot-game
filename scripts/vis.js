@@ -267,8 +267,6 @@ namespace.module('bot.vis', function (exports, require) {
 
             drawAttacks(ctx, this.zone.attacks.attacks);
 
-
-
             drawMessages(ctx, msgs);
 
             return this;
@@ -401,12 +399,12 @@ namespace.module('bot.vis', function (exports, require) {
     function drawNameHealth(ctx, tcanvas, text, pos, hpPct) {
         text = text.toUpperCase();
 
-        var fontHeight = Math.floor(vvs.ratio * 17000);
+        var fontHeight = Math.floor(vvs.ratio * 25000);
 
         ctx.fillStyle = '#111';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        ctx.font = fontHeight + 'px Source Code Pro';
+        ctx.font = 'bold ' + fontHeight + 'px Source Code Pro';
         ctx.fillText(text, pos.x, pos.y - fontHeight * 1.75);
 
         var tctx = tcanvas.getContext('2d');
@@ -418,7 +416,7 @@ namespace.module('bot.vis', function (exports, require) {
         tctx.fillStyle = '#e12';
         tctx.textAlign = 'left';
         tctx.textBaseline = 'top';
-        tctx.font = fontHeight + 'px Source Code Pro';
+        tctx.font = 'bold ' + fontHeight + 'px Source Code Pro';
         tctx.fillText(text, 0, 0);
 
         tctx.clearRect(textWidth * hpPct, 0, textWidth, fontHeight);

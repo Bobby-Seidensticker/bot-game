@@ -2,7 +2,6 @@ namespace.module('bot.attacks', function (exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
     var log = namespace.bot.log;
-    var vector = namespace.bot.vector;
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
 

@@ -6,7 +6,6 @@ namespace.module('bot.entity', function (exports, require) {
     var funcs = require('org.startpad.funcs').patch();
 
     var log = namespace.bot.log;
-    var vector = namespace.bot.vector;
     var inventory = namespace.bot.inv;
     var utils = namespace.bot.utils;
     var itemref = namespace.bot.itemref;

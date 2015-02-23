@@ -14,7 +14,6 @@ namespace.module('bot.vis', function (exports, require) {
     var vvs = {};  // vis vars
     var SIZE = 1000 * 1000;
 
-    var vector = namespace.bot.vector;
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
 

@@ -10,7 +10,6 @@ namespace.module('bot.zone', function (exports, require) {
     var entity = namespace.bot.entity;
     var prob = namespace.bot.prob;
     var itemref = namespace.bot.itemref;
-    var vector = namespace.bot.vector;
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
 

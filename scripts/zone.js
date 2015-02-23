@@ -254,6 +254,10 @@ namespace.module('bot.zone', function (exports, require) {
         done: function() {
             return this.roomCleared() && this.heroPos === this.rooms.length - 1;
         },
+
+        getAttacks: function() {
+            return this.attacks.getAttacks();
+        },
     });
 
     var EntityBody = gl.Model.extend({

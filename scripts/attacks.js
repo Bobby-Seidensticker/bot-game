@@ -81,6 +81,10 @@ namespace.module('bot.attacks', function (exports, require) {
                 }
             }, this);
         },
+
+        getAttacks: function() {
+            return this.attacks;
+        },
     });
 
     var Attack = gl.Model.extend({

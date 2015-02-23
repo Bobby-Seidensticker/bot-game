@@ -206,10 +206,6 @@ namespace.module('bot.vis', function (exports, require) {
         },
     });
 
-    /*function BodyWrapper(body) {
-        this.body = body;
-    }*/
-
     var EntityView = Backbone.View.extend({
         tagName: 'canvas',
         className: 'entity',
@@ -246,12 +242,26 @@ namespace.module('bot.vis', function (exports, require) {
             var room = this.zone.ensureRoom();
             var mons = this.zone.liveMons();
 
+            var drawables = [];
+
             _.each(mons, function(mon) {
-                drawBody(ctx, mon, 'rgba(240, 20, 30, 1)', this.tempCanvas);
+                drawables.push(new BodyView(mon));
+                //drawBody(ctx, mon, 'rgba(240, 20, 30, 1)', this.tempCanvas);
             }, this);
 
             // draw hero
-            drawBody(ctx, this.zone.hero, 'rgba(0, 150, 240, 1)', this.tempCanvas);
+            drawables.push(new BodyView(this.zone.hero));
+            //drawBody(ctx, this.zone.hero, 'rgba(0, 150, 240, 1)', this.tempCanvas);
+
+            _.each(this.zone.getAttacks(), function(atk) {
+                drawables.push(new AttackView(atk));
+            });
+
+            sortDrawables(drawables);
+
+            _.each(drawables, function(drawable) {
+                drawable.draw(ctx, this.tempCanvas);
+            }, this);
 
             var pos;
             pos = transpose(this.zone.getCurrentRoom().ent)
@@ -265,23 +275,13 @@ namespace.module('bot.vis', function (exports, require) {
                 circle(ctx, pos, '#0f0', 5, true);
             }
 
-            drawAttacks(ctx, this.zone.attacks.attacks);
+            //drawAttacks(ctx, this.zone.attacks.attacks);
 
             drawMessages(ctx, msgs);
 
             return this;
         },
     });
-
-    function drawAttacks(ctx, attacks) {
-        var atk;
-        for (var i = 0; i < attacks.length; i++) {
-            atk = attacks[i];
-            pos = transpose(atk.pos)
-            pos.y -= attacks[i].z * vvs.ratio;
-            circle(ctx, pos, atk.color, atk.radius * vvs.ratio, true);
-        }
-    }
 
     function drawMessages(ctx, msgs) {
         _.each(msgs, function(msg) {
@@ -297,13 +297,49 @@ namespace.module('bot.vis', function (exports, require) {
         });
     }
 
-    function drawBody(ctx, body, color, tempCanvas) {
-        var coords = transpose(body.pos);
+    function sortDrawables(drawables) {
+        for (var i = drawables.length; i--;) {
+            drawables[i].updateZ();
+        }
+        drawables.sort(function (a, b) { return a.z - b.z; });
+    }
+
+    function AttackView(atk) {
+        this.atk = atk;
+        this.z = 0;
+    }
+
+    AttackView.prototype.updateZ = function() {
+        this.z = (this.atk.pos.x + this.atk.pos.y) / 2;
+    }
+
+    AttackView.prototype.draw = function(ctx, tempCanvas) {
+        if (this.atk.type === 'proj' && gl.time < this.atk.fireTime) {
+            return;
+        }
+        var pos = transpose(this.atk.pos)
+        pos.y -= this.atk.z * vvs.ratio;
+        circle(ctx, pos, this.atk.color, this.atk.radius * vvs.ratio, true);
+    }
+
+    // Implements drawable interface
+    function BodyView(body) {
+        this.body = body;
+        this.z = 0;
+        this.color = this.body.isHero() ? 'rgba(0, 150, 240, 1)' : 'rgba(240, 20, 30, 1)';
+    }
+
+    BodyView.prototype.updateZ = function() {
+        this.z = (this.body.pos.x + this.body.pos.y) / 2;
+    }
+
+    BodyView.prototype.draw = function(ctx, tempCanvas) {
+        var coords = transpose(this.body.pos);
         var p;
-        var height = body.spec.height * vvs.ratio;
-        var width = body.spec.width * vvs.ratio;
+        var height = this.body.spec.height * vvs.ratio;
+        var width = this.body.spec.width * vvs.ratio;
         ctx.lineCap = 'round';
-        ctx.lineWidth = body.spec.lineWidth * vvs.ratio;
+        ctx.lineWidth = this.body.spec.lineWidth * vvs.ratio;
 
         height *= 3 / 4
 
@@ -316,35 +352,35 @@ namespace.module('bot.vis', function (exports, require) {
         var bodyPos = [headPos, new Point(0, legSize)]; 
 
         // head
-        circle(ctx, coords.sub(headPos), color, headSize, true);
-        //isoCircle(ctx, coords.sub(headPos), color, headSize, headSize, true);
+        circle(ctx, coords.sub(headPos), this.color, headSize, true);
+        //isoCircle(ctx, coords.sub(headPos), this.color, headSize, headSize, true);
 
         // draw body, legs
         var legFrame = 0;
-        if (body.hasMoved) {
+        if (this.body.hasMoved) {
             legFrame = Math.abs(Math.floor(gl.time % 400 / 20) - 10);
         }
         ctx.beginPath();
         lines(ctx,
               coords.sub(bodyPos[0]),
               coords.sub(bodyPos[1]),
-              coords.add(new Point(width / 2 * (10 - legFrame) / 10, 0))
+              coords.add(new Point(width / 2 * (1 - legFrame / 10), 0))
              );
 
         lines(ctx,
               coords.sub(bodyPos[1]),
-              coords.sub(new Point(width / 2 * (10 - legFrame) / 10, 0))
+              coords.sub(new Point(width / 2 * (1 - legFrame / 10), 0))
              );
 
         // arms
         var rArm;
         var lArm;
 
-        if (body.busy()) {
-            var ra = ((body.nextAction - gl.time) / body.lastDuration + .1) * 1.3 * Math.PI * 2;
+        if (this.body.busy()) {
+            var ra = ((this.body.nextAction - gl.time) / this.body.lastDuration + .1) * 1.3 * Math.PI * 2;
             var mra = Math.PI / 4 * Math.sin(ra);
 
-            var la = ((body.nextAction - gl.time) / body.lastDuration) * Math.PI * 2;
+            var la = ((this.body.nextAction - gl.time) / this.body.lastDuration) * Math.PI * 2;
             var mla = Math.PI / 4 * Math.sin(la);
 
             rArm = new Point(Math.cos(mra) * width / 2, Math.sin(mra) * width / 2);
@@ -368,23 +404,7 @@ namespace.module('bot.vis', function (exports, require) {
 
         ctx.stroke();        
 
-        drawNameHealth(ctx, tempCanvas, body.spec.name, coords.sub(new Point(0, height)), body.hp / body.spec.maxHp);
-
-
-        /*
-        ctx.lineWidth = 1;
-        //HP fill
-        var hpCoords = coords.add(new Point(-15, -10 - height));
-        var pctHp = body.hp / body.spec.maxHp;
-        ctx.fillStyle = "#A00";
-        ctx.fillRect(hpCoords.x, hpCoords.y, pctHp * 30, 5);
-
-        //HP box
-        ctx.beginPath();
-        ctx.strokeStyle = 'black';
-        ctx.rect(hpCoords.x, hpCoords.y, 30, 5);
-        ctx.closePath();
-        ctx.stroke();*/
+        drawNameHealth(ctx, tempCanvas, this.body.spec.name, coords.sub(new Point(0, height)), this.body.hp / this.body.spec.maxHp);
     }
 
     function lines(ctx, p) {

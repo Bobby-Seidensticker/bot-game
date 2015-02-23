@@ -18,6 +18,11 @@ namespace.module('bot.vis', function (exports, require) {
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
 
+    var TEXTURES = {
+        'assets/floor.jpg': new Image()
+    };
+    _.each(TEXTURES, function(value, key) { value.src = key; });
+
     var VisView = Backbone.View.extend({
         tagName: 'div',
         className: 'vis',
@@ -63,8 +68,6 @@ namespace.module('bot.vis', function (exports, require) {
             }
             vvs.ratio = vvs.realSize / SIZE;
 
-            this.updateConstants();
-
             this.$el.css({
                 width: ss.x,
                 height: ss.y
@@ -95,12 +98,21 @@ namespace.module('bot.vis', function (exports, require) {
     var BackgroundTiles = gl.Model.extend({
         initialize: function(filename, canvasSize, imgSize, scale) {
             this.canvas = document.createElement('canvas');
-            this.img = new Image();
-            this.img.src = filename;
-            this.img.onload = this.cache.bind(this);
             this.canvasSize = canvasSize;
             this.imgSize = imgSize;
             this.scale = scale;
+
+            if (filename in TEXTURES) {
+                this.img = TEXTURES[filename];
+                this.img.onload = this.cache.bind(this);
+                this.cache();
+            } else {
+                log.error('%s not found in TEXTURES cache. Loading but not available instantly', filename);
+                this.img = new Image();
+                this.img.src = filename;
+                this.img.onload = this.cache.bind(this);
+                TEXTURES[filename] = this.img;
+            }
         },
 
         cache: function() {
@@ -131,7 +143,6 @@ namespace.module('bot.vis', function (exports, require) {
         className: 'bg',
 
         initialize: function(options, game) {
-            log.warning('bg view init');
             this.zone = game.zone;
 
             this.redraw = true;
@@ -148,7 +159,7 @@ namespace.module('bot.vis', function (exports, require) {
                 height: this.size.y
             });
 
-            this.tiles = new BackgroundTiles('assets/floor.jpg', new Point(4000, 4000), new Point(256, 256), 0.25);
+            this.tiles = new BackgroundTiles('assets/floor.jpg', new Point(4000, 4000), new Point(256, 256), vvs.ratio * 400);
 
             this.ctx = this.el.getContext('2d');
             this.force();
@@ -161,6 +172,7 @@ namespace.module('bot.vis', function (exports, require) {
 
         force: function() {
             this.redraw = true;
+            log.info('force background');
             this.render();
         },
 
@@ -196,12 +208,12 @@ namespace.module('bot.vis', function (exports, require) {
                 size = room.size.rawMult(vvs.ratio);
 
                 this.ctx.drawImage(this.tiles.canvas, 0, 0, size.x, size.y, pos.x, pos.y, size.x, size.y);
-
+                /*
                 this.ctx.font = '20px sans-serif';
                 this.ctx.fillStyle = '#eee';
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
-                this.ctx.fillText(i, pos.x + size.x / 2, pos.y + 25);
+                this.ctx.fillText(i, pos.x + size.x / 2, pos.y + 25);*/
             }
         },
     });
@@ -263,7 +275,7 @@ namespace.module('bot.vis', function (exports, require) {
                 drawable.draw(ctx, this.tempCanvas);
             }, this);
 
-            var pos;
+            /*var pos;
             pos = transpose(this.zone.getCurrentRoom().ent)
             pos.y -= 2;
             circle(ctx, pos, '#f00', 2, true);
@@ -272,8 +284,8 @@ namespace.module('bot.vis', function (exports, require) {
             if (exit) {
                 pos = transpose(exit);
                 pos.y -= 5;
-                circle(ctx, pos, '#0f0', 5, true);
-            }
+                circle(ctx, pos, '#0f0', 2, true);
+            }*/
 
             //drawAttacks(ctx, this.zone.attacks.attacks);
 

@@ -1,12 +1,12 @@
-// TODO wrap this in a closure
+$(function() {
+    var Model = gl.Model = function() {
+        this.id = _.uniqueId('m');
+        this.initialize.apply(this, arguments);
+    };
 
-var Model = gl.Model = function() {
-    this.id = _.uniqueId('m');
-    this.initialize.apply(this, arguments);
-};
+    _.extend(gl.Model.prototype, Backbone.Events, {
+        initialize: function() {}
+    });
 
-_.extend(gl.Model.prototype, Backbone.Events, {
-    initialize: function() {}
-});
-
-Model.extend = Backbone.Model.extend;
+    Model.extend = Backbone.Model.extend;
+}());

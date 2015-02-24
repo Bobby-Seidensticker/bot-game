@@ -5,30 +5,6 @@
 </head>
 
 <body>
-  <!--
-  <div class="header"></div>
-
-  <div class="vis"></div>
-
-  <div class="menu">
-    <ul class="tab-holder">
-      <li class="tab" id="map">Map</li>
-      <li class="tab" id="inv">Inv</li>
-      <li class="tab" id="craft">Craft</li>
-      <li class="tab" id="lvlup">Lvlup</li>
-      <li class="tab" id="settings">Settings</li>
-    </ul>
-    <div class="menu-holder">
-      <div class="sub-menu closed" id="map-menu-holder">map</div>
-      <div class="sub-menu closed" id="inv-menu-holder">inv</div>
-      <div class="sub-menu closed" id="craft-menu-holder">craft</div>
-      <div class="sub-menu closed" id="lvlup-menu-holder">lvlup</div>
-      <div class="sub-menu closed" id="settings-menu-holder">settings</div>
-    </div>
-  </div>
-
-  <div class="messages"></div>
-  -->
 
   <script id="item-slot-template" type="text/template">
     <% if (slot) { %>
@@ -42,21 +18,11 @@
     <% } %>
   </script>
 
-
-
   <script id="equipped-item-slot-template" type="text/template">
     <% if (model) { %>
     <div class="levelnum" style="float:right"><span><%= model.level %></span></div>
     <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
     <% } %>
-    <!--<img src="assets/wooden sword.svg" style="border: 0px; border-radius:3px;">
-    <div style="text-align: right"><%= slot %></div>
-    <% if (model) { %>
-      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
-      <div>Level <%= model.level %></div>
-    <% } else { %>
-      <div>Empty</div>
-    <% } %>-->
   </script>
 
   <script id="skillchain-item-slot-template" type="text/template">
@@ -243,7 +209,7 @@
     Level: <%= level %>
     <br/>
     Rooms: <%= roomCount %>,
-    Boss: <%= boss %>,
+    Boss: <%= boss %>
   </script>
 
   <script id="inv-menu-item-template" type="text/template">

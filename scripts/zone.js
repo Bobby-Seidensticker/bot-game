@@ -10,7 +10,6 @@ namespace.module('bot.zone', function (exports, require) {
     var entity = namespace.bot.entity;
     var prob = namespace.bot.prob;
     var itemref = namespace.bot.itemref;
-    var vector = namespace.bot.vector;
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
 
@@ -254,6 +253,10 @@ namespace.module('bot.zone', function (exports, require) {
         done: function() {
             return this.roomCleared() && this.heroPos === this.rooms.length - 1;
         },
+
+        getAttacks: function() {
+            return this.attacks.getAttacks();
+        },
     });
 
     var EntityBody = gl.Model.extend({
@@ -360,7 +363,7 @@ namespace.module('bot.zone', function (exports, require) {
         tryAttack: function(enemies, distances, room) {
             var minIndex = distances.minIndex();
             var minDist = distances[minIndex];
-            // TODO: make this work:
+
             for (var si = 0; si < this.skills.length; si++) {      // use first skill that:
                 if (this.skills[si] && 
                     this.skills[si].coolAt <= gl.time &&           // is cool
@@ -380,6 +383,8 @@ namespace.module('bot.zone', function (exports, require) {
         tryMove: function(enemies, distances, room) {
             if (this.busy()) { return; }
             this.hasMoved = true;
+
+            // Need some way of determining what range you move until
 
             var dist = this.spec.moveSpeed * gl.lastTimeIncr;
             var range = 1000;  // TODO range needs to come from somewhere
@@ -484,7 +489,6 @@ namespace.module('bot.zone', function (exports, require) {
             this.skills = _.map(
                 skills,
                 function(skill) {
-                    // TODO do the gl.time (fake time) stuff
                     if (skill.name in lookup) {
                         return {spec: skill, coolAt: lookup[skill.name].coolAt};
                     } else {
@@ -498,8 +502,7 @@ namespace.module('bot.zone', function (exports, require) {
         onKill: function(target) {
             var xpGained = target.spec.xpOnKill();
             this.spec.applyXp(xpGained);
-            // TODO ensure this works:
-            var drops =target.spec.getDrops();
+            var drops = target.spec.getDrops();
             if (drops.length) {
                 drops = _.filter(drops, function(drop, index) {
                     // get names and remove duplicate item drops

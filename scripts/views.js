@@ -700,7 +700,7 @@ namespace.module('bot.views', function (exports, require) {
 
 
             if (this.selectedSlot) {
-                var ctmtr = this.cardInv.getSlotCTMs(this.selectedSlot.slot);
+                var ctmtr = this.cardInv.getSlotCards(this.selectedSlot.slot);
             } else {
                 var ctmtr = this.cardInv.models;
             }

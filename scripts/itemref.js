@@ -654,7 +654,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireResist more -20", "type": "eleResist"},
                     {"def": "physDmg more -30", "type": "dmg"},
-                    
                 ],
             },
             "proto-grunt": {
@@ -689,35 +688,30 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg added 1 perLevel", "type": "dmg"}
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "hot sword": {
                 "mods": [
                     {"def": "fireDmg added 2 perLevel", "type": "dmg"}
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "cold sword": {
                 "mods": [
                     {"def": "coldDmg added 2 perLevel", "type": "dmg"}
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "surprisingly hot sword": {
                 "mods": [
                     {"def": "fireDmg more 1 perLevel", "type": "dmg"}
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "honed blade": {
                 "mods": [
                     {"def": "physDmg added 2 perLevel", "type": "dmg"}
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
 
             "breadhat": {
@@ -725,7 +719,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "armor added 4 perLevel", "type": "def"}
                 ],
                 "slot": "head",
-                "levels": 10
             },            
             "six pack": {
                 "mods": [
@@ -733,21 +726,18 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "armor added 8 perLevel", "type": "def"}
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "steel toed": {
                 "mods": [
                     {"def": "armor added 4 perLevel", "type": "def"}
                 ],
                 "slot": "legs",
-                "levels": 10
             },
             "extra plating": {
                 "mods": [
                     {"def": "armor added 3 perLevel", "type": "def"}
                 ],
                 "slot": "hands",
-                "levels": 10
             },
             
             "quenching blade": {
@@ -755,14 +745,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "cool shoes": {
                 "mods": [
                     {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
                 "slot": "legs",
-                "levels": 10
             },
             "compression shorts": {
                 "mods": [
@@ -770,7 +758,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "moveSpeed added 20 perLevel", "type": "def"},
                 ],
                 "slot": "legs",
-                "levels": 10
             },
 
             "asbestos lining": {
@@ -778,14 +765,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
                 "slot": "hands",
-                "levels": 10
             },
             "sopping underclothes": {
                 "mods": [
                     {"def": "fireResist more -5 perLevel", "type": "eleResist"}
                 ],
                 "slot": "chest",
-                "levels": 10
             },
 
             "brain juice": {
@@ -793,21 +778,18 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "manaRegen added 2 perLevel", "type": "def"}
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "heart juice": {
                 "mods": [
                     {"def": "hpRegen added 1 perLevel", "type": "def"}
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "head of vigor": {
                 "mods": [
                     {"def": "maxHp added 5 perLevel", "type": "def"}
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "nimble": {
                 "mods": [
@@ -815,7 +797,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "dodge added 20", "type": "def"}
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "bloodsucker": {
                 "mods": [
@@ -823,14 +804,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg added 1 perLevel", "type": "dmg"}
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "strong back": {
                 "mods": [
                     {"def": "strength added 5 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "thwomping": {
                 "mods": [
@@ -840,35 +819,30 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "moveSpeed more -75", "type": "def"},
                 ],
                 "slot": "legs",
-                "levels": 10
             },
             "dexterous hands": {
                 "mods": [
                     {"def": "dexterity added 5 perLevel", "type": "def"},
                 ],
                 "slot": "hands",
-                "levels": 10
             },
             "dummy" : {
                 "mods": [
                     {"def": "moveSpeed added -300", "type": "def"},
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "fear" : {
                 "mods": [
                     {"def": "moveSpeed added -400", "type": "def"},
                 ],
                 "slot": "legs",
-                "levels": 10
             },
             "stinging": {
                 "mods": [
                     {"def": "physDmg added 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "ignited": {
                 "mods": [
@@ -876,7 +850,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "fireDmg more 2 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "frosted": {
                 "mods": [
@@ -884,7 +857,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "coldDmg more 2 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "charged": {
                 "mods": [
@@ -892,7 +864,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "lightDmg more 2 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "putrified": {
                 "mods": [
@@ -900,7 +871,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "poisDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "heart of granite": {
                 "mods": [
@@ -908,7 +878,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "armor more 3 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "heart of granite": {
                 "mods": [
@@ -916,7 +885,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "armor more 3 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "small stature": {
                 "mods": [
@@ -926,21 +894,18 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "dodge more 3 perLevel", "type": "def"},                    
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "keen wit": {
                 "mods": [
                     {"def": "wisdom added 5 perLevel", "type": "def"},
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "electrified": {
                 "mods": [
                     {"def": "lightDmg more 3 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "flying": {
                 "mods": [
@@ -949,7 +914,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     //TODO - flying vis stuff
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "clawed": {
                 "mods": [
@@ -957,7 +921,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 10", "type": "dmg"},
                 ],
                 "slot": "hands",
-                "levels": 10
             },
             "riveted": {               
                 "mods": [
@@ -965,7 +928,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "armor more 5 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "clockwork": {
                 "mods": [
@@ -973,7 +935,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "speed more -15", "type": "dmg"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "mecha heart": {
                 "mods": [
@@ -982,14 +943,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "hpRegen added 2 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "steam powered": {
                 "mods": [
                     {"def": "manaRegen added 5 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "goblin toe": {
                 "mods": [
@@ -997,7 +956,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 25", "type":"dmg"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "berserking": {
                 "mods": [
@@ -1006,7 +964,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "maxHp more -50", "type": "def"},
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "simple minded": {
                 "mods": [
@@ -1015,7 +972,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "meleeDmg added 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "explosive bolts": {
                 "mods": [
@@ -1024,7 +980,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "skill",
                 "types": ["range"],
-                "levels": 10
             },
             "shambling": {
                 "mods": [
@@ -1032,7 +987,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 3 perLevel", "type": "dmg"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "unwashed hands": {
                 "mods": [
@@ -1040,7 +994,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "poisDmg more 3 perLevel", "type": "dmg"},
                 ],
                 "slot": "hands",
-                "levels": 10
             },
             "indigenous toxins": {
                 "mods": [
@@ -1048,14 +1001,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "poisDmg more 3 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "non-newtownian fluid": {
                 "mods": [
                     {"def": "armor added 10 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "big": {
                 "mods": [
@@ -1065,7 +1016,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "maxHp more 2 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "buff": {
                 "mods": [
@@ -1076,7 +1026,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "rangeDmg more 3 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "vampyric touch": {
                 "mods": [
@@ -1084,7 +1033,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "hands",
-                "levels": 10
             },
             "vampyric embrace": {
                 "mods": [
@@ -1092,7 +1040,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "soulsucker": {
                 "mods": [
@@ -1100,7 +1047,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "alabaster": {
                 "mods": [
@@ -1108,7 +1054,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "armor added 100", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "vest pockets": {
                 "mods": [
@@ -1116,7 +1061,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "speed more -1 perLevel", "type": "dmg"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "precise": {
                 "mods": [
@@ -1124,7 +1068,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "fleece lining": {
                 "mods": [
@@ -1132,7 +1075,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "coldResist more -1 perLevel", "type": "eleResist"},
                 ],
                 "slot": "hands",
-                "levels": 10
             },
             "fur hat": {
                 "mods": [
@@ -1140,7 +1082,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "coldResist more -1 perLevel", "type": "eleResist"},
                 ],
                 "slot": "head",
-                "levels": 10
             },
             "chinchilla lining": {
                 "mods": [
@@ -1148,7 +1089,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "coldResist more -1 perLevel", "type": "eleResist"},
                 ],
                 "slot": "legs",
-                "levels": 10
             },
             "yeti fur": {
                 "mods": [
@@ -1156,7 +1096,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "coldResist more -1 perLevel", "type": "eleResist"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "ice plating": {
                 "mods": [
@@ -1164,21 +1103,18 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "fireResist more -1 perLevel", "type": "eleResist"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "shadow walker": {
                 "mods": [
                     {"def": "dodge added 20 perLevel", "type": "def"},
                 ],
                 "slot": "legs",
-                "levels": 10
             },
             "full plating": {
                 "mods": [
                     {"def": "armor added 20 perLevel", "type": "def"},
                 ],
                 "slot": "chest",
-                "levels": 10
             },
             "hateful blade": {
                 "mods": [
@@ -1186,7 +1122,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
-                "levels": 10
             },
             "ethereal": {
                 "mods": [
@@ -1194,7 +1129,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "dodge added 100", "type": "def"},
                 ],
                 "slot": "hands",
-                "levels": 10
             },
             "pyromania": {
                 "mods": [
@@ -1203,7 +1137,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "fireDmg gainedas 1 hpLeech", "type":"dmg"}
                 ],
                 "slot": "head",
-                "levels": 10
             },
         },
         "monster": {

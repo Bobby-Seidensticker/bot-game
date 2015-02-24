@@ -305,10 +305,8 @@ namespace.module('bot.inv', function (exports, require) {
             log.debug('skill chain compute attrs');
 
             this.lastDmgStats = dmgStats;
-            _.each(this.skills, function(skill) {
-                if (skill !== undefined) {
-                    skill.computeAttrs(dmgStats, weaponType, dmgKeys, actualDmgKeys);
-                }
+            _.each(_.compact(this.skills), function(skill) {
+                skill.computeAttrs(dmgStats, weaponType, dmgKeys, actualDmgKeys);
             });
 
             this.trigger('skillComputeAttrs');
@@ -431,94 +429,67 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         addDrops: function(drops) {
-            // TODO add checking in here to ignore duplicates and do something about cards n stuff
-            var drop;
-            for (var i = 0; i < drops.length; i++) {
-                drop = drops[i];
-                if (drop.dropType === 'card') {
-                    continue;
+            var messages = [];
+            _.each(drops, function(drop) {
+                if (_.findWhere(this.models, {name: drop.name})) {
+                    return;
                 }
-                if (drop.dropType === 'weapon' || drop.dropType === 'armor') {
-                    var exists = !!(_.findWhere(this.models, {itemType: drop.data[0], type: drop.data[1], classLevel: drop.data[2]}));
-                    if (!exists) {
-                        gl.DirtyQueue.mark('inventory:new');
-                        if (drop.dropType === 'weapon') {
-                            this.models.push(new WeaponModel(drop.data[2], drop.data[1]));
-                            this.sort();
-                            log.info('Adding %s %s %d to inv', drop.data[0], drop.data[1], drop.data[2]);
-                        } else if (drop.dropType === 'armor') {
-                            this.models.push(new ArmorModel(drop.data[2], drop.data[1]));
-                            this.sort();
-                            log.info('Adding %s %s %d to inv', drop.data[0], drop.data[1], drop.data[2]);
-                        }
-                    } else {
-                        log.info('Already have %s %s %d', drop.data[0], drop.data[1], drop.data[2]);
-                    }
-                } else if (drop.dropType === 'skill') {
-                    var exists = !!(_.findWhere(this.models, {name: drop.data}));
-                    if (!exists) {
-                        gl.DirtyQueue.mark('inventory:new');
-                        this.models.push(new SkillModel(drop.data));
-                        this.sort();
-                        log.info('Adding skill %s', drop.data);
-                    } else {
-                        log.info('Already have skill %s', drop.data);
-                    }
+                if (drop.type === 'skill') {
+                    this.models.push(new SkillModel(drop.name));
+                } else if (drop.dropType === 'weapon') {
+                    this.models.push(new WeaponModel(drop.classLevel, drop.type));
+                } else if (drop.dropType === 'armor') {
+                    this.models.push(new ArmorModel(drop.classLevel, drop.type));
                 }
-            }
+                this.sort();
+                log.info('Adding %s %s to inv', drop.type, drop.name);
+                gl.DirtyQueue.mark('inventory:new');
+                messages.push(drop.name);
+            }, this);
+            return messages;
         }
     });
 
-    var CardTypeModel = gl.Model.extend({
+    var CardModel = gl.Model.extend({
         initialize: function(name) {
             _.extend(this, itemref.expand('card', name));
-            this.itemType = 'ctm';
+            this.itemType = 'card';
             this.name = name;
-            this.amts = [];
-            this.equipped = [];
-            // this.amts and equipped have 0 undefined so weird stuff will happen if you access / write them
-            // the 0th element is ignored so we don't have to deal with index and level being different
-            for (var i = 1; i <= this.levels; i++) {
-                this.amts[i] = 0;
-                this.equipped[i] = 0;
+            this.equipped = false;
+            this.qp = 0;
+            this.level = 1;
+        },
+
+        getMods: function() {
+            log.debug('CardTypeModel.getMods. name: %s, level: %d', this.name, this.level);
+            return utils.applyPerLevels(this.mods, this.level);
+        },
+
+        applyQp: function(qp) {
+            var levels = 0;
+            this.qp += qp;
+            if (this.canLevel()) {
+                this.levelUp();
+                levels++;
             }
+            if (levels && this.equipped) {
+                this.trigger('change');
+            }
+            return levels;
         },
 
-        levelAvailable: function(level) {
-            return level <= this.levels && this.amts[level] > 0 && this.equipped[level] === 0;
+        canLevel: function() {
+            return this.qp >= this.getNextLevelQp();
         },
 
-        getMods: function(level) {
-            log.debug('CardTypeModel.getMods. name: %s, level: %d, amts: %d, equipped: %d',
-                      this.name, level, this.amts[level], this.equipped[level]);
-
-            return utils.applyPerLevels(this.mods, level);
+        getNextLevelQp: function() {
+            return Math.pow(10, this.level);
         },
 
-        /*// Must already be available, and called must then equip it
-        getCard: function(level) {
-            log.debug('CardTypeModel.getCard. name: %s, level: %d, amts: %d, equipped: %d',
-                      this.name, level, this.amts[level], this.equipped[level]);
-
-            this.equipped[level] = 1;
-            return {
-                mods: this.mods,
-                level: level,
-                callback: _.bind(this.unequip, this, level)
-            };
-        },*/
-
-        // this is called with level, not index.  If it's out of range, you're screwed, so don't do that
-        equip: function(level) {
-            this.equipped[level]++;
-            log.warning('CardTypeModel.equip card name: %s, level: %d, current equipped[level]: %d',
-                     this.name, level, this.equipped[level]);
-        },
-
-        unequip: function(level) {
-            this.equipped[level]--;
-            log.warning('CardTypeModel.unequip card name: %s, level: %d, current equipped[level]: %d',
-                     this.name, level, this.equipped[level]);
+        levelUp: function() {
+            this.qp -= this.getNextLevelQp();
+            this.level += 1;
+            log.info('card %s leveling up to %d', this.name, this.level);
         },
 
         addCard: function(level) {
@@ -536,31 +507,33 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
-    var CardTypeCollection = gl.Model.extend({
+    var CardCollection = gl.Model.extend({
         initialize: function() {
             this.models = [];
         },
 
         addDrops: function(drops) {
-            var drop;
-            for (var i = 0; i < drops.length; i++) {
-                drop = drops[i];
-                if (drop.dropType !== 'card') {
-                    continue;
+            var messages = [];
+            _.each(drops, function(drop) {
+                var existingCard = _.findWhere(this.models, {name: drop.name});
+                if (existingCard) {
+                    var qp = Math.pow(10, drop.level)
+                    existingCard.applyQp(qp);
+                    messages.push(qp + ' ' + drop.name + ' qp');
+                } else {
+                    var card = new CardModel(drop.name);
+                    this.models.push(card);
+                    card.applyQp(10, qp);
+                    messages.push(drop.name);
                 }
-                var typeModel = _.findWhere(this.models, {name: drop.data[0]});
-                if (typeModel === undefined) {
-                    typeModel = new CardTypeModel(drop.data[0]);
-                    this.models.push(typeModel);
-                }
-                typeModel.addCard(drop.data[1]);
-                log.debug('Added card %s level %d to card inv', drop.data[0], drop.data[1]);
+                log.debug('Added card %s level %d to card inv', drop.name, drop.level);
                 gl.DirtyQueue.mark('cards:new');
-            }
+            }, this);
+            return messages;
         },
 
-        getSlotCTMs: function(slot) {
-            if(typeof(slot) == "number") {
+        getSlotCards: function(slot) {
+            if (typeof(slot) == "number") {
                 slot = 'skill';
             }
             return _.filter(this.models, function(model) { return model.slot === slot; });
@@ -569,8 +542,8 @@ namespace.module('bot.inv', function (exports, require) {
 
     exports.extend({
         ItemCollection: ItemCollection,
-        CardTypeCollection: CardTypeCollection,
-        CardTypeModel: CardTypeModel,
+        CardCollection: CardCollection,
+        CardModel: CardModel,
         WeaponModel: WeaponModel,
         ArmorModel: ArmorModel,
         SkillModel: SkillModel,

@@ -440,6 +440,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
+                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 3000, mods: [], onHit: [], onKill: [], onRemove: [] }],                
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'speed added 1000', type: 'dmg'},
@@ -1241,7 +1242,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "melee", 2]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
-                    ["heart of granite", 0],
+                    ["heart of granite", 1],
                     ["ignited", 1]
                 ],
             },
@@ -1249,7 +1250,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "melee", 2]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
-                    ["heart of granite", 0],
+                    ["heart of granite", 1],
                     ["frosted", 1]
                 ],
             },
@@ -1257,7 +1258,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "melee", 2]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
-                    ["heart of granite", 0],
+                    ["heart of granite", 1],
                     ["charged", 1]
                 ],
             },
@@ -1265,7 +1266,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "melee", 2]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
-                    ["heart of granite", 0],
+                    ["heart of granite", 1],
                     ["putrified", 1]
                 ],
             },
@@ -1495,6 +1496,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "melee", 2]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
+                    ["big", 1],
                     ["fleece lining", 1],
                     ["frosted", 1],
                     ["chinchilla lining", 1],

@@ -10,6 +10,7 @@ namespace.module('bot.entity', function (exports, require) {
     var utils = namespace.bot.utils;
     var itemref = namespace.bot.itemref;
     var prob = namespace.bot.prob;
+    var dropLib = namespace.bot.drops;
 
     var defKeys = ['strength', 'vitality', 'wisdom', 'dexterity', 'maxHp', 'maxMana', 'armor',
                    'dodge', 'eleResistAll', 'hpRegen', 'manaRegen', 'moveSpeed'];
@@ -233,52 +234,36 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         getDrops: function() {
-            var drops = [];
-            var pick;
+            var cardDrops = [];
+            var gearDrops = [];
+            var any = false;
             if (Math.random() < 1) { // 0.03 * 10) {
                 if (this.droppableCards.length) {
-                    drops.push(new CardDrop(this.droppableCards[prob.pyRand(0, this.droppableCards.length)]));
+                    cardDrops.push(
+                        dropLib.dropFactory('card', this.droppableCards[prob.pyRand(0, this.droppableCards.length)])
+                    );
+                    any = true;
                 }
             }
-            if (Math.random() < 1) { //0.001 * 50) {
+            if (Math.random() < 1) { // 0.001 * 50) {
                 if (this.items.length) {
-                    drops.push(new ItemDrop(this.items[prob.pyRand(0, this.items.length)]));
+                    gearDrops.push(
+                        dropLib.dropFactory('item', this.items[prob.pyRand(0, this.items.length)])
+                    );
+                    any = true;
                 }
             }
-            if (Math.random() < 1) { //0.001 * 50) {
+            if (Math.random() < 1) { // 0.001 * 50) {
                 if (this.skills.length) {
-                    drops.push(new SkillDrop(this.skills[prob.pyRand(0, this.skills.length)]));
+                    gearDrops.push(
+                        dropLib.dropFactory('skill', this.skills[prob.pyRand(0, this.skills.length)])
+                    );
+                    any = true;
                 }
             }
-            if (drops.length > 0) {
-                log.debug('%s is dropping %s', this.name, JSON.stringify(drops));
-            }
-            return drops;
+            return {cardDrops: cardDrops, gearDrops: gearDrops, any: any};
         }
     });
-
-    function CardDrop(data) {
-        this.dropType = 'card';
-        this.name = data[0];
-        this.level = data[1];
-        this.displayStr = this.name + ' ' + this.level;
-        log.info('new CardDrop, name: %s, level: %d, displayStr: %s', this.name, this.level, this.displayStr);
-    }
-
-    function ItemDrop(data) {
-        this.dropType = 'item';
-        this.itemType = data[0];
-        this.type = data[1];
-        this.classLevel = data[2];
-        this.name = itemref.ref[this.itemType][this.type].names[this.classLevel];
-        this.displayStr = this.name;
-    }
-
-    function SkillDrop(name) {
-        this.dropType = 'skill';
-        this.name = name;
-        this.displayStr = this.name;
-    }
 
     function newHeroSpec(inv, cardInv) {
         // stopgap measures: basic equipped stuff

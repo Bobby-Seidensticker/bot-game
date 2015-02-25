@@ -502,18 +502,11 @@ namespace.module('bot.zone', function (exports, require) {
         onKill: function(target) {
             var xpGained = target.spec.xpOnKill();
             this.spec.applyXp(xpGained);
-            var drops = target.spec.getDrops();
-            if (drops.length) {
-                var messages = this.spec.inv.addDrops(
-                    _.filter(drops, function(drop) {
-                        return drop.dropType !== 'card';
-                    }));
-                
-                messages = messages.concat(
-                    this.spec.cardInv.addDrops(
-                        _.filter(drops, function(drop) {
-                            return drop.dropType === 'card';
-                        })));
+            var allDrops = target.spec.getDrops();
+            if (allDrops.any) {
+                var invMessages = this.spec.inv.addDrops(allDrops.gearDrops);
+                var cardMessages = this.spec.cardInv.addDrops(allDrops.cardDrops);
+                var messages = invMessages.concat(cardMessages);
 
                 _.each(messages, function(message, index) {
                     gl.MessageEvents.trigger(

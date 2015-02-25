@@ -433,21 +433,17 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             var messages = [];
+            log.warning('adding %d inv drops', drops.length);
             _.each(drops, function(drop) {
+                console.log(drop);
                 if (_.findWhere(this.models, {name: drop.name})) {
                     return;
                 }
-                if (drop.type === 'skill') {
-                    this.models.push(new SkillModel(drop.name));
-                } else if (drop.dropType === 'weapon') {
-                    this.models.push(new WeaponModel(drop.classLevel, drop.type));
-                } else if (drop.dropType === 'armor') {
-                    this.models.push(new ArmorModel(drop.classLevel, drop.type));
-                }
+                this.models.push(drop.make());
                 this.sort();
-                log.info('Adding %s %s to inv', drop.type, drop.name);
+                messages.push(drop.message());
+                log.warning('Adding %s %s to inv', drop.type, drop.name);
                 gl.DirtyQueue.mark('inventory:new');
-                messages.push(drop.name);
             }, this);
             return messages;
         }
@@ -517,18 +513,16 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             var messages = [];
+            log.warning('adding card drops');
             _.each(drops, function(drop) {
                 var existingCard = _.findWhere(this.models, {name: drop.name});
                 if (existingCard) {
-                    var qp = Math.pow(10, drop.level)
-                    existingCard.applyQp(qp);
-                    messages.push(qp + ' ' + drop.name + ' qp');
+                    drop.update(existingCard);
                 } else {
-                    var card = new CardModel(drop.name);
-                    this.models.push(card);
-                    card.applyQp(10, qp);
-                    messages.push(drop.name);
+                    this.models.push(drop.make());
                 }
+                messages.push(drop.message());
+
                 log.debug('Added card %s level %d to card inv', drop.name, drop.level);
                 gl.DirtyQueue.mark('cards:new');
             }, this);

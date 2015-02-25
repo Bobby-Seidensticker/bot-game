@@ -6,6 +6,9 @@ namespace.module('bot.views', function (exports, require) {
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
 
+    // highlight open tab
+    // show unequip X on hover
+
     var GameView = Backbone.View.extend({
         el: $('body'),
 
@@ -242,7 +245,7 @@ namespace.module('bot.views', function (exports, require) {
             if (this.view) {
                 this.$el.css('display', 'block');
                 // Avoid crashes due to undefineds
-                this.$el.html(this.template(_.extend({model: undefined, level: 'hngg'}, this.view)));
+                this.$el.html(this.template(this.view));
             } else {
                 this.$el.css('display', 'none');
             }
@@ -266,10 +269,16 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
+            if (this.slot !== undefined) {
+                this.$el.addClass('hovering');
+            }
             gl.UIEvents.trigger('mouseover', this);
         },
 
         onMouseout: function() {
+            if (this.slot !== undefined) {
+                this.$el.removeClass('hovering');
+            }
             gl.UIEvents.trigger('mouseout');
         },
 
@@ -279,56 +288,44 @@ namespace.module('bot.views', function (exports, require) {
             this.selected = options.selected;
             this.isValidSlot = options.validSlot;
             this.template = _.template($('#' + loc + '-item-slot-template').html());
-            if(this.selected) {
+            if (this.selected) {
                 this.select();
             }
+            this.listenTo(gl.UIEvents, 'mouseover', this.onGlobalMouseover);
+            this.listenTo(gl.UIEvents, 'mouseout', this.onGlobalMouseout);
             this.render();
-            this.listenTo(gl.UIEvents, 'mouseover', this.tryAddValid);
-            this.listenTo(gl.UIEvents, 'mouseout', this.wipeValid);
         },
         select: function() { this.selected = true; this.$el.addClass('selected');  },
-        unselect: function() {
-            this.selected = false;
-            //console.log("TODO: unselecting does not always happen properly", this.model.name);
-            this.$el.removeClass('selected'); },
+        unselect: function() { this.selected = false; this.$el.removeClass('selected'); },
         toggleSelect: function() { this.$el.toggleClass('selected'); },
         empty: function() { this.model = undefined; this.render(); },
         fill: function(model) { this.model = model; this.render(); },
 
-        tryAddValid: function(hovered) {            
-            if(hovered.slot != undefined) {
-                return;
-            }
-            if((hovered.model.itemType == "skill" && this.loc=="skillchain") ||
-               (hovered.model.itemType == "weapon" && this.slot == "weapon") ||
-               (hovered.model.itemType == "armor" && hovered.model.type == this.slot) ||
-               (hovered.model.itemType == "ctm" && hovered.model.slot == "skill" && this.loc == "skillchain") ||
-               (hovered.model.itemType == "ctm" && hovered.model.slot == this.slot )) {
-                this.isValidSlot = true;
-                this.$el.addClass('validSlot');
+        onGlobalMouseover: function(hoveredSlot) {
+            if (hoveredSlot.slot !== undefined) { return; }  // Is a fixed slot, ignore
+
+            if ((hoveredSlot.model.itemType === 'skill' && this.loc === 'skillchain') ||
+                (hoveredSlot.model.itemType === 'weapon' && this.slot === 'weapon') ||
+                (hoveredSlot.model.itemType === 'armor' && hoveredSlot.model.type === this.slot) ||
+                (hoveredSlot.model.itemType === 'card' && hoveredSlot.model.slot === 'skill' && this.loc === 'skillchain') ||
+                (hoveredSlot.model.itemType === 'card' && hoveredSlot.model.slot === this.slot )) {
+                this.hovering = true;
+                this.$el.addClass('yellow');
             }
         },
 
-        wipeValid: function() {
-            this.isValidSlot = false;
-            this.$el.removeClass('validSlot');
+        onGlobalMouseout: function() {
+            this.hovering = false;
+            this.$el.removeClass('yellow');
         },
         
         render: function() {
             this.$el.html(this.template(this));
-            if(this.isValidSlot) {
-                this.$el.addClass('validSlot');
-            } else {
-                this.$el.removeClass('validSlot');
+            if (this.hovering) {
+                this.$el.addClass('yellow');
             }
-
-            if (this.model) {
-                this.$el.css({"background-image": "url('assets/" + this.model.name +".svg')"});
-                if (this.model.disabled) {
-                    this.$el.addClass('disabled');
-                } else {
-                    this.$el.removeClass('disabled');
-                }
+            if (this.model && this.model.disabled) {
+                this.$el.addClass('red');
             }
             return this;
         }
@@ -341,10 +338,10 @@ namespace.module('bot.views', function (exports, require) {
         className: 'itemTab',
         template: _.template($('#item-tab-template').html()),
 
-        initialize: function(options, game) {  // itemCollection, equippedGearModel, skillchain) {
-            this.equipped = game.hero.equipped;  // equippedGearModel;
-            this.skillchain = game.hero.skillchain;  // skillchain;
-            this.inventory = game.inv; // itemCollection;
+        initialize: function(options, game) {
+            this.equipped = game.hero.equipped;
+            this.skillchain = game.hero.skillchain;
+            this.inventory = game.inv;
 
             this.subs = {
                 equipped: [],
@@ -446,7 +443,7 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
             var selectedId = undefined;
-            if(this.selected) {
+            if (this.selected) {
                 selectedId = this.selected.model.id;
                 //console.log(this.selected.model);
             }
@@ -470,7 +467,7 @@ namespace.module('bot.views', function (exports, require) {
                 return model.equipped === false;
             });
             _.each(invOnly, function(model) {
-                if(selectedId != undefined && model.id == selectedId) {
+                if(selectedId !== undefined && model.id === selectedId) {
                     this.newItemSlot(model, 'inventory', undefined, true);
                 } else {
                     this.newItemSlot(model, 'inventory');
@@ -513,13 +510,12 @@ namespace.module('bot.views', function (exports, require) {
         className: 'itemSlot',
         template: _.template($('#card-slot-template').html()),
 
-        initialize: function(options, level, loc, slot) {
-            this.level = level;
-            this.loc = loc;                //this.loc = 'card-inventory';
+        initialize: function(options, loc, slot) {
+            this.loc = loc;        // this.loc = 'card-inventory';
             this.slot = slot;
+            this.listenTo(gl.UIEvents, 'mouseover', this.onGlobalMouseover);
+            this.listenTo(gl.UIEvents, 'mouseout', this.onGlobalMouseout);
             this.render();
-            this.listenTo(gl.UIEvents, 'mouseover', this.tryAddValid);
-            this.listenTo(gl.UIEvents, 'mouseout', this.wipeValid);
         },
 
         events: {
@@ -533,10 +529,16 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseover: function() {
+            if (this.slot !== undefined) {
+                this.$el.addClass('hovering');
+            }
             gl.UIEvents.trigger('mouseover', this);
         },
 
         onMouseout: function() {
+            if (this.slot !== undefined) {
+                this.$el.removeClass('hovering');
+            }
             gl.UIEvents.trigger('mouseout');
         },
 
@@ -544,25 +546,25 @@ namespace.module('bot.views', function (exports, require) {
 
         render: function() {
             this.$el.html(this.template(_.extend({model: this.model}, this)));
-            if(this.model) {
-                this.$el.css({"background-image": "url('assets/" + this.model.name +".svg')"});
+            if (this.hovering) {
+                this.$el.addClass('yellow');
+            }
+            if (this.model && this.model.disabled) {
+                this.$el.addClass('red');
             }
             return this;
         },
 
-        tryAddValid: function(hovered) {
-            if(hovered.slot != undefined) {
-                return;
-            }
-            if(this.loc == "equipped-cards" && hovered.slot == undefined) {
-                this.isValidSlot = true;
-                this.$el.addClass('validSlot');
+        onGlobalMouseover: function(hoveredSlot) {
+            if (hoveredSlot.slot !== undefined && this.loc === 'equipped-cards') {
+                this.hovering = true;
+                this.$el.addClass('yellow');
             }
         },
 
-        wipeValid: function() {
-            this.isValidSlot = false;
-            this.$el.removeClass('validSlot');
+        onGlobalMouseout: function() {
+            this.hovering = false;
+            this.$el.removeClass('yellow');
         },
     });
 
@@ -625,7 +627,7 @@ namespace.module('bot.views', function (exports, require) {
                 }
             } else if (clickedView.loc === 'equipped-cards') {
                 if (this.selectedCard) {
-                    this.selectedSlot.model.equipCard({model: this.selectedCard.model, level: this.selectedCard.level}, clickedView.slot);
+                    this.selectedSlot.model.equipCard(this.selectedCard.model, clickedView.slot);
                 } else {
                     this.selectedSlot.model.equipCard(undefined, clickedView.slot);
                 }
@@ -687,33 +689,27 @@ namespace.module('bot.views', function (exports, require) {
 
                 _.each(this.selectedSlot.model.cards, function(card, slot) {
                     if (card) {
-                        var view = new CardSlot({model: card.model}, card.level, 'equipped-cards', slot);
+                        var view = new CardSlot({model: card}, 'equipped-cards', slot);
                     } else {
-                        var view = new CardSlot({}, undefined, 'equipped-cards', slot);
+                        var view = new CardSlot({}, 'equipped-cards', slot);
                     }
                     this.views.push(view);
                     frag.appendChild(view.el);
                 }, this);
 
                 this.$('.equipped-cards').append(frag);
-            }
 
-
-            if (this.selectedSlot) {
-                var ctmtr = this.cardInv.getSlotCTMs(this.selectedSlot.slot);
+                var cards = this.cardInv.getSlotCards(this.selectedSlot.slot);
             } else {
-                var ctmtr = this.cardInv.models;
+                var cards = this.cardInv.models;
             }
+            cards = _.filter(cards, function(card) { return !card.equipped; });
 
             frag = document.createDocumentFragment();
-            _.each(ctmtr, function(ctm, i) {
-                for (var level = 1; level <= ctm.levels; level++) {
-                    if (ctm.amts[level] > 0 && ctm.equipped[level] === 0) {
-                        var view = new CardSlot({model: ctm}, level, 'card-inventory');
-                        this.views.push(view);
-                        frag.appendChild(view.el);
-                    }
-                }
+            _.each(cards, function(card) {
+                var view = new CardSlot({model: card}, 'card-inventory');
+                this.views.push(view);
+                frag.appendChild(view.el);
             }, this);
 
             this.$('.card-inventory').append(frag);
@@ -733,7 +729,7 @@ namespace.module('bot.views', function (exports, require) {
             if (this.selectedCard) {
                 for (var i = 0; i < this.views.length; i++) {
                     var v = this.views[i];
-                    if (v.model && v.model.id === this.selectedCard.model.id && v.level === this.selectedCard.level) {
+                    if (v.model && v.model.id === this.selectedCard.model.id) {
                         this.selectedCard = v;
                         this.selectedCard.select();
                         break;

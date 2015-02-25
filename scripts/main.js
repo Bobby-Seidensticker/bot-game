@@ -35,7 +35,7 @@ namespace.module('bot.main', function (exports, require) {
             gl.messages = new namespace.bot.messages.Messages();
 
             this.inv = new inv.ItemCollection();
-            this.cardInv = new inv.CardTypeCollection();
+            this.cardInv = new inv.CardCollection();
             this.hero = new entity.newHeroSpec(this.inv, this.cardInv);
             this.zone = new zone.ZoneManager(this.hero);
 
@@ -158,22 +158,29 @@ namespace.module('bot.main', function (exports, require) {
             log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
         } else if (key === CKEY) {
             log.error('Equipment cheat');
-            var drops = [];
-            _.each([['heart juice', 4], ['brain juice', 4], ['hot sword', 4]], function(card) {
-                drops.push({dropType: 'card', data: card});
-            });
-            _.each([['weapon', 'melee', 1], ['weapon', 'range', 1], ['armor', 'head', 1], ['armor', 'chest', 1],
-                    ['armor', 'hands', 1], ['armor', 'legs', 1]], function(item) {
-                        drops.push({dropType: item[0], data: item});
-                    });
-            _.each(['super smash', 'fire ball', 'fire slash', 'basic range'], function(skill) {
-                drops.push({dropType: 'skill', data: skill});
-            });
-            this.gameModel.inv.addDrops(drops);
-            this.gameModel.cardInv.addDrops(drops);
-            this.gameModel.autoEquip();
-            this.gameModel.inv.addDrops(drops);
-            this.gameModel.cardInv.addDrops(drops);
+
+            this.gameModel.inv.addDrops([
+                {type: 'item', itemType: 'weapon', type: 'melee', classLevel: 1},
+                {type: 'item', itemType: 'weapon', type: 'range', classLevel: 1},
+                {type: 'item', itemType: 'armor', type: 'head', classLevel: 1},
+                {type: 'item', itemType: 'armor', type: 'chest', classLevel: 1},
+                {type: 'item', itemType: 'armor', type: 'legs', classLevel: 1},
+                {type: 'item', itemType: 'armor', type: 'hands', classLevel: 1}
+            ]);
+
+            this.gameModel.inv.addDrops([
+                {type: 'skill', name: 'super smash'},
+                {type: 'skill', name: 'fire slash'},
+                {type: 'skill', name: 'basic range'},
+                {type: 'skill', name: 'fire ball'},
+            ]);
+
+            this.gameModel.cardInv.addDrops([
+                {name: 'heart juice', level: 4},
+                {name: 'brain juice', level: 4},
+                {name: 'hot sword', level: 4},
+            ]);
+
             this.gameModel.autoEquip();
             this.gameModel.autoEquip();
         } else if (key === PKEY) {

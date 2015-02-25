@@ -755,6 +755,7 @@ namespace.module('bot.views', function (exports, require) {
             this.listenTo(gl.DirtyListener, 'hero:xp', this.xpChange);
             this.listenTo(gl.DirtyListener, 'hero:levelup', this.render);
             this.listenTo(gl.DirtyListener, 'revive', this.render);
+            this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
         },
 
         hpChange: function() {

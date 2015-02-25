@@ -22,7 +22,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
-                "names": ["cardboard sword", "ass axe", "master sword"]
+                "names": ["cardboard sword", "hand axe", "stone hammer", "falchion", "morning star", "long sword", "spikey mace", "spiked battle axe", "winged axe"]
             },
             "range": {
                 "mods": [
@@ -34,7 +34,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     return [{def: 'physDmg added ' + Math.floor(Math.pow(2 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
-                "names": ["shitty bow", "wooden bow", "compound bow"]
+                "names": ["wooden bow", "hand crossbow", "crossbow", "composite bow"]
             },
             "spell": {
                 "mods": [
@@ -45,7 +45,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     return [{def: 'spellDmg added ' + Math.floor(Math.pow(3 + classLevel, 2)), type: 'dmg'}];
                 },
                 "slotFormula": gearSlotFormula,
-                "names": ["shitty wand", "crappy wand", "compound wand"]
+                "names": ["simple wand", "knobby wand", "pewter wand", "delicate wand", "dragonstone wand", "star wand", "fairy wand", "demon wand"]
             }
         },
         "armor": {
@@ -60,7 +60,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 1,
-                "names": ["balsa helmet", "collander", "bucket"]
+                "names": ["balsa helmet", "collander", "conquistador helm", "crusader helm", "gladiator helm", "apollo helm"]
             },
             "chest": {
                 "mods": [
@@ -73,7 +73,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 2,
-                "names": ["t-shirt", "foamcore tunic", "steel breastplate"]
+                "names": ["t-shirt", "leather armor",  "goblin leather", "leatherscale armor", "leatherplate armor", "hammered chestplate", "iron chestplate", "copper chestplate", "muscle plate", "elegant plate", "raider armor", "shadow armor", "scout leather", "studded leather", "velvet tunic", "war robe", "winged leather", "cultist robe", "embroidered silks"]
             },
             "legs": {
                 "mods": [
@@ -86,7 +86,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 2,
-                "names": ["cardboard kneepads", "jeans", "platemail leggings"]
+                "names": ["jeans", "leather boots", "elf boots", "mage boots", "arcane boots", "buckaneer boots", "suess boots"]
             },
             "hands": {
                 "mods": [
@@ -99,7 +99,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 },
                 "slotFormula": gearSlotFormula,
                 "weight": 1,
-                "names": ["latex gloves", "gardening gloves", "chainmail gloves"]
+                "names": ["latex gloves", "gardening gloves", "leather gloves", "velvet gloves", "handmail", "fancy gauntlets", "polished gauntlets", "goldenscale gauntlets"]
             }
         },
         /*
@@ -375,7 +375,10 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj"],
                 "baseMods": [
-                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'manaCost added 3', type: 'dmg'},
+                    {def: 'manaCost more 20 perLevel', type: 'dmg'},
+                    {def: 'physDmg more -30', type: 'dmg'},
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'},                    
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
@@ -836,9 +839,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "thwomping": {
                 "mods": [
                     {"def": "physDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "physDmg more 50", "type": "dmg"},
-                    {"def": "moveSpeed more -5 perLevel", "type": "def"},
-                    {"def": "moveSpeed more -75", "type": "def"},
+                    {"def": "physDmg more 25", "type": "dmg"},
+                    {"def": "moveSpeed more -50", "type": "def"},
                 ],
                 "slot": "legs",
                 "levels": 10
@@ -997,7 +999,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "armor added 10 perLevel", "type": "def"},
                     {"def": "physDmg more 25", "type":"dmg"},
                 ],
-                "slot": "chest",
+                "slot": "legs",
                 "levels": 10
             },
             "berserking": {
@@ -1206,6 +1208,64 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "head",
                 "levels": 10
             },
+            "life on hit": {
+                "mods": [
+                    {"def": "hpOnHit added 5 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
+            "mana on hit": {
+                "mods":[
+                    {"def": "manaOnHit added 5 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
+            "faster attacks": {
+                "mods":[
+                    {"def": "speed more -17", "type": "dmg"},
+                    {"def": "speed more -3 perLevel", "type": "dmg"}
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
+            "more physical damage": {
+                "mods":[
+                    {"def": "physDmg more 17", "type": "dmg"},
+                    {"def": "physDmg more 3 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
+            "longer cooldown": {
+                "mods":[
+                    {"def": "cooldownTime more 5 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
+            "shorter cooldown": {
+                "mods":[
+                    {"def": "cooldownTime more -5 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
+            "longer range": {
+                "mods":[
+                    {"def": "range more 5 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
+            "shorter range": {
+                "mods":[
+                    {"def": "range more -5 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "levels": 10
+            },
         },
         "monster": {
             "skeleton" : {
@@ -1257,7 +1317,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "wood nymph" : {
-                "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
+                "items": [["weapon", "melee", 2]],
                 "skills": ["basic melee"],
                 "sourceCards": [
                     ["nimble", 1],
@@ -1273,7 +1333,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "ent" : {
-                "items": [["weapon", "melee", 0]],
+                "items": [["weapon", "melee", 0], ["armor", "head", 2], ["armor", "chest", 2], ["armor", "legs", 2]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["strong back", 2],
@@ -1289,7 +1349,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "elf king" : {
-                "items": [["weapon", "range", 2]],
+                "items": [["weapon", "range", 4]],
                 "skills": ["speed shot", "poison arrow", "basic range"],
                 "sourceCards": [
                     ["proto-boss", 0],
@@ -1306,7 +1366,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "fire golem" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "melee", 3]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
@@ -1314,7 +1374,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "ice golem" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "melee", 3]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
@@ -1322,7 +1382,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "shock golem" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "melee", 3]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
@@ -1330,7 +1390,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "toxic golem" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "melee", 3]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
@@ -1338,7 +1398,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "gnome" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "melee", 5]],
                 "skills": ["quick hit", "basic melee"],
                 "sourceCards": [
                     ["small stature", 1],
@@ -1346,7 +1406,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "gnome electrician" : {
-                "items": [["weapon", "spell", 2]],
+                "items": [["weapon", "spell", 5]],
                 "skills": ["lightning ball", "nova", "basic melee"],
                 "sourceCards": [
                     ["small stature", 1],
@@ -1355,7 +1415,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "roflcopter" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "melee", 1]],
                 "skills": ["pressure wave", "quick hit", "basic melee"],
                 "sourceCards": [
                     ["flying", 1],
@@ -1364,7 +1424,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "harpy" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "melee", 6]],
                 "skills": ["pressure wave", "quick hit", "basic melee"],
                 "sourceCards": [
                     ["flying", 1],
@@ -1380,7 +1440,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["clockwork", 1],
                     ["mecha heart", 1],
                     ["ignited", 1],
-                    ["steam powered", 1]
+                    ["steam powered", 1],
                 ],
             },
             "mechfridgerator": {
@@ -1420,7 +1480,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "goblin" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "melee", 6]],
                 "skills": ["flame cone", "basic melee"],
                 "sourceCards": [
                     ["goblin toe", 1],
@@ -1480,7 +1540,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "dart imp" : {
-                "items": [["weapon", "melee", 2]],
+                "items": [["weapon", "range", 2]],
                 "skills": ["poison arrow", "speed shot", "basic range"],
                 "sourceCards": [
                     ["berserking", 1],
@@ -1519,7 +1579,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "scalp collector": {
-                "items": [["weapon", "range", 2]],
+                "items": [["weapon", "range", 3]],
                 "skills": ["headshot", "basic range"],
                 "sourceCards": [
                     ["indigenous toxins", 1],
@@ -1529,7 +1589,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "frost skeleton": {
-                "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
+                "items": [["weapon", "melee", 4], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
                 "skills": ["ice slash", "basic melee"],
                 "sourceCards": [
                     ["cold sword", 1],
@@ -1660,7 +1720,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2, 2, 3],
-                "level": 4,
+                "level": 5,
             },
             "clockwork ruins": {
                 "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
@@ -1668,7 +1728,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "sir mechs-a-lot",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 7,
+                "level": 10,
             },
             "aggro crag": {
                 "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
@@ -1676,7 +1736,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"flame dragon",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 10,
+                "level": 15,
             },
             "hostile marsh": {
                 "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
@@ -1684,7 +1744,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"scalp collector",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 13,
+                "level": 20,
             },
             "icy tunnel": {
                 "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "frow djinn"],
@@ -1692,7 +1752,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "yeti",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 16,
+                "level": 25,
             },
             "gothic castle": {
                 "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
@@ -1700,7 +1760,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "shadow knight",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 19,
+                "level": 30,
             },
             "demonic laboroatory": {
                 "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],
@@ -1708,7 +1768,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "pigbearman",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 35,
             },
             "scarred plains": {
                 "choices": ["troll", "cyclops", "harpy", "bandit", "giant", "frost giant"],
@@ -1716,7 +1776,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "pigbearman",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 17,
+                "level": 40,
             },
             "dojo": {
                 "choices": ["dummy"],

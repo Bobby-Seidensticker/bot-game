@@ -7,18 +7,6 @@
 <body>
 
   <script id="item-slot-template" type="text/template">
-    <% if (slot) { %>
-      <div style="text-align: right"><%= slot %></div>
-    <% } %>
-    <% if (model) { %>
-      <div><%= model.name %><% if (model.classLevel !== undefined) { %> (<%= model.classLevel %>)<% } %></div>
-      <div>Level <%= model.level %></div>
-    <% } else { %>
-      <div>Empty</div>
-    <% } %>
-  </script>
-
-  <script id="equipped-item-slot-template" type="text/template">
     <% if (model) { %>
       <img src="assets/<%= model.name %>.svg" />
       <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
@@ -27,20 +15,11 @@
     <% } %>
   </script>
 
-  <script id="skillchain-item-slot-template" type="text/template">
+  <script id="card-slot-template" type="text/template">
     <% if (model) { %>
       <img src="assets/<%= model.name %>.svg" />
       <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
-      <div class="xpbar" style="width: <%= 63 * (model.xp / model.getNextLevelXp()) %>px;"></div>
-      <div class="filter"></div>
-    <% } %>
-  </script>
-
-  <script id="inventory-item-slot-template" type="text/template">
-    <% if (model) { %>
-      <img src="assets/<%= model.name %>.svg" />
-      <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
-      <div class="xpbar" style="width: <%= 63 * (model.xp / model.getNextLevelXp()) %>px;"></div>
+      <div class="xpbar" style="width: <%= 63 * (model.qp / model.getNextLevelQp()) %>px;"></div>
       <div class="filter"></div>
     <% } %>
   </script>
@@ -79,15 +58,6 @@
     <div class="container card-inventory">
       <div class="header">Inventory</div>
     </div>
-  </script>
-
-  <script id="card-slot-template" type="text/template">
-    <% if (model) { %>
-      <img src="assets/<%= model.name %>.svg" />
-      <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
-      <div class="xpbar" style="width: <%= 63 * (model.qp / model.getNextLevelQp()) %>px;"></div>
-      <div class="filter"></div>
-    <% } %>
   </script>
 
   <script id="info-box-template" type="text/template">

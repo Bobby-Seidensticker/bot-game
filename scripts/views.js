@@ -287,7 +287,7 @@ namespace.module('bot.views', function (exports, require) {
             this.slot = slot;
             this.selected = options.selected;
             this.isValidSlot = options.validSlot;
-            this.template = _.template($('#' + loc + '-item-slot-template').html());
+            this.template = _.template($('#item-slot-template').html());
             if (this.selected) {
                 this.select();
             }

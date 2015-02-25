@@ -98,11 +98,9 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         unequipCards: function() {
-            var i, l, c;
-            for (i = 0, l = this.cards.length; i < l; i++) {
-                c = this.cards[i];
-                if (c) {
-                    c.model.unequip(c.level);
+            for (var i = 0; i < this.cards.length; i++) {
+                if (this.cards[i]) {
+                    this.cards[i].equipped = false;
                     this.cards[i] = undefined;
                 }
             }

@@ -6,6 +6,7 @@ namespace.module('bot.main', function (exports, require) {
     var entity = namespace.bot.entity;
     var zone = namespace.bot.zone;
     var views = namespace.bot.views;
+    var dropsLib = namespace.bot.drops
 
     var STEP_SIZE = 10;
 
@@ -160,25 +161,25 @@ namespace.module('bot.main', function (exports, require) {
             log.error('Equipment cheat');
 
             this.gameModel.inv.addDrops([
-                {type: 'item', itemType: 'weapon', type: 'melee', classLevel: 1},
-                {type: 'item', itemType: 'weapon', type: 'range', classLevel: 1},
-                {type: 'item', itemType: 'armor', type: 'head', classLevel: 1},
-                {type: 'item', itemType: 'armor', type: 'chest', classLevel: 1},
-                {type: 'item', itemType: 'armor', type: 'legs', classLevel: 1},
-                {type: 'item', itemType: 'armor', type: 'hands', classLevel: 1}
+                dropsLib.dropFactory('item', ['weapon', 'melee', 1]),
+                dropsLib.dropFactory('item', ['weapon', 'range', 1]),
+                dropsLib.dropFactory('item', ['armor', 'head', 1]),
+                dropsLib.dropFactory('item', ['armor', 'chest', 1]),
+                dropsLib.dropFactory('item', ['armor', 'legs', 1]),
+                dropsLib.dropFactory('item', ['armor', 'hands', 1]),
             ]);
 
             this.gameModel.inv.addDrops([
-                {type: 'skill', name: 'super smash'},
-                {type: 'skill', name: 'fire slash'},
-                {type: 'skill', name: 'basic range'},
-                {type: 'skill', name: 'fire ball'},
+                dropsLib.dropFactory('skill', 'super smash'),
+                dropsLib.dropFactory('skill', 'fire slash'),
+                dropsLib.dropFactory('skill', 'basic range'),
+                dropsLib.dropFactory('skill', 'fire ball'),
             ]);
 
             this.gameModel.cardInv.addDrops([
-                {name: 'heart juice', level: 4},
-                {name: 'brain juice', level: 4},
-                {name: 'hot sword', level: 4},
+                dropsLib.dropFactory('card', ['heart juice', 4]),
+                dropsLib.dropFactory('card', ['brain juice', 4]),
+                dropsLib.dropFactory('card', ['hot sword', 4])
             ]);
 
             this.gameModel.autoEquip();

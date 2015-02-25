@@ -385,7 +385,6 @@ namespace.module('bot.views', function (exports, require) {
                     itemSlot.select();
                     this.selected = itemSlot;
                 }
-
             } else {
                 if (this.selected) {
                     this.selected.unselect();

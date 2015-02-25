@@ -48,7 +48,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         ensureCardArray: function() {
             _.each(_.compact(this.cards), function(card) {
-                if (!card.model || card.model.itemType !== 'ctm') {
+                if (!card || card.itemType !== 'card') {
                     throw('Error, GearModel\'s this.cards has a improper card');
                 }
             }, this);
@@ -67,7 +67,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         getMods: function() {
             var cards = _.compact(this.cards);
-            var mods = _.flatten(_.map(cards, function(card) { return card.model.getMods(card.level); }));
+            var mods = _.flatten(_.map(cards, function(card) { return card.getMods(); }));
             return mods.concat(utils.applyPerLevels(this.baseMods, this.level));
         },
 
@@ -76,13 +76,16 @@ namespace.module('bot.inv', function (exports, require) {
                 log.error('Cannot equip card in slotIndex %d when item only has %d slots', slotIndex, this.cards.length);
                 return false;
             }
-
+            if (card && card.equipped) {
+                log.error('Cannot equip already equipped card, %s', card.name);
+                return false;
+            }
             if (this.cards[slotIndex]) {
-                this.cards[slotIndex].model.unequip(this.cards[slotIndex].level);
+                this.cards[slotIndex].equipped = false;  // model.unequip(this.cards[slotIndex].level);
                 this.cards[slotIndex] = undefined;
             }
             if (card) {
-                card.model.equip(card.level);
+                card.equipped = true;  // model.equip(card.level);
                 this.cards[slotIndex] = card;
             }
 
@@ -461,7 +464,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getMods: function() {
-            log.debug('CardTypeModel.getMods. name: %s, level: %d', this.name, this.level);
+            log.debug('CardModel.getMods. name: %s, level: %d', this.name, this.level);
             return utils.applyPerLevels(this.mods, this.level);
         },
 
@@ -533,7 +536,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getSlotCards: function(slot) {
-            if (typeof(slot) == "number") {
+            if (typeof(slot) === 'number') {
                 slot = 'skill';
             }
             return _.filter(this.models, function(model) { return model.slot === slot; });

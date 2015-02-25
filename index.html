@@ -20,22 +20,28 @@
 
   <script id="equipped-item-slot-template" type="text/template">
     <% if (model) { %>
-    <div class="levelnum" style="float:right"><span><%= model.level %></span></div>
-    <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
+      <img src="assets/<%= model.name %>.svg" />
+      <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
+      <div class="xpbar" style="width: <%= 63 * (model.xp / model.getNextLevelXp()) %>px;"></div>
+      <div class="filter"></div>
     <% } %>
   </script>
 
   <script id="skillchain-item-slot-template" type="text/template">
     <% if (model) { %>
-    <div class="levelnum" style="float:right"><span><%= model.level %></span></div>
-    <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
+      <img src="assets/<%= model.name %>.svg" />
+      <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
+      <div class="xpbar" style="width: <%= 63 * (model.xp / model.getNextLevelXp()) %>px;"></div>
+      <div class="filter"></div>
     <% } %>
   </script>
 
   <script id="inventory-item-slot-template" type="text/template">
     <% if (model) { %>
-    <div class="levelnum" style="float:right"><span><%= model.level %></span></div>
-    <div class="xpbar" style="width:<%= 63 * model.xp / model.getNextLevelXp() %>px;"></div>
+      <img src="assets/<%= model.name %>.svg" />
+      <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
+      <div class="xpbar" style="width: <%= 63 * (model.xp / model.getNextLevelXp()) %>px;"></div>
+      <div class="filter"></div>
     <% } %>
   </script>
 
@@ -77,25 +83,27 @@
 
   <script id="card-slot-template" type="text/template">
     <% if (model) { %>
-    <div class="levelnum" style="float:right"><span><%= level %></span></div>
-    <div class="xpbar" style="width:<%= 63 * (model.amts[level]-1) / 10 %>px;"></div>
+      <img src="assets/<%= model.name %>.svg" />
+      <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
+      <div class="xpbar" style="width: <%= 63 * (model.qp / model.getNextLevelQp()) %>px;"></div>
+      <div class="filter"></div>
     <% } %>
   </script>
 
   <script id="info-box-template" type="text/template">
     <% if (model) { %>
-      <% if (model.itemType && model.itemType !== 'ctm') { %>
+      <% if (model.itemType && model.itemType !== 'card') { %>
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
-        <% if (model.itemType == "armor") { %>
+        <% if (model.itemType === "armor") { %>
           <div class="infoitem"><%= namespace.bot.utils.firstCap(model.type) %> Armor</div>
-        <% } else if (model.itemType == "weapon") { %>
+        <% } else if (model.itemType === "weapon") { %>
           <div class="infoitem"><%= namespace.bot.utils.firstCap(model.type) %> Weapon</div>
-        <% } else if (model.itemType == "skill") { %>
-        <div class="infoitem"><%= namespace.bot.utils.firstCap(model.class) %> Skill</div>
+        <% } else if (model.itemType === "skill") { %>
+          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.class) %> Skill</div>
         <% } %>
         <div class="infoitem">Level <%= model.level %></div>
         <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>
-        <div class="xpbox"><div class="xpearned" style="width:<%= (model.xp / model.getNextLevelXp())*100 %>px"></div></div>
+        <div class="xpbox"><div class="xpearned" style="width: <%= (model.xp / model.getNextLevelXp()) * 100 %>px"></div></div>
         <% if (model.disabled) { %>
         <div class="infoitem disabled">Skill Cannot Be Used Because Wrong Weapon Type Equipped</div>
         <% } %>
@@ -111,25 +119,25 @@
       <% } else { %>
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
         <div class="infoitem"><%= namespace.bot.utils.firstCap(model.slot) %> Card</div>
-        <div class="infoitem">Level <%= level %></div>
-        <div class="infoitem"><%= model.amts[level] %>/10 to Level Up</div>
-        <div class="xpbox"><div class="xpearned" style="width:<%= (model.amts[level]) * 10 %>px"></div></div>
+        <div class="infoitem">Level <%= model.level %></div>
+        <div class="infoitem"><%= model.qp %> / <% print(model.getNextLevelQp()) %> to Level Up</div>
+        <div class="xpbox"><div class="xpearned" style="width: <%= model.qp / model.getNextLevelQp() * 100 %>px"></div></div>
         <div class="mods">
-        <% _.each(namespace.bot.utils.prettifyMods(model.mods, level), function(modstr) {%>
+        <% _.each(namespace.bot.utils.prettifyMods(model.mods, model.level), function(modstr) {%>
           <div class="mod"><%= modstr %></div>
          <% }); %>
           <div class="infoitem">Next Level: </div>
-          <% _.each(namespace.bot.utils.prettifyPerLvlMods(model.mods, level), function(modstr) {%>
-          <div class="perLvlMod"><%= modstr %></div>
+          <% _.each(namespace.bot.utils.prettifyPerLvlMods(model.mods, model.level), function(modstr) {%>
+            <div class="perLvlMod"><%= modstr %></div>
           <% }); %>
         </div>
       <% } %>
       <% if (model.flavor) { %>
-      <div class="infoitem flavor"><%= model.flavor %></div>
+        <div class="infoitem flavor"><%= model.flavor %></div>
       <% } %>
-      <% if (model.itemType == "skill" && model.equipped) { %>
-      <div class="infoitem skilldmg">Total Damage: <%= model.getTotalDmg() %></div>
-      <div class="infoitem skilldmg">DPS: <%= model.getDps() %></div>      
+      <% if (model.itemType === 'skill' && model.equipped) { %>
+        <div class="infoitem skilldmg">Total Damage: <%= model.getTotalDmg() %></div>
+        <div class="infoitem skilldmg">DPS: <%= model.getDps() %></div>      
       <% } %>
     <% } %>
   </script>

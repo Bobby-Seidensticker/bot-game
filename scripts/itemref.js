@@ -550,7 +550,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "pressure wave": {
-                "prototype": ["basic"],
+                "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "spell"],
                 "baseMods": [
@@ -562,7 +562,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "shadow dagger": {
-                "prototype": ["basic"],
+                "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "spell"],
                 "baseMods": [
@@ -574,11 +574,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "health suck": {
-                "prototype": ["basic"],
+                "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "spell"],
                 "baseMods": [
                     {def: 'manaCost added 1', type: 'dmg'},
+                    {def: 'manaCost more 25 perLevel', type: 'dmg'},
                     {def: 'speed added 150', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'physDmg added 9', type:'dmg'},
@@ -631,7 +632,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "poison nova": {
-                "prototype": ["basic"],
+                "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
                 "baseMods": [

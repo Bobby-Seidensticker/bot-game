@@ -219,9 +219,11 @@ namespace.module('bot.entity', function (exports, require) {
             this.droppableCards = _.filter(this.sourceCards, function(card) { return card[0].slice(0, 5) !== 'proto'; }, this);
 
             this.skillchain = new inventory.Skillchain();
-            for (var i = 0; i < this.skills.length; i++) {
-                this.skillchain.equip(new inventory.SkillModel(this.skills[i]), i);
-            }
+            _.each(this.skills, function(skill, i) {
+                var skill = new inventory.SkillModel(skill);
+                skill.level = this.level;
+                this.skillchain.equip(skill, i);
+            }, this);
 
             this.computeAttrs();
         },

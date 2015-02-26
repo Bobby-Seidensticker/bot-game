@@ -114,6 +114,11 @@ namespace.module('bot.vectorutils', function (exports, require) {
         return this.x * v.x + this.y * v.y;
     }
 
+    Point.prototype.unitVector = function() {
+        var len = this.len();
+        return this.rawMult(1 / len);
+    }
+
     function hit(s, e, t, r1, r2) {
         var r = r1 + r2;
         var r2 = r * r;

@@ -12,6 +12,7 @@ namespace.module('bot.zone', function (exports, require) {
     var itemref = namespace.bot.itemref;
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
+    var Damage = namespace.bot.damage.Damage;
 
     var ZoneManager = gl.Model.extend({
         initialize: function(hero) {
@@ -431,7 +432,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
-                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dmg', this.pos, 'rgba(230, 230, 10, 0.7)', 1000));
+                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.7)', 1000));
                 return 0;
             }
 
@@ -455,8 +456,13 @@ namespace.module('bot.zone', function (exports, require) {
 
             gl.MessageEvents.trigger(
                 'message',
-                newZoneMessage(Math.ceil(totalDmg).toString(), 'dmg', this.pos, 'rgba(190, 0, 0, 1)', 500, this.spec.height)
+                newDamageMessage(attack, Math.ceil(totalDmg), 'rgba(230, 0, 0, 1)')
             );
+
+            /*gl.MessageEvents.trigger(
+                'message',
+                newZoneMessage(Math.ceil(totalDmg).toString(), 'hngg', this.pos, 'rgba(190, 0, 0, 1)', 500, this.spec.height)
+            );*/
             return totalDmg;
         },
 
@@ -511,7 +517,7 @@ namespace.module('bot.zone', function (exports, require) {
                 _.each(messages, function(message, index) {
                     gl.MessageEvents.trigger(
                         'message',
-                        newZoneMessage(message, 'dmg', target.pos, 'rgba(255, 100, 0, 0.8)', 1000, target.spec.height / 2 + index * 20)
+                        newZoneMessage(message, 'drop', target.pos, 'rgba(255, 100, 0, 0.8)', 1000, target.spec.height / 2 + index * 20)
                     );
                 }, this);
             }
@@ -567,6 +573,17 @@ namespace.module('bot.zone', function (exports, require) {
         };
     }
 
+    function newDamageMessage(attack, text, color) {
+        var dmg = new Damage(attack.start, attack.pos, attack.target.spec.height);
+        return {
+            type: 'dmg',
+            text: text,
+            dmg: dmg,
+            color: color,
+            expires: gl.time + 10000
+        };
+    }
+
     var ZoneMessages = gl.Model.extend({
         initialize: function() {
             this.listenTo(gl.MessageEvents, 'message', this.addMessage);
@@ -579,7 +596,8 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         prune: function() {
-            this.msgs = _.filter(this.msgs, function(msg) { return msg.expires > gl.time });
+            // TODO: when messages die, make them pool on the ground, in iso fmt
+            this.msgs = _.filter(this.msgs, function(msg) { return msg.expires > gl.time && (!(msg.type === 'dmg') || msg.dmg.getY() > 0) });
         },
     });
 

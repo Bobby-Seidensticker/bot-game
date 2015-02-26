@@ -299,12 +299,19 @@ namespace.module('bot.vis', function (exports, require) {
             ctx.fillStyle = msg.color;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
-            ctx.font = '12px Source Code Pro';
-            var pos = transpose(msg.pos)
-            if (msg.verticalOffset) {
-                pos.y -= msg.verticalOffset * vvs.ratio;
+            ctx.font = '14px Source Code Pro';
+            if (msg.type === 'dmg') {
+                var dmg = msg.dmg;
+                var base = transpose(dmg.getBase());
+                base.y -= dmg.getY() * vvs.ratio;
+                ctx.fillText(msg.text, base.x, base.y);
+            } else {
+                var pos = transpose(msg.pos)
+                if (msg.verticalOffset) {
+                    pos.y -= msg.verticalOffset * vvs.ratio;
+                }
+                ctx.fillText(msg.text, pos.x, pos.y - (gl.time - msg.time) / msg.lifespan * 20);
             }
-            ctx.fillText(msg.text, pos.x, pos.y - (gl.time - msg.time) / msg.lifespan * 20);
         });
     }
 
@@ -352,7 +359,7 @@ namespace.module('bot.vis', function (exports, require) {
         ctx.lineCap = 'round';
         ctx.lineWidth = this.body.spec.lineWidth * vvs.ratio;
 
-        height *= 3 / 4
+        //height *= 3 / 4
 
         var headPos = new Point(0, height * 67 / 72);
         var headSize = height * 10 / 72;

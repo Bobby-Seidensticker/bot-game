@@ -410,15 +410,6 @@ namespace.module('bot.views', function (exports, require) {
         
         render: function() {
             this.$el.html(this.template(this));
-            if (this.selected) {
-                this.$el.addClass('selected');
-            }
-            if (this.hovering) {
-                this.$el.addClass('hovering');
-            }
-            if (this.yellow) {
-                this.$el.addClass('yellow');
-            }
             if (this.model && this.model.disabled) {
                 this.$el.addClass('red');
             }

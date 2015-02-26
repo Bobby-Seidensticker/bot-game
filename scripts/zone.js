@@ -516,9 +516,11 @@ namespace.module('bot.zone', function (exports, require) {
                 var messages = invMessages.concat(cardMessages);
 
                 _.each(messages, function(message, index) {
+                    var alpha = (message.slice(0,3) == "New") ? 0.8: 0.6;
+                    var color = 'rgba(255, 100, 0, ' + alpha + ')';
                     gl.MessageEvents.trigger(
                         'message',
-                        newZoneMessage(message, 'drop', target.pos, 'rgba(255, 100, 0, 0.8)', 1000, target.spec.height / 2 + index * 20)
+                        newZoneMessage(message, 'drop', target.pos, color, 1000, target.spec.height / 2 + index * 30000)
                     );
                 }, this);
             }

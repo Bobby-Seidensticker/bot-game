@@ -432,7 +432,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
-                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.7)', 1000));
+                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.4)', 1000));
                 return 0;
             }
 
@@ -516,8 +516,7 @@ namespace.module('bot.zone', function (exports, require) {
                 var messages = invMessages.concat(cardMessages);
 
                 _.each(messages, function(message, index) {
-                    var alpha = (message.slice(0,3) == "New" || message.slice(0,7) == "Leveled") ? 0.8: 0.6;
-                    var color = 'rgba(255, 100, 0, ' + alpha + ')';
+                    var color = (message.slice(0,3) == "New" || message.slice(0,7) == "Leveled") ? 'rgba(255, 140, 0, 0.8)' : 'rgba(255, 100, 0, 0.6)';
                     gl.MessageEvents.trigger(
                         'message',
                         newZoneMessage(message, 'drop', target.pos, color, 1000, target.spec.height / 2 + index * 30000)

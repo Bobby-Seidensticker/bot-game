@@ -91,7 +91,7 @@ namespace.module('bot.drops', function (exports, require) {
     }
 
     SkillDrop.prototype.message = function() {
-        return "New Skill: " + this.name;
+        return "New Skill: " + utils.firstCap(this.name);
     }
 
     exports.extend({

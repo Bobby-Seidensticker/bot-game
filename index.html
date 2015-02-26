@@ -9,18 +9,20 @@
   <script id="item-slot-template" type="text/template">
     <% if (model) { %>
       <img src="assets/<%= model.name %>.svg" />
-      <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
+      <div class="corner corner-level"><%= model.level %></div>
       <div class="xpbar" style="width: <%= 63 * (model.xp / model.getNextLevelXp()) %>px;"></div>
       <div class="filter"></div>
+      <div class="corner corner-x">X</div>
     <% } %>
   </script>
 
   <script id="card-slot-template" type="text/template">
     <% if (model) { %>
       <img src="assets/<%= model.name %>.svg" />
-      <div class="corner"><div class="corner-x">X</div><div class="corner-level"><%= model.level %></div></div>
+      <div class="corner corner-level"><%= model.level %></div>
       <div class="xpbar" style="width: <%= 63 * (model.qp / model.getNextLevelQp()) %>px;"></div>
       <div class="filter"></div>
+      <div class="corner corner-x">X</div>
     <% } %>
   </script>
 
@@ -35,8 +37,8 @@
       <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->      
     </div>
 
-    <div class="container inventory">
-      <div class="header">Inventory</div>
+    <div class="container unequipped">
+      <div class="header">Unequipped Items</div>
     </div>
   </script>
 

@@ -297,7 +297,6 @@ namespace.module('bot.views', function (exports, require) {
         },
         select: function() { this.selected = true; this.$el.addClass('selected');  },
         unselect: function() { this.selected = false; this.$el.removeClass('selected'); },
-        toggleSelect: function() { this.$el.toggleClass('selected'); },
         empty: function() { this.model = undefined; this.render(); },
         fill: function(model) { this.model = model; this.render(); },
 
@@ -309,19 +308,22 @@ namespace.module('bot.views', function (exports, require) {
                 (hoveredSlot.model.itemType === 'armor' && hoveredSlot.model.type === this.slot) ||
                 (hoveredSlot.model.itemType === 'card' && hoveredSlot.model.slot === 'skill' && this.loc === 'skillchain') ||
                 (hoveredSlot.model.itemType === 'card' && hoveredSlot.model.slot === this.slot )) {
-                this.hovering = true;
+                this.yellow = true;
                 this.$el.addClass('yellow');
             }
         },
 
         onGlobalMouseout: function() {
-            this.hovering = false;
+            this.yellow = false;
             this.$el.removeClass('yellow');
         },
         
         render: function() {
             this.$el.html(this.template(this));
             if (this.hovering) {
+                this.$el.addClass('hovering');
+            }
+            if (this.yellow) {
                 this.$el.addClass('yellow');
             }
             if (this.model && this.model.disabled) {
@@ -331,7 +333,98 @@ namespace.module('bot.views', function (exports, require) {
         }
     });
 
-    // TODO: fix all of this
+    var NewItemSlot = Backbone.View.extend({
+        tagName: 'div',
+        className: 'itemSlot',
+
+        events: {
+            'click': 'onClick',
+            'mouseover': 'onMouseover',
+            'mouseout': 'onMouseout',
+        },
+
+        onClick: function(event) {
+            var cls = event.target.classList[0];
+            if (cls === 'corner' && this.canUnequip()) {
+                this.trigger('unequip', this);
+                return;
+            }
+            this.trigger('click', this);
+        },
+
+        onMouseover: function() {
+            if (this.canUnequip()) {
+                this.$el.addClass('hovering');
+            }
+            this.trigger('hovering', this);
+            gl.UIEvents.trigger('mouseover', this);
+        },
+
+        onMouseout: function() {
+            this.$el.removeClass('hovering');
+            this.trigger('hovering');
+            gl.UIEvents.trigger('mouseout');
+        },
+
+        initialize: function(options, slot, equippedModel) {
+            this.slot = slot;
+            this.equippedModel = equippedModel;
+            this.template = _.template($('#item-slot-template').html());
+
+            this.listenTo(gl.UIEvents, 'mouseover', this.onGlobalMouseover);
+            this.listenTo(gl.UIEvents, 'mouseout', this.onGlobalMouseout);
+            this.render();
+        },
+
+        canSelect: function() {
+            // is NOT an equipped gear or skillchain slot
+            return this.slot === undefined;
+        },
+
+        canUnequip: function() {
+            return this.slot !== undefined && this.model;
+        },
+
+        select: function() { this.selected = true; this.$el.addClass('selected');  },
+        unselect: function() { this.selected = false; this.$el.removeClass('selected'); },
+        empty: function() { this.model = undefined; this.render(); },
+        fill: function(model) { this.model = model; this.render(); },
+
+        onGlobalMouseover: function(hoveredSlot) {
+            if (hoveredSlot.slot !== undefined) { return; }  // Is a fixed slot, ignore
+
+            if ((hoveredSlot.model.itemType === 'skill' && this.loc === 'skillchain') ||
+                (hoveredSlot.model.itemType === 'weapon' && this.slot === 'weapon') ||
+                (hoveredSlot.model.itemType === 'armor' && hoveredSlot.model.type === this.slot) ||
+                (hoveredSlot.model.itemType === 'card' && hoveredSlot.model.slot === 'skill' && this.loc === 'skillchain') ||
+                (hoveredSlot.model.itemType === 'card' && hoveredSlot.model.slot === this.slot )) {
+                this.yellow = true;
+                this.$el.addClass('yellow');
+            }
+        },
+
+        onGlobalMouseout: function() {
+            this.yellow = false;
+            this.$el.removeClass('yellow');
+        },
+        
+        render: function() {
+            this.$el.html(this.template(this));
+            if (this.selected) {
+                this.$el.addClass('selected');
+            }
+            if (this.hovering) {
+                this.$el.addClass('hovering');
+            }
+            if (this.yellow) {
+                this.$el.addClass('yellow');
+            }
+            if (this.model && this.model.disabled) {
+                this.$el.addClass('red');
+            }
+            return this;
+        }
+    });
 
     var ItemTab = Backbone.View.extend({
         tagName: 'div',
@@ -343,11 +436,8 @@ namespace.module('bot.views', function (exports, require) {
             this.skillchain = game.hero.skillchain;
             this.inventory = game.inv;
 
-            this.subs = {
-                equipped: [],
-                skillchain: [],
-                inventory: []
-            };
+            this.selected = undefined;
+            this.hovering = undefined;
 
             this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
             this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
@@ -373,132 +463,112 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onClick: function(itemSlot) {
-            log.info('itemSlot on click');
+            log.info('itemSlot on click, selected: %s', !!this.selected);
 
-            if (itemSlot.loc === 'inventory') {
-                log.info('inventory itemSlot on click');
+            if (itemSlot.canSelect()) {
+                var sameClicked = false;
                 if (this.selected) {
+                    sameClicked = itemSlot.model.id === this.selected.model.id;
                     this.selected.unselect();
                     this.selected = undefined;
                 }
-                if (itemSlot.model !== undefined) {
+                if (!sameClicked) {
                     itemSlot.select();
                     this.selected = itemSlot;
                 }
             } else {
                 if (this.selected) {
+                    var equipSuccess = itemSlot.equippedModel.equip(this.selected.model, itemSlot.slot);
                     this.selected.unselect();
-                    if (this[itemSlot.loc].equip(this.selected.model, itemSlot.slot)) {
-                        gl.DirtyQueue.mark('equipChange');
-                        log.info('Successfully equipped item %s', this.selected.model.name);
-                        // selected is always from the inventory
-                        itemSlot.fill(this.selected.model);
-                        this.selected.empty();
-                    } else {
-                        log.info('Failed to equip item %s', this.selected.name);
-                    }
                     this.selected = undefined;
-                } else {
-                    this[itemSlot.loc].equip(undefined, itemSlot.slot);
-                    gl.DirtyQueue.mark('equipChange');
-                    var unequippingModel = itemSlot.model;
-                    itemSlot.empty();
-                    this.addItemSlot(unequippingModel, 'inventory');
+
+                    if (equipSuccess) {
+                        gl.DirtyQueue.mark('equipChange');
+                        this.render();
+                    }
                 }
             }
-
-            this.rerenderInv();
         },
 
-        rerenderInv: function() {
-            var views = _.filter(this.subs.inventory, function(view) { return view.model !== undefined && view.model.equipped === false; });
-            var i = 0;
-            for (; i < views.length; i++) {
-                this.subs.inventory[i].fill(views[i].model);
+        onUnequip: function(itemSlot) {
+            log.warning('itemSlot on unequip');
+
+            if (this.selected) {
+                this.selected.unselect();
+                this.selected = undefined;
             }
-            for (; i < this.subs.inventory.length; i++) {
-                this.stopListening(this.subs.inventory[i]);
-                this.subs.inventory[i].remove();
-            }
-            this.subs.inventory = this.subs.inventory.slice(0, views.length);
+
+            itemSlot.unselect();
+            var unequipSuccess = itemSlot.equippedModel.equip(undefined, itemSlot.slot);
         },
 
-        newItemSlot: function(model, loc, slot, selected) {
-            var selected = selected ? true : false;
-            var view = new ItemSlot({model: model, selected: selected}, loc, slot);
+        onHover: function(itemSlot) {
+            if (itemSlot && itemSlot.canUnequip()) {
+                this.hovering = itemSlot;
+            } else {
+                this.hovering = undefined;
+            }
+        },
+
+        newItemSlot: function(model, slot, parent/*, selected*/) {
+            //var selected = selected ? true : false;
+            var view = new NewItemSlot({model: model/*, selected: selected*/}, slot, parent);
             this.listenTo(view, 'click', this.onClick);
-            this.subs[loc].push(view);
+            this.listenTo(view, 'unequip', this.onUnequip);
+            this.listenTo(view, 'hovering', this.onHover);
+            this.allViews.push(view);
             return view;
-        },
-
-        addItemSlot: function(model, loc, slot) {
-            log.error('adding item slot');
-            var el = this.newItemSlot(model, loc).el;
-            this.$('.' + loc).append(el);
         },
 
         render: function() {
             if (!this.visible) {
                 return this;
             }
-            var selectedId = undefined;
-            if (this.selected) {
-                selectedId = this.selected.model.id;
-                //console.log(this.selected.model);
-            }
+
             this.$el.html(this.template());
 
-            _.each(this.subs, function(arr, key) {
-                _.each(arr, function(subView) {
-                    this.stopListening(subView);
-                    subView.remove();
-                }, this);
-                this.subs[key] = [];
-            }, this);
+            // properly remove all views
+            _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);
+            this.allViews = [];
 
+            var $equipped = this.$('.equipped');
             _.each(this.equipped.slots, function(slot) {
-                this.newItemSlot(this.equipped[slot], 'equipped', slot);
+                var view = this.newItemSlot(this.equipped[slot], slot, this.equipped);
+                $equipped.append(view.el);
             }, this);
+
+            var $skillchain = this.$('.skillchain');
             _.each(this.skillchain.skills, function(skill, i) {
-                this.newItemSlot(skill, 'skillchain', i);
+                var view = this.newItemSlot(skill, i, this.skillchain);
+                $skillchain.append(view.el);
             }, this);
-            var invOnly = _.filter(this.inventory.models, function(model) {
-                return model.equipped === false;
+
+            var $unequipped = this.$('.unequipped');
+            var items = _.filter(this.inventory.models, function(model) {
+                return !model.equipped;
             });
-            _.each(invOnly, function(model) {
-                if(selectedId !== undefined && model.id === selectedId) {
-                    this.newItemSlot(model, 'inventory', undefined, true);
+            _.each(items, function(model) {
+                var view = this.newItemSlot(model);
+                $unequipped.append(view.el);
+            }, this);
+
+            if (this.selected) {
+                var selectedView = _.find(this.allViews, function(view) { return this.selected.model.id === view.model.id; }, this);
+                if (selectedView && selectedView.canSelect()) {
+                    selectedView.select();
+                    this.selected = selectedView;
                 } else {
-                    this.newItemSlot(model, 'inventory');
+                    this.selected = undefined;
                 }
-            }, this);
-            this.rerenderInv();
+            }
 
-
-            //console.log(this.selected);
-            //this.selected = undefined;
-            this.rendered = true;
-
-            var $eq = this.$('.equipped');
-            var frag = document.createDocumentFragment();
-            _.each(this.subs.equipped, function(subView, slot) {
-                frag.appendChild(subView.el);
-            });
-            $eq.append(frag);
-
-            var $sk = this.$('.skillchain');
-            var frag = document.createDocumentFragment();
-            _.each(this.subs.skillchain, function(subView, i) {
-                frag.appendChild(subView.el);
-            });
-            $sk.append(frag);
-
-            var $inv = this.$('.inventory');
-            var frag = document.createDocumentFragment();
-            _.each(this.subs.inventory, function(subView) {
-                frag.appendChild(subView.el);
-            });
-            $inv.append(frag);
+            if (this.hovering) {
+                var hoveringView = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
+                if (hoveringView && hoveringView.canUnequip()) {
+                    hoveringView.onMouseover();
+                }
+                this.hovering = hoveringView;
+            }
 
             return this;
         },

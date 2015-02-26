@@ -476,6 +476,7 @@ namespace.module('bot.zone', function (exports, require) {
 
     var HeroBody = EntityBody.extend({
         initialize: function(spec) {
+            this.potionCoolAt = gl.time;
             this.listenTo(spec.skillchain, 'skillComputeAttrs', this.updateSkillchain);
             this.listenTo(spec, 'computeAttrs', this.updateSkillchain);
             EntityBody.prototype.initialize.call(this, spec);
@@ -539,9 +540,24 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         revive: function() {
+            this.potionCoolAt = gl.time;
             EntityBody.prototype.revive.call(this);
             gl.DirtyQueue.mark('revive');
         },
+
+        tryUsePotion: function() {
+            if(this.hp == this.spec.maxHp) {
+                return;
+            }
+            if(this.potionCoolAt <= gl.time) {
+                this.potionCoolAt = gl.time + 5000; //5 second cooldown
+                var addAmount = this.spec.level * 10; 
+                this.hp = Math.min(this.spec.maxHp, this.hp + addAmount);
+                gl.MessageEvents.trigger('message', newZoneMessage('potion worked!', 'potion', this.pos, 'rgba(230, 230, 230, 0.7)', 1000));
+            } else {
+                gl.MessageEvents.trigger('message', newZoneMessage('potion still cooling down!', 'potion', this.pos, 'rgba(230, 230, 230, 0.4)', 500));                
+            }
+        }
     });
 
     gl.monsterSpecs = {};

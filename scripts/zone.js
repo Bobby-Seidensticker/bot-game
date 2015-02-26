@@ -516,7 +516,7 @@ namespace.module('bot.zone', function (exports, require) {
                 var messages = invMessages.concat(cardMessages);
 
                 _.each(messages, function(message, index) {
-                    var alpha = (message.slice(0,3) == "New") ? 0.8: 0.6;
+                    var alpha = (message.slice(0,3) == "New" || message.slice(0,7) == "Leveled") ? 0.8: 0.6;
                     var color = 'rgba(255, 100, 0, ' + alpha + ')';
                     gl.MessageEvents.trigger(
                         'message',

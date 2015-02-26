@@ -45,8 +45,11 @@ namespace.module('bot.drops', function (exports, require) {
     // Extra function for cards.  What is called if there already exists that card but it needs xp
     CardDrop.prototype.update = function(existingCard) {
         var qp = Math.pow(10, this.level - 1);
-        existingCard.applyQp(qp);
-        this.storedMessage = '+' + qp + ' ' + utils.firstCap(this.name) + ' QP';
+        if(existingCard.applyQp(qp) > 0) {
+            this.storedMessage = "Leveled Up: " + utils.firstCap(this.name);
+        } else {
+            this.storedMessage = '+' + qp + ' ' + utils.firstCap(this.name) + ' QP';
+        }
     }
 
     CardDrop.prototype.message = function() {

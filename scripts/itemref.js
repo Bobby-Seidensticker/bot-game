@@ -653,6 +653,20 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'fireDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
+            "lethal strike": {
+                "prototype": ["basic"],
+                "class": "melee",
+                "types": ["melee"],
+                "baseMods": [
+                    {def: 'manaCost added 20', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 5 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 100', type: 'dmg'},
+                    {def: 'cooldownTime added 2000', type: 'dmg'},                                        
+                ]
+            },
         },
         "card": {
             "proto-skeleton": {
@@ -1147,7 +1161,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "fireDmg more 8", "type": "dmg"},
                     {"def": "fireDmg more 5 perLevel", "type": "dmg"},
                     {"def": "fireDmg gainedas 10 hpLeech", "type":"dmg"},
-                    {"def": "fireResist more 50", "type", "eleResist"},
+                    {"def": "fireResist more 50", "type": "eleResist"}
                 ],
                 "slot": "head",
                 "rarity": "rare"
@@ -1261,9 +1275,60 @@ namespace.module('bot.itemref', function (exports, require) {
             "fatal blow": {
                 "mods": [
                     {"def": "physDmg more 25 perLevel", "type": "dmg"},                                     {"def": "physDmg more 25", "type": "dmg"},   
+                    {"def": "cooldownTime added 100", "type": "dmg"},
                     {"def": "cooldownTime more 100", "type": "dmg"},
-                    {"def": "cooldownTime more 10 perLevel", "type": "dmg"},                    
                 ],
+                "slot":"skill",
+            },
+            "finishing move": {
+                "mods": [
+                    {"def": "physDmg more 200", "type": "dmg"},
+                    {"def": "cooldownTime added 500", "type": "dmg"},
+                    {"def": "speed more 100", "type": "dmg"},
+                    {"def": "speed more -10 perLevel", "type": "dmg"},                    
+                ],
+                "slot":"skill",
+            },
+            "reach": {
+                "mods": [
+                    {"def": "range more 40", "type": "dmg"},
+                    {"def": "range more 10 perLevel", "type": "dmg"},
+                ],
+                "slot":"skill",
+            },
+            "frugal": {
+                "mods": [
+                    {"def": "manaCost added -1 perLevel", "type": "dmg"},
+                ],
+                "slot":"skill",
+            },
+            "stingy": {
+                "mods": [
+                    {"def": "manaCost added -3 perLevel", "type": "dmg"},
+                    {"def": "speed more 50", "type": "dmg"}
+                ],
+                "slot":"skill",
+            },
+            "short sighted": {
+                "mods": [
+                    {"def": "manaCost more -5 perLevel", "type": "dmg"},
+                    {"def": "range more -60", "type": "dmg"}
+                ],
+                "slot":"skill",
+            },
+            "divine assistance": {
+                "mods": [
+                    {"def": "manaCost more -100", "type": "dmg"},
+                    {"def": "speed more 100", "type": "dmg"},
+                    {"def": "cooldownTime added 1000", "type": "dmg"},
+                    {"def": "cooldownTime added -100 perLevel", "type": "dmg"}
+                ],
+                "slot":"skill",
+            },
+            "micronaps": {
+                "mods": [
+                    {"def": "cooldownTime more -5 perLevel", "type": "dmg"},
+                    ],
                 "slot":"skill",
             },
         },
@@ -1282,7 +1347,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "fire skeleton": {
                 "items": [["weapon", "melee", 0], ["armor", "head", 0], ["armor", "chest", 0], ["armor", "legs", 0]],
-                "skills": ["fire slash", "super smash", "basic melee"],
+                "skills": ["lethal strike", "fire slash", "super smash", "basic melee"],
                 "sourceCards": [
                     ["hot sword", 1],
                     ["proto-skeleton", 0],

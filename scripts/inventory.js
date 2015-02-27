@@ -37,6 +37,10 @@ namespace.module('bot.inv', function (exports, require) {
             return Math.floor(100 * Math.exp((this.level - 1) / Math.PI));
         },
 
+        pctLeveled: function() {
+            return this.xp / this.getNextLevelXp();
+        },
+
         levelUp: function() {
             var type = this.itemType;
             this.xp -= this.getNextLevelXp();
@@ -481,6 +485,10 @@ namespace.module('bot.inv', function (exports, require) {
 
         getNextLevelQp: function() {
             return Math.pow(10, this.level);
+        },
+
+        pctLeveled: function() {
+            return this.qp / this.getNextLevelQp();
         },
 
         levelUp: function() {

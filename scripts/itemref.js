@@ -1146,16 +1146,17 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireDmg more 8", "type": "dmg"},
                     {"def": "fireDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "fireDmg gainedas 1 hpLeech", "type":"dmg"}
+                    {"def": "fireDmg gainedas 10 hpLeech", "type":"dmg"},
+                    {"def": "fireResist more 50", "type", "eleResist"},
                 ],
                 "slot": "head",
+                "rarity": "rare"
             },
             "life on hit": {
                 "mods": [
                     {"def": "hpOnHit added 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "gratifying blow": {
                 "mods": [
@@ -1163,15 +1164,20 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "manaCost more 10", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10,
                 "rarity": "rare",
             },
             "mana on hit": {
                 "mods":[
-                    {"def": "manaOnHit added 5 perLevel", "type": "dmg"},
+                    {"def": "manaOnHit added 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
+            },
+            "mana drinker": {
+                "mods":[
+                    {"def": "manaOnHit added 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "rarity": "rare"
             },
             "faster attacks": {
                 "mods":[
@@ -1179,7 +1185,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "speed more -3 perLevel", "type": "dmg"}
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "more physical damage": {
                 "mods":[
@@ -1187,35 +1192,30 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 3 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "longer cooldown": {
                 "mods":[
                     {"def": "cooldownTime more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "shorter cooldown": {
                 "mods":[
                     {"def": "cooldownTime more -5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "longer range": {
                 "mods":[
                     {"def": "range more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "shorter range": {
                 "mods":[
                     {"def": "range more -5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "ab shocker belt": {
                 "mods": [
@@ -1229,7 +1229,43 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "maxHp added 10 perLevel", "type": "def"},
                 ],
                 "slot":"hands",
-            },  
+            },
+            "hearty heart": {
+                "mods": [
+                    {"def": "maxHp more 3 perLevel", "type": "def"},
+                ],
+                "slot":"chest",
+            },
+            "side arm": {
+                "mods": [
+                    {"def": "cooldownTime added 250", "type": "dmg"},
+                    {"def": "speed more -50", "type": "dmg"}
+                ],
+                "slot":"skill",
+            },
+            "practiced": {
+                "mods": [
+                    {"def": "physDmg more 10", "type": "dmg"},
+                    {"def": "speed more -8", "type": "dmg"},
+                    {"def": "speed more -2 perLevel", "type": "dmg"}                    
+                ],
+                "slot":"skill",
+            },
+            "honed": {
+                "mods": [
+                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
+                    {"def": "speed more -3 perLevel", "type": "dmg"},                   
+                ],
+                "slot":"skill",
+            },
+            "fatal blow": {
+                "mods": [
+                    {"def": "physDmg more 25 perLevel", "type": "dmg"},                                     {"def": "physDmg more 25", "type": "dmg"},   
+                    {"def": "cooldownTime more 100", "type": "dmg"},
+                    {"def": "cooldownTime more 10 perLevel", "type": "dmg"},                    
+                ],
+                "slot":"skill",
+            },
         },
         "monster": {
             "skeleton" : {
@@ -1240,7 +1276,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-grunt", 0],
                     ["sharpened", 1],
                     ["breadhat", 1],
-                    ["stinging", 1]
+                    ["stinging", 1],
+                    ["hearty heart", 1]
                 ],
             },
             "fire skeleton": {
@@ -1261,15 +1298,18 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-skeleton", 0],
                     ["head of vigor", 1],
                     ["happy hands", 1],
+                    ["mana on hit", 1],
+                    ["longer range", 1]
                 ]
             },
             "skeleton mage" : {
-                "items": [["weapon", "spell", 0], ["armor", "legs", 0], ["armor", "hands", 0]],
+                "items": [["weapon", "spell", 0]],
                 "skills": ["fire ball", "basic spell"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
                     ["brain juice", 1],
                     ["heart juice", 1],
+                    ["life on hit", 1]
                 ]
             },
             "skeleton king" : {

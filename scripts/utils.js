@@ -35,29 +35,18 @@ namespace.module('bot.vectorutils', function (exports, require) {
         return new Point(this.y, this.x);
     }
 
-    Point.prototype.dflip = function() {
-        var t = this.x;
-        this.x = this.y;
-        this.y = t;
-        return this;
-    }
-
     Point.prototype.mult = function(scalar) {
-        return new Point(Math.round(this.x * scalar), Math.round(this.y * scalar));
-    }
-
-    Point.prototype.rawMult = function(scalar) {
-        return new Point(Math.round(this.x * scalar), Math.round(this.y * scalar));
+        return new Point(this.x * scalar, this.y * scalar);
     }
 
     Point.prototype.dmult = function(scalar) {
-        this.x = Math.round(this.x * scalar);
-        this.y = Math.round(this.y * scalar);
+        this.x = this.x * scalar;
+        this.y = this.y * scalar;
         return this;
     }
 
     Point.prototype.dist = function(p) {
-        return Math.round(Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2)));
+        return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
     }
 
     Point.prototype.len = function() {
@@ -81,10 +70,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
     }
 
     Point.prototype.velocity = function(end, rate) {
-        var res = end.sub(this);
-        var fact = rate / end.rawDist(start);
-        res.dmult(fact);
-        return res;
+        return end.sub(this).unitVector().mult(rate);
     }
 
     Point.prototype.closer = function(dest, rate, stop) {
@@ -116,7 +102,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
 
     Point.prototype.unitVector = function() {
         var len = this.len();
-        return this.rawMult(1 / len);
+        return this.mult(1 / len);
     }
 
     function hit(s, e, t, r1, r2) {

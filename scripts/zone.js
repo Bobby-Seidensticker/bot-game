@@ -134,7 +134,7 @@ namespace.module('bot.zone', function (exports, require) {
                 absEnt = room.pos.add(room.exit);
 
                 if (dir === 0) {
-                    size.dflip();
+                    size = size.flip();
                     ent = new Point(prob.middle50(size.x), size.y);
                     pos = absEnt.sub(ent);
                 } else {

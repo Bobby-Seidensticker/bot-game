@@ -105,7 +105,7 @@ namespace.module('bot.attacks', function (exports, require) {
             if (arr && arr.length) {
                 _.each(arr, function(spec) {
                     if (spec.type === 'proj') {
-                        // new proj from attack
+                        //if (spec.count 
                     } else if (spec.type === 'cone') {
                         // new cone from attack
                     } else if (spec.type === 'circle') {
@@ -139,7 +139,7 @@ namespace.module('bot.attacks', function (exports, require) {
             this.start = attacker.pos.clone();
             this.pos = attacker.pos.clone();
             this.end = target.pos.clone();
-            this.travelTime = this.start.dist(this.end) / this.rate;
+            this.velocity = this.start.velocity(this.end, this.rate);
 
             this.fireTime = gl.time + spec.speed / 2;
 
@@ -154,11 +154,10 @@ namespace.module('bot.attacks', function (exports, require) {
                 return;
             }
             var elapsedTime = gl.time - this.fireTime;
-            var nextPos = this.start.pctCloser(this.end, elapsedTime / this.travelTime);
+            var nextPos = this.start.add(this.velocity.mult(elapsedTime));
 
             for (var i = 0; i < enemies.length; i++) {
-                var didHit = vu.hit(this.pos, nextPos, enemies[i].pos, enemies[i].spec.width, this.radius);
-                if (didHit) {
+                if (vu.hit(this.pos, nextPos, enemies[i].pos, enemies[i].spec.width, this.radius)) {
                     log.debug('projectile hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
                     this.hit(enemies[i]);
                     break;

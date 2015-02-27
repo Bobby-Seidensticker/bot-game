@@ -120,7 +120,7 @@ namespace.module('bot.entity', function (exports, require) {
                 
                 {def: 'eleResistAll added 1', type: 'def'},
 
-                {def: 'maxHp added 10 perLevel', type: 'def'},
+                {def: 'maxHp added 20 perLevel', type: 'def'},
                 {def: 'maxMana added 5 perLevel', type: 'def'},
 
                 {def: 'maxMana gainedas 2 manaRegen', type: 'def'}

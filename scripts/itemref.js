@@ -673,7 +673,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "lethal strike": {
-                "prototype": ["basic"],
+                "prototype": ["basic melee"],
                 "class": "melee",
                 "types": ["melee"],
                 "baseMods": [
@@ -691,7 +691,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "proto-skeleton": {
                 "mods": [
                     {"def": "fireResist more -20", "type": "eleResist"},
-                    {"def": "physDmg more -30", "type": "dmg"},
+                    {"def": "physDmg more -10", "type": "dmg"},
                 ],
             },
             "proto-grunt": {
@@ -1187,7 +1187,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "life on hit": {
                 "mods": [
-                    {"def": "hpOnHit added 2 perLevel", "type": "dmg"},
+                    {"def": "hpOnHit added 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
             },
@@ -1241,6 +1241,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "longer range": {
                 "mods":[
                     {"def": "range more 5 perLevel", "type": "dmg"},
+                    {"def": "range more 20", "type": "dmg"},                    
                 ],
                 "slot": "skill",
             },
@@ -1357,7 +1358,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["basic melee"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
-                    ["proto-grunt", 0],
+                    //["proto-grunt", 0],
                     ["sharpened", 1],
                     ["breadhat", 1],
                     ["stinging", 1],

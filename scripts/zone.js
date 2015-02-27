@@ -432,7 +432,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
-                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.7)', 1000));
+                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.4)', 1000));
                 return 0;
             }
 
@@ -476,6 +476,7 @@ namespace.module('bot.zone', function (exports, require) {
 
     var HeroBody = EntityBody.extend({
         initialize: function(spec) {
+            this.potionCoolAt = gl.time;
             this.listenTo(spec.skillchain, 'skillComputeAttrs', this.updateSkillchain);
             this.listenTo(spec, 'computeAttrs', this.updateSkillchain);
             EntityBody.prototype.initialize.call(this, spec);
@@ -515,9 +516,10 @@ namespace.module('bot.zone', function (exports, require) {
                 var messages = invMessages.concat(cardMessages);
 
                 _.each(messages, function(message, index) {
+                    var color = (message.slice(0,3) == "New" || message.slice(0,7) == "Leveled") ? 'rgba(255, 140, 0, 0.8)' : 'rgba(255, 100, 0, 0.6)';
                     gl.MessageEvents.trigger(
                         'message',
-                        newZoneMessage(message, 'drop', target.pos, 'rgba(255, 100, 0, 0.8)', 1000, target.spec.height / 2 + index * 20)
+                        newZoneMessage(message, 'drop', target.pos, color, 1000, target.spec.height / 2 + index * 30000)
                     );
                 }, this);
             }
@@ -539,9 +541,24 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         revive: function() {
+            this.potionCoolAt = gl.time;
             EntityBody.prototype.revive.call(this);
             gl.DirtyQueue.mark('revive');
         },
+
+        tryUsePotion: function() {
+            if(this.hp == this.spec.maxHp) {
+                return;
+            }
+            if(this.potionCoolAt <= gl.time) {
+                this.potionCoolAt = gl.time + 5000; //5 second cooldown
+                var addAmount = this.spec.level * 10; 
+                this.hp = Math.min(this.spec.maxHp, this.hp + addAmount);
+                gl.MessageEvents.trigger('message', newZoneMessage('potion worked!', 'potion', this.pos, 'rgba(230, 230, 230, 0.7)', 1000));
+            } else {
+                gl.MessageEvents.trigger('message', newZoneMessage('potion still cooling down!', 'potion', this.pos, 'rgba(230, 230, 230, 0.4)', 500));                
+            }
+        }
     });
 
     gl.monsterSpecs = {};

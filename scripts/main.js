@@ -137,7 +137,7 @@ namespace.module('bot.main', function (exports, require) {
     KeyHandler.prototype.onKeydown = function(event) {
         var gameModel = this.gameModel;
 
-        var SPACE = 32, EKEY = 69, TKEY = 84, UP = 38, DN = 40, CKEY = 67, PKEY = 80;
+        var SPACE = 32, EKEY = 69, TKEY = 84, UP = 38, DN = 40, CKEY = 67, PKEY = 80, HKEY = 72;
         var key = event.keyCode;
 
         log.info('keydown, key: %d', event.keyCode);
@@ -148,6 +148,10 @@ namespace.module('bot.main', function (exports, require) {
             //Cheat for adding 1000xp (for easier testing)
             log.warning("XP Cheat!");                
             this.gameModel.hero.applyXp(1000);
+        } else if (key == HKEY) {
+            //Cheat for adding 1000xp (for easier testing)
+            log.warning("Health Potion");
+            this.gameModel.zone.hero.tryUsePotion();
         } else if (key == TKEY) {
             log.warning("Time Cheat!");
             this.gameModel.lastTime -= 1000 * 60 * 5;

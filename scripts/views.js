@@ -466,7 +466,7 @@ namespace.module('bot.views', function (exports, require) {
             }, this);
 
             if (this.selected) {
-                var selectedView = _.find(this.allViews, function(view) { return this.selected.model.id === view.model.id; }, this);
+                var selectedView = _.find(this.allViews, function(view) { return view.model && this.selected.model.id === view.model.id; }, this);
                 if (selectedView && selectedView.canSelect) {
                     selectedView.select();
                     this.selected = selectedView;

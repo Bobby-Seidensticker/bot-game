@@ -3,7 +3,9 @@ namespace.module('bot.drops', function (exports, require) {
     var inventory;
     $(function() {
         inventory = namespace.bot.inv;
-        itemref = namespace.bot.itemref
+        itemref = namespace.bot.itemref;
+        utils = namespace.bot.utils;
+        
     });
 
     /*
@@ -43,15 +45,18 @@ namespace.module('bot.drops', function (exports, require) {
     // Extra function for cards.  What is called if there already exists that card but it needs xp
     CardDrop.prototype.update = function(existingCard) {
         var qp = Math.pow(10, this.level - 1);
-        existingCard.applyQp(qp);
-        this.storedMessage = qp + ' ' + this.name + ' qp';
+        if(existingCard.applyQp(qp) > 0) {
+            this.storedMessage = "Leveled Up: " + utils.firstCap(this.name);
+        } else {
+            this.storedMessage = '+' + qp + ' ' + utils.firstCap(this.name) + ' QP';
+        }
     }
 
     CardDrop.prototype.message = function() {
         if (this.storedMessage) {
             return this.storedMessage;
         } else {
-            return this.name + ' ' + this.level;
+            return "New Card: " + utils.firstCap(this.name);
         }
     }
 
@@ -73,7 +78,7 @@ namespace.module('bot.drops', function (exports, require) {
     }
 
     ItemDrop.prototype.message = function() {
-        return this.name;
+        return "New Item: " + utils.firstCap(this.name);
     }
 
     function SkillDrop(refData) {
@@ -86,7 +91,7 @@ namespace.module('bot.drops', function (exports, require) {
     }
 
     SkillDrop.prototype.message = function() {
-        return this.name;
+        return "New Skill: " + utils.firstCap(this.name);
     }
 
     exports.extend({

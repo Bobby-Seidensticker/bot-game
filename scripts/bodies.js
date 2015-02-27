@@ -217,7 +217,11 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         onKill: function() {},
-        onDeath: function() {}
+        onDeath: function() {},
+
+        fireHeight: function() {
+            return this.spec.height / 2;
+        },
     });
 
     var HeroBody = EntityBody.extend({
@@ -255,9 +259,6 @@ namespace.module('bot.bodies', function(exports, require) {
         onKill: function(target) {
             var xpGained = target.spec.xpOnKill();
             this.spec.applyXp(xpGained);
-            if (target.spec.getDrops === undefined) {
-                console.log('right here');
-            }
             var allDrops = target.spec.getDrops();
             if (allDrops.any) {
                 var invMessages = this.spec.inv.addDrops(allDrops.gearDrops);
@@ -340,7 +341,7 @@ namespace.module('bot.bodies', function(exports, require) {
     }
 
     function newDamageMessage(attack, text, color) {
-        var dmg = new Damage(attack.start, attack.pos, attack.target.spec.height);
+        var dmg = new Damage(attack.start, attack.pos, attack.hitHeight);  // target.spec.height);
         return {
             type: 'dmg',
             text: text,

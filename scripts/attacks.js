@@ -39,10 +39,10 @@ namespace.module('bot.attacks', function (exports, require) {
                   "trigger" attack.onRemove
             */
             var i;
-            for (i = 0; i < this.attacks.length; i++) {
-                var enemies = livingBodies[this.attacks[i].target.spec.team];
-                this.attacks[i].tick(enemies);
-            }
+            _.each(this.attacks, function(attack, i) {
+                var enemies = livingBodies[attack.targetTeam];
+                attack.tick(enemies);
+            }, this);
             i = 0;
             var atk;
             var newAttacks;
@@ -116,7 +116,10 @@ namespace.module('bot.attacks', function (exports, require) {
         },
 
         hit: function(enemy) {
+            this.hitHeight = enemy.fireHeight();
+
             var dmgDealt = enemy.takeDamage(this);
+
             this.attacker.handleHit(enemy, this.leech);
             this.handle('hit');
             if (!enemy.isAlive()) {
@@ -133,6 +136,7 @@ namespace.module('bot.attacks', function (exports, require) {
             _.extend(this, spec);
             this.attacker = attacker;
             this.target = target;
+            this.targetTeam = target.spec.team;
 
             this.radius = spec.radius ? spec.radius : Math.pow(2, 16);
 
@@ -178,6 +182,7 @@ namespace.module('bot.attacks', function (exports, require) {
             _.extend(this, spec);
             this.attacker = attacker;
             this.target = target;
+            this.targetTeam = target.spec.team;
 
             this.start = attacker.pos.clone();
             this.pos = attacker.pos.clone();

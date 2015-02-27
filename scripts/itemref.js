@@ -1165,8 +1165,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireDmg more 8", "type": "dmg"},
                     {"def": "fireDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "fireDmg gainedas 10 hpLeech", "type":"dmg"},
-                    {"def": "fireResist more 50", "type", "eleResist"},
+                    {"def": "fireDmg gainedas 10 hpLeech", "type": "dmg"},
+                    {"def": "fireResist more 50", "type": "eleResist"},
                 ],
                 "slot": "head",
                 "rarity": "rare"

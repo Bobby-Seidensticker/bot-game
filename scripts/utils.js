@@ -338,6 +338,10 @@ namespace.module('bot.utils', function (exports, require) {
     }
 
     function firstCap(str) {
+        if(str === undefined) {
+            log.error("utils.firstCap called with undefined string");
+            return;
+        }
         var words = str.split(' ');
         _.each(words, function(word, i) {
             words[i] = word[0].toUpperCase() + word.slice(1);

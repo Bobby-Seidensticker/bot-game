@@ -1283,7 +1283,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "elf king" : {
-                "items": [["weapon", "range", 4]],
+                "items": [["weapon", "range", 3]],
                 "skills": ["speed shot", "poison arrow", "basic range"],
                 "sourceCards": [
                     ["proto-boss", 0],
@@ -1777,10 +1777,13 @@ namespace.module('bot.itemref', function (exports, require) {
             "manaOnHit": "Mana Gained on Hit",
             "cooldownTime": "Cooldown Length",
             "range": "Skill Range",
-            "speed": "Skill Speed",
+            "speed": "Skill Duration",
             "manaCost": "Mana Cost",
             "hpLeech": "Leeched Health",
-            "manaLeech": "Leeched Mana"
+            "manaLeech": "Leeched Mana",
+            "lineWidth": "Line Width",
+            "height": "Character Height",
+            "width": "Character Width", 
         }
 
     };

@@ -607,7 +607,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "ice blast": {
-                "prototype": ["basic"],
+                "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "aoecone" , "spell"],
                 "baseMods": [
@@ -618,7 +618,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "nova": {
-                "prototype": ["basic"],
+                "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
                 "baseMods": [
@@ -629,7 +629,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "fire nova": {
-                "prototype": ["basic"],
+                "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
                 "baseMods": [
@@ -640,7 +640,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "ice nova": {
-                "prototype": ["basic"],
+                "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
                 "baseMods": [
@@ -1025,7 +1025,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "skill",
             },
-            "non-newtownian fluid": {
+            "swamp armor": {
                 "mods": [
                     {"def": "armor added 10 perLevel", "type": "def"},
                 ],
@@ -1127,6 +1127,14 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "chest",
             },
+            "blue ice": {
+                "mods": [
+                    {"def": "coldDmg gainedas 30 poisDmg", "type": "dmg"},
+                    {"def": "coldDmg more 3 perLevel", "type": "dmg"}
+                ],
+                "slot": "gloves",
+                "rarity": "rare",
+            },
             "shadow walker": {
                 "mods": [
                     {"def": "dodge added 20 perLevel", "type": "def"},
@@ -1157,23 +1165,38 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireDmg more 8", "type": "dmg"},
                     {"def": "fireDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "fireDmg gainedas 1 hpLeech", "type":"dmg"}
+                    {"def": "fireDmg gainedas 10 hpLeech", "type":"dmg"},
+                    {"def": "fireResist more 50", "type", "eleResist"},
                 ],
                 "slot": "head",
+                "rarity": "rare"
             },
             "life on hit": {
                 "mods": [
-                    {"def": "hpOnHit added 5 perLevel", "type": "dmg"},
+                    {"def": "hpOnHit added 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
+            },
+            "gratifying blow": {
+                "mods": [
+                    {"def": "hpOnHit added 5 perLevel", "type": "dmg"},
+                    {"def": "manaCost more 10", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "rarity": "rare",
             },
             "mana on hit": {
                 "mods":[
-                    {"def": "manaOnHit added 5 perLevel", "type": "dmg"},
+                    {"def": "manaOnHit added 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
+            },
+            "mana drinker": {
+                "mods":[
+                    {"def": "manaOnHit added 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill",
+                "rarity": "rare"
             },
             "faster attacks": {
                 "mods":[
@@ -1181,7 +1204,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "speed more -3 perLevel", "type": "dmg"}
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "more physical damage": {
                 "mods":[
@@ -1189,35 +1211,79 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg more 3 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "longer cooldown": {
                 "mods":[
                     {"def": "cooldownTime more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "shorter cooldown": {
                 "mods":[
                     {"def": "cooldownTime more -5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "longer range": {
                 "mods":[
                     {"def": "range more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
             },
             "shorter range": {
                 "mods":[
                     {"def": "range more -5 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-                "levels": 10
+            },
+            "ab shocker belt": {
+                "mods": [
+                    {"def": "maxHp added 20 perLevel", "type": "def"},
+                    {"def": "lightResist more 20", "type": "eleResist"}
+                ],
+                "slot": "chest",
+            },
+            "happy hands": {
+                "mods":[
+                    {"def": "maxHp added 10 perLevel", "type": "def"},
+                ],
+                "slot":"hands",
+            },
+            "hearty heart": {
+                "mods": [
+                    {"def": "maxHp more 3 perLevel", "type": "def"},
+                ],
+                "slot":"chest",
+            },
+            "side arm": {
+                "mods": [
+                    {"def": "cooldownTime added 250", "type": "dmg"},
+                    {"def": "speed more -50", "type": "dmg"}
+                ],
+                "slot":"skill",
+            },
+            "practiced": {
+                "mods": [
+                    {"def": "physDmg more 10", "type": "dmg"},
+                    {"def": "speed more -8", "type": "dmg"},
+                    {"def": "speed more -2 perLevel", "type": "dmg"}                    
+                ],
+                "slot":"skill",
+            },
+            "honed": {
+                "mods": [
+                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
+                    {"def": "speed more -3 perLevel", "type": "dmg"},                   
+                ],
+                "slot":"skill",
+            },
+            "fatal blow": {
+                "mods": [
+                    {"def": "physDmg more 25 perLevel", "type": "dmg"},                                     {"def": "physDmg more 25", "type": "dmg"},   
+                    {"def": "cooldownTime more 100", "type": "dmg"},
+                    {"def": "cooldownTime more 10 perLevel", "type": "dmg"},                    
+                ],
+                "slot":"skill",
             },
         },
         "monster": {
@@ -1229,7 +1295,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-grunt", 0],
                     ["sharpened", 1],
                     ["breadhat", 1],
-                    ["stinging", 1]
+                    ["stinging", 1],
+                    ["hearty heart", 1]
                 ],
             },
             "fire skeleton": {
@@ -1248,16 +1315,20 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["speed shot", "basic range"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
-                    ["head of vigor", 1]
+                    ["head of vigor", 1],
+                    ["happy hands", 1],
+                    ["mana on hit", 1],
+                    ["longer range", 1]
                 ]
             },
             "skeleton mage" : {
-                "items": [["weapon", "spell", 0], ["armor", "legs", 0], ["armor", "hands", 0]],
+                "items": [["weapon", "spell", 0]],
                 "skills": ["fire ball", "basic spell"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
                     ["brain juice", 1],
                     ["heart juice", 1],
+                    ["life on hit", 1]
                 ]
             },
             "skeleton king" : {
@@ -1282,7 +1353,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["quick hit", "basic melee"],
                 "sourceCards": [
                     ["nimble", 1],
-                    ["bloodsucker", 1]
+                    ["bloodsucker", 1],
+                    ["life on hit", 1]                                        
                 ]
             },
             "ent" : {
@@ -1519,7 +1591,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["indigenous toxins", 1],
                     ["putrified", 1],
-                    ["non-newtownian fluid", 1]
+                    ["swamp armor", 1]
                 ],
             },
             "mad ape": {
@@ -1554,7 +1626,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "frost mage": {
                 "items": [["weapon", "spell", 2]],
-                "skills": ["ice blast", "ice nova", "ice ball", "basic range"],
+                "skills": ["ice blast", "ice nova", "ice ball", "basic spell"],
                 "sourceCards": [
                     ["fleece lining", 1],
                     ["frosted", 1],
@@ -1582,6 +1654,29 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["chinchilla lining", 1],
                     ["clawed", 1],
                     ["yeti fur", 1]
+                ],
+            },
+            "wight": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["ice blast", "ice nova", "ice ball", "basic melee"],
+                "sourceCards": [
+                    ["fleece lining", 1],
+                    ["frosted", 1],
+                    ["fur hat", 1],
+                    ["ethereal", 1],
+                    ["shadow walker", 1]
+                ],
+            },
+            "walter wight": {
+                "items": [["weapon", "melee", 2]],
+                "skills": ["ice blast", "ice nova", "ice ball", "basic melee"],
+                "sourceCards": [
+                    ["proto-boss", 0],
+                    ["fleece lining", 1],
+                    ["frosted", 1],
+                    ["fur hat", 1],
+                    ["ethereal", 1],
+                    ["shadow walker", 1]
                 ],
             },
             "shadow knight": {
@@ -1700,9 +1795,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "level": 20,
             },
             "icy tunnel": {
-                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "frow djinn"],
+                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn"],
                 "weights": [20, 10, 10, 10 ,10, 0],
-                "boss": "yeti",
+                "boss": "walter wight",
                 "roomCount": 20,
                 "quantity": [2,2,3],
                 "level": 25,

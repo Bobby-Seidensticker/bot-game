@@ -91,21 +91,21 @@ namespace.module('bot.entity', function (exports, require) {
 
         getMods: function() {
             var mods = [
-                {def: 'strength added 10', type: 'def'},
-                {def: 'strength added 2 perLevel', type: 'def'},
-                {def: 'dexterity added 10', type: 'def'},
-                {def: 'dexterity added 2 perLevel', type: 'def'},
-                {def: 'wisdom added 10', type: 'def'},
-                {def: 'wisdom added 2 perLevel', type: 'def'},
-                {def: 'vitality added 10', type: 'def'},
-                {def: 'vitality added 2 perLevel', type: 'def'},
+                {def: 'strength added 9', type: 'def'},
+                {def: 'strength added 1 perLevel', type: 'def'},
+                {def: 'dexterity added 9', type: 'def'},
+                {def: 'dexterity added 1 perLevel', type: 'def'},
+                {def: 'wisdom added 9', type: 'def'},
+                {def: 'wisdom added 1 perLevel', type: 'def'},
+                {def: 'vitality added 9', type: 'def'},
+                {def: 'vitality added 1 perLevel', type: 'def'},
 
                 {def: 'vitality gainedas 100 maxHp', type: 'def'},
                 {def: 'vitality gainedas 25 maxMana', type: 'def'},                
                 {def: 'wisdom gainedas 100 maxMana', type: 'def'},
 
-                {def: 'strength gainedas 50 armor', type: 'def'},
-                {def: 'dexterity gainedas 50 dodge', type: 'def'},
+                {def: 'strength gainedas 200 armor', type: 'def'},
+                {def: 'dexterity gainedas 200 dodge', type: 'def'},
 
                 {def: 'moveSpeed added 300', type: 'def'},
 

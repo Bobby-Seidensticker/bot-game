@@ -109,7 +109,7 @@ namespace.module('bot.attacks', function (exports, require) {
                     } else if (spec.type === 'cone') {
                         // new cone from attack
                     } else if (spec.type === 'circle') {
-                        // new cricle from attack
+                        // new circle from attack
                     }
                 }, this);
             }

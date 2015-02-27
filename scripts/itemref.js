@@ -305,6 +305,25 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },
+            "molten strike": {
+                "prototype": ["basic melee"],
+                "types": ["melee", "fire"],
+                "specs": [{ type: 'melee', mods: [],
+                            onHit: [{ type: 'proj', angle: 30, count: 3, mods: [{def: 'physDmg more -20', type: 'dmg'}], onKill: [], onRemove: []}],
+                            onKill: [],
+                            onRemove: []
+                          }],
+                "baseMods": [
+                    {def: 'manaCost added 3', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
+                    {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
+                ]
+            },
             "exploding strike": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],

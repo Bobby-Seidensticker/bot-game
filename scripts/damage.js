@@ -26,7 +26,7 @@ namespace.module('bot.damage', function (exports, require) {
 
     Damage.prototype.getBase = function() {
         var elapsed = (gl.time - this.startTime);
-        var base = this.end.add(this.vect.rawMult(400 * elapsed));
+        var base = this.end.add(this.vect.mult(400 * elapsed));
         return base;
     }
 

@@ -50,7 +50,7 @@ namespace.module('bot.vis', function (exports, require) {
 
         updateConstants: function() {
             vvs.center = this.gameView.getCenter();
-            vvs.cart = this.zone.hero.pos.rawMult(vvs.ratio);
+            vvs.cart = this.zone.hero.pos.mult(vvs.ratio);
             vvs.iso = vvs.cart.toIso();
             vvs.iso.y -= SIZE / 2;
             vvs.diff = vvs.center.sub(vvs.iso);
@@ -88,7 +88,7 @@ namespace.module('bot.vis', function (exports, require) {
     });
 
     function transpose(modelPoint) {
-        var viewPoint = modelPoint.rawMult(vvs.ratio);
+        var viewPoint = modelPoint.mult(vvs.ratio);
         viewPoint = viewPoint.toIso();
         viewPoint.y -= SIZE / 2;
         return viewPoint.add(vvs.diff);
@@ -120,7 +120,7 @@ namespace.module('bot.vis', function (exports, require) {
                 height: this.canvasSize.y
             });
 
-            var scaled = this.imgSize.rawMult(this.scale);
+            var scaled = this.imgSize.mult(this.scale);
             $(this.img).attr({ width: scaled.x, height: scaled.y });
 
             var iMax = this.canvasSize.x / scaled.x;
@@ -203,8 +203,8 @@ namespace.module('bot.vis', function (exports, require) {
                 var pos = room.pos.sub(this.zone.getCurrentRoom().pos);
                 var size;
 
-                pos = pos.rawMult(vvs.ratio);
-                size = room.size.rawMult(vvs.ratio);
+                pos = pos.mult(vvs.ratio);
+                size = room.size.mult(vvs.ratio);
 
                 this.ctx.drawImage(this.tiles.canvas, 0, 0, size.x, size.y, pos.x, pos.y, size.x, size.y);
                 /*

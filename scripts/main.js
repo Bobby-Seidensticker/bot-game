@@ -106,7 +106,8 @@ namespace.module('bot.main', function (exports, require) {
         bestGear: function(itemType, type) {
             var items = _.where(gl.game.inv.models, {itemType: itemType});
             items = _.where(items, {type: type});
-            items = _.sortBy(items, function(item) { return item.classLevel; });
+            //WARNING - used to be sort by classlevel, dont have an easy indicator of quality anymore, so just using level
+            items = _.sortBy(items, function(item) { return item.level; });
             if (items.length > 0) {
                 return items.pop();
             }

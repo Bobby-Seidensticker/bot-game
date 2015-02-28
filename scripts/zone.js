@@ -45,7 +45,7 @@ namespace.module('bot.zone', function (exports, require) {
                 if (i % 2 === 0) {  // if this is not a corridor
                     count = this.quantity[0] + prob.pProb(this.quantity[1], this.quantity[2]);
                     //max room pop is i+1 (first room always only one monster)
-                    count = Math.min(i+1, count);
+                    count = Math.min(i / 2 + 1, count);
                     for (var j = 0; j < count; j++) {
                         monsters.push(new MonsterBody(this.choices[prob.pick(this.weights)], this.level));
                     }

@@ -120,7 +120,7 @@ namespace.module('bot.entity', function (exports, require) {
                 
                 {def: 'eleResistAll added 1', type: 'def'},
 
-                {def: 'maxHp added 10 perLevel', type: 'def'},
+                {def: 'maxHp added 20 perLevel', type: 'def'},
                 {def: 'maxMana added 5 perLevel', type: 'def'},
 
                 {def: 'maxMana gainedas 2 manaRegen', type: 'def'}
@@ -205,17 +205,18 @@ namespace.module('bot.entity', function (exports, require) {
 
             _.extend(this, itemref.expand('monster', this.name));
 
-            this.mods = _.map(this.items, function(item) { return utils.expandSourceItem(item[0], item[1], this.level, item[2]); }, this);
+            this.weaponType = 'melee';
+            
+            this.mods = _.map(this.items, function(item) {
+                var expanded = itemref.expand(item[0], item[1]);
+                if(item[0] == "weapon") {
+                    this.weaponType = expanded.type;
+                }
+                return expanded.mods;
+            }, this);
             this.mods = _.flatten(this.mods);
             this.mods = this.mods.concat(utils.expandSourceCards(this.sourceCards));
 
-            this.weaponType = 'melee'
-            for (var i = 0; i < this.items.length; i++) {
-                if (this.items[i][0] === 'weapon') {
-                    this.weaponType = this.items[i][1];
-                    break;
-                }
-            }
 
             this.droppableCards = _.filter(this.sourceCards, function(card) { return card[0].slice(0, 5) !== 'proto'; }, this);
 

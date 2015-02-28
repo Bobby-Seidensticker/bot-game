@@ -384,14 +384,15 @@ namespace.module('bot.utils', function (exports, require) {
         }
         return result;
     }
-
+    //Removed!
+    /*
     // rename this to getItemMods
     function expandSourceItem(itemType, type, itemLevel, classLevel) {
         itemLevel = parseInt(itemLevel);  //ensure itemLevel is num not string
         var ref = itemref.ref[itemType][type];
         var mods = ref.getClassMods(classLevel).concat(ref.mods);
         return applyPerLevels(mods, itemLevel);
-    }
+    }*/
 
     // turns shorthand from monster definitions into usable cards
     // [['hot sword', 1], ['hard head', 1]] => [{mods: [(hot sword mods)], level: 1}, {mods: [(hard head mods)], level: 1}]
@@ -404,7 +405,7 @@ namespace.module('bot.utils', function (exports, require) {
     exports.extend({
         applyPerLevel: applyPerLevel,
         applyPerLevels: applyPerLevels,
-        expandSourceItem: expandSourceItem,
+        //expandSourceItem: expandSourceItem,
         expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
         prettifyMods: prettifyMods,

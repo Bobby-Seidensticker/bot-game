@@ -200,6 +200,7 @@ namespace.module('bot.bodies', function(exports, require) {
 
             if (this.spec.team === TEAM_HERO) {
                 log.debug('Team Hero taking %.2f damage', -totalDmg);
+                totalDmg *= 0.5;
             }
             this.modifyHp(-totalDmg);
 
@@ -303,7 +304,7 @@ namespace.module('bot.bodies', function(exports, require) {
             }
             if(this.potionCoolAt <= gl.time) {
                 this.potionCoolAt = gl.time + 5000; //5 second cooldown
-                var addAmount = this.spec.level * 10; 
+                var addAmount = this.spec.level * 20; 
                 this.hp = Math.min(this.spec.maxHp, this.hp + addAmount);
                 gl.MessageEvents.trigger('message', newZoneMessage('potion worked!', 'potion', this.pos, 'rgba(230, 230, 230, 0.7)', 1000));
             } else {

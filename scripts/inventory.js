@@ -47,7 +47,6 @@ namespace.module('bot.inv', function (exports, require) {
             this.level += 1;
 
             this.ensureCardArray(this.maxCards);
-            // maybe this goes away forever? this.ensureCardArray(this.slotFormula(this.classLevel, this.level));
         },
 
         ensureCardArray: function() {
@@ -114,50 +113,45 @@ namespace.module('bot.inv', function (exports, require) {
     function getSortKey(model) {
         var num = 0;
         if (model.itemType === 'weapon') {
-            return 'a' + {melee: 'a', range: 'b', spell: 'c'}[model.type] + model.classLevel.toString();
+            return 'a' + {melee: 'a', range: 'b', spell: 'c'}[model.type] + model.name;
         } else if (model.itemType === 'armor') {
-            return 'b' + {head: 'a', chest: 'b', legs: 'c', hands: 'd'}[model.type] + model.classLevel.toString();
+            return 'b' + {head: 'a', chest: 'b', legs: 'c', hands: 'd'}[model.type] + model.name;
         } else if (model.itemType === 'skill') {
             return 'c' + model.name.toLowerCase();
         }
     }
 
     var ArmorModel = GearModel.extend({
-        initialize: function(classLevel, type) {
+        initialize: function(name) {
             GearModel.prototype.initialize.call(this)
+            this.name = name;
+            _.extend(this, itemref.expand('armor', this.name));            
             this.itemType = 'armor';
-            this.classLevel = classLevel;
-            this.type = type;
-
-            var ref = $.extend(true, {}, itemref.ref.armor[type]);
-            this.baseMods = ref.mods.concat(ref.getClassMods(this.classLevel));
+            this.baseMods = this.mods;
             //this.slotFormula = ref.slotFormula;
-            this.weight = ref.weight;
-            this.name = ref.names[this.classLevel];
+
 
             this.key = getSortKey(this);
 
-            // might go away forever? this.ensureCardArray(this.slotFormula(this.classLevel, this.level));
-            log.debug('Made a new armor cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
+            log.debug('Made a new armor name: %s', this.name);
         }
     });
 
     var WeaponModel = GearModel.extend({
-        initialize: function(classLevel, type) {
+        initialize: function(name) {
             GearModel.prototype.initialize.call(this)
+            this.name = name;
+            _.extend(this, itemref.expand('weapon', this.name));
+            
             this.itemType = 'weapon';
-            this.classLevel = classLevel;
-            this.type = type;
 
-            var ref = $.extend(true, {}, itemref.ref.weapon[type]);
-            this.baseMods = ref.mods.concat(ref.getClassMods(this.classLevel));
-            //this.slotFormula = ref.slotFormula;
-            this.name = ref.names[this.classLevel];
+
+
+            this.baseMods = this.mods;
 
             this.key = getSortKey(this);
 
-            // might go away forever? this.ensureCardArray(this.slotFormula(this.classLevel, this.level));
-            log.debug('Made a new weapon cl: %d, type: %s, name: %s', this.classLevel, this.type, this.name);
+            log.debug('Made a new weapon name: %s', this.name);
         }
     });
 
@@ -414,9 +408,9 @@ namespace.module('bot.inv', function (exports, require) {
     var ItemCollection = gl.Model.extend({
         initialize: function() {
             this.models = [
-                new WeaponModel(0, 'melee'),
+                new WeaponModel('cardboard sword'),
                 new SkillModel('basic melee'),
-                new ArmorModel(0, 'head'),
+                new ArmorModel('balsa helmet'),
             ];
             this.sort();
         },

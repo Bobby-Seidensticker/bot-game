@@ -580,9 +580,6 @@ namespace.module('bot.views', function (exports, require) {
             view.isCard = isCard;
             view.isUnequipped = slot === undefined;
 
-            log.info('Making new card tab item slot with model: %s and canSelect: %s, canUnequip: %s, isCard: %s, isUnequipped: %s, slot: %s',
-                     model ? model.name : model, view.canSelect, view.canUnequip, view.isCard, view.isUnequipped, slot);
-
             this.listenTo(view, 'click', this.onClick);
             this.listenTo(view, 'unequip', this.onUnequip);
             this.listenTo(view, 'hovering', this.onHover);

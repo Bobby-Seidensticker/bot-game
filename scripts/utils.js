@@ -5,6 +5,9 @@ namespace.module('bot.vectorutils', function (exports, require) {
     function Point(x, y) {
         this.x = x;
         this.y = y;
+        if (isNaN(this.x)) {
+            throw('shit');
+        }
     }
 
     Point.prototype.clone = function() {
@@ -102,7 +105,19 @@ namespace.module('bot.vectorutils', function (exports, require) {
 
     Point.prototype.unitVector = function() {
         var len = this.len();
-        return this.mult(1 / len);
+        if (!len) {
+            return this;
+        } else {
+            return this.mult(1 / len);
+        }
+    }
+
+    Point.prototype.rotate = function(degrees) {
+        var angle = degrees / 180 * Math.PI;
+        var sn = Math.sin(angle);
+        var cs = Math.cos(angle);
+
+        return new Point(this.x * cs - this.y * sn, this.x * sn + this.y * cs);
     }
 
     function hit(s, e, t, r1, r2) {
@@ -363,7 +378,8 @@ namespace.module('bot.utils', function (exports, require) {
             result[adk[i]] = dmg[adk[i]];
         }
         for (i = mods.length; i--;) {
-            var split = mods[i].split(' ');
+            console.log(mods[i]);
+            var split = mods[i].def.split(' ');
             result[split[0]] *= (parseInt(split[2], 10) + 100) / 100;
         }
         return result;

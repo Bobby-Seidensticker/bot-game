@@ -3,7 +3,7 @@ namespace.module('bot.bodies', function(exports, require) {
     var TEAM_HERO = 0;
     var TEAM_MONSTER = 1;
 
-    var vu, Point, MonsterSpec, prob, log, Damage;
+    var vu, Point, MonsterSpec, prob, log, Damage, attacksLib;
 
     $(function() {
         vu = namespace.bot.vectorutils;
@@ -12,6 +12,7 @@ namespace.module('bot.bodies', function(exports, require) {
         prob = namespace.bot.prob;
         log = namespace.bot.log;
         Damage = namespace.bot.damage.Damage;
+        attacksLib = namespace.bot.attacks;
     });
 
     var EntityBody = gl.Model.extend({

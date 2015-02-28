@@ -41,6 +41,9 @@ namespace.module('bot.attacks', function (exports, require) {
             var i;
             _.each(this.attacks, function(attack, i) {
                 var enemies = livingBodies[attack.targetTeam];
+                if (enemies === undefined) {
+                    console.log('fuck');
+                }
                 attack.tick(enemies);
             }, this);
             i = 0;
@@ -71,14 +74,44 @@ namespace.module('bot.attacks', function (exports, require) {
                     // new melee from body
                     this.attacks.push(new MeleeAttack(spec, attacker, target));
                 } else if (spec.type === 'proj') {
-                    // new proj from body
-                    this.attacks.push(new ProjAttack(spec, attacker, target));
+                    var targetTeam = target.spec.team;
+                    var vector = target.pos.sub(attacker.pos);
+                    this.addProjectileAttack(spec, attacker, attacker.pos, vector, targetTeam, false);
                 } else if (spec.type === 'cone') {
                     // new cone from body
                 } else if (spec.type === 'circle') {
                     // new circle from body
                 }
             }, this);
+        },
+
+        addProjectileAttack: function(spec, attacker, start, vector, targetTeam, instant) {
+            if (spec.count !== undefined && spec.count > 1) {
+                if (spec.angle !== undefined && spec.angle !== 0) {
+                    var s, e;
+                    if (spec.count % 2 === 0) {
+                        e = spec.angle * (0.5 + (spec.count - 2) / 2);
+                        s = -e;
+                    } else {
+                        e = spec.angle * (spec.count - 1) / 2;
+                        s = -e;
+                    }
+                    for (var a = s; a <= e; a += spec.angle) {
+                        this.attacks.push(new ProjAttack(spec, attacker, start, vector.rotate(a), targetTeam, instant));
+                    }
+                }
+            } else {
+                //this.attacks.push(new ProjAttack(spec, attacker, target));
+                this.attacks.push(new ProjAttack(spec, attacker, start, vector, targetTeam, instant));
+            }
+        },
+
+        rawAddAttack: function() {
+            
+        },
+
+        addChainedAttack: function(spec) {
+            
         },
 
         getAttacks: function() {
@@ -105,7 +138,8 @@ namespace.module('bot.attacks', function (exports, require) {
             if (arr && arr.length) {
                 _.each(arr, function(spec) {
                     if (spec.type === 'proj') {
-                        //if (spec.count 
+                        console.log('right here');
+                        gl.addProjectileAttack(spec, this.attacker, this.pos, this.velocity, this.targetTeam, true);
                     } else if (spec.type === 'cone') {
                         // new cone from attack
                     } else if (spec.type === 'circle') {
@@ -130,27 +164,44 @@ namespace.module('bot.attacks', function (exports, require) {
         },
     });
 
+    // from target: team, end
+    // from attacker: pos, height  // pos needs to be replaced with the hit location
+
+    /*function newProjFromBody(spec, attacker, target) {
+        var vector = target.pos.sub(attacker.pos);
+        return new ProjAttack(spec, attacker, target.spec.team, target.pos.clone());
+    }
+
+    function newProjsFromAttack(spec, attacker, index) {
+        var vector = target.pos.sub(attacker.pos);
+        return new ProjAttack(spec, attacker, vector, target.spec.team);
+    }*/
+    
     var ProjAttack = Attack.extend({
-        initialize: function(spec, attacker, target) {
+        //initialize: function(spec, attacker, target) {
+        initialize: function(spec, attacker, start, vector, targetTeam, instant) {
             this.newAttacks = [];
             _.extend(this, spec);
             this.attacker = attacker;
-            this.target = target;
-            this.targetTeam = target.spec.team;
+            //this.targetTeam = target.spec.team;
+            this.targetTeam = targetTeam;
 
             this.radius = spec.radius ? spec.radius : Math.pow(2, 16);
 
-            this.start = attacker.pos.clone();
-            this.pos = attacker.pos.clone();
-            this.end = target.pos.clone();
-            this.velocity = this.start.velocity(this.end, this.rate);
+            this.start = start.clone();
+            this.pos = start.clone();
+            this.velocity = vector.unitVector().mult(spec.rate);  // this.start.velocity(end, this.rate);
 
-            this.fireTime = gl.time + spec.speed / 2;
+            if (instant) {
+                this.fireTime = gl.time;
+            } else {
+                this.fireTime = gl.time + spec.speed / 2;
+            }
 
             this.z = attacker.spec.height / 2;
             this.color = spec.color ? spec.color : '#fff';
 
-            log.debug('projectile created, pos: %s, end: %s', this.pos, this.end);
+            log.debug('projectile created, pos: %s, velocity: %s', this.pos, this.velocity);
         },
 
         tick: function(enemies) {
@@ -183,6 +234,8 @@ namespace.module('bot.attacks', function (exports, require) {
             this.attacker = attacker;
             this.target = target;
             this.targetTeam = target.spec.team;
+
+            this.velocity = this.target.pos.sub(this.attacker.pos);
 
             this.start = attacker.pos.clone();
             this.pos = attacker.pos.clone();

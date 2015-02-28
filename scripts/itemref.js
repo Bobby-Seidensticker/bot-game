@@ -79,29 +79,29 @@ namespace.module('bot.itemref', function (exports, require) {
             ////////////////////
             "wooden bow": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 5', type: 'dmg'},
+                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
                 "type": "range",
             },
             "hand crossbow": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 7', type: 'dmg'},
+                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
                 "type": "range",
             },
             "crossbow": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 9', type: 'dmg'},
+                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
                 "type": "range",
             },
             "composite bow": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 10', type: 'dmg'},
+                    {def: 'physDmg added 3 perLevel', type: 'dmg'}
                 ],
                 "type": "range",
             },
@@ -1756,11 +1756,13 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "skeleton king" : {
                 "items": [["weapon", "hand axe"], ["armor", "collander"], ["armor", "leather armor"], ["armor", "gardening gloves"], ["armor", "leather boots"]],
-                "skills": ["super smash", "basic melee"],
+                "skills": ["lethal strike", "super smash", "basic melee"],
                 "sourceCards": [
                     ["proto-skeleton", 1],
                     ["proto-boss", 1],
-                    ["hot sword", 1]
+                    ["sharpened", 3],
+                    ["hot sword", 3],
+                    ["life on hit", 1]
                 ]
             },
             "wood nymph" : {

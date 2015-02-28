@@ -61,19 +61,16 @@ namespace.module('bot.drops', function (exports, require) {
     }
 
     function ItemDrop(refData) {
-        // ['weapon|armor', 'type/slot', classLevel]
         this.itemType = refData[0];
-        this.type = refData[1];
-        this.classLevel = refData[2];
-        this.name = itemref.ref[this.itemType][this.type].names[this.classLevel];
+        this.name = refData[1];
     }
 
     ItemDrop.prototype.make = function() {
         if (this.itemType === 'weapon') {
-            return new inventory.WeaponModel(this.classLevel, this.type);
+            return new inventory.WeaponModel(this.name);
         }
         if (this.itemType === 'armor') {
-            return new inventory.ArmorModel(this.classLevel, this.type);
+            return new inventory.ArmorModel(this.name);
         }
     }
 

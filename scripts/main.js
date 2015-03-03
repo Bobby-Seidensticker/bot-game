@@ -179,6 +179,7 @@ namespace.module('bot.main', function (exports, require) {
                 dropsLib.dropFactory('skill', 'fire slash'),
                 dropsLib.dropFactory('skill', 'basic range'),
                 dropsLib.dropFactory('skill', 'fire ball'),
+                dropsLib.dropFactory('skill', 'molten strike'),
             ]);
 
             this.gameModel.cardInv.addDrops([

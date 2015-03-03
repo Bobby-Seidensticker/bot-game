@@ -666,7 +666,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
                 "specs": [{ type: 'melee', mods: [],
-                            onHit: [{ type: 'proj', angle: 30, count: 3, mods: [{def: 'physDmg more -20', type: 'dmg'}], onKill: [], onRemove: []}],
+                            onHit: [{ type: 'proj', angle: 30, count: 3, radius: 5000, color: '#a52a2a', rate: 1000, mods: [{def: 'physDmg more -20', type: 'dmg'}], onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []
                           }],

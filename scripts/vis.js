@@ -49,15 +49,10 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         updateConstants: function() {
-            vvs.center = this.gameView.getCenter();
-            vvs.cart = this.zone.hero.pos.mult(vvs.ratio);
-            vvs.iso = vvs.cart.toIso();
-            vvs.iso.y -= SIZE / 2;
-            vvs.diff = vvs.center.sub(vvs.iso);
-        },
-
-        resize: function() {
             var ss = new Point(window.innerWidth, window.innerHeight - 155);
+            if (ss.y < 1) {
+                ss.y = 1;
+            }
             vvs.ss = ss.clone();
 
             if (ss.x / 2 > ss.y) {  // if height is the limiting factor
@@ -67,12 +62,20 @@ namespace.module('bot.vis', function (exports, require) {
             }
             vvs.ratio = vvs.realSize / SIZE;
 
+            vvs.center = this.gameView.getCenter();
+            vvs.cart = this.zone.hero.pos.mult(vvs.ratio);
+            vvs.iso = vvs.cart.toIso();
+            vvs.iso.y -= SIZE / 2;
+            vvs.diff = vvs.center.sub(vvs.iso);
+        },
+
+        resize: function() {
+            this.updateConstants();
             this.$el.css({
-                width: ss.x,
-                height: ss.y
+                width: vvs.ss.x,
+                height: vvs.ss.y
             });
 
-            this.updateConstants();
             this.bg.resize();
             this.entity.resize();
         },
@@ -100,6 +103,8 @@ namespace.module('bot.vis', function (exports, require) {
             this.canvasSize = canvasSize;
             this.imgSize = imgSize;
             this.scale = scale;
+            log.error('SHIFSDOISDF');
+            console.log(filename, canvasSize, imgSize, scale);
 
             if (filename in TEXTURES) {
                 this.img = TEXTURES[filename];
@@ -395,10 +400,16 @@ namespace.module('bot.vis', function (exports, require) {
         var lArm;
 
         if (this.body.busy()) {
-            var ra = ((this.body.nextAction - gl.time) / this.body.lastDuration + .1) * 1.3 * Math.PI * 2;
+            var pct;
+            if (this.body.lastDuration > 0) {
+                pct = (this.body.nextAction - gl.time) / this.body.lastDuration;
+            } else {
+                pct = 1;
+            }
+            var ra = (pct + .1) * 1.3 * Math.PI * 2;
             var mra = Math.PI / 4 * Math.sin(ra);
 
-            var la = ((this.body.nextAction - gl.time) / this.body.lastDuration) * Math.PI * 2;
+            var la = pct * Math.PI * 2;
             var mla = Math.PI / 4 * Math.sin(la);
 
             rArm = new Point(Math.cos(mra) * width / 2, Math.sin(mra) * width / 2);

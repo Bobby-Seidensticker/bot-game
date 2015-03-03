@@ -165,14 +165,14 @@ namespace.module('bot.main', function (exports, require) {
         } else if (key === CKEY) {
             log.error('Equipment cheat');
 
-            this.gameModel.inv.addDrops([
+            /*this.gameModel.inv.addDrops([
                 dropsLib.dropFactory('item', ['weapon', 'melee', 1]),
                 dropsLib.dropFactory('item', ['weapon', 'range', 1]),
                 dropsLib.dropFactory('item', ['armor', 'head', 1]),
                 dropsLib.dropFactory('item', ['armor', 'chest', 1]),
                 dropsLib.dropFactory('item', ['armor', 'legs', 1]),
                 dropsLib.dropFactory('item', ['armor', 'hands', 1]),
-            ]);
+            ]);*/
 
             this.gameModel.inv.addDrops([
                 dropsLib.dropFactory('skill', 'super smash'),

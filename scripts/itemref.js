@@ -20,34 +20,38 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "hand axe": {
                 "mods": [
-                    {def: 'physDmg added 8', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "stone hammer": {
                 "mods": [
-                    {def: 'physDmg added 10', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'speed more 20', type: 'dmg'},
+                    {def: 'physDmg added 10', type: 'dmg'},                    
+                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "falchion": {
                 "mods": [
-                    {def: 'physDmg added 12', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'speed more -20', type: 'dmg'},                    
+                    {def: 'physDmg added 8', type: 'dmg'},
+                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "morning star": {
                 "mods": [
+                    {def: 'speed more 20', type: 'dmg'},                    
                     {def: 'physDmg added 14', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "long sword": {
                 "mods": [
+                    {def: 'speed more -1 perLevel', type: 'dmg'},                    
                     {def: 'physDmg added 16', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
@@ -55,13 +59,15 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "spikey mace": {
                 "mods": [
-                    {def: 'physDmg added 18', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'speed more 40', type: 'dmg'},
+                    {def: 'physDmg added 16', type: 'dmg'},                    
+                    {def: 'physDmg added 4 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "spiked battle axe": {
                 "mods": [
+                    {def: 'speed more -1 perLevel', type: 'dmg'},                    
                     {def: 'physDmg added 20', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
@@ -69,7 +75,9 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "winged axe": {
                 "mods": [
-                    {def: 'physDmg added 22', type: 'dmg'},
+                    {def: 'range more 2 perLevel', type: 'dmg'},
+                    {def: 'speed more 20', type: 'dmg'},                    
+                    {def: 'physDmg added 19', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
@@ -87,12 +95,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "hand crossbow": {
                 "mods": [
                     {def: 'physDmg added 7', type: 'dmg'},
-                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
+                    {def: 'speed more -30', type: 'dmg'},                    
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "range",
             },
             "crossbow": {
                 "mods": [
+                    {def: 'speed more 20', type: 'dmg'},                    
                     {def: 'physDmg added 9', type: 'dmg'},
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
@@ -100,6 +110,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "composite bow": {
                 "mods": [
+                    {def: 'range more 20', type: 'dmg'},                    
                     {def: 'physDmg added 10', type: 'dmg'},
                     {def: 'physDmg added 3 perLevel', type: 'dmg'}
                 ],
@@ -314,8 +325,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "velvet tunic": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'manaRegen added 5', type: 'def'},
+                    {def: 'manaRegen added 2 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
@@ -344,6 +355,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
+                ],
+                "type": "chest",
+            },
+            "batsuit": {
+                "mods": [
+                    {def: 'speed more -20', type: 'dmg'},
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
                 ],
                 "type": "chest",
             },
@@ -834,7 +852,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "anim": ["#f00"],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'speed added 50', type: 'dmg'},
+                    {def: 'speed added 100', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
                     {def: 'fireDmg added 2', type: 'dmg'},
                     {def: 'fireDmg added 2 perLevel', type: 'dmg'},
@@ -1303,6 +1321,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "flying": {
                 "mods": [
+                    {"def": "armor more -20", "type": "def"},
                     {"def": "dodge added 95", "type": "def"},
                     {"def": "dodge added 5 perLevel", "type": "def"},
                     //TODO - flying vis stuff
@@ -1709,6 +1728,20 @@ namespace.module('bot.itemref', function (exports, require) {
                     ],
                 "slot":"skill",
             },
+            "healing charm": {
+                "mods": [
+                    {"def": "manaRegen added -5 perLevel", "type": "def"},
+                    {"def": "hpRegen added 10 perLevel", "type": "def"},
+                ],
+                "slot": "chest",
+            },
+            "blood pact": {
+                "mods": [
+                    {"def": "manaRegen added 10 perLevel", "type": "def"},
+                    {"def": "hpRegen added -5 perLevel", "type": "def"},                    
+                ],
+                "slot": "head",
+            }
         },
         "monster": {
             "skeleton" : {
@@ -1746,7 +1779,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "skeleton mage" : {
-                "items": [["weapon", "simple wand"]],
+                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"]],
                 "skills": ["fire ball", "basic spell"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
@@ -1776,7 +1809,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "bat" : {
-                "items": [["weapon", "cardboard sword"]],
+                "items": [["weapon", "cardboard sword"], ["armor", "batsuit"]],
                 "skills": ["quick hit", "basic melee"],
                 "sourceCards": [
                     ["nimble", 1],
@@ -1863,12 +1896,15 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "gnome electrician" : {
-                "items": [["weapon", "simple wand"]],
+                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"]],
                 "skills": ["lightning ball", "nova", "basic spell"],
                 "sourceCards": [
                     ["small stature", 1],
                     ["keen wit", 1],
                     ["electrified", 1],
+                    ["healing charm", 3],
+                    ["blood pact", 3]
+                
                 ],
             },
             "roflcopter" : {
@@ -1967,13 +2003,15 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "flame dragon" : {
                 "items": [["weapon", "dragonstone wand"]],
-                "skills": ["incinerate", "basic spell"],
+                "skills": ["fire ball", "incinerate", "basic spell"],
                 "sourceCards": [
-                    ["ignited", 1],
+                    ["ignited", 3],
                     ["proto-boss", 1],
-                    ["pyromania", 1],
-                    ["keen wit", 1],
-                    ["brain juice", 1]
+                    ["pyromania", 2],
+                    ["keen wit", 3],
+                    ["brain juice", 3],
+                    ["mana on hit", 3],
+                    ["longer range", 3]
                 ],
             },
             
@@ -2100,15 +2138,17 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "walter wight": {
-                "items": [["weapon", "long sword"]],
-                "skills": ["ice blast", "ice nova", "ice ball", "basic melee"],
+                "items": [["weapon", "star wand"]],
+                "skills": ["ice blast", "ice nova", "ice ball", "basic spell"],
                 "sourceCards": [
                     ["proto-boss", 0],
                     ["fleece lining", 1],
                     ["frosted", 1],
                     ["fur hat", 1],
                     ["ethereal", 1],
-                    ["shadow walker", 1]
+                    ["shadow walker", 1],
+                    ["keen wit", 4],
+                    ["mana on hit", 3]
                 ],
             },
             "shadow knight": {
@@ -2220,7 +2260,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10, 10, 10, 10, 0, 10 ,10],
                 "boss":"scalp collector",
                 "roomCount": 20,
-                "quantity": [2,2,3],
+                "quantity": [4,2,4],
                 "level": 20,
             },
             "icy tunnel": {
@@ -2228,7 +2268,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10, 10 ,10, 0],
                 "boss": "walter wight",
                 "roomCount": 20,
-                "quantity": [2,2,3],
+                "quantity": [2,3,4],
                 "level": 25,
             },
             "gothic castle": {
@@ -2236,7 +2276,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10, 10, 10, 10, 10],
                 "boss": "shadow knight",
                 "roomCount": 20,
-                "quantity": [2,2,3],
+                "quantity": [3,3,6],
                 "level": 30,
             },
             "demonic laboroatory": {
@@ -2244,7 +2284,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10],
                 "boss": "pigbearman",
                 "roomCount": 20,
-                "quantity": [2,2,3],
+                "quantity": [2,3,4],
                 "level": 35,
             },
             "scarred plains": {
@@ -2252,7 +2292,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10],
                 "boss": "pigbearman",
                 "roomCount": 20,
-                "quantity": [2,2,3],
+                "quantity": [3,3,6],
                 "level": 40,
             },
             "dojo": {

@@ -20,56 +20,56 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "hand axe": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 8', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "stone hammer": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 10', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "falchion": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 12', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "morning star": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 14', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "long sword": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 16', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "spikey mace": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 18', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "spiked battle axe": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 20', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
             },
             "winged axe": {
                 "mods": [
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 22', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
                 "type": "melee",
@@ -1545,6 +1545,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "life on hit": {
                 "mods": [
                     {"def": "hpOnHit added 1 perLevel", "type": "dmg"},
+                    {"def": "manaCost added 1", "type": "dmg"},
                 ],
                 "slot": "skill",
             },
@@ -1766,11 +1767,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "wood nymph" : {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "cardboard sword"]],
                 "skills": ["basic melee"],
                 "sourceCards": [
                     ["nimble", 1],
-                    ["compression shorts", 3]
+                    ["compression shorts", 3],
+                    ["life on hit", 2]
                 ]
             },
             "bat" : {
@@ -1779,7 +1781,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["nimble", 1],
                     ["bloodsucker", 1],
-                    ["life on hit", 1]                                        
+                    ["life on hit", 1],
+                    ["clawed", 1]
                 ]
             },
             "ent" : {
@@ -1791,20 +1794,24 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "elf" : {
-                "items": [["weapon", "hand crossbow"]],
+                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"]],
                 "skills": ["poison arrow", "basic range"],
                 "sourceCards": [
                     ["dexterous hands", 1],
-                    ["proto-elf", 0]
+                    ["proto-elf", 0],
+                    ["practiced", 2],
+                    ["sharpened", 2]
                 ]
             },
             "elf king" : {
-                "items": [["weapon", "composite bow"]],
+                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"]],
                 "skills": ["speed shot", "poison arrow", "basic range"],
                 "sourceCards": [
                     ["proto-boss", 0],
                     ["proto-elf", 0],
-                    ["dexterous hands", 2]
+                    ["dexterous hands", 2],
+                    ["practiced", 2],                    
+                    ["sharpened", 2]
                 ],
                 "flavor": "He knows you've been naughty"
             },
@@ -1857,7 +1864,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "gnome electrician" : {
                 "items": [["weapon", "simple wand"]],
-                "skills": ["lightning ball", "nova", "basic melee"],
+                "skills": ["lightning ball", "nova", "basic spell"],
                 "sourceCards": [
                     ["small stature", 1],
                     ["keen wit", 1],
@@ -1884,7 +1891,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "mechcinerator" : {
                 "items": [["weapon", "pewter wand"]],
-                "skills": ["incinerate", "fire nova", "basic melee"],
+                "skills": ["incinerate", "fire nova", "basic spell"],
                 "sourceCards": [
                     ["riveted", 1],
                     ["clockwork", 1],
@@ -1895,7 +1902,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "mechfridgerator": {
                 "items": [["weapon", "pewter wand"]],
-                "skills": ["ice blast", "ice nova", "basic melee"],
+                "skills": ["ice blast", "ice nova", "basic spell"],
                 "sourceCards": [
                     ["riveted", 1],
                     ["clockwork", 1],
@@ -1906,7 +1913,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "mecha watt" : {
                 "items": [["weapon", "pewter wand"]],
-                "skills": ["lightning ball", "nova", "basic melee"],
+                "skills": ["lightning ball", "nova", "basic spell"],
                 "sourceCards": [
                     ["riveted", 1],
                     ["clockwork", 1],

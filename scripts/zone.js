@@ -23,8 +23,9 @@ namespace.module('bot.zone', function (exports, require) {
 
             this.hero = new HeroBody(hero);
             this.attackManager = new namespace.bot.attacks.AttackManager();
-            gl.addAttack = this.attackManager.addAttack.bind(this.attackManager);  // Expose the attack manager's add attack fn for EntitiyBodies
-            gl.addProjectileAttack = this.attackManager.addProjectileAttack.bind(this.attackManager);  // Expose the attack manager's add attack fn for EntitiyBodies
+
+            // Expose attack manager functions for EntityBodies and chaining projectiles
+            gl.addAttack = this.attackManager.addAttack.bind(this.attackManager);
             this.messages = new ZoneMessages();
 
             this.nextZone = 'spooky dungeon';

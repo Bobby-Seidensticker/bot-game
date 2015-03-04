@@ -28,7 +28,7 @@ namespace.module('bot.vis', function (exports, require) {
 
         // this needs to get all zones, when game model changes, probably should get all of gameModel
         initialize: function(options, game, gameView) {
-            log.warning('visview init');
+            log.info('visview init');
             this.zone = game.zone;
             this.gameView = gameView;
 
@@ -224,7 +224,7 @@ namespace.module('bot.vis', function (exports, require) {
         className: 'entity',
 
         initialize: function(options, game) {
-            log.warning('visview init');
+            log.info('visview init');
             this.zone = game.zone;
 
             this.resize();

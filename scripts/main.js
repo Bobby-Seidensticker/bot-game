@@ -12,6 +12,22 @@ namespace.module('bot.main', function (exports, require) {
 
     function onReady() {
 
+
+        /*gl.FB = new Firebase("https://fiery-heat-4226.firebaseio.com");
+
+        gl.FB.authAnonymously(function(error, authData) {
+            if(error) {
+                console.log("anon login failed", error);
+                gl.FBuid = "failedauth";
+            } else {
+                console.log("Good anon auth", authData);
+                gl.FBuid = authData.uid.slice(11);
+                console.log(gl.FBuid);
+                gl.FBL = gl.FB.child(gl.FBuid);
+                gl.FBL.push("page loading");
+            }
+        });*/
+        
         localStorage.clear();
 
         log.info('onReady');

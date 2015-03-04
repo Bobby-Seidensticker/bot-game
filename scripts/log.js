@@ -1,10 +1,27 @@
 namespace.module('bot.log', function (exports, require) {
 
-    var LEVEL = 'info';
+    gl.FB = new Firebase("https://fiery-heat-4226.firebaseio.com");
 
-    var FNS = [debug, info, warning, error, stack];
+    gl.FB.authAnonymously(function(error, authData) {
+        if(error) {
+            console.log("anon login failed", error);
+            gl.FBuid = "failedauth";
+            gl.FBL = gl.FB.child(gl.FBuid);
+            gl.FBL.push("starting with failed auth");
+        } else {
+            //info('Good anon auth: %s', authData.uid);
+            gl.FBuid = authData.uid.slice(11);
+            gl.FBL = gl.FB.child(gl.FBuid);
+            gl.FBUI = gl.FBL.child("UI");
+            gl.FBL.push("starting");
+        }
+    });
 
-    var NAMES = ['debug', 'info', 'warning', 'error', 'stack'];
+    var LEVEL = 'UI';
+
+    var FNS = [debug, info, UI, warning, error, stack];
+
+    var NAMES = ['debug', 'info', 'UI', 'warning', 'error', 'stack'];
 
     var extender = {};
     var clear = false;
@@ -13,7 +30,7 @@ namespace.module('bot.log', function (exports, require) {
         if (clear || LEVEL === NAMES[i]) {
             extender[NAMES[i]] = FNS[i];
             clear = true;
-            console.log(NAMES[i], ' clear');
+            //console.log(NAMES[i], ' clear');
         } else {
             extender[NAMES[i]] = function() {};
         }
@@ -44,14 +61,21 @@ namespace.module('bot.log', function (exports, require) {
 
     function warning() {
         var a = arguments;
+        if (gl.FBL) {
+            gl.FBL.push("WARNING: " + sprintf.apply(null,a) + "  @" + gl.time);
+        }
         a[0] = 'WARNING ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: orange');
     }
 
     function error() {
         var a = arguments;
+        if (gl.FBL) {
+            gl.FBL.push("ERROR:" + sprintf.apply(null,a) + "  @" + gl.time);
+        }
         a[0] = 'ERROR ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: red');
+
     }
 
     //  call with 'log.line(new Error(), 'your text here');
@@ -59,5 +83,14 @@ namespace.module('bot.log', function (exports, require) {
         var a = arguments;
         a[0] = new Error().stack.replace(/   at /g, '').split('\n').slice(2).join('\n') + '\n  ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: purple');
+    }
+
+    function UI() {
+        var a = arguments;
+        if (gl.FBUI) {
+            gl.FBUI.push("UI:" + sprintf.apply(null,a) + "  @" + gl.time);
+        }
+        a[0] = 'UI: ' + fileLine() + ' ' + a[0];
+        console.log('%c' + sprintf.apply(null, a), 'color: cyan');
     }
 });

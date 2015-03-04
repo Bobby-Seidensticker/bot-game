@@ -230,7 +230,7 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         updateSkillchain: function() {
-            log.warning('updateSkillchain');
+            log.info('HeroBody: updateSkillchain');
             var s = this.spec.skillchain;
 
             var lookup = {};

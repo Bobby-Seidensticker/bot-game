@@ -19,12 +19,12 @@ namespace.module('bot.entity', function (exports, require) {
     var dmgKeys = ['meleeDmg', 'rangeDmg', 'spellDmg', 'physDmg', 'lightDmg', 'coldDmg',
                    'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech',
                    'cooldownTime', 'range', 'decayRange', 'speed', 'manaCost', 'projCount',
-                   'angle'];
+                   'angle', 'rate', 'radius'];
     var actualDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg'];
 
     var attackSpecKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit',
-                          'hpLeech', 'manaOnHit', 'manaLeech', 'decayRange', 'speed',
-                          'projCount', 'angle'];
+                          'hpLeech', 'manaOnHit', 'manaLeech', 'range', 'decayRange', 'speed',
+                          'projCount', 'angle', 'rate', 'radius'];
     var attackSpecDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpLeech', 'manaLeech'];
 
     var EntitySpec = gl.Model.extend({
@@ -133,6 +133,8 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'projCount added 1', type: 'dmg'},
                 {def: 'angle added 15', type: 'dmg'},
                 {def: 'range gainedas 150 decayRange', type: 'dmg'},
+                {def: 'rate added 1000', type: 'dmg'},
+                {def: 'radius added 5000', type: 'dmg'},
             ];
             return _.map(mods, function(mod) { return utils.applyPerLevel(mod, this.level); }, this);
         },

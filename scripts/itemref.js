@@ -564,7 +564,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "melee",
                 "types": ["melee"],
-                "specs": [{ type: 'melee', radius: 10000, color: '#777', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'melee', color: '#777', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
@@ -575,7 +575,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 1000, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', color: '#a52a2a', rate: 1000, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -586,7 +586,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "spell",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 1000, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', color: '#a52a2a', rate: 1000, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -644,7 +644,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
                 "specs": [{ type: 'melee', quals: [],
-                            onHit: [{ type: 'proj', angle: 30, count: 3, radius: 5000, color: '#a52a2a', rate: 300,
+                            onHit: [{ type: 'proj', color: '#a52a2a',
                                       quals: ['projCount added 2', 'dmg more -20'],
                                       onKill: [], onRemove: []}],
                             onKill: [],
@@ -657,8 +657,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
-                    {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},      
+                    {def: 'physDmg converted 60 fireDmg', type: 'dmg'},
+                    {def: 'rate more -70', type: 'dmg'},
                 ]
             },
             "exploding strike": {
@@ -799,12 +800,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 3000, quals: [], onHit: [], onKill: [], onRemove: [] }],                
+                "specs": [{ type: 'proj', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],                
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'physDmg more 10 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 10 perLevel', type: 'dmg'},
+                    {def: 'rate more 200', type: 'dmg'}
                 ]
             },
             "incinerate": {                
@@ -889,17 +891,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "ice blast": {
                 "prototype": ["basic spell"],
                 "class": "spell",
-                "types": ["proj", "cold", "spell"],
+                "types": ["cone", "cold", "spell"],
                 "specs": [{ type: 'cone', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'manaCost added 7', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 500', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'coldDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 2, type: 'dmg'},
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
-                    {def: 'coldDmg added 3', type: 'dmg'},
-                    {def: 'coldDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'coldDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
             "pressure wave": {
@@ -938,17 +937,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 9', type:'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg gainedas 100 hpLeech', type: 'dmg'}
-                ]
-            },
-            "ice blast": {
-                "prototype": ["basic spell"],
-                "class": "spell",
-                "types": ["proj", "aoecone" , "spell"],
-                "baseMods": [
-                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
-                    {def: 'speed added 200', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'coldDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
             "nova": {

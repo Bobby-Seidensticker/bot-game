@@ -265,7 +265,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onClick: function(event) {
-            log.UI("Clicked on ItemSlot in slot: %s, containing: %s", this.slot, this.model ? this.model.name : "empty");
+            log.UI("Clicked on ItemSlot in slot: %s, containing: %s", this.slot ? this.slot : "unequipped", this.model ? this.model.name : "empty");
             var cls = event.target.classList[0];
             if (cls === 'corner' && this.canUnequip) {
                 this.trigger('unequip', this);
@@ -958,6 +958,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         zoneClick: function(zoneName) {
+            log.UI("MapTab: Clicked on zone: %s", zoneName);
             this.zone.nextZone = zoneName;
             this.zone.newZone(zoneName);
             this.render();

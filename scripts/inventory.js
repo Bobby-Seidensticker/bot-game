@@ -84,12 +84,15 @@ namespace.module('bot.inv', function (exports, require) {
                 return false;
             }
             if (this.cards[slotIndex]) {
+                log.warning("Unequipping card %s at slot %d of item: %s", this.cards[slotIndex].name, slotIndex, this.name);
                 this.cards[slotIndex].equipped = false;  // model.unequip(this.cards[slotIndex].level);
                 this.cards[slotIndex] = undefined;
+
             }
             if (card) {
                 card.equipped = true;  // model.equip(card.level);
                 this.cards[slotIndex] = card;
+                log.warning("Equipped card %s into slot %d of item: %s", card.name, slotIndex, this.name);
             }
 
             log.info('equipCard, now have %d cards equipped', _.compact(this.cards).length);

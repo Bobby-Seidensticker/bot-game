@@ -14,7 +14,7 @@ namespace.module('bot.attacks', function (exports, require) {
             _.each(this.attacks, function(attack, i) {
                 var enemies = livingBodies[attack.targetTeam];
                 if (enemies === undefined) {
-                    console.log('fuck');
+                    log.error("Attackmanager tick: no enemies %d", attack.targetTeam);
                 }
                 attack.tick(enemies);
             }, this);
@@ -24,7 +24,6 @@ namespace.module('bot.attacks', function (exports, require) {
                 atk = this.attacks[i];
                 newAttacks = atk.getNewAttacks();
                 if (newAttacks.length) {
-                    log.warning('Adding %d child attacks!', newAttacks.length);
                     this.attacks.push.apply(this.attacks, newAttacks);
                 }
                 if (atk.done) {
@@ -79,7 +78,7 @@ namespace.module('bot.attacks', function (exports, require) {
                     log.info(eventType);
                     if (spec.type === 'proj') {
                         this.newAttacks.push.apply(this.newAttacks, newChildProjs(spec, this, enemy));
-                        log.warning('Added new child projs to new attacks, len: %d', this.newAttacks.length);
+                        log.info('Added new child projs to new attacks, len: %d', this.newAttacks.length);
                         //gl.addProjectileAttack(spec, this.attacker, this.pos, this.velocity, this.targetTeam, true);
                     } else if (spec.type === 'cone') {
                         // new cone from attack

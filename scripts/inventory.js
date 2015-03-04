@@ -438,6 +438,8 @@ namespace.module('bot.inv', function (exports, require) {
             this.models = [
                 new WeaponModel('cardboard sword'),
                 new SkillModel('basic melee'),
+                new SkillModel('basic range'),
+                new SkillModel('basic spell'),                
                 new ArmorModel('balsa helmet'),
             ];
             this.sort();

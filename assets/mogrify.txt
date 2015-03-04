@@ -1,0 +1,1 @@
+mogrify -resize 73x73 -format png *.svg

@@ -61,7 +61,7 @@ namespace.module('bot.views', function (exports, require) {
     var MenuTabMixin = {
         // Mixing class needs to set a "name" string property for these logs to make sense
         show: function() {
-            log.info('Showing %s tab', this.name);
+            log.UI('Showing %s tab', this.name);
             this.visible = true;
             this.$el.removeClass('hidden');
             this.render();
@@ -265,6 +265,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onClick: function(event) {
+            log.UI("Clicked on ItemSlot in slot: %s, containing: %s", this.slot, this.model ? this.model.name : "empty");
             var cls = event.target.classList[0];
             if (cls === 'corner' && this.canUnequip) {
                 this.trigger('unequip', this);
@@ -403,8 +404,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onUnequip: function(itemSlot) {
-            log.warning('itemSlot on unequip');
-
+            log.UI('Unequipping: ' + itemSlot.model.name);
             if (this.selected) {
                 this.selected.unselect();
                 this.selected = undefined;
@@ -493,6 +493,7 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#card-tab-template').html()),
 
         initialize: function(options, game) {
+            this.name = 'Card';
             this.equipped = game.hero.equipped;  // equippedGearModel;
             this.skillchain = game.hero.skillchain;  // skillchain;
             this.cardInv = game.cardInv; // cardTypeCollection;
@@ -522,7 +523,7 @@ namespace.module('bot.views', function (exports, require) {
 
         onClick: function(clickedView) {
             if (clickedView.isUnequipped) {
-                log.warning('clicking unequipped');
+                log.info('clicking unequipped card %s', clickedView.model.name);
                 // unequipped card selecting logic
                 if (this.selectedCard && clickedView.model.id === this.selectedCard.model.id) {
                     this.selectedCard.unselect();
@@ -533,9 +534,9 @@ namespace.module('bot.views', function (exports, require) {
                 }
                 return;
             }
-            log.warning('Was not unequipped');
+            log.info('Was not unequipped');
             if (clickedView.canSelect) {
-                log.warning('clicked selectable');
+                log.info('clicked selectable card');
                 // equipped item selecting logic
                 if (this.selectedItem && clickedView.model.id === this.selectedItem.model.id) {
                     this.selectedItem.unselect();
@@ -558,7 +559,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.render();
                 return;
             }
-            log.warning('Was not selectable, unequipped, or card');
+            log.error('Was not selectable, unequipped, or card');
         },
 
         onUnequip: function(clickedView) {

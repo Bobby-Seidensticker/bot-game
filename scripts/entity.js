@@ -34,7 +34,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         computeAttrs: function() {
-            log.error('compute attrs');
+            log.info('compute attrs on: %s', this.name);
 
             if(this.team === TEAM_HERO) {
                 this.weaponType = 'melee'

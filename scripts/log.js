@@ -6,20 +6,21 @@ namespace.module('bot.log', function (exports, require) {
         if(error) {
             console.log("anon login failed", error);
             gl.FBuid = "failedauth";
-        } else {
-            console.log("Good anon auth", authData);
-            gl.FBuid = authData.uid.slice(11);
-            console.log(gl.FBuid);
             gl.FBL = gl.FB.child(gl.FBuid);
-            gl.FBL.push("page loading");
+            gl.FBL.push("starting with failed auth");
+        } else {
+            //info('Good anon auth: %s', authData.uid);
+            gl.FBuid = authData.uid.slice(11);
+            gl.FBL = gl.FB.child(gl.FBuid);
+            gl.FBL.push("starting");
         }
     });
 
-    var LEVEL = 'info';
+    var LEVEL = 'UI';
 
-    var FNS = [debug, info, warning, error, stack];
+    var FNS = [debug, info, UI, warning, error, stack];
 
-    var NAMES = ['debug', 'info', 'warning', 'error', 'stack'];
+    var NAMES = ['debug', 'info', 'UI', 'warning', 'error', 'stack'];
 
     var extender = {};
     var clear = false;
@@ -28,7 +29,7 @@ namespace.module('bot.log', function (exports, require) {
         if (clear || LEVEL === NAMES[i]) {
             extender[NAMES[i]] = FNS[i];
             clear = true;
-            console.log(NAMES[i], ' clear');
+            //console.log(NAMES[i], ' clear');
         } else {
             extender[NAMES[i]] = function() {};
         }
@@ -81,5 +82,14 @@ namespace.module('bot.log', function (exports, require) {
         var a = arguments;
         a[0] = new Error().stack.replace(/   at /g, '').split('\n').slice(2).join('\n') + '\n  ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: purple');
+    }
+
+    function UI() {
+        var a = arguments;
+        if (gl.FBL) {
+            gl.FBL.push("UI:" + sprintf.apply(null,a));
+        }
+        a[0] = 'UI: ' + fileLine() + ' ' + a[0];
+        console.log('%c' + sprintf.apply(null, a), 'color: cyan');
     }
 });

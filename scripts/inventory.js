@@ -467,16 +467,16 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             var messages = [];
-            log.warning('adding %d inv drops', drops.length);
+            //log.warning('adding %d inv drops', drops.length);
             _.each(drops, function(drop) {
-                console.log(drop);
+                //console.log(drop);
                 if (_.findWhere(this.models, {name: drop.name})) {
                     return;
                 }
                 this.models.push(drop.make());
                 this.sort();
                 messages.push(drop.message());
-                log.warning('Adding %s %s to inv', drop.type, drop.name);
+                log.warning('Item dropped: %s', drop.name);
                 gl.DirtyQueue.mark('inventory:new');
             }, this);
             return messages;
@@ -551,7 +551,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             var messages = [];
-            log.warning('adding card drops');
+            log.info('adding card drops');
             _.each(drops, function(drop) {
                 var existingCard = _.findWhere(this.models, {name: drop.name});
                 if (existingCard) {
@@ -561,7 +561,7 @@ namespace.module('bot.inv', function (exports, require) {
                 }
                 messages.push(drop.message());
 
-                log.debug('Added card %s level %d to card inv', drop.name, drop.level);
+                log.warning('Card dropped: %s', drop.name);
                 gl.DirtyQueue.mark('cards:new');
             }, this);
             return messages;

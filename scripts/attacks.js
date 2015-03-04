@@ -128,9 +128,6 @@ namespace.module('bot.attacks', function (exports, require) {
         if (projCount === 1) {
             angles.push(0);
         } else {
-            if (angle === 0) {
-                angle = 5;
-            }
             var s, e;
             if (projCount % 2 === 0) {
                 e = angle * (0.5 + (projCount - 2) / 2);

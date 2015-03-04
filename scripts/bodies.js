@@ -163,21 +163,17 @@ namespace.module('bot.bodies', function(exports, require) {
             gl.addAttack(skill, this, target);
         },
 
-        handleHit: function(target, leech) {
-            this.handleLeech(leech);
+        handleHit: function(target, atk) {
+            this.handleLeech(atk);
             if (!target.isAlive()) {
                 this.onKill(target);
                 target.onDeath();
             }
         },
 
-        handleLeech: function(leech) {
-            if (leech.hp) {
-                this.modifyHp(leech.hp);
-            }
-            if (leech.mana) {
-                this.modifyMana(leech.mana);
-            }
+        handleLeech: function(atk) {
+            if (atk.totalHpLeech) { this.modifyHp(atk.totalHpLeech); }
+            if (atk.totalManaLeech) { this.modifyMana(atk.totalManaLeech); }
         },
 
         takeDamage: function(attack) {
@@ -189,14 +185,13 @@ namespace.module('bot.bodies', function(exports, require) {
                 return 0;
             }
 
-            var dmg = attack.dmg;
-            var physDmg = dmg.physDmg;
+            var physDmg = attack.physDmg;
 
             var totalDmg = physDmg * physDmg / (physDmg + this.spec.armor) +
-                dmg.lightDmg * this.spec.lightResist +
-                dmg.coldDmg * this.spec.coldResist +
-                dmg.fireDmg * this.spec.fireResist +
-                dmg.poisDmg * this.spec.poisResist;
+                attack.lightDmg * this.spec.lightResist +
+                attack.coldDmg * this.spec.coldResist +
+                attack.fireDmg * this.spec.fireResist +
+                attack.poisDmg * this.spec.poisResist;
 
             if (this.spec.team === TEAM_HERO) {
                 log.debug('Team Hero taking %.2f damage', -totalDmg);

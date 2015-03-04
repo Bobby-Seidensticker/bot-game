@@ -16,11 +16,16 @@ namespace.module('bot.entity', function (exports, require) {
                    'dodge', 'eleResistAll', 'hpRegen', 'manaRegen', 'moveSpeed'];
     var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
     var visKeys = ['height', 'width', 'lineWidth'];
-    var dmgKeys = [
-        'meleeDmg', 'rangeDmg', 'spellDmg',
-        'physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech',
-        'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed', 'manaCost', 'projCount', 'angle'];
+    var dmgKeys = ['meleeDmg', 'rangeDmg', 'spellDmg', 'physDmg', 'lightDmg', 'coldDmg',
+                   'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech',
+                   'cooldownTime', 'range', 'decayRange', 'speed', 'manaCost', 'projCount',
+                   'angle'];
     var actualDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg'];
+
+    var attackSpecKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit',
+                          'hpLeech', 'manaOnHit', 'manaLeech', 'decayRange', 'speed',
+                          'projCount', 'angle'];
+    var attackSpecDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpLeech', 'manaLeech'];
 
     var EntitySpec = gl.Model.extend({
         initialize: function() {
@@ -123,7 +128,11 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'maxHp added 20 perLevel', type: 'def'},
                 {def: 'maxMana added 5 perLevel', type: 'def'},
 
-                {def: 'maxMana gainedas 2 manaRegen', type: 'def'}
+                {def: 'maxMana gainedas 2 manaRegen', type: 'def'},
+
+                {def: 'projCount added 1', type: 'dmg'},
+                {def: 'angle added 15', type: 'dmg'},
+                {def: 'range gainedas 150 decayRange', type: 'dmg'},
             ];
             return _.map(mods, function(mod) { return utils.applyPerLevel(mod, this.level); }, this);
         },
@@ -287,7 +296,9 @@ namespace.module('bot.entity', function (exports, require) {
         defKeys: defKeys,
         eleResistKeys: eleResistKeys,
         dmgKeys: dmgKeys,
-        actualDmgKeys: actualDmgKeys
+        actualDmgKeys: actualDmgKeys,
+        attackSpecKeys: attackSpecKeys,
+        attackSpecDmgKeys: attackSpecDmgKeys
     });
 
 });

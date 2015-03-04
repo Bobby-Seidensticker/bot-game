@@ -645,7 +645,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["melee", "fire"],
                 "specs": [{ type: 'melee', quals: [],
                             onHit: [{ type: 'proj', angle: 30, count: 3, radius: 5000, color: '#a52a2a', rate: 300,
-                                      quals: ['projCount added 2', 'angle added 30', 'physDmg more -20'],
+                                      quals: ['projCount added 2', 'dmg more -20'],
                                       onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []

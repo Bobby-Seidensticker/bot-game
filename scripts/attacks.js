@@ -95,7 +95,7 @@ namespace.module('bot.attacks', function (exports, require) {
 
             var dmgDealt = enemy.takeDamage(this);
 
-            this.attacker.handleHit(enemy, this.leech);
+            this.attacker.handleHit(enemy, this);
             this.handle('hit', enemy);
             if (!enemy.isAlive()) {
                 this.handle('kill', enemy);
@@ -124,14 +124,13 @@ namespace.module('bot.attacks', function (exports, require) {
 
     function getProjAngles(projCount, angle) {
         var angles = [];
-        if (projCount === undefined) { projCount = 1; }
-        if (angle === undefined) { angle = 0; }
 
-        if (angle === 0) {
-            for (var i = projCount; i--;) {
-                angles.push(0);
-            }
+        if (projCount === 1) {
+            angles.push(0);
         } else {
+            if (angle === 0) {
+                angle = 5;
+            }
             var s, e;
             if (projCount % 2 === 0) {
                 e = angle * (0.5 + (projCount - 2) / 2);

@@ -217,44 +217,53 @@ namespace.module('bot.inv', function (exports, require) {
             }, this);
             this.disabled = totalDmg === 0;
 
-            this.leech = {hp: this.hpOnHit + this.hpLeech, mana: this.manaOnHit + this.manaLeech};
-
-            if (this.angle === undefined) { this.angle = 0; }
-            this.angle = Math.abs(Math.floor(this.angle));
-            if (this.projCount === undefined) { this.projCount = 1; } else { this.projCount++; }
-            if (this.projCount < 1) { this.projCount = 1; }
-
             this.calcAttacks();
         },
 
         calcAttack: function(spec, index, specs) {
-            if (spec.quals && spec.quals.length) {
-                spec.dmg = utils.applyDmgQuals(this, spec.quals);
-            } else {
-                spec.dmg = utils.applyDmgQuals(this, []);
-            }
-            spec.speed = this.speed;
-            spec.leech = this.leech;
+            var keys = namespace.bot.entity.attackSpecKeys;
+            var dmgKeys = namespace.bot.entity.attackSpecDmgKeys;
 
-            if (spec.type === 'proj') {
-                spec.projCount = this.projCount;
-                spec.angle = this.angle;
+            // Ensure spec has necessary keys from skill
+            _.each(keys, function(key) {
+                spec[key] = this[key];
+            }, this);
+
+            // ensure angle and projCount, log errors
+            if (spec.angle === undefined) { log.error('In calcAttack, Skill angle is undefined'); spec.angle = 30; }
+            if (spec.projCount === undefined) { log.error('In calcAttack, Skill projCount is undefined'); spec.projCount = 1; }
+
+            // apply qualifiers, lots of special case code
+            if (spec.quals && spec.quals.length) {
                 _.each(spec.quals, function(qual) {
-                    var split = qual.def.split(' ')
-                    if (split[0] === 'projCount') {
+                    var split = qual.split(' ');
+                    if (split[0] === 'dmg') {
+                        if (split[1] === 'more') {
+                            var dmgMod = 1 + (parseFloat(split[2]) / 100);
+                            _.each(dmgKeys, function(key) {
+                                spec[key] *= dmgMod;
+                            });
+                        } else {
+                            log.error('Trying to apply an invalid damage qualifier %s', qual);
+                        } 
+                    } else if (split[0].indexOf('Dmg') > -1) {
+                        log.error('Trying to apply an invalid damage qualifier %s', qual);
+                    } else if (split[0] === 'projCount') {
                         spec.projCount += parseFloat(split[2]);
                     } else if (split[0] === 'angle') {
                         spec.angle += parseFloat(split[2]);
                     }
                 }, this);
-                spec.angle = Math.abs(Math.floor(spec.angle));
-                if (spec.projCount < 1) { spec.projCount = 1; }
-                log.info('projCount: %d, angle: %d, quals: %s', spec.projCount, spec.angle, spec.quals)
-                if (spec.projCount > 1 && spec.angle === 0) {
-                    log.error('You messed up, need to specify an angle for multiple projectiles, saving your ass');
-                    spec.angle = 30;
-                }
             }
+
+            // Sum LGoH and leech for quick use in EntityBody.handleHit
+            spec.totalHpLeech = spec.hpOnHit + spec.hpLeech;
+            spec.totalManaLeech = spec.manaOnHit + spec.manaLeech;
+
+            // Ensure projCount and angle have sane values
+            spec.projCount = Math.floor(spec.projCount);
+            spec.angle = Math.floor(Math.abs(spec.angle));
+            if (spec.projCount < 1) { spec.projCount = 1; }
 
             var arrs = ['onHit', 'onKill', 'onRemove'];
             _.each(arrs, function(arr) {

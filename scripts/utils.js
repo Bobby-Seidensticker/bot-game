@@ -350,16 +350,6 @@ namespace.module('bot.utils', function (exports, require) {
         return words.join(" ");
     }
 
-    /*
-    // this should also work for the mod object on an item (same fmt)
-    function addModStats(all, mod) {
-        var i, mod;
-        for (var i = 0; i < card.mods.length; i++) {
-            mod = card.mods[i];
-            addMod(all[mod.type], mod.def, card.level);
-        }
-    }*/
-
     function addAllMods(all, mods) {
         for (var i = 0; i < mods.length; i++) {
             //addMod(all, mods[i]);
@@ -369,57 +359,6 @@ namespace.module('bot.utils', function (exports, require) {
             addMod(all[mods[i].type], mods[i].def);
         }
     }
-
-    function applyDmgQuals(spec, quals) {
-        var adk = namespace.bot.entity.actualDmgKeys;
-        var result = {};
-        var i;
-        for (i = adk.length; i--;) {
-            result[adk[i]] = spec[adk[i]];
-        }
-        _.each(quals, function(qual) {
-            var split = qual.split(' ');
-            if (split[0] === 'dmg') {
-                if (split[1] === 'more') {
-                    var dmgMod = 1 + (parseFloat(split[2]) / 100);
-                    _.each(adk, function(key) {
-                        result[key] *= dmgMod;
-                    });
-                } else {
-                    log.error('Trying to apply an invalid damage qualifier %s', qual);
-                } 
-            } else if (split[0].indexOf('Dmg') > -1) {
-                log.error('Trying to apply an invalid damage qualifier %s', qual);
-            }
-        });
-        return result;
-    }
-
-    /*function applyAttackMods(dmg, mods) {
-        var adk = namespace.bot.entity.actualDmgKeys;
-        var result = {};
-        var i;
-        for (i = adk.length; i--;) {
-            result[adk[i]] = dmg[adk[i]];
-        }
-        for (i = mods.length; i--;) {
-            console.log(mods[i]);
-            var split = mods[i].def.split(' ');
-            if (split[0] in result) {
-                result[split[0]] *= (parseInt(split[2], 10) + 100) / 100;
-            }
-        }
-        return result;
-    }*/
-    //Removed!
-    /*
-    // rename this to getItemMods
-    function expandSourceItem(itemType, type, itemLevel, classLevel) {
-        itemLevel = parseInt(itemLevel);  //ensure itemLevel is num not string
-        var ref = itemref.ref[itemType][type];
-        var mods = ref.getClassMods(classLevel).concat(ref.mods);
-        return applyPerLevels(mods, itemLevel);
-    }*/
 
     // turns shorthand from monster definitions into usable cards
     // [['hot sword', 1], ['hard head', 1]] => [{mods: [(hot sword mods)], level: 1}, {mods: [(hard head mods)], level: 1}]
@@ -432,17 +371,14 @@ namespace.module('bot.utils', function (exports, require) {
     exports.extend({
         applyPerLevel: applyPerLevel,
         applyPerLevels: applyPerLevels,
-        //expandSourceItem: expandSourceItem,
         expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
         prettifyMods: prettifyMods,
         prettifyPerLvlMods: prettifyPerLvlMods,        
-        //addAllCards: addAllCards,
         addAllMods: addAllMods,
         addMod: addMod,
         computeStat: computeStat,
         firstCap: firstCap,
-        applyDmgQuals: applyDmgQuals
     });
 
 });

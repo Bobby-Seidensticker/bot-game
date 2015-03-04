@@ -154,7 +154,7 @@ namespace.module('bot.attacks', function (exports, require) {
             this.attacker = attacker;
             this.targetTeam = targetTeam;
             this.start = start.clone();
-            this.pos = start.clone();
+            this.pos = start.add(vector.mult(0.00000001));
             this.fireTime = fireTime;
 
             if (immuneTarget) {

@@ -350,6 +350,11 @@ namespace.module('bot.utils', function (exports, require) {
         return words.join(" ");
     }
 
+    function spaceToUnderscore(str) {
+        var arr =str.split(' ');
+        return arr.join('_');
+    }
+    
     function addAllMods(all, mods) {
         for (var i = 0; i < mods.length; i++) {
             //addMod(all, mods[i]);
@@ -379,6 +384,7 @@ namespace.module('bot.utils', function (exports, require) {
         addMod: addMod,
         computeStat: computeStat,
         firstCap: firstCap,
+        spaceToUnderscore: spaceToUnderscore,
     });
 
 });

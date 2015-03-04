@@ -8,7 +8,7 @@
 
   <script id="item-slot-template" type="text/template">
     <% if (model) { %>
-      <img src="assets/<%= model.name %>.svg" />
+      <img src="assets/<%= utils.spaceToUnderscore(model.name) %>.png" />
       <div class="corner corner-level"><%= model.level %></div>
       <div class="xpbar" style="width: <%= 63 * model.pctLeveled() %>px;"></div>
       <div class="filter"></div>
@@ -158,7 +158,7 @@
     <% _.each(data, function(skill) { %>
     <div class="skill">
       <div class="box">
-        <img src="assets/<%= skill.name %>.svg" />
+        <img src="assets/<%= utils.spaceToUnderscore(skill.name) %>.png" />
         <div class="cooldown"></div>
       </div>
       <div class="use-holder"><div class="use-bar"></div></div>
@@ -188,7 +188,7 @@
     </div>
     <div class="item-body">
       <div class="item-mid">
-        <img src="assets/<%= name %>.svg" height="90" width="90">
+        <img src="assets/<%= utils.spaceToUnderscore(name) %>.png" height="90" width="90">
         <div class="item-mid-text">
           Type: <%= itemType %><br/><%= midExtra %> 
         </div>
@@ -322,7 +322,7 @@
     <div class="<%= slot %>">
       <img class="slot-background" src="assets/<%= 'empty-' + slot %>.svg" width="60" height="60" />
       <% if (item) { %>
-      <img class="slot-img" src="assets/<%= item.get('name') %>.svg" width="60" height="60" />
+      <img class="slot-img" src="assets/<%= item.get('name') %>.png" width="60" height="60" />
       <% } else { %>
       <img class="empty slot-img" width="60" height="60" />
       <% } %>

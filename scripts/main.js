@@ -138,7 +138,7 @@ namespace.module('bot.main', function (exports, require) {
     KeyHandler.prototype.onKeydown = function(event) {
         var gameModel = this.gameModel;
 
-        var SPACE = 32, EKEY = 69, TKEY = 84, UP = 38, DN = 40, CKEY = 67, PKEY = 80, HKEY = 72;
+        var SPACE = 32, EKEY = 69, TKEY = 84, UP = 38, DN = 40, CKEY = 67, PKEY = 80, HKEY = 72, XKEY = 88, VKEY = 86;
         var key = event.keyCode;
 
         log.info('keydown, key: %d', event.keyCode);
@@ -162,34 +162,88 @@ namespace.module('bot.main', function (exports, require) {
         } else if (key === DN) {
             this.gameModel.timeCoefficient /= 2;
             log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
-        } else if (key === CKEY) {
-            log.error('Equipment cheat');
-
-            /*this.gameModel.inv.addDrops([
-                dropsLib.dropFactory('item', ['weapon', 'melee', 1]),
-                dropsLib.dropFactory('item', ['weapon', 'range', 1]),
-                dropsLib.dropFactory('item', ['armor', 'head', 1]),
-                dropsLib.dropFactory('item', ['armor', 'chest', 1]),
-                dropsLib.dropFactory('item', ['armor', 'legs', 1]),
-                dropsLib.dropFactory('item', ['armor', 'hands', 1]),
-            ]);*/
+        } else if (key === CKEY || key === XKEY || key === VKEY) {
+            log.error('Melee Equipment cheat');
+            var item;
+            
+            if (key === CKEY) {
+                this.gameModel.inv.addDrops([                
+                    dropsLib.dropFactory('item', ['weapon', 'spikey mace']),                
+                    dropsLib.dropFactory('skill', 'lethal strike'),
+                    dropsLib.dropFactory('skill', 'molten strike'),
+                ]);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "spikey mace"});
+                this.gameModel.hero.equipped.equip(item, "weapon");
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "lethal strike"});
+                this.gameModel.hero.skillchain.equip(item, 0);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "molten strike"});
+                this.gameModel.hero.skillchain.equip(item, 1);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "basic melee"});
+                this.gameModel.hero.skillchain.equip(item, 4);
+            } else if (key === XKEY) {
+                this.gameModel.inv.addDrops([
+                    dropsLib.dropFactory('item', ['weapon', 'composite bow']),
+                    dropsLib.dropFactory('skill', 'headshot'),
+                    dropsLib.dropFactory('skill', 'speed shot'),                    
+                ]);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "composite bow"});
+                this.gameModel.hero.equipped.equip(item, "weapon");
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "headshot"});
+                this.gameModel.hero.skillchain.equip(item, 0);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "speed shot"});
+                this.gameModel.hero.skillchain.equip(item, 1);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "basic range"});
+                this.gameModel.hero.skillchain.equip(item, 4);
+            } else if (key === VKEY) {
+                this.gameModel.inv.addDrops([
+                    dropsLib.dropFactory('item', ['weapon', 'star wand']),
+                    dropsLib.dropFactory('skill', 'fire ball'),
+                    dropsLib.dropFactory('skill', 'poison ball'),
+                    dropsLib.dropFactory('skill', 'lightning ball'),
+                    dropsLib.dropFactory('skill', 'ice ball'),                    
+                ]);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "star wand"});
+                this.gameModel.hero.equipped.equip(item, "weapon");
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "fire ball"});
+                this.gameModel.hero.skillchain.equip(item, 0);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "poison ball"});
+                this.gameModel.hero.skillchain.equip(item, 1);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "ice ball"});
+                this.gameModel.hero.skillchain.equip(item, 2);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "lightning ball"});
+                this.gameModel.hero.skillchain.equip(item, 3);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "basic spell"});
+                this.gameModel.hero.skillchain.equip(item, 4);
+            }
 
             this.gameModel.inv.addDrops([
-                dropsLib.dropFactory('skill', 'super smash'),
-                dropsLib.dropFactory('skill', 'fire slash'),
-                dropsLib.dropFactory('skill', 'basic range'),
-                dropsLib.dropFactory('skill', 'fire ball'),
-                dropsLib.dropFactory('skill', 'molten strike'),
+
+                dropsLib.dropFactory('item', ['armor', 'crusader helm']),
+                dropsLib.dropFactory('item', ['armor', 'leatherplate armor']),
+                dropsLib.dropFactory('item', ['armor', 'buckaneer boots']),
+                dropsLib.dropFactory('item', ['armor', 'goldenscale gauntlets']),
+
             ]);
 
+            item = _.find(this.gameModel.inv.models, function(item) {return item.name == "crusader helm"});
+            this.gameModel.hero.equipped.equip(item, "head");
+            item = _.find(this.gameModel.inv.models, function(item) {return item.name == "leatherplate armor"});
+            this.gameModel.hero.equipped.equip(item, "chest");
+            item = _.find(this.gameModel.inv.models, function(item) {return item.name == "buckaneer boots"});
+            this.gameModel.hero.equipped.equip(item, "legs");
+            item = _.find(this.gameModel.inv.models, function(item) {return item.name == "goldenscale gauntlets"});
+            this.gameModel.hero.equipped.equip(item, "hands");
+
+
+            
             this.gameModel.cardInv.addDrops([
                 dropsLib.dropFactory('card', ['heart juice', 4]),
                 dropsLib.dropFactory('card', ['brain juice', 4]),
                 dropsLib.dropFactory('card', ['hot sword', 4])
             ]);
 
-            this.gameModel.autoEquip();
-            this.gameModel.autoEquip();
+            //this.gameModel.autoEquip();
+            //this.gameModel.autoEquip();
         } else if (key === PKEY) {
             log.warning('Time Test / Cheat!');
             var start = new Date().getTime();

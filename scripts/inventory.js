@@ -264,6 +264,7 @@ namespace.module('bot.inv', function (exports, require) {
             spec.projCount = Math.floor(spec.projCount);
             spec.angle = Math.floor(Math.abs(spec.angle));
             if (spec.projCount < 1) { spec.projCount = 1; }
+            if (spec.projCount > 1 && spec.angle === 0) { spec.angle = 5; }
 
             var arrs = ['onHit', 'onKill', 'onRemove'];
             _.each(arrs, function(arr) {

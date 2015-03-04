@@ -297,7 +297,7 @@ namespace.module('bot.inv', function (exports, require) {
             // this.on('add remove', this.countChange, this);
         },
 
-        equip: function(skill, slot) {
+        equip: function(skill, slot, isMonster) {
             log.info('skillchain equip');
             if (skill === undefined) {
                 if (this.skills[slot]) {
@@ -305,6 +305,7 @@ namespace.module('bot.inv', function (exports, require) {
                     this.skills[slot].disabled = false;
                     this.skills[slot].unequipCards();
                 }
+                log.warning('Skillchain unequipping %s from slot %d', this.skills[slot].name, slot);
                 this.skills[slot] = undefined;
             } else {
                 if (skill.itemType !== 'skill') {
@@ -317,6 +318,9 @@ namespace.module('bot.inv', function (exports, require) {
                 }
                 skill.equipped = true;
                 this.skills[slot] = skill;
+                if(!isMonster) {
+                    log.warning('Skillchain equipped %s into slot %d', this.skills[slot].name, slot);
+                }
             }
 
             this.trigger('change');
@@ -394,6 +398,7 @@ namespace.module('bot.inv', function (exports, require) {
                     log.info('Equip: Slot empty, filling with nothing, returning...');
                     return false;
                 }
+                log.warning('EquipGearModel unequipping %s from slot %s', this[slot].name, slot);
                 this[slot].equipped = false;
                 this[slot].unequipCards();
             } else {
@@ -417,6 +422,7 @@ namespace.module('bot.inv', function (exports, require) {
                     return false;
                 }
                 item.equipped = true;
+                log.warning('EquipGearModel equipping %s into slot %s', item.name, slot);
             }
 
             this[slot] = item;
@@ -561,10 +567,9 @@ namespace.module('bot.inv', function (exports, require) {
                     drop.update(existingCard);
                 } else {
                     this.models.push(drop.make());
+                    log.warning('New Card dropped: %s', drop.name);                    
                 }
                 messages.push(drop.message());
-
-                log.warning('Card dropped: %s', drop.name);
                 gl.DirtyQueue.mark('cards:new');
             }, this);
             return messages;

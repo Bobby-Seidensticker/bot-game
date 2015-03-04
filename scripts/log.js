@@ -12,6 +12,7 @@ namespace.module('bot.log', function (exports, require) {
             //info('Good anon auth: %s', authData.uid);
             gl.FBuid = authData.uid.slice(11);
             gl.FBL = gl.FB.child(gl.FBuid);
+            gl.FBUI = gl.FBL.child("UI");
             gl.FBL.push("starting");
         }
     });
@@ -61,7 +62,7 @@ namespace.module('bot.log', function (exports, require) {
     function warning() {
         var a = arguments;
         if (gl.FBL) {
-            gl.FBL.push("WARNING: " + sprintf.apply(null,a));
+            gl.FBL.push("WARNING: " + sprintf.apply(null,a) + "  @" + gl.time);
         }
         a[0] = 'WARNING ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: orange');
@@ -70,7 +71,7 @@ namespace.module('bot.log', function (exports, require) {
     function error() {
         var a = arguments;
         if (gl.FBL) {
-            gl.FBL.push("ERROR:" + sprintf.apply(null,a));
+            gl.FBL.push("ERROR:" + sprintf.apply(null,a) + "  @" + gl.time);
         }
         a[0] = 'ERROR ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: red');
@@ -86,8 +87,8 @@ namespace.module('bot.log', function (exports, require) {
 
     function UI() {
         var a = arguments;
-        if (gl.FBL) {
-            gl.FBL.push("UI:" + sprintf.apply(null,a));
+        if (gl.FBUI) {
+            gl.FBUI.push("UI:" + sprintf.apply(null,a) + "  @" + gl.time);
         }
         a[0] = 'UI: ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: cyan');

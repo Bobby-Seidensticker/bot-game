@@ -233,7 +233,7 @@ namespace.module('bot.entity', function (exports, require) {
             _.each(this.skills, function(skill, i) {
                 var skill = new inventory.SkillModel(skill);
                 skill.level = this.level;
-                this.skillchain.equip(skill, i);
+                this.skillchain.equip(skill, i, true);
             }, this);
 
             this.computeAttrs();

@@ -1213,7 +1213,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "bloodsucker": {
                 "mods": [
-                    {"def": "physDmg gainedas 10 hpLeech", "type": "dmg"},
+                    {"def": "physDmg gainedas 5 hpLeech", "type": "dmg"},
                     {"def": "physDmg added 1 perLevel", "type": "dmg"}
                 ],
                 "slot": "head",
@@ -1555,7 +1555,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireDmg more 8", "type": "dmg"},
                     {"def": "fireDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "fireDmg gainedas 10 hpLeech", "type": "dmg"},
+                    {"def": "fireDmg gainedas 5 hpLeech", "type": "dmg"},
                     {"def": "fireResist more 50", "type": "eleResist"},
                 ],
                 "slot": "head",
@@ -2279,6 +2279,14 @@ namespace.module('bot.itemref', function (exports, require) {
                 "quantity": [3,3,6],
                 "level": 30,
             },
+            "hordecave": {
+                "choices": ["vampire"],
+                "weights": [1],
+                "boss": "bat",
+                "roomCount": 20,
+                "quantity": [20, 500, 5000],
+                "level": 35
+            },
             "demonic laboroatory": {
                 "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],
                 "weights": [20, 10, 10],
@@ -2356,7 +2364,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "coldDmg": "Cold Damage",
             "lightDmg": "Lightning Damage",
             "poisDmg": "Poison Damange",
-            "hpOnHit": "Health Gained on Hit",
+            "hpOnHit": "Health Gainedon Hit",
             "manaOnHit": "Mana Gained on Hit",
             "cooldownTime": "Cooldown Length",
             "range": "Skill Range",

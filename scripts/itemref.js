@@ -1253,6 +1253,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "legs",
             },
+            "lmp": {
+                "mods": [
+                    {"def": "projCount added 1 perLevel", "type": "dmg"},
+                    {"def": "angle added 30", "type": "dmg"},
+                ],
+                "slot": "skill",
+            },
             "stinging": {
                 "mods": [
                     {"def": "physDmg added 1 perLevel", "type": "dmg"},

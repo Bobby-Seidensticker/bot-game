@@ -250,12 +250,10 @@ namespace.module('bot.inv', function (exports, require) {
                 spec.angle = Math.abs(Math.floor(spec.angle));
                 if (spec.projCount < 1) { spec.projCount = 1; }
                 log.info('projCount: %d, angle: %d, mods: %s', spec.projCount, spec.angle, spec.mods)
-            }
-
-            if (this.name === 'basic range') {
-                log.error('fuck');
-                console.log(this);
-                console.log(this.projCount, this.angle, spec.projCount, spec.angle);
+                if (spec.projCount > 1 && spec.angle === 0) {
+                    log.error('You messed up, need to specify an angle for multiple projectiles, saving your ass');
+                    spec.angle = 30;
+                }
             }
 
             var arrs = ['onHit', 'onKill', 'onRemove'];

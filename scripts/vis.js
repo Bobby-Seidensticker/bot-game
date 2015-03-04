@@ -103,8 +103,6 @@ namespace.module('bot.vis', function (exports, require) {
             this.canvasSize = canvasSize;
             this.imgSize = imgSize;
             this.scale = scale;
-            log.error('SHIFSDOISDF');
-            console.log(filename, canvasSize, imgSize, scale);
 
             if (filename in TEXTURES) {
                 this.img = TEXTURES[filename];
@@ -133,7 +131,6 @@ namespace.module('bot.vis', function (exports, require) {
 
             var ctx = this.canvas.getContext('2d');
 
-            //ctx.drawImage(this.img, 0, 0, scaled[0], scaled[1]);
             for (var i = 0; i < this.canvasSize.x; i += scaled.x) {
                 for (var j = 0; j < this.canvasSize.y; j += scaled.y) {
                     ctx.drawImage(this.img, i, j, scaled.x, scaled.y);

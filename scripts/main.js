@@ -184,7 +184,10 @@ namespace.module('bot.main', function (exports, require) {
                 this.gameModel.inv.addDrops([
                     dropsLib.dropFactory('item', ['weapon', 'composite bow']),
                     dropsLib.dropFactory('skill', 'headshot'),
-                    dropsLib.dropFactory('skill', 'speed shot'),                    
+                    dropsLib.dropFactory('skill', 'speed shot'),
+                ]);
+                this.gameModel.cardInv.addDrops([
+                    dropsLib.dropFactory('card', ['lmp', 2]),
                 ]);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "composite bow"});
                 this.gameModel.hero.equipped.equip(item, "weapon");
@@ -200,7 +203,7 @@ namespace.module('bot.main', function (exports, require) {
                     dropsLib.dropFactory('skill', 'fire ball'),
                     dropsLib.dropFactory('skill', 'poison ball'),
                     dropsLib.dropFactory('skill', 'lightning ball'),
-                    dropsLib.dropFactory('skill', 'ice ball'),                    
+                    dropsLib.dropFactory('skill', 'ice ball'),
                 ]);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "star wand"});
                 this.gameModel.hero.equipped.equip(item, "weapon");

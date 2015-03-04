@@ -1,5 +1,20 @@
 namespace.module('bot.log', function (exports, require) {
 
+    gl.FB = new Firebase("https://fiery-heat-4226.firebaseio.com");
+
+    gl.FB.authAnonymously(function(error, authData) {
+        if(error) {
+            console.log("anon login failed", error);
+            gl.FBuid = "failedauth";
+        } else {
+            console.log("Good anon auth", authData);
+            gl.FBuid = authData.uid.slice(11);
+            console.log(gl.FBuid);
+            gl.FBL = gl.FB.child(gl.FBuid);
+            gl.FBL.push("page loading");
+        }
+    });
+
     var LEVEL = 'info';
 
     var FNS = [debug, info, warning, error, stack];
@@ -44,14 +59,21 @@ namespace.module('bot.log', function (exports, require) {
 
     function warning() {
         var a = arguments;
+        if (gl.FBL) {
+            gl.FBL.push("WARNING: " + sprintf.apply(null,a));
+        }
         a[0] = 'WARNING ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: orange');
     }
 
     function error() {
         var a = arguments;
+        if (gl.FBL) {
+            gl.FBL.push("ERROR:" + sprintf.apply(null,a));
+        }
         a[0] = 'ERROR ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: red');
+
     }
 
     //  call with 'log.line(new Error(), 'your text here');

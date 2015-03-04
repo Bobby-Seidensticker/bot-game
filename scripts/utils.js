@@ -370,7 +370,32 @@ namespace.module('bot.utils', function (exports, require) {
         }
     }
 
-    function applyAttackMods(dmg, mods) {
+    function applyDmgQuals(spec, quals) {
+        var adk = namespace.bot.entity.actualDmgKeys;
+        var result = {};
+        var i;
+        for (i = adk.length; i--;) {
+            result[adk[i]] = spec[adk[i]];
+        }
+        _.each(quals, function(qual) {
+            var split = qual.split(' ');
+            if (split[0] === 'dmg') {
+                if (split[1] === 'more') {
+                    var dmgMod = 1 + (parseFloat(split[2]) / 100);
+                    _.each(adk, function(key) {
+                        result[key] *= dmgMod;
+                    });
+                } else {
+                    log.error('Trying to apply an invalid damage qualifier %s', qual);
+                } 
+            } else if (split[0].indexOf('Dmg') > -1) {
+                log.error('Trying to apply an invalid damage qualifier %s', qual);
+            }
+        });
+        return result;
+    }
+
+    /*function applyAttackMods(dmg, mods) {
         var adk = namespace.bot.entity.actualDmgKeys;
         var result = {};
         var i;
@@ -385,7 +410,7 @@ namespace.module('bot.utils', function (exports, require) {
             }
         }
         return result;
-    }
+    }*/
     //Removed!
     /*
     // rename this to getItemMods
@@ -417,7 +442,7 @@ namespace.module('bot.utils', function (exports, require) {
         addMod: addMod,
         computeStat: computeStat,
         firstCap: firstCap,
-        applyAttackMods: applyAttackMods
+        applyDmgQuals: applyDmgQuals
     });
 
 });

@@ -28,7 +28,6 @@ namespace.module('bot.attacks', function (exports, require) {
                     this.attacks.push.apply(this.attacks, newAttacks);
                 }
                 if (atk.done) {
-                    log.warning('Removing attack');
                     this.attacks.splice(i, 1);
                     i--;
                 }

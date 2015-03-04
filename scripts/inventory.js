@@ -228,10 +228,10 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         calcAttack: function(spec, index, specs) {
-            if (spec.mods && spec.mods.length) {
-                spec.dmg = utils.applyAttackMods(this, spec.mods);
+            if (spec.quals && spec.quals.length) {
+                spec.dmg = utils.applyDmgQuals(this, spec.quals);
             } else {
-                spec.dmg = utils.applyAttackMods(this, []);
+                spec.dmg = utils.applyDmgQuals(this, []);
             }
             spec.speed = this.speed;
             spec.leech = this.leech;
@@ -239,8 +239,8 @@ namespace.module('bot.inv', function (exports, require) {
             if (spec.type === 'proj') {
                 spec.projCount = this.projCount;
                 spec.angle = this.angle;
-                _.each(spec.mods, function(mod) {
-                    var split = mod.def.split(' ')
+                _.each(spec.quals, function(qual) {
+                    var split = qual.def.split(' ')
                     if (split[0] === 'projCount') {
                         spec.projCount += parseFloat(split[2]);
                     } else if (split[0] === 'angle') {
@@ -249,7 +249,7 @@ namespace.module('bot.inv', function (exports, require) {
                 }, this);
                 spec.angle = Math.abs(Math.floor(spec.angle));
                 if (spec.projCount < 1) { spec.projCount = 1; }
-                log.info('projCount: %d, angle: %d, mods: %s', spec.projCount, spec.angle, spec.mods)
+                log.info('projCount: %d, angle: %d, quals: %s', spec.projCount, spec.angle, spec.quals)
                 if (spec.projCount > 1 && spec.angle === 0) {
                     log.error('You messed up, need to specify an angle for multiple projectiles, saving your ass');
                     spec.angle = 30;

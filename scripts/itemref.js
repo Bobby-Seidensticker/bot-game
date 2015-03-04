@@ -557,46 +557,6 @@ namespace.module('bot.itemref', function (exports, require) {
           
          */
 
-        /*
-          basic range skill:
-
-          proj 1
-          start 50
-
-          lmp card:
-
-          dmg -20
-          proj 2
-
-
-          basic melee skill:
-
-          melee 1
-          start 50
-
-          melee splash:
-
-          aoe 5000
-          dmg -20
-         */
-
-        "attack": {
-            "melee": {
-                "type": "melee",
-            },
-            "range": {
-                "type": "range",
-                // int projSpeed, int count, int angle (if count > 1)
-            },
-            "cone": {
-                "type": "cone",
-                "angle": 30,
-            },
-            "circle": {
-                "type": "circle",
-            }
-        },
-
         "skill": {
             "basic": {
             },
@@ -604,7 +564,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "melee",
                 "types": ["melee"],
-                "specs": [{ type: 'melee', radius: 10000, color: '#777', mods: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'melee', radius: 10000, color: '#777', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
@@ -615,7 +575,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 1000, mods: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 1000, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -626,7 +586,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "spell",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 1000, mods: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 1000, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -683,11 +643,10 @@ namespace.module('bot.itemref', function (exports, require) {
             "molten strike": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
-                "specs": [{ type: 'melee', mods: [],
-                            onHit: [{ type: 'proj', angle: 30, count: 3, radius: 5000, color: '#a52a2a', rate: 300, mods: [
-                                {def: 'projCount added 2', type: 'dmg'},
-                                {def: 'angle added 30', type: 'dmg'},
-                                {def: 'physDmg more -20', type: 'dmg'}], onKill: [], onRemove: []}],
+                "specs": [{ type: 'melee', quals: [],
+                            onHit: [{ type: 'proj', angle: 30, count: 3, radius: 5000, color: '#a52a2a', rate: 300,
+                                      quals: ['projCount added 2', 'angle added 30', 'physDmg more -20'],
+                                      onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []
                           }],
@@ -705,8 +664,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "exploding strike": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
-                "specs": [{ type: 'melee', mods: [],
-                          onHit: [{ type: 'circle', mods: [{def: 'physDmg more -20', type: 'dmg'}], onHit: [], onKill: [], onRemove: []}],
+                "specs": [{ type: 'melee', quals: [],
+                          onHit: [{ type: 'circle', quals: ['dmg more -20'], onHit: [], onKill: [], onRemove: []}],
                           onKill: [],
                           onRemove: []
                         }],
@@ -840,7 +799,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 3000, mods: [], onHit: [], onKill: [], onRemove: [] }],                
+                "specs": [{ type: 'proj', radius: 5000, color: '#a52a2a', rate: 3000, quals: [], onHit: [], onKill: [], onRemove: [] }],                
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'speed added 1000', type: 'dmg'},
@@ -893,10 +852,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'coldDmg added 3', type: 'dmg'},
                     {def: 'coldDmg more 1 perLevel', type: 'dmg'},
-
                 ]
             },
-
             "lightning ball": {
                 "prototype": ["basic spell"],
                 "class": "spell",
@@ -933,8 +890,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "cold", "spell"],
-                "anim": ["#00f"],
-                "onTry": ["AOECone 0 5000 45"],
+                "specs": [{ type: 'cone', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},

@@ -24,7 +24,7 @@ namespace.module('bot.attacks', function (exports, require) {
                 atk = this.attacks[i];
                 newAttacks = atk.getNewAttacks();
                 if (newAttacks.length) {
-                    log.warning('Actually adding attacks!');
+                    log.warning('Adding %d child attacks!', newAttacks.length);
                     this.attacks.push.apply(this.attacks, newAttacks);
                 }
                 if (atk.done) {
@@ -43,48 +43,15 @@ namespace.module('bot.attacks', function (exports, require) {
         addAttack: function(skill, attacker, target) {
             _.each(skill.spec.specs, function(spec, i, specs) {
                 if (spec.type === 'melee') {
-                    // new melee from body
                     this.attacks.push(new MeleeAttack(spec, attacker, target));
                 } else if (spec.type === 'proj') {
-                    this.attacks.push(newProjFromBody(spec, attacker, target));
-                    //var targetTeam = target.spec.team;
-                    //var vector = target.pos.sub(attacker.pos);
-                    //this.addProjectileAttack(spec, attacker, attacker.pos, vector, targetTeam, false);
+                    this.attacks.push.apply(this.attacks, newProjsFromBody(spec, attacker, target));
                 } else if (spec.type === 'cone') {
                     // new cone from body
                 } else if (spec.type === 'circle') {
                     // new circle from body
                 }
             }, this);
-        },
-
-        /*addProjectileAttack: function(spec, attacker, start, vector, targetTeam, instant) {
-            if (spec.count !== undefined && spec.count > 1) {
-                if (spec.angle !== undefined && spec.angle !== 0) {
-                    var s, e;
-                    if (spec.count % 2 === 0) {
-                        e = spec.angle * (0.5 + (spec.count - 2) / 2);
-                        s = -e;
-                    } else {
-                        e = spec.angle * (spec.count - 1) / 2;
-                        s = -e;
-                    }
-                    for (var a = s; a <= e; a += spec.angle) {
-                        this.attacks.push(new ProjAttack(spec, attacker, start, vector.rotate(a), targetTeam, instant));
-                    }
-                }
-            } else {
-                //this.attacks.push(new ProjAttack(spec, attacker, target));
-                this.attacks.push(new ProjAttack(spec, attacker, start, vector, targetTeam, instant));
-            }
-        },*/
-
-        rawAddAttack: function() {
-            
-        },
-
-        addChainedAttack: function(spec) {
-            
         },
 
         getAttacks: function() {
@@ -110,6 +77,7 @@ namespace.module('bot.attacks', function (exports, require) {
             }
             if (arr && arr.length) {
                 _.each(arr, function(spec) {
+                    log.info(eventType);
                     if (spec.type === 'proj') {
                         this.newAttacks.push.apply(this.newAttacks, newChildProjs(spec, this, enemy));
                         log.warning('Added new child projs to new attacks, len: %d', this.newAttacks.length);
@@ -138,57 +106,49 @@ namespace.module('bot.attacks', function (exports, require) {
         },
     });
 
-    function newProjFromBody(spec, attacker, target) {
+    function newProjsFromBody(spec, attacker, target) {
         var vector = target.pos.sub(attacker.pos);
         var fireTime = gl.time + spec.speed / 2;
-        return new ProjAttack(spec, attacker, target.spec.team, attacker.pos, vector, fireTime, []);
+        var angles = getProjAngles(spec.projCount, spec.angle);
+        return _.map(angles, function(angle) {
+            return new ProjAttack(spec, attacker, target.spec.team, attacker.pos, vector.rotate(angle), fireTime);
+        });
     }
 
     function newChildProjs(spec, atk, enemy) {
-        var angles = [];
-        var count = 1;
-        var angle = 0;
-        if (spec.count !== undefined) { count = spec.count; }
-        if (spec.angle !== undefined) { angle = spec.angle; }
-
-        if (angle === 0) {
-            angles.push(0);
-        } else {
-            var s, e;
-            if (count % 2 === 0) {
-                e = angle * (0.5 + (count - 2) / 2);
-                s = -e;
-            } else {
-                e = angle * (count - 1) / 2;
-                s = -e;
-            }
-            for (var a = s; a <= e; a += angle) {
-                angles.push(a);
-                //this.attacks.push(new ProjAttack(spec, attacker, start, vector.rotate(a), targetTeam, instant));
-            }
-        }
+        var angles = getProjAngles(spec.projCount, spec.angle);
 
         return _.map(angles, function(angle) {
             return new ProjAttack(spec, atk.attacker, atk.targetTeam, atk.pos, atk.velocity.rotate(angle), gl.time, enemy);
         });
     }
 
-    // from target: team, end
-    // from attacker: pos, height  // pos needs to be replaced with the hit location
+    function getProjAngles(projCount, angle) {
+        var angles = [];
+        if (projCount === undefined) { projCount = 1; }
+        if (angle === undefined) { angle = 0; }
 
-    /*function newProjFromBody(spec, attacker, target) {
-        var vector = target.pos.sub(attacker.pos);
-        return new ProjAttack(spec, attacker, target.spec.team, target.pos.clone());
+        if (angle === 0) {
+            for (var i = projCount; i--;) {
+                angles.push(0);
+            }
+        } else {
+            var s, e;
+            if (projCount % 2 === 0) {
+                e = angle * (0.5 + (projCount - 2) / 2);
+                s = -e;
+            } else {
+                e = angle * (projCount - 1) / 2;
+                s = -e;
+            }
+            for (var a = s; a <= e; a += angle) {
+                angles.push(a);
+            }
+        }
+        return angles;
     }
 
-    function newProjsFromAttack(spec, attacker, index) {
-        var vector = target.pos.sub(attacker.pos);
-        return new ProjAttack(spec, attacker, vector, target.spec.team);
-    }*/
-    
     var ProjAttack = Attack.extend({
-        //initialize: function(spec, attacker, target) {
-        //initialize: function(spec, attacker, start, vector, targetTeam, instant) {
         initialize: function(spec, attacker, targetTeam, start, vector, fireTime, immuneTarget) {
             this.newAttacks = [];
             _.extend(this, spec);
@@ -199,7 +159,9 @@ namespace.module('bot.attacks', function (exports, require) {
             this.pos = start.clone();
             this.fireTime = fireTime;
 
-            this.immuneTargetId = immuneTarget.id;
+            if (immuneTarget) {
+                this.immuneTargetId = immuneTarget.id;
+            }
 
             this.radius = spec.radius ? spec.radius : Math.pow(2, 16);
             this.velocity = vector.unitVector().mult(spec.rate);
@@ -217,11 +179,11 @@ namespace.module('bot.attacks', function (exports, require) {
             var nextPos = this.start.add(this.velocity.mult(elapsedTime));
 
             for (var i = 0; i < enemies.length; i++) {
+                if (enemies[i].id === this.immuneTargetId) {
+                    log.debug('Intentionally avoiding immune target');
+                    continue;
+                }
                 if (vu.hit(this.pos, nextPos, enemies[i].pos, enemies[i].spec.width, this.radius)) {
-                    if (enemies[i].id === this.immuneTargetId) {
-                        log.info('Intentionally avoiding immune target');
-                        continue;
-                    }
                     log.debug('projectile hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
                     this.hit(enemies[i]);
                     break;

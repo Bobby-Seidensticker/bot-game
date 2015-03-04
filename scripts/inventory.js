@@ -196,7 +196,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             _.each(arr, function(stat) {
                 this[stat] = utils.computeStat(this.dmgStats, stat);
-                if (this.class + "Dmg" == stat) {
+                if (this.class + "Dmg" === stat) {
                     typeMoreMod *= 1 + (this[stat] / 100); //attackType modifiers are percentage based
                 }
             }, this);
@@ -219,6 +219,11 @@ namespace.module('bot.inv', function (exports, require) {
 
             this.leech = {hp: this.hpOnHit + this.hpLeech, mana: this.manaOnHit + this.manaLeech};
 
+            if (this.angle === undefined) { this.angle = 0; }
+            this.angle = Math.abs(Math.floor(this.angle));
+            if (this.projCount === undefined) { this.projCount = 1; } else { this.projCount++; }
+            if (this.projCount < 1) { this.projCount = 1; }
+
             this.calcAttacks();
         },
 
@@ -230,6 +235,29 @@ namespace.module('bot.inv', function (exports, require) {
             }
             spec.speed = this.speed;
             spec.leech = this.leech;
+
+            if (spec.type === 'proj') {
+                spec.projCount = this.projCount;
+                spec.angle = this.angle;
+                _.each(spec.mods, function(mod) {
+                    var split = mod.def.split(' ')
+                    if (split[0] === 'projCount') {
+                        spec.projCount += parseFloat(split[2]);
+                    } else if (split[0] === 'angle') {
+                        spec.angle += parseFloat(split[2]);
+                    }
+                }, this);
+                spec.angle = Math.abs(Math.floor(spec.angle));
+                if (spec.projCount < 1) { spec.projCount = 1; }
+                log.info('projCount: %d, angle: %d, mods: %s', spec.projCount, spec.angle, spec.mods)
+            }
+
+            if (this.name === 'basic range') {
+                log.error('fuck');
+                console.log(this);
+                console.log(this.projCount, this.angle, spec.projCount, spec.angle);
+            }
+
             var arrs = ['onHit', 'onKill', 'onRemove'];
             _.each(arrs, function(arr) {
                 if (spec[arr] && spec[arr].length) {

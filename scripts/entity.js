@@ -19,7 +19,7 @@ namespace.module('bot.entity', function (exports, require) {
     var dmgKeys = [
         'meleeDmg', 'rangeDmg', 'spellDmg',
         'physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech',
-        'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed', 'manaCost'];
+        'manaOnHit', 'manaLeech', 'cooldownTime', 'range', 'speed', 'manaCost', 'projCount', 'angle'];
     var actualDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg'];
 
     var EntitySpec = gl.Model.extend({

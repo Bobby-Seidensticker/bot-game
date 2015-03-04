@@ -380,7 +380,9 @@ namespace.module('bot.utils', function (exports, require) {
         for (i = mods.length; i--;) {
             console.log(mods[i]);
             var split = mods[i].def.split(' ');
-            result[split[0]] *= (parseInt(split[2], 10) + 100) / 100;
+            if (split[0] in result) {
+                result[split[0]] *= (parseInt(split[2], 10) + 100) / 100;
+            }
         }
         return result;
     }

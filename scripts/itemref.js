@@ -601,7 +601,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
             "basic spell": {
@@ -666,7 +666,10 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
                 "specs": [{ type: 'melee', mods: [],
-                            onHit: [{ type: 'proj', angle: 30, count: 3, radius: 5000, color: '#a52a2a', rate: 300, mods: [{def: 'physDmg more -20', type: 'dmg'}], onKill: [], onRemove: []}],
+                            onHit: [{ type: 'proj', angle: 30, count: 3, radius: 5000, color: '#a52a2a', rate: 300, mods: [
+                                {def: 'projCount added 2', type: 'dmg'},
+                                {def: 'angle added 30', type: 'dmg'},
+                                {def: 'physDmg more -20', type: 'dmg'}], onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []
                           }],

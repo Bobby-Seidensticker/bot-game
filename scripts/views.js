@@ -123,11 +123,23 @@ namespace.module('bot.views', function (exports, require) {
                 var arr = [];
                 skill = this.model.skills[i];
                 _.each(entity.dmgKeys, function(key) {
+                    if(key == "projCount" && skill.spec.projCount <= 1) {
+                        return;
+                    }
+                    if(key == "decayRange"){
+                        return;
+                    }
+                    if(key == "radius" || key == "rate" || key == "angle"){ //todo only if not aoe
+                        return;
+                    }
+
+                    
+                    
                     statname = namespace.bot.itemref.ref.statnames[key];
                     arr.push([statname, skill.spec[key].toFixed(2)]);
-                });
+                }, this);
                 var coolIn = Math.max(0, skill.coolAt - gl.time);
-                arr.push(['Cool In', coolIn]);
+                arr.push(['Cool In', Math.floor(coolIn)]);
                 skilldata[skill.spec.name] = arr;
             }
 

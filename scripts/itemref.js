@@ -590,7 +590,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'physDmg added 3', type: 'dmg'},
+                    {def: 'physDmg added 9', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
@@ -640,7 +640,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },
-            "molten strike": {
+            "flaming debris": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
                 "specs": [{ type: 'melee', quals: [],
@@ -857,6 +857,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 3', type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'projRadius more 200', type: 'dmg'},
                 ],
                 "flavor": "Goodness gracious, these balls are great!"
             },
@@ -1595,12 +1596,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "skill",
             },
-            "longer range": {
+            "telescoping handle": {
                 "mods":[
                     {"def": "range more 5 perLevel", "type": "dmg"},
                     {"def": "range more 20", "type": "dmg"},                    
                 ],
-                "slot": "skill",
+                "slot": "weapon",
             },
             "shorter range": {
                 "mods":[
@@ -1615,13 +1616,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "chest",
             },
-            "happy hands": {
+            "bloodfingers": {
                 "mods":[
                     {"def": "maxHp added 10 perLevel", "type": "def"},
                 ],
                 "slot":"hands",
             },
-            "hearty heart": {
+            "bloodbath": {
                 "mods": [
                     {"def": "maxHp more 3 perLevel", "type": "def"},
                 ],
@@ -1733,7 +1734,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["sharpened", 1],
                     ["breadhat", 1],
                     ["stinging", 1],
-                    ["hearty heart", 1]
+                    ["bloodbath", 1]
                 ],
             },
             "fire skeleton": {
@@ -1753,9 +1754,11 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["proto-skeleton", 0],
                     ["head of vigor", 1],
-                    ["happy hands", 1],
+                    ["bloodfingers", 1],
                     ["mana on hit", 1],
-                    ["longer range", 1]
+                    ["telescoping handle", 1],
+                    ["sharpened", 1],
+                    ["stinging", 1]
                 ]
             },
             "skeleton mage" : {
@@ -1776,7 +1779,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-boss", 1],
                     ["sharpened", 3],
                     ["hot sword", 3],
-                    ["life on hit", 1]
+                    ["life on hit", 4],
+                    ["telescoping handle", 2],
+                    ["stinging", 4]
                 ]
             },
             "wood nymph" : {
@@ -1940,21 +1945,21 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "sir mechs-a-lot" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["flame cone", "lightning ball", "ice nova", "basic melee"],
+                "skills": ["ground smash", "lightning ball", "ice nova", "basic melee"],
                 "sourceCards": [
                     ["proto-boss", 1],
                     ["riveted", 1],
                     ["clockwork", 1],
                     ["mecha heart", 1],
                     ["charged", 1],
-                    ["steam powered", 1],
+                    ["steam powered", 4],
                     ["frosted", 1],
                     ["ignited", 1]
                 ],
             },
             "goblin" : {
                 "items": [["weapon", "spikey mace"], ["armor", "goblin leather"]],
-                "skills": ["flame cone", "basic melee"],
+                "skills": ["ground smash", "basic melee"],
                 "sourceCards": [
                     ["goblin toe", 1],
                     ["berserking", 1],
@@ -1978,7 +1983,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["goblin toe", 1],
                     ["berserking", 1],
                     ["simple minded", 1],
-                    ["explosive bolts", 1]
+                    ["ignited", 2]
                 ],
             },
             "flame dragon" : {
@@ -1991,7 +1996,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["keen wit", 3],
                     ["brain juice", 3],
                     ["mana on hit", 3],
-                    ["longer range", 3]
+                    ["telescoping handle", 3]
                 ],
             },
             
@@ -2344,7 +2349,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "coldDmg": "Cold Damage",
             "lightDmg": "Lightning Damage",
             "poisDmg": "Poison Damange",
-            "hpOnHit": "Health Gainedon Hit",
+            "hpOnHit": "Health Gained on Hit",
             "manaOnHit": "Mana Gained on Hit",
             "cooldownTime": "Cooldown Length",
             "range": "Skill Range",
@@ -2354,7 +2359,13 @@ namespace.module('bot.itemref', function (exports, require) {
             "manaLeech": "Leeched Mana",
             "lineWidth": "Line Width",
             "height": "Character Height",
-            "width": "Character Width", 
+            "width": "Character Width",
+            "aoeRadius": "AOE Radius",
+            "aoeSpeed": "AOE Speed",
+            "angle": "Angle",
+            "projRange": "Projectile Range",
+            "projRadius": "Projectile Radius",
+            "projSpeed": "Projectile Speed"
         }
 
     };

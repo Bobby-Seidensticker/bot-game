@@ -255,7 +255,10 @@ namespace.module('bot.bodies', function(exports, require) {
 
         onKill: function(target) {
             var xpGained = target.spec.xpOnKill();
-            this.spec.applyXp(xpGained);
+            var levels = this.spec.applyXp(xpGained);
+            if (levels > 0) {
+                this.revive();
+            }
             var allDrops = target.spec.getDrops();
             if (allDrops.any) {
                 var invMessages = this.spec.inv.addDrops(allDrops.gearDrops);

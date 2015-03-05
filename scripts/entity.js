@@ -16,15 +16,20 @@ namespace.module('bot.entity', function (exports, require) {
                    'dodge', 'eleResistAll', 'hpRegen', 'manaRegen', 'moveSpeed'];
     var eleResistKeys = ['fireResist', 'coldResist', 'lightResist', 'poisResist'];
     var visKeys = ['height', 'width', 'lineWidth'];
-    var dmgKeys = ['meleeDmg', 'rangeDmg', 'spellDmg', 'physDmg', 'lightDmg', 'coldDmg',
-                   'fireDmg', 'poisDmg', 'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech',
-                   'cooldownTime', 'range', 'decayRange', 'speed', 'manaCost', 'projCount',
-                   'angle', 'rate', 'radius'];
+    var dmgKeys = ['meleeDmg', 'rangeDmg', 'spellDmg',
+                   'physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg',
+                   'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech',
+                   'speed', 'cooldownTime',
+                   'range', 'projRange', 'projRadius', 'aoeRadius', 'manaCost', 'projCount',
+                   'angle', 'projSpeed', 'aoeSpeed'];
     var actualDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg'];
 
-    var attackSpecKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpOnHit',
-                          'hpLeech', 'manaOnHit', 'manaLeech', 'range', 'decayRange', 'speed',
-                          'projCount', 'angle', 'rate', 'radius'];
+    var attackSpecKeys = [//'meleeDmg', 'rangeDmg', 'spellDmg',
+        'physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg',
+        'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech',
+        // 'cooldownTime', 'manaCost',
+        'speed', 'range', 'projRange', 'projRadius', 'aoeRadius', 'projCount',
+        'angle', 'projSpeed', 'aoeSpeed'];
     var attackSpecDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpLeech', 'manaLeech'];
 
     var EntitySpec = gl.Model.extend({
@@ -36,7 +41,7 @@ namespace.module('bot.entity', function (exports, require) {
         computeAttrs: function() {
             log.info('compute attrs on: %s', this.name);
 
-            if(this.team === TEAM_HERO) {
+            if (this.team === TEAM_HERO) {
                 this.weaponType = 'melee'
                 if (this.team === TEAM_HERO && this.equipped.weapon) {
                     this.weaponType = this.equipped.weapon.type
@@ -131,10 +136,14 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'maxMana gainedas 2 manaRegen', type: 'def'},
 
                 {def: 'projCount added 1', type: 'dmg'},
+
                 {def: 'angle added 15', type: 'dmg'},
-                {def: 'range gainedas 150 decayRange', type: 'dmg'},
-                {def: 'rate added 1000', type: 'dmg'},
-                {def: 'radius added 5000', type: 'dmg'},
+                {def: 'range gainedas 125 projRange', type: 'dmg'},
+                //{def: 'rate added 1000', type: 'dmg'},
+                {def: 'projSpeed added 1000', type: 'dmg'},
+                {def: 'aoeSpeed added 300', type: 'dmg'},
+                {def: 'projRadius added 5000', type: 'dmg'},
+                {def: 'aoeRadius added 300000', type: 'dmg'},
             ];
             return _.map(mods, function(mod) { return utils.applyPerLevel(mod, this.level); }, this);
         },
@@ -189,6 +198,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (levels > 0) {
                 this.computeAttrs();
             }
+            return levels;
         },
 
         /*

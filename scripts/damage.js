@@ -3,11 +3,13 @@ namespace.module('bot.damage', function (exports, require) {
     var vu;
     var Point;
     var prob;
+    var log;
 
     $(function() {
         vu = namespace.bot.vectorutils;
         Point = vu.Point;
         prob = namespace.bot.prob;
+        log = namespace.bot.log;
     });
 
     function Damage(start, end, height) {

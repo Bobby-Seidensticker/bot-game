@@ -60,6 +60,10 @@ namespace.module('bot.vectorutils', function (exports, require) {
         return this.x * this.x + this.y * this.y;
     }
 
+    Point.prototype.within = function(p, radius) {
+        return this.sub(p).len2() < (radius * radius);
+    }
+
     Point.prototype.rawDist = function(p) {
         return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
     }
@@ -141,6 +145,37 @@ namespace.module('bot.vectorutils', function (exports, require) {
 
         var closest = Math.sin(Math.acos(sd / (st.len() * se.len()))) * st.len();
         if (closest <= r) {
+            return true;
+        }
+        return false;
+    }
+
+    function coneHit(start, diff, angle, tpos, trad) {
+        var arcDist = diff.len();
+        var tDist = tpos.sub(start);
+        if (arcDist < tDist - trad || arcDist > tDist + trad) {
+            // Too close or too far away
+            return false;
+        }
+
+        var leftVector = diff.rotate(-angle / 2);
+        var leftPoint = start.add(leftVector);
+        if (leftPoint.within(tpos, trad)) {
+            return true;
+        }
+
+        var rightVector = diff.rotate(angle / 2);
+        var rightPoint = start.add(rightVector);
+        if (rightPoint.within(tpos, trad)) {
+            return true;
+        }
+
+        var tv = tpos.sub(start);
+        var angleDiff = degrees(tv.angle() - diff.angle());
+        if (angleDiff > 180) {
+            angleDiff = 360 - angleDiff;
+        }
+        if (angleDiff < angle / 2) {
             return true;
         }
         return false;

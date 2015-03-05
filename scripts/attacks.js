@@ -81,6 +81,7 @@ namespace.module('bot.attacks', function (exports, require) {
                         log.info('Added new child projs to new attacks, len: %d', this.newAttacks.length);
                         //gl.addProjectileAttack(spec, this.attacker, this.pos, this.velocity, this.targetTeam, true);
                     } else if (spec.type === 'cone') {
+                        //this.newAttacks.push.apply(this.newAttacks, 
                         // new cone from attack
                     } else if (spec.type === 'circle') {
                         // new circle from attack
@@ -99,9 +100,12 @@ namespace.module('bot.attacks', function (exports, require) {
             if (!enemy.isAlive()) {
                 this.handle('kill', enemy);
             }
+        },
+
+        remove: function() {
             this.handle('remove');
             this.done = true;
-        },
+        }
     });
 
     function newProjsFromBody(spec, attacker, target) {
@@ -150,7 +154,7 @@ namespace.module('bot.attacks', function (exports, require) {
             this.attacker = attacker;
             this.targetTeam = targetTeam;
             this.start = start.clone();
-            this.pos = start.clone();
+            this.pos = start.add(vector.mult(0.00000001));
             this.fireTime = fireTime;
 
             if (immuneTarget) {
@@ -180,11 +184,69 @@ namespace.module('bot.attacks', function (exports, require) {
                 if (vu.hit(this.pos, nextPos, enemies[i].pos, enemies[i].spec.width, this.radius)) {
                     log.debug('projectile hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
                     this.hit(enemies[i]);
+                    this.remove();
                     break;
                 }
             }
             log.debug('proj moving from %s to %s', this.pos, nextPos);
             this.pos = nextPos;
+
+            if (this.pos.sub(this.start).len() > this.decayRange) {
+                this.remove();
+            }
+        },
+    });
+
+    var ConeAttack = Attack.extend({
+        initialize: function(spec, attacker, targetTeam, start, vector, fireTime, immuneTarget) {
+            this.newAttacks = [];
+            _.extend(this, spec);
+
+            this.attacker = attacker;
+            this.targetTeam = targetTeam;
+            this.start = start.clone();
+            this.pos = start.clone();
+            this.startTime = gl.time;
+            this.fireTime = fireTime;
+
+            this.immuneTargetIds = {};
+            if (immuneTarget) {
+                this.immuneTargetIds[immuneTarget.id] = true;
+            }
+
+            // this.radius = spec.radius ? spec.radius : Math.pow(2, 16);
+            this.vector = vector.unitVector().mult(spec.rate);
+            this.z = 0;
+            this.color = spec.color ? spec.color : '#fff';
+
+            log.debug('projectile created, pos: %s, velocity: %s', this.pos, this.velocity);
+        },
+
+        tick: function(enemies) {
+            if (gl.time <= this.fireTime) {
+                return;
+            }
+            var elapsedTime = gl.time - this.fireTime;
+            var diff = this.velocity.mult(elapsedTime);
+            var nextPos = this.start.add(diff);
+
+            for (var i = 0; i < enemies.length; i++) {
+                if (this.immuneTargetIds[enemies[i].id]) {
+                    log.debug('Intentionally avoiding immune target');
+                    continue;
+                }
+                if (vu.coneHit(this.start, diff, spec.angle, enemies[i].pos, enemies[i].spec.width)) {
+                    log.warning('Cone hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
+                    this.hit(enemies[i]);
+                    break;
+                }
+            }
+            log.debug('proj moving from %s to %s', this.pos, nextPos);
+            this.pos = nextPos;
+
+            if (this.pos.sub(this.start).len2() > this.decayRange * this.decayRange) {
+                this.remove();
+            }
         },
     });
 
@@ -219,6 +281,7 @@ namespace.module('bot.attacks', function (exports, require) {
             } else {
                 this.pos = this.target.pos;
                 this.hit(this.target);
+                this.remove();
             }
         },
     });

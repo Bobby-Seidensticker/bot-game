@@ -130,6 +130,8 @@ namespace.module('bot.views', function (exports, require) {
                     if(key == "radius" || key == "rate" || key == "angle"){ //todo only if not aoe
                         return;
                     }
+
+                    
                     
                     statname = namespace.bot.itemref.ref.statnames[key];
                     arr.push([statname, skill.spec[key].toFixed(2)]);

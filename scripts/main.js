@@ -186,7 +186,7 @@ namespace.module('bot.main', function (exports, require) {
                 this.gameModel.inv.addDrops([                
                     dropsLib.dropFactory('item', ['weapon', 'spikey mace']),                
                     dropsLib.dropFactory('skill', 'lethal strike'),
-                    dropsLib.dropFactory('skill', 'molten strike'),
+                    dropsLib.dropFactory('skill', 'flaming debris'),
                     dropsLib.dropFactory('skill', 'ground smash'),
                 ]);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "spikey mace"});
@@ -195,7 +195,7 @@ namespace.module('bot.main', function (exports, require) {
                 this.gameModel.hero.skillchain.equip(item, 0);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "lethal strike"});
                 this.gameModel.hero.skillchain.equip(item, 1);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "molten strike"});
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "flaming debris"});
                 this.gameModel.hero.skillchain.equip(item, 2);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "basic melee"});
                 this.gameModel.hero.skillchain.equip(item, 4);

@@ -640,7 +640,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },
-            "molten strike": {
+            "flaming debris": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
                 "specs": [{ type: 'melee', quals: [],
@@ -1593,12 +1593,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "skill",
             },
-            "longer range": {
+            "telescoping handle": {
                 "mods":[
                     {"def": "range more 5 perLevel", "type": "dmg"},
                     {"def": "range more 20", "type": "dmg"},                    
                 ],
-                "slot": "skill",
+                "slot": "weapon",
             },
             "shorter range": {
                 "mods":[
@@ -1613,13 +1613,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "chest",
             },
-            "happy hands": {
+            "bloodfingers": {
                 "mods":[
                     {"def": "maxHp added 10 perLevel", "type": "def"},
                 ],
                 "slot":"hands",
             },
-            "hearty heart": {
+            "bloodbath": {
                 "mods": [
                     {"def": "maxHp more 3 perLevel", "type": "def"},
                 ],
@@ -1731,7 +1731,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["sharpened", 1],
                     ["breadhat", 1],
                     ["stinging", 1],
-                    ["hearty heart", 1]
+                    ["bloodbath", 1]
                 ],
             },
             "fire skeleton": {
@@ -1751,9 +1751,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["proto-skeleton", 0],
                     ["head of vigor", 1],
-                    ["happy hands", 1],
+                    ["bloodfingers", 1],
                     ["mana on hit", 1],
-                    ["longer range", 1]
+                    ["telescoping handle", 1]
                 ]
             },
             "skeleton mage" : {
@@ -1989,7 +1989,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["keen wit", 3],
                     ["brain juice", 3],
                     ["mana on hit", 3],
-                    ["longer range", 3]
+                    ["telescoping handle", 3]
                 ],
             },
             

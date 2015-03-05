@@ -964,11 +964,13 @@ namespace.module('bot.itemref', function (exports, require) {
             "nova": {
                 "prototype": ["basic spell"],
                 "class": "spell",
-                "types": ["proj", "aoecircle" , "spell"],
+                "types": ["proj", "circle" , "spell"],
+                "specs": [{ type: 'circle', color: 'rgba(85, 26, 139, 0.6)', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
-                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    //{def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 2, type: 'dmg'},
+                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'lightDmg added 3 perLevel', type: 'dmg'},
                 ]
             },

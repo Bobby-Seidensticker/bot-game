@@ -224,11 +224,12 @@ namespace.module('bot.main', function (exports, require) {
                     dropsLib.dropFactory('skill', 'lightning ball'),
                     dropsLib.dropFactory('skill', 'ice ball'),
                     dropsLib.dropFactory('skill', 'ice blast'),
+                    dropsLib.dropFactory('skill', 'nova'),
                 ]);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "star wand"});
                 this.gameModel.hero.equipped.equip(item, "weapon");
                 //item = _.find(this.gameModel.inv.models, function(item) {return item.name == "fire ball"});
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "ice blast"});
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "nova"});
                 this.gameModel.hero.skillchain.equip(item, 0);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "poison ball"});
                 this.gameModel.hero.skillchain.equip(item, 1);

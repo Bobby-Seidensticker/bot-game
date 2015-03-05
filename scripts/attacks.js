@@ -48,6 +48,7 @@ namespace.module('bot.attacks', function (exports, require) {
                     this.attacks.push(newConeFromBody(spec, attacker, target));
                     // new cone from body
                 } else if (spec.type === 'circle') {
+                    this.attacks.push(newCircleFromBody(spec, attacker, target));
                     // new circle from body
                 }
             }, this);
@@ -78,7 +79,7 @@ namespace.module('bot.attacks', function (exports, require) {
                     log.warning('creating new cone');
                     this.newAttacks.push(newChildCone(spec, this, enemy));
                 } else if (spec.type === 'circle') {
-                    // circle
+                    this.newAttacks.push(newChildCircle(spec, this, enemy));
                 }
             }, this);
         },
@@ -256,8 +257,70 @@ namespace.module('bot.attacks', function (exports, require) {
         },
     });
 
-    var AOEAttack = Attack.extend({
-        advance: function(enemies, room) {},
+
+    function newCircleFromBody(spec, attacker, target) {
+        var vector = target.pos.sub(attacker.pos);
+        var fireTime = gl.time + spec.speed / 2;
+        return new CircleAttack(spec, attacker, target.spec.team, attacker.pos, vector, fireTime);
+    }
+
+    function newChildCircle(spec, atk, enemy) {
+        return new CircleAttack(spec, atk.attacker, atk.targetTeam, enemy.pos, atk.vector, gl.time);
+    }
+
+    var CircleAttack = Attack.extend({
+        initialize: function(spec, attacker, targetTeam, start, vector, fireTime, immuneTarget) {
+            this.newAttacks = [];
+            _.extend(this, spec);
+
+            this.attacker = attacker;
+            this.targetTeam = targetTeam;
+            this.start = start.clone();
+            this.pos = start.clone();
+            this.startTime = gl.time;
+            this.fireTime = fireTime;
+
+            this.immuneTargetIds = {};
+            if (immuneTarget !== undefined) {
+                this.immuneTargetIds[immuneTarget.id] = true;
+            }
+
+            this.vector = vector.unitVector().mult(this.aoeSpeed);
+            this.z = 0;
+            if (!this.color) { this.color = '#fff'; }
+
+            log.warning('Circle created, pos: %s, vector: %s', this.pos, this.vector);
+        },
+
+        tick: function(enemies) {
+            if (gl.time <= this.fireTime) {
+                return;
+            }
+            var elapsedTime = gl.time - this.fireTime;
+            var diff = this.vector.mult(elapsedTime);
+            var nextPos = this.start.add(diff);
+            log.debug('circle moving from %s to %s', this.pos, nextPos);
+            this.pos = nextPos;
+
+            var radius = this.pos.sub(this.start).len();
+
+            for (var i = 0; i < enemies.length; i++) {
+                if (this.immuneTargetIds[enemies[i].id]) {
+                    log.debug('Intentionally avoiding immune target');
+                    continue;
+                }
+                if (enemies[i].pos.sub(this.start).len() < radius + enemies[i].spec.width) {
+                    //if (vu.circleHit(this.start, diff, this.angle, enemies[i].pos, enemies[i].spec.width)) {
+                    this.hit(enemies[i]);
+                    this.immuneTargetIds[enemies[i].id] = true;
+                    break;
+                }
+            }
+
+            if (this.pos.sub(this.start).len2() > this.aoeRadius * this.aoeRadius) {
+                this.remove();
+            }
+        },
     });
 
     var MeleeAttack = Attack.extend({

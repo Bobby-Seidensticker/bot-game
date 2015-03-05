@@ -330,16 +330,28 @@ namespace.module('bot.vis', function (exports, require) {
     }
 
     AttackView.prototype.updateZ = function() {
-        this.z = (this.atk.pos.x + this.atk.pos.y) / 2;
+        if (this.atk.type === 'cone') {
+            this.z = 0;
+        } else {
+            this.z = (this.atk.pos.x + this.atk.pos.y) / 2;
+        }
     }
 
     AttackView.prototype.draw = function(ctx, tempCanvas) {
         if (this.atk.type === 'proj' && gl.time < this.atk.fireTime) {
             return;
         }
+        if (this.atk.type === 'cone' && gl.time < this.atk.fireTime) {
+            return;
+        }
+
         var pos = transpose(this.atk.pos)
         pos.y -= this.atk.z * vvs.ratio;
-        circle(ctx, pos, this.atk.color, this.atk.radius * vvs.ratio, true);
+        if (this.atk.type === 'cone') {
+            flatArc(ctx, this.atk); //atk.start, atk. pos, this.atk.color, this.atk.radius * vvs.ratio, true);
+        } else {
+            circle(ctx, pos, this.atk.color, this.atk.radius * vvs.ratio, true);
+        }
     }
 
     // Implements drawable interface
@@ -512,6 +524,46 @@ namespace.module('bot.vis', function (exports, require) {
         ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
         //ctx.closePath(); // not used correctly, see comments (use to close off open path)
         ctx.stroke();
+    }
+
+    function flatArc(ctx, atk) {
+        log.warning('flatArc');
+
+        var outerRadius = atk.pos.sub(atk.start).len();
+        var innerRadius = outerRadius - atk.range / 2;
+        if (innerRadius < 0) {
+            innerRadius = 0;
+        }
+        outerRadius *= vvs.ratio;
+        innerRadius *= vvs.ratio;
+
+        var pos = transpose(atk.start);
+
+        var a1 = atk.vector.rotate(-atk.angle / 2).angle();
+        var a2 = atk.vector.rotate(atk.angle / 2).angle();
+
+        var properAngle = function(a) {
+            if (a < 0) { a += Math.PI * 2; }
+            return a;
+        }
+
+        a1 = properAngle(a1);
+        a2 = properAngle(a2);
+
+
+        ctx.save();
+        ctx.beginPath();
+
+        var a = 1, b = 0.5, c = -1, d = 0.5;
+        ctx.setTransform(a, b, c, d, pos.x, pos.y);
+
+        ctx.fillStyle = atk.color;
+
+        ctx.arc(0, 0, outerRadius, a1, a2, false);
+        ctx.arc(0, 0, innerRadius, a2, a1, true);
+        ctx.fill();
+
+        ctx.restore();
     }
 
     exports.extend({

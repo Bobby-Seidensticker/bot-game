@@ -45,6 +45,7 @@ namespace.module('bot.attacks', function (exports, require) {
                 } else if (spec.type === 'proj') {
                     this.attacks.push.apply(this.attacks, newProjsFromBody(spec, attacker, target));
                 } else if (spec.type === 'cone') {
+                    this.attacks.push(newConeFromBody(spec, attacker, target));
                     // new cone from body
                 } else if (spec.type === 'circle') {
                     // new circle from body
@@ -197,6 +198,12 @@ namespace.module('bot.attacks', function (exports, require) {
         },
     });
 
+    function newConeFromBody(spec, attacker, target) {
+        var vector = target.pos.sub(attacker.pos);
+        var fireTime = gl.time + spec.speed / 2;
+        return new ConeAttack(spec, attacker, target.spec.team, attacker.pos, vector, fireTime);
+    }
+
     var ConeAttack = Attack.extend({
         initialize: function(spec, attacker, targetTeam, start, vector, fireTime, immuneTarget) {
             this.newAttacks = [];
@@ -210,16 +217,16 @@ namespace.module('bot.attacks', function (exports, require) {
             this.fireTime = fireTime;
 
             this.immuneTargetIds = {};
-            if (immuneTarget) {
+            if (immuneTarget !== undefined) {
                 this.immuneTargetIds[immuneTarget.id] = true;
             }
 
             // this.radius = spec.radius ? spec.radius : Math.pow(2, 16);
-            this.vector = vector.unitVector().mult(spec.rate);
+            this.vector = vector.unitVector().mult(this.rate);
             this.z = 0;
-            this.color = spec.color ? spec.color : '#fff';
+            this.color = this.color ? this.color : '#fff';
 
-            log.debug('projectile created, pos: %s, velocity: %s', this.pos, this.velocity);
+            log.warning('Cone created, pos: %s, vector: %s', this.pos, this.vector);
         },
 
         tick: function(enemies) {
@@ -227,22 +234,22 @@ namespace.module('bot.attacks', function (exports, require) {
                 return;
             }
             var elapsedTime = gl.time - this.fireTime;
-            var diff = this.velocity.mult(elapsedTime);
+            var diff = this.vector.mult(elapsedTime);
             var nextPos = this.start.add(diff);
+            log.debug('cone moving from %s to %s', this.pos, nextPos);
+            this.pos = nextPos;
 
             for (var i = 0; i < enemies.length; i++) {
                 if (this.immuneTargetIds[enemies[i].id]) {
                     log.debug('Intentionally avoiding immune target');
                     continue;
                 }
-                if (vu.coneHit(this.start, diff, spec.angle, enemies[i].pos, enemies[i].spec.width)) {
-                    log.warning('Cone hit!, traveled %s to %s, enemy at %s', this.pos, nextPos, enemies[i].pos);
+                if (vu.coneHit(this.start, diff, this.angle, enemies[i].pos, enemies[i].spec.width)) {
                     this.hit(enemies[i]);
+                    this.immuneTargetIds[enemies[i].id] = true;
                     break;
                 }
             }
-            log.debug('proj moving from %s to %s', this.pos, nextPos);
-            this.pos = nextPos;
 
             if (this.pos.sub(this.start).len2() > this.decayRange * this.decayRange) {
                 this.remove();

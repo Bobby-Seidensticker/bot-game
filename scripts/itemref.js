@@ -892,11 +892,11 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["cone", "cold", "spell"],
-                "specs": [{ type: 'cone', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'cone', color: '#7FFFD4', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE / 2, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
                 ]

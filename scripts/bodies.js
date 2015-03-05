@@ -204,7 +204,7 @@ namespace.module('bot.bodies', function(exports, require) {
 
             gl.MessageEvents.trigger(
                 'message',
-                newDamageMessage(attack, Math.ceil(totalDmg), 'rgba(230, 0, 0, 1)')
+                newDamageMessage(attack, this.pos, Math.ceil(totalDmg), 'rgba(230, 0, 0, 1)')
             );
             return totalDmg;
         },
@@ -337,8 +337,8 @@ namespace.module('bot.bodies', function(exports, require) {
         };
     }
 
-    function newDamageMessage(attack, text, color) {
-        var dmg = new Damage(attack.start, attack.pos, attack.hitHeight);  // target.spec.height);
+    function newDamageMessage(attack, pos, text, color) {
+        var dmg = new Damage(attack.start, pos, attack.hitHeight);  // target.spec.height);
         return {
             type: 'dmg',
             text: text,

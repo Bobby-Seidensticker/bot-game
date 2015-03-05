@@ -76,17 +76,13 @@ namespace.module('bot.vectorutils', function (exports, require) {
         return Math.atan2(this.y, this.x);
     }
 
-    Point.prototype.velocity = function(end, rate) {
-        return end.sub(this).unitVector().mult(rate);
-    }
-
-    Point.prototype.closer = function(dest, rate, stop) {
+    Point.prototype.closer = function(dest, speed, stop) {
         var diff = dest.sub(this);
         var distance = this.dist(dest);
-        if (distance - rate < stop) {
-            rate = distance - stop;
+        if (distance - speed < stop) {
+            speed = distance - stop;
         }
-        var ratio = 1 - (distance - rate) / distance;
+        var ratio = 1 - (distance - speed) / distance;
         diff.dmult(ratio);
         return this.add(diff);
     }
@@ -223,7 +219,7 @@ namespace.module('bot.utils', function (exports, require) {
             log.error('addMod called with undefined def');
         }
         var s = def.split(' ');
-        var amt = parseInt(s[2], 10);
+        var amt = parseFloat(s[2]);
         if (s[1] === 'added') {
             dict[s[0]]['added'] += amt;
         } else if (s[1] === 'more') {
@@ -243,7 +239,7 @@ namespace.module('bot.utils', function (exports, require) {
     function applyPerLevel(mod, level) {
         var s = mod.def.split(' ');
         if (s.length === 4 && s[3] === 'perLevel') {
-            s[2] = parseInt(s[2], 10) * level;
+            s[2] = parseFloat(s[2]) * level;
             s.pop();
             return {def: s.join(' '), type: mod.type};
         } else {
@@ -329,10 +325,9 @@ namespace.module('bot.utils', function (exports, require) {
                     var fspl = fin[i].split(' ');
                     if(fspl.length == 3 && fspl[0] == spl[0] && fspl[1] == spl[1]) {
                         if(fspl[1] == "added") {
-                            fin[i] = fspl[0] + " " + fspl[1] + " " + (parseInt(fspl[2]) + parseInt(spl[2]));
+                            fin[i] = fspl[0] + " " + fspl[1] + " " + (parseFloat(fspl[2]) + parseFloat(spl[2]));
                         } else if (fspl[1] == "more") {
-                            var prod = parseFloat((((1 +(parseInt(fspl[2])*0.01)) * (1 +(parseInt(spl[2])*0.01)) - 1) * 100).toFixed(2));
-                            //console.log(mod.def, spl[2], fspl[2], prod);
+                            var prod = parseFloat((((1 +(parseFloat(fspl[2])*0.01)) * (1 +(parseFloat(spl[2])*0.01)) - 1) * 100).toFixed(2));
                             fin[i] = fspl[0] + " " + fspl[1] + " " + (prod);
                         }
                         found = true;

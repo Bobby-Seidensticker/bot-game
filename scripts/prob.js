@@ -121,7 +121,7 @@ namespace.module('bot.prob', function (exports, require) {
                 base = base[0] + base[0] + base[1] + base[1] + base[2] + base[2];
             }
             if (base.length !== 6) {
-                throw('fuck, randcolor base != 6');
+                throw('randcolor base != 6');
             }
             base = [parseInt(base.slice(0, 2), 16), parseInt(base.slice(2,4), 16), parseInt(base.slice(4,6), 16)];
         }

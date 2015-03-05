@@ -187,13 +187,16 @@ namespace.module('bot.main', function (exports, require) {
                     dropsLib.dropFactory('item', ['weapon', 'spikey mace']),                
                     dropsLib.dropFactory('skill', 'lethal strike'),
                     dropsLib.dropFactory('skill', 'molten strike'),
+                    dropsLib.dropFactory('skill', 'ground smash'),
                 ]);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "spikey mace"});
                 this.gameModel.hero.equipped.equip(item, "weapon");
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "lethal strike"});
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "ground smash"});
                 this.gameModel.hero.skillchain.equip(item, 0);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "molten strike"});
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "lethal strike"});
                 this.gameModel.hero.skillchain.equip(item, 1);
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "molten strike"});
+                this.gameModel.hero.skillchain.equip(item, 2);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "basic melee"});
                 this.gameModel.hero.skillchain.equip(item, 4);
             } else if (key === XKEY) {
@@ -220,10 +223,12 @@ namespace.module('bot.main', function (exports, require) {
                     dropsLib.dropFactory('skill', 'poison ball'),
                     dropsLib.dropFactory('skill', 'lightning ball'),
                     dropsLib.dropFactory('skill', 'ice ball'),
+                    dropsLib.dropFactory('skill', 'ice blast'),
                 ]);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "star wand"});
                 this.gameModel.hero.equipped.equip(item, "weapon");
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "fire ball"});
+                //item = _.find(this.gameModel.inv.models, function(item) {return item.name == "fire ball"});
+                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "ice blast"});
                 this.gameModel.hero.skillchain.equip(item, 0);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "poison ball"});
                 this.gameModel.hero.skillchain.equip(item, 1);

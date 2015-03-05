@@ -575,7 +575,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', color: '#a52a2a', rate: 1000, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -586,7 +586,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "spell",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', color: '#a52a2a', rate: 1000, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -654,12 +654,13 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
+                    {def: 'projRange added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},      
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'},
-                    {def: 'rate more -70', type: 'dmg'},
+                    {def: 'projSpeed more -80', type: 'dmg'},
                 ]
             },
             "exploding strike": {
@@ -673,6 +674,25 @@ namespace.module('bot.itemref', function (exports, require) {
                 "onHit": ["AOECircle -20 1000"],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
+                    {def: 'cooldownTime added 600', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
+                    {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
+                ]
+            },
+            "ground smash": {
+                "prototype": ["basic melee"],
+                "types": ["melee", "fire"],
+                "specs": [{ type: 'melee', quals: [],
+                            onHit: [{ type: 'cone', color: 'rgba(255, 120, 0, 0.6)', quals: ['dmg more -20'], onHit: [], onKill: [], onRemove: []}],
+                            onKill: [],
+                            onRemove: []
+                          }],
+                "baseMods": [
+                    //{def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
@@ -806,7 +826,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'physDmg more 10 perLevel', type: 'dmg'},
-                    {def: 'rate more 200', type: 'dmg'}
+                    {def: 'projSpeed more 200', type: 'dmg'}
                 ]
             },
             "incinerate": {                
@@ -892,12 +912,14 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["cone", "cold", "spell"],
-                "specs": [{ type: 'cone', color: '#7FFFD4', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'cone', color: 'rgba(0, 255, 255, 0.6)', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
-                    {def: 'manaCost added 7', type: 'dmg'},
+                    {def: 'manaCost added 2', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 2, type: 'dmg'},
+                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'manaCost added 0.4 perLevel', type: 'dmg'},
+                    {def: 'coldDmg added 6', type: 'dmg'},
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
@@ -986,11 +1008,13 @@ namespace.module('bot.itemref', function (exports, require) {
             "flame cone": {
                 "prototype": ["basic"],
                 "class": "melee",
-                "types": ["aoecone" , "melee"],
+                "types": ["cone" , "melee"],
+                "specs": [{ type: 'cone', color: 'rgba(255, 120, 0, 0.6)', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
+                    {def: 'aoeRadius added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'fireDmg added 3 perLevel', type: 'dmg'},
                 ]
             },

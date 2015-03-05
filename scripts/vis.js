@@ -350,7 +350,7 @@ namespace.module('bot.vis', function (exports, require) {
         if (this.atk.type === 'cone') {
             flatArc(ctx, this.atk); //atk.start, atk. pos, this.atk.color, this.atk.radius * vvs.ratio, true);
         } else {
-            circle(ctx, pos, this.atk.color, this.atk.radius * vvs.ratio, true);
+            circle(ctx, pos, this.atk.color, this.atk.projRadius * vvs.ratio, true);
         }
     }
 
@@ -530,7 +530,7 @@ namespace.module('bot.vis', function (exports, require) {
         log.warning('flatArc');
 
         var outerRadius = atk.pos.sub(atk.start).len();
-        var innerRadius = outerRadius - atk.range / 2;
+        var innerRadius = outerRadius - atk.aoeRadius / 2;
         if (innerRadius < 0) {
             innerRadius = 0;
         }

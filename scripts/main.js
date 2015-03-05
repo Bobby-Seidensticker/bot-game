@@ -28,7 +28,7 @@ namespace.module('bot.main', function (exports, require) {
             }
         });*/
         
-        localStorage.clear();
+        //localStorage.clear();
 
         log.info('onReady');
 

@@ -96,7 +96,7 @@ namespace.module('bot.views', function (exports, require) {
     }
 
     var EntityView = Backbone.View.extend({
-        tagName: 'table',
+        tagName: 'div',
 
         template: _.template($('#kv-table-template').html()),
 
@@ -108,16 +108,13 @@ namespace.module('bot.views', function (exports, require) {
         render: function() {
             var skill;
             var data = {};
+            var skilldata = {};
             var body = this.model;
             var spec = body.spec;
 
             data.body = [
                 ['name', spec.name],
                 ['level', spec.level],
-                ['hp', twoRatio(body.hp, spec.maxHp)],
-                ['mana', twoRatio(body.mana, spec.maxMana)],
-                ['xp', twoRatio(spec.xp, spec.nextLevelXp)],
-                ['pos/10k', '[' + Math.round(body.x / 10000) + ', ' + Math.round(body.y / 10000) + ']']
             ];
 
             for (var i = 0; i < this.model.skills.length; i++) {
@@ -128,7 +125,7 @@ namespace.module('bot.views', function (exports, require) {
                 });
                 var coolIn = Math.max(0, skill.coolAt - gl.time);
                 arr.push(['cool in', coolIn]);
-                data[skill.spec.name] = arr;
+                skilldata[skill.spec.name] = arr;
             }
 
             data.spec = [];
@@ -139,7 +136,7 @@ namespace.module('bot.views', function (exports, require) {
                   data.spec.push([key, this.model.spec[key].toFixed(2)]);
             }
 
-            this.$el.html(this.template({data: data}));
+            this.$el.html(this.template({data: data, skilldata: skilldata}));
             return this;
         },
     });
@@ -194,24 +191,13 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
             var diffs = this.diffs();
-            var sameEntities = _.every(diffs, function(value, key) { return this.last[key] === value; }, this);
 
-            if (sameEntities) {
-                this.heroView.render();
-                _.invoke(this.monsterViews, 'render');
-            } else {
-                var frag = document.createDocumentFragment();
-                frag.appendChild(this.heroView.render().el);
+            var frag = document.createDocumentFragment();
+            frag.appendChild(this.heroView.render().el);
 
-                _.invoke(this.monsterViews, 'remove');
-                this.monsterViews = [];
-                var livingMons = this.zone.liveMons();
-                for (var i = 0; i < livingMons.length; i++) {
-                    this.monsterViews.push(new EntityView({model: livingMons[i]}));
-                    frag.appendChild(this.monsterViews[i].render().el);
-                }
-                this.$holder.html(frag);
-            }
+                
+            this.$holder.html(frag);
+
             return this;
         },
     }).extend(MenuTabMixin);

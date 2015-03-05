@@ -106,25 +106,26 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         render: function() {
-            var skill;
+            var skill, statname;
             var data = {};
             var skilldata = {};
             var body = this.model;
             var spec = body.spec;
 
             data.body = [
-                ['name', spec.name],
-                ['level', spec.level],
+                ['Name', spec.name],
+                ['Level', spec.level],
             ];
 
             for (var i = 0; i < this.model.skills.length; i++) {
                 var arr = [];
                 skill = this.model.skills[i];
                 _.each(entity.dmgKeys, function(key) {
-                    arr.push([key, skill.spec[key].toFixed(2)]);
+                    statname = namespace.bot.itemref.ref.statnames[key];
+                    arr.push([statname, skill.spec[key].toFixed(2)]);
                 });
                 var coolIn = Math.max(0, skill.coolAt - gl.time);
-                arr.push(['cool in', coolIn]);
+                arr.push(['Cool In', coolIn]);
                 skilldata[skill.spec.name] = arr;
             }
 
@@ -133,7 +134,8 @@ namespace.module('bot.views', function (exports, require) {
             var key;
             for (var i = 0; i < specKeys.length; i++) {
                 key = specKeys[i];
-                  data.spec.push([key, this.model.spec[key].toFixed(2)]);
+                statname = namespace.bot.itemref.ref.statnames[key];
+                data.spec.push([statname, this.model.spec[key].toFixed(2)]);
             }
 
             this.$el.html(this.template({data: data, skilldata: skilldata}));

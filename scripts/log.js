@@ -1,4 +1,14 @@
 namespace.module('bot.log', function (exports, require) {
+    
+    var uid = localStorage.getItem('uid');
+    
+    if(uid === null) {
+        uid = Math.floor(Math.random() * 100000000);
+        localStorage.setItem('uid', uid);
+        localStorage.getItem('uid');
+    } else {
+        warning("UID found in localStorage, resuming session");
+    }
 
     gl.FB = new Firebase("https://fiery-heat-4226.firebaseio.com");
 
@@ -6,12 +16,12 @@ namespace.module('bot.log', function (exports, require) {
         if(error) {
             console.log("anon login failed", error);
             gl.FBuid = "failedauth";
-            gl.FBL = gl.FB.child(gl.FBuid);
+            gl.FBL = gl.FB.child(uid);
             gl.FBL.push("starting with failed auth");
         } else {
             //info('Good anon auth: %s', authData.uid);
             gl.FBuid = authData.uid.slice(11);
-            gl.FBL = gl.FB.child(gl.FBuid);
+            gl.FBL = gl.FB.child(uid);
             gl.FBUI = gl.FBL.child("UI");
             gl.FBL.push("starting");
         }

@@ -6,6 +6,8 @@ namespace.module('bot.views', function (exports, require) {
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
 
+    var FOOTER_HEIGHT = 113;
+
     // highlight open tab
     // show unequip X on hover
 
@@ -53,7 +55,7 @@ namespace.module('bot.views', function (exports, require) {
 
             return new Point(
                 (window.innerWidth - left - right) / 2 + left,
-                (window.innerHeight - 155) / 2
+                (window.innerHeight - FOOTER_HEIGHT) / 2
             );
         },
     });
@@ -183,7 +185,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         resize: function() {
-            var size = new Point(window.innerWidth, window.innerHeight - 155);
+            var size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
             this.$el.css({
                 height: size.y
             });
@@ -368,7 +370,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         resize: function() {
-            var size = new Point(window.innerWidth, window.innerHeight - 155);
+            var size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
             this.$el.css({
                 left: size.x - 405,
                 height: size.y
@@ -514,7 +516,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         resize: function() {
-            var size = new Point(window.innerWidth, window.innerHeight - 155);
+            var size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
             this.$el.css({
                 left: size.x - 405,
                 height: size.y
@@ -864,7 +866,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         resize: function() {
-            var size = new Point(window.innerWidth, window.innerHeight - 155);
+            var size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
             this.$el.css({
                 width: size.x,
                 top: size.y
@@ -925,10 +927,10 @@ namespace.module('bot.views', function (exports, require) {
 
         resize: function() {
             this.$el.css({
-                height: window.innerHeight - 155
+                height: window.innerHeight - FOOTER_HEIGHT
             });
             this.$holder.css({
-                height: window.innerHeight - 155
+                height: window.innerHeight - FOOTER_HEIGHT
             });
         },
 

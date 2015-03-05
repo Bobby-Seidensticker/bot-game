@@ -9,6 +9,7 @@ namespace.module('bot.vis', function (exports, require) {
       OnResize adjust namespace global RATIO, REAL_SIZE so the max dimension is the min size of the screen
     */
 
+    var FOOTER_HEIGHT = 113;
 
     var log = namespace.bot.log;
     var vvs = {};  // vis vars
@@ -49,7 +50,7 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         updateConstants: function() {
-            var ss = new Point(window.innerWidth, window.innerHeight - 155);
+            var ss = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
             if (ss.y < 1) {
                 ss.y = 1;
             }
@@ -154,7 +155,7 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         resize: function() {
-            this.size = new Point(window.innerWidth, window.innerHeight - 155);
+            this.size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
             this.$el.attr({
                 width: this.size.x,
                 height: this.size.y
@@ -234,7 +235,7 @@ namespace.module('bot.vis', function (exports, require) {
         },
 
         resize: function() {
-            this.size = new Point(window.innerWidth, window.innerHeight - 155);
+            this.size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
             this.$el.attr({
                 width: this.size.x,
                 height: this.size.y

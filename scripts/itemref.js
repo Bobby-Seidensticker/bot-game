@@ -968,7 +968,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj", "circle" , "spell"],
                 "specs": [{ type: 'circle', color: 'rgba(85, 26, 139, 0.6)', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
-                    //{def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE / 2, type: 'dmg'},
                     {def: 'aoeRadius added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -1361,9 +1361,9 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "simple minded": {
                 "mods": [
-                    {"def": "spellDmg added -30", "type": "dmg"},
+                    {"def": "spellDmg more -30", "type": "dmg"},
                     {"def": "strength more 2 perLevel", "type": "def"},
-                    {"def": "meleeDmg added 5 perLevel", "type": "dmg"},
+                    {"def": "meleeDmg more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "head",
             },

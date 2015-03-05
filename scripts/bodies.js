@@ -301,8 +301,8 @@ namespace.module('bot.bodies', function(exports, require) {
                 return;
             }
             if(this.potionCoolAt <= gl.time) {
-                this.potionCoolAt = gl.time + 5000; //5 second cooldown
-                var addAmount = this.spec.level * 20; 
+                this.potionCoolAt = gl.time + 10000; //10 second cooldown
+                var addAmount = 10 + this.spec.level * 10; 
                 this.hp = Math.min(this.spec.maxHp, this.hp + addAmount);
                 gl.MessageEvents.trigger('message', newZoneMessage('potion worked!', 'potion', this.pos, 'rgba(230, 230, 230, 0.7)', 1000));
             } else {

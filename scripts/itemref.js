@@ -1058,6 +1058,11 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "maxHp more 1000", "type": "def"}
                 ],
             },
+            "proto-bat": {
+                "mods": [
+                    {"def": "height more -80", "type": "vis"},
+                ]
+            },
             "proto-rofl": {
                 "mods": [
                     {"def": "height more -50", "type": "vis"},                    
@@ -1797,6 +1802,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "cardboard sword"], ["armor", "batsuit"]],
                 "skills": ["quick hit", "basic melee"],
                 "sourceCards": [
+                    ["proto-bat", 1],
                     ["nimble", 1],
                     ["bloodsucker", 1],
                     ["life on hit", 1],

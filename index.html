@@ -116,12 +116,21 @@
   </script>
 
   <script id="kv-table-template" type="text/template">
+    <table>
     <% _.each(data, function(value, key) { %>
-        <tr><th><%= key %></th></tr>
+        <tr><th><%= utils.firstCap(key) %></th></tr>
         <% _.each(value, function(val) { %>
             <tr><td><%= val[0] %></td><td><%= val[1] %></td></tr>
         <% }); %>
     <% }); %>
+    </table><table>    
+    <% _.each(skilldata, function(value, key) { %>
+        <tr><th><%= utils.firstCap(key) %></th></tr>
+        <% _.each(value, function(val) { %>
+            <tr><td><%= val[0] %></td><td><%= val[1] %></td></tr>
+        <% }); %>
+    <% }); %>        
+    </table>
   </script>
 
   <script id="hero-footer-template" type="text/template">

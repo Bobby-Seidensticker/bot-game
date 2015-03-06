@@ -18,6 +18,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.equipped = false;
             this.maxCards = 5;
             this.ensureCardArray();
+            gl.ItemEvents.trigger('newchange');
         },
 
         applyXp: function(xp) {
@@ -291,6 +292,7 @@ namespace.module('bot.inv', function (exports, require) {
     var Skillchain = gl.Model.extend({
         initialize: function() {
             this.skills = [undefined, undefined, undefined, undefined, undefined];
+            this.name = "Skillchain";
             // this.on('add remove', this.countChange, this);
         },
 
@@ -372,6 +374,9 @@ namespace.module('bot.inv', function (exports, require) {
             // this line and event object is used exclusively for equipment card changes to propogate through here
             // and up to the hero so the egm doesn't have to listen and stop listening every equip
             this.listenTo(gl.EquipEvents, 'change', this.propChange);
+            this.name = "Equipped";
+            this.newCards = {'weapon': false, 'head': false, 'hands': false, 'chest': false, 'legs': false};
+            this.listenTo(gl.ItemEvents, 'newchange', this.findNews);
         },
 
         propChange: function() { this.trigger('change'); },
@@ -457,6 +462,7 @@ namespace.module('bot.inv', function (exports, require) {
                 new ArmorModel('balsa helmet'),
             ];
             this.sort();
+            this.listenTo(gl.ItemEvents, 'newchange', this.checkForNews);
         },
 
         byId: function(id) {
@@ -484,8 +490,23 @@ namespace.module('bot.inv', function (exports, require) {
                 messages.push(drop.message());
                 log.warning('Item dropped: %s', drop.name);
                 gl.DirtyQueue.mark('inventory:new');
+                this.checkForNews();
             }, this);
             return messages;
+        },
+
+        checkForNews: function() {
+            var any = false;
+            _.each(this.models, function(item) {
+                if(item.isNew) {
+                    any = true;
+                }
+            }, this);
+            if (any) {
+                gl.DirtyQueue.mark('footer:buttons:invshownew');
+            } else {
+                gl.DirtyQueue.mark('footer:buttons:invhidenew');
+            }
         }
     });
 
@@ -498,6 +519,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.qp = 0;
             this.level = 1;
             this.isNew = true;
+            gl.ItemEvents.trigger('newchange');
         },
 
         getMods: function() {
@@ -554,6 +576,32 @@ namespace.module('bot.inv', function (exports, require) {
     var CardCollection = gl.Model.extend({
         initialize: function() {
             this.models = [];
+            this.listenTo(gl.ItemEvents, 'newchange', this.updateNews);
+        },
+
+        updateNews: function() {
+            var any = false;
+            this.skillchain.newCards = false;
+            _.each(this.equipped.slots, function(slot) {
+                this.equipped.newCards[slot] = false;
+            }, this);
+            _.each(this.models, function(card) {
+                if(card.isNew) {
+                    any = true;
+                    if(card.slot == "skill") {
+                        this.skillchain.newCards = true;
+                    } else {
+                        this.equipped.newCards[card.slot] = true;
+                    }
+                }
+            }, this);
+            if(any) {
+                gl.DirtyQueue.mark('footer:buttons:cardshownew')
+            } else {
+                gl.DirtyQueue.mark('footer:buttons:cardhidenew')
+            }
+            gl.DirtyQueue.mark('cards:newchange');
+            //console.log("NEW!: ", this);
         },
 
         addDrops: function(drops) {
@@ -565,7 +613,8 @@ namespace.module('bot.inv', function (exports, require) {
                     drop.update(existingCard);
                 } else {
                     this.models.push(drop.make());
-                    log.warning('New Card dropped: %s', drop.name);                    
+                    log.warning('New Card dropped: %s', drop.name);
+                    this.updateNews();
                 }
                 messages.push(drop.message());
                 gl.DirtyQueue.mark('cards:new');

@@ -54,6 +54,8 @@ namespace.module('bot.main', function (exports, require) {
             this.inv = new inv.ItemCollection();
             this.cardInv = new inv.CardCollection();
             this.hero = new entity.newHeroSpec(this.inv, this.cardInv);
+            this.cardInv.equipped = this.hero.equipped;
+            this.cardInv.skillchain = this.hero.skillchain;
             this.zone = new zone.ZoneManager(this.hero);
 
             this.lastTime = new Date().getTime();

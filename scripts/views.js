@@ -301,7 +301,12 @@ namespace.module('bot.views', function (exports, require) {
 
         onMouseleave: function() {
             if (this.model) {
-                this.model.isNew = false;
+                if (this.tabName === "Items" || this.equippedModel === undefined ||
+                    this.equippedModel.name !== "Equipped" &&
+                    this.equippedModel.name !== "Skillchain") {
+                    this.model.isNew = false;
+                    gl.ItemEvents.trigger('newchange');
+                }
                 this.render();
             }
             log.warning('onMouseleave');
@@ -310,8 +315,11 @@ namespace.module('bot.views', function (exports, require) {
             gl.UIEvents.trigger('mouseleave');
         },
 
-        initialize: function(options, slot, equippedModel, canSelect, canUnequip) {
+        initialize: function(options, slot, equippedModel, canSelect, canUnequip, tabName, isCard) {
             this.slot = slot;
+            this.showNew = false;
+            this.tabName = tabName;
+            this.isCard = isCard;
             this.equippedModel = equippedModel;
             this.template = _.template($('#item-slot-template').html());
             this.canSelect = canSelect;
@@ -319,6 +327,7 @@ namespace.module('bot.views', function (exports, require) {
 
             this.listenTo(gl.UIEvents, 'mouseenter', this.onGlobalMouseenter);
             this.listenTo(gl.UIEvents, 'mouseleave', this.onGlobalMouseleave);
+            this.listenTo(gl.DirtyListener, 'cards:newchange', this.render);
             this.render();
         },
 
@@ -381,6 +390,21 @@ namespace.module('bot.views', function (exports, require) {
         },
         
         render: function() {
+            if (this.model && this.model.isNew) {
+                this.showNew = true;
+            } else {
+                this.showNew = false;
+            }
+            if (this.model && this.tabName === "Cards" && !this.isCard) {
+                var loc = this.equippedModel.name;
+                if (loc === "Skillchain" && this.equippedModel.newCards) {
+                    this.showNew = true;
+                } else if (loc === "Equipped" && this.equippedModel.newCards[this.slot]) {
+                    this.showNew = true;
+                } else {
+                    this.showNew = false;
+                }
+            }
             this.$el.html(this.template(this));
             if (this.model && this.model.disabled) {
                 this.$el.addClass('red');
@@ -473,7 +497,7 @@ namespace.module('bot.views', function (exports, require) {
         newItemSlot: function(model, slot, parent) {
             var canSelect = slot === undefined;
             var canUnequip = slot !== undefined && model;
-            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip);
+            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip, "Items");
             this.listenTo(view, 'click', this.onClick);
             this.listenTo(view, 'unequip', this.onUnequip);
             this.listenTo(view, 'hovering', this.onHover);
@@ -621,10 +645,8 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         newItemSlot: function(model, slot, parent, canSelect, canUnequip, isCard) {
-            var view = new ItemSlot({model: model}, slot, parent);
-            view.canSelect = canSelect;
-            view.canUnequip = canUnequip;
-            view.isCard = isCard;
+            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip, "Cards", isCard);
+
             view.isUnequipped = slot === undefined;
 
             this.listenTo(view, 'click', this.onClick);
@@ -644,6 +666,7 @@ namespace.module('bot.views', function (exports, require) {
             if (!this.tvm.visible) {
                 return this;
             }
+
 
             this.$el.html(this.template());
 
@@ -872,8 +895,25 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function() {
             this.listenTo(gl.UIEvents, 'tabShow', this.onTabShow);
             this.listenTo(gl.UIEvents, 'tabHide', this.onTabHide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:invshownew', this.invShowNew);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:invhidenew', this.invHideNew);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:cardshownew', this.cardShowNew);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:cardhidenew', this.cardHideNew);
         },
-
+        
+        invShowNew: function() {
+            this.$('.invnewflag').show();
+        },
+        invHideNew: function() {
+            this.$('.invnewflag').hide();
+        },
+        cardShowNew: function() {
+            this.$('.cardnewflag').show();
+        },
+        cardHideNew: function() {
+            this.$('.cardnewflag').hide();
+        },
+        
         events: {
             'mousedown .config-button': 'clickConfig',
             'mousedown .help-button': 'clickHelp',

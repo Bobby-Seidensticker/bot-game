@@ -193,7 +193,7 @@ body .stats {
 
     top: 5px;
     right: 410px;
-    
+
     font-size:12px;
     color: grey;
     background-color: rgba(0, 0, 0, 0.7);  /* @color-primary-0; */
@@ -334,6 +334,7 @@ body .stats {
     }
 
     .buttons {
+        position: relative;
         font-size: 16px;
         float: right;
         /* full size, margins handled in buttons */
@@ -355,21 +356,22 @@ body .stats {
 
         .invnewflag {
             font-weight: bold;
-           position: absolute;
-           color: #FFF;
-           top: -16px;
-           display: none;
-           font-size: 14px;
+            position: absolute;
+            color: #FFF;
+            top: -14px;
+            left: 2px;
+            display: none;
+            font-size: 14px;
         }
 
         .cardnewflag {
             font-weight: bold;
             position: absolute;
-           color: #FFF;
-           top: -16px;
-           left: 16px;
-           display: none;
-           font-size: 14px;
+            color: #FFF;
+            top: -14px;
+            left: 2px;
+            display: none;
+            font-size: 14px;
         }  
 
         > div {
@@ -377,9 +379,9 @@ body .stats {
             border: 2px solid @button-border;
             border-radius: 5px;
             /*border-top: 2px solid #333;
-            border-left: 2px solid #333;
-            border-right: 2px solid #111;
-            border-bottom: 2px solid #111;*/
+              border-left: 2px solid #333;
+              border-right: 2px solid #111;
+              border-bottom: 2px solid #111;*/
             margin: 5px 0 0 5px;
             position:relative;
             float: left;
@@ -445,6 +447,13 @@ body .stats {
     .holder {
         width: 405px;
         overflow: auto;
+        > div {
+            margin-left: 10px;
+        }
+        #devmsg {
+            height:150px;
+            width:300px;
+        }
     }
 }
 
@@ -461,6 +470,11 @@ body .stats {
     .holder {
         width: 405px;
         overflow: auto;
+        > div {
+            width: 360px;
+            padding: 0 10px;
+        }
+
     }
 }
 

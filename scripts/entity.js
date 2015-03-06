@@ -293,7 +293,7 @@ namespace.module('bot.entity', function (exports, require) {
 
     function newHeroSpec(inv, cardInv) {
         // stopgap measures: basic equipped stuff
-        var heroName = 'bobbeh';
+        var heroName = 'some newbie';
         var equipped = new inventory.EquippedGearModel();
         equipped.equip(_.findWhere(inv.models, {name: 'cardboard sword'}), 'weapon');
         equipped.equip(_.findWhere(inv.models, {name: 'balsa helmet'}), 'head');

@@ -372,6 +372,66 @@
     </div>
   </script>
 
+  <script id="config-template" type="text/template">
+    <div><p>What is your name?</p>
+      <input id="charname" type="text" value="<%= gl.game.hero.name %>" /><input type="button" value="OK" id="namebutton" />
+      <p>Message to the devs?</p>
+      <textarea id="devmsg" placeholder="Tell us what you think" rows="5" cols="20" wrap="soft"/>
+      <input type="button" value="OK" id="devbutton" />
+    </div>
+  </script>
+
+  <script id="help-template" type="text/template">
+    <div>
+      <h4>Welcome to Dungeons of Derp</h4>
+
+      <p>Hints:</p>
+      <p>-Click your potion to regain some health</p>
+      <p>-Click "Inv" or "Card" buttons to change equipment</p>
+
+        <p>Please check out our <a href="https://www.reddit.com/r/DungeonsOfDerp" target="_blank">Subreddit</a> for more help</p>
+      
+        <p>We have been focused on engine, UI and balance, and haven't made an in-game tutorial yet.  Please feel free to give the game a try without reading all of this, but not all of our controls are completely intuitive, so please read through this if you get stuck.The game has only been balanced up to about level 20 so far - if you beat the Gothic Castle, you've "won".</p>
+
+        <p>Getting started:</p>
+        <p>You're going to be dying a lot at the beginning, don't worry about it.</p>
+
+        <p>To start being able to survive in the first zone, "Spooky Dungeon", you'll need to get a full set of armor, equip some cards, and maybe find a better skill.</p>
+
+        <p>Equipping gear:</p>
+        <p>Click the Inv button in the footer to open the Inventory Tab.</p>
+
+        <p>The first row of slots is your equipped gear.  You start with only a helmet and sword equipped.</p>
+
+        <p>The second row of slots is your "Skillchain" - up to five skills which you character will try to use in left-to-right order whenever they can take another action.</p>
+
+        <p>Below this is your inventory- which contains all of your unequipped items.  Hovering over items in your inventory will highlight valid slots in which they can be placed.</p>
+
+        <p>To equip an item or skill, click the unequipped item to select it.  This will make a yellow border around it.  Then click the slot in which you'd like it to be placed.</p>
+
+        <p>Understanding the Skillchain</p>
+        <p>The skillchain is the way in which you control your hero's behavior and which skills they will use when.</p>
+
+        <p>Whenever a character is free to use a new action, each skill is checked from left to right to see if it can be used: if the character has enough mana, the skill isn't on cooldown, and an enemy is within range.  If all of these criteria are met, the skill is used.  Otherwise, the next skill is checked.  If no skills can be used, a character will try to move closer to get in range.</p>
+
+        <p>Equipping Cards</p>
+        <p>Now that we have a basic understanding of the Inv Tab, lets switch over to the Card Tab to equip some cards.  Click the “Card” button in the footer.</p>
+
+        <p>Each item equipped on the Inv Tab has 5 Card slots. These cards can make items or skills stronger and grant powerful bonuses.  By stacking multiple similar cards together, you can get even better results.</p>
+
+        <p>In the default view, you'll see all of your items and all of your unequipped cards.  You can hover over cards to see more information about them and highlight valid items or skills they could be placed into.</p>
+
+        <p>First, select an item you'd like to put a card into by clicking on it.  This will add a yellow border to the item and filter the unequipped cards to only those which could be placed inside the item. Now, you can click on a unequipped card to select it, and then click on a slot to place it there.  Sorry we know this is kind of janky, and will implement drag and drop soonish. If you have UI suggestions we'd love to hear them.</p>
+
+        <p>Beating the First Level:</p>
+        <p>There are several ways to beat the first zone and kill the skeleton king, but these tips will probably help you a lot:</p>
+        <p>Use your Potion!</p>
+        <p>Heart juice is the first method you get of regenerating health, and is essential to having enough health to fight the boss.  Skeleton mages drop heart juice, so make sure you character can kill them effectively.</p>
+        <p>Equip all of the cards you can!  There aren't any cards in the first zone which have negatives to you hero, so you should equip all the cards you find.  As your slots get full and stranger cards drop, you'll have to be more discriminating.</p>
+        <p>Bosses are hard!  You might have better luck leveling up in a harder zone and coming back to kill the skeleton king.</p>
+  </div>
+  </script>
+  
   <script type="text/template" id="menu-tab-template">
     <td class="tab" id="<%- name %>"><%- name %></td>
   </script>

@@ -571,8 +571,6 @@ namespace.module('bot.vis', function (exports, require) {
     }
 
     function flatCircle(ctx, atk) {
-        log.warning('flatCircle');
-
         var outerRadius = atk.pos.sub(atk.start).len();
         var innerRadius = outerRadius - 20000;
         if (innerRadius < 0) {

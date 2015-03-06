@@ -238,8 +238,8 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#info-box-template').html()),
 
         initialize: function() {
-            this.listenTo(gl.UIEvents, 'mouseover', this.show);
-            this.listenTo(gl.UIEvents, 'mouseout', this.hide);
+            this.listenTo(gl.UIEvents, 'mouseenter', this.show);
+            this.listenTo(gl.UIEvents, 'mouseleave', this.hide);
 
             this.listenTo(gl.DirtyListener, 'footer:buttons', this.hide);
             this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
@@ -276,8 +276,8 @@ namespace.module('bot.views', function (exports, require) {
 
         events: {
             'mousedown': 'onClick',
-            'mouseover': 'onMouseover',
-            'mouseout': 'onMouseout',
+            'mouseenter': 'onMouseenter',
+            'mouseleave': 'onMouseleave',
         },
 
         onClick: function(event) {
@@ -290,27 +290,29 @@ namespace.module('bot.views', function (exports, require) {
             this.trigger('click', this);
         },
 
-        onMouseover: function() {
+        onMouseenter: function() {
             if (this.canUnequip) {
+                log.warning('adding hovering class on item slot');
                 this.$el.addClass('hovering');
             }
             this.trigger('hovering', this);
-            gl.UIEvents.trigger('mouseover', this);
+            gl.UIEvents.trigger('mouseenter', this);
         },
 
-        onMouseout: function() {
+        onMouseleave: function() {
             if (this.model) {
-                if(this.tabName == "Items" || this.equippedModel === undefined ||
-                   this.equippedModel.name != "Equipped" &&
-                   this.equippedModel.name != "Skillchain") {
+                if (this.tabName === "Items" || this.equippedModel === undefined ||
+                    this.equippedModel.name !== "Equipped" &&
+                    this.equippedModel.name !== "Skillchain") {
                     this.model.isNew = false;
                     gl.ItemEvents.trigger('newchange');
                 }
+                this.render();
             }
-            this.render();
+            log.warning('onMouseleave');
             this.$el.removeClass('hovering');
             this.trigger('hovering');
-            gl.UIEvents.trigger('mouseout');
+            gl.UIEvents.trigger('mouseleave');
         },
 
         initialize: function(options, slot, equippedModel, canSelect, canUnequip, tabName, isCard) {
@@ -322,9 +324,10 @@ namespace.module('bot.views', function (exports, require) {
             this.template = _.template($('#item-slot-template').html());
             this.canSelect = canSelect;
             this.canUnequip = canUnequip;
+
+            this.listenTo(gl.UIEvents, 'mouseenter', this.onGlobalMouseenter);
+            this.listenTo(gl.UIEvents, 'mouseleave', this.onGlobalMouseleave);
             this.listenTo(gl.DirtyListener, 'cards:newchange', this.render);
-            this.listenTo(gl.UIEvents, 'mouseover', this.onGlobalMouseover);
-            this.listenTo(gl.UIEvents, 'mouseout', this.onGlobalMouseout);
             this.render();
         },
 
@@ -340,43 +343,68 @@ namespace.module('bot.views', function (exports, require) {
         select: function() { this.selected = true; this.$el.addClass('selected');  },
         unselect: function() { this.selected = false; this.$el.removeClass('selected'); },
 
-        onGlobalMouseover: function(hoveredSlot) {
-            if (hoveredSlot.slot !== undefined) { return; }  // Is a fixed slot, ignore
+        onGlobalMouseenter: function(hoveredSlot) {
+            if (hoveredSlot.slot !== undefined) { return; }
 
-            if ((hoveredSlot.model.itemType === 'skill' && this.loc === 'skillchain') ||
-                (hoveredSlot.model.itemType === 'weapon' && this.slot === 'weapon') ||
-                (hoveredSlot.model.itemType === 'armor' && hoveredSlot.model.type === this.slot) ||
-                (hoveredSlot.model.itemType === 'card' && hoveredSlot.model.slot === 'skill' && this.loc === 'skillchain') ||
-                (hoveredSlot.model.itemType === 'card' && hoveredSlot.model.slot === this.slot )) {
-                this.yellow = true;
-                this.$el.addClass('yellow');
+            if (hoveredSlot.model.itemType === 'card') {
+                if (this.slot !== undefined &&
+                    (this.slot === hoveredSlot.model.slot || (typeof(this.slot) === 'number' && hoveredSlot.model.slot === 'skill'))) {
+                    this.yellow = true;
+                    this.$el.addClass('yellow');
+                }
+            } else {
+                if (hoveredSlot.model.itemType === 'skill') {
+                    if (typeof(this.slot) === 'number') {
+                        this.yellow = true;
+                        this.$el.addClass('yellow');
+                    }
+                } else {
+                    if (this.slot) {
+                        if (this.model) {
+                            if (hoveredSlot.model.itemType === this.model.itemType) {
+                                if ((hoveredSlot.model.itemType === 'weapon') ||
+                                    (hoveredSlot.model.type === this.model.type)) {
+                                    this.yellow = true;
+                                    this.$el.addClass('yellow');
+                                }
+                            }
+                        } else {
+                            if (hoveredSlot.model.itemType === 'weapon') {
+                                if (hoveredSlot.model.itemType === this.slot) {
+                                    this.yellow = true;
+                                    this.$el.addClass('yellow');
+                                }
+                            } else if (hoveredSlot.model.type === this.slot) {
+                                this.yellow = true;
+                                this.$el.addClass('yellow');
+                            }
+                        }
+                    }
+                }
             }
         },
 
-        onGlobalMouseout: function() {
+        onGlobalMouseleave: function() {
             this.yellow = false;
             this.$el.removeClass('yellow');
         },
         
         render: function() {
-            if(this.model && this.model.isNew) {
+            if (this.model && this.model.isNew) {
                 this.showNew = true;
             } else {
                 this.showNew = false;
             }
-            if(this.model && this.tabName == "Cards" && !this.isCard) {
+            if (this.model && this.tabName === "Cards" && !this.isCard) {
                 var loc = this.equippedModel.name;
-                if (loc == "Skillchain" && this.equippedModel.newCards) {
+                if (loc === "Skillchain" && this.equippedModel.newCards) {
                     this.showNew = true;
-                } else if (loc == "Equipped" && this.equippedModel.newCards[this.slot]) {
+                } else if (loc === "Equipped" && this.equippedModel.newCards[this.slot]) {
                     this.showNew = true;
                 } else {
                     this.showNew = false;
                 }
-                //console.log(this.model.name);
             }
-            
-            
             this.$el.html(this.template(this));
             if (this.model && this.model.disabled) {
                 this.$el.addClass('red');
@@ -458,11 +486,12 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onHover: function(itemSlot) {
-            if (itemSlot && itemSlot.canUnequip) {
+            this.hovering = itemSlot;
+            /*if (itemSlot && itemSlot.canUnequip) {
                 this.hovering = itemSlot;
             } else {
                 this.hovering = undefined;
-            }
+            }*/
         },
 
         newItemSlot: function(model, slot, parent) {
@@ -518,12 +547,9 @@ namespace.module('bot.views', function (exports, require) {
                 }
             }
 
-            if (this.hovering) {
-                var hoveringView = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
-                if (hoveringView && hoveringView.canUnequip) {
-                    hoveringView.onMouseover();
-                }
-                this.hovering = hoveringView;
+            if (this.hovering && this.hovering.model) {
+                this.hovering = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
+                this.hovering.onMouseenter();
             }
 
             return this;
@@ -609,11 +635,13 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onHover: function(hoveredView) {
+            this.hovering = hoveredView;
+            /*console.log('on HOVER', hoveredView);
             if (hoveredView && hoveredView.canUnequip) {
                 this.hovering = hoveredView;
             } else {
                 this.hovering = undefined;
-            }
+            }*/
         },
 
         newItemSlot: function(model, slot, parent, canSelect, canUnequip, isCard) {
@@ -709,12 +737,9 @@ namespace.module('bot.views', function (exports, require) {
                     this.selectedCard = undefined;
                 }
             }
-            if (this.hovering) {
-                var hoveringView = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
-                if (hoveringView && hoveringView.canUnequip) {
-                    hoveringView.onMouseover();
-                }
-                this.hovering = hoveringView;
+            if (this.hovering && this.hovering.model) {
+                this.hovering = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
+                this.hovering.onMouseenter();
             }
 
             return this;

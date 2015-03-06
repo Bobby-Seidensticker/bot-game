@@ -133,8 +133,6 @@ namespace.module('bot.inv', function (exports, require) {
             _.extend(this, itemref.expand('armor', this.name));            
             this.itemType = 'armor';
             this.baseMods = this.mods;
-            //this.slotFormula = ref.slotFormula;
-
 
             this.key = getSortKey(this);
 
@@ -149,8 +147,6 @@ namespace.module('bot.inv', function (exports, require) {
             _.extend(this, itemref.expand('weapon', this.name));
             
             this.itemType = 'weapon';
-
-
 
             this.baseMods = this.mods;
 

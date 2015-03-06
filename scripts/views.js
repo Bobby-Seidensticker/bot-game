@@ -304,6 +304,7 @@ namespace.module('bot.views', function (exports, require) {
                    this.equippedModel.name != "Equipped" &&
                    this.equippedModel.name != "Skillchain") {
                     this.model.isNew = false;
+                    gl.ItemEvents.trigger('newchange');
                 }
             }
             this.render();
@@ -460,7 +461,7 @@ namespace.module('bot.views', function (exports, require) {
         newItemSlot: function(model, slot, parent) {
             var canSelect = slot === undefined;
             var canUnequip = slot !== undefined && model;
-            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip, this.name);
+            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip, "Items");
             this.listenTo(view, 'click', this.onClick);
             this.listenTo(view, 'unequip', this.onUnequip);
             this.listenTo(view, 'hovering', this.onHover);

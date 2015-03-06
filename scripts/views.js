@@ -1094,12 +1094,19 @@ namespace.module('bot.views', function (exports, require) {
             }
             this.$holder.html(this.template);
             this.$('#namebutton').bind('click', this.nameButton);
+            this.$('#devbutton').bind('click', this.devButton);            
             return this;
         },
 
         nameButton: function() {
             gl.game.hero.name = $('#charname').val();
-        }
+        },
+        
+        devButton: function() {
+            var msg = $('#devmsg').val();
+            gl.FB.child('feedback').push(localStorage.getItem('uid') + " says:" + msg);
+        },
+        
     });
 
     var HelpTab = Backbone.View.extend({

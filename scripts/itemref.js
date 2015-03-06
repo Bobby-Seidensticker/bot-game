@@ -823,11 +823,11 @@ namespace.module('bot.itemref', function (exports, require) {
                 "specs": [{ type: 'proj', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],                
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
-                    {def: 'speed added 1000', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'physDmg more 10 perLevel', type: 'dmg'},
                     {def: 'projSpeed more 200', type: 'dmg'},
-                    {def: 'cooldownTime added 500', type: 'dmg'},
+                    {def: 'cooldownTime added 1000', type: 'dmg'},
                 ]
             },
             "incinerate": {                

@@ -206,7 +206,7 @@ namespace.module('bot.main', function (exports, require) {
                     dropsLib.dropFactory('skill', 'speed shot'),
                 ]);
                 this.gameModel.cardInv.addDrops([
-                    dropsLib.dropFactory('card', ['lmp', 2]),
+                    dropsLib.dropFactory('card', ['more projectiles', 2]),
                 ]);
                 item = _.find(this.gameModel.inv.models, function(item) {return item.name == "composite bow"});
                 this.gameModel.hero.equipped.equip(item, "weapon");

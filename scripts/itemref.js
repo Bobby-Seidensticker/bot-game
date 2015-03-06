@@ -826,7 +826,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'physDmg more 10 perLevel', type: 'dmg'},
-                    {def: 'projSpeed more 200', type: 'dmg'}
+                    {def: 'projSpeed more 200', type: 'dmg'},
+                    {def: 'cooldownTime added 500', type: 'dmg'},
                 ]
             },
             "incinerate": {                
@@ -1035,6 +1036,19 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 2000', type: 'dmg'},                                        
                 ]
             },
+            "deadly volley": {
+                "prototype": ["basic"],
+                "class": "range",
+                "types": ["proj"],
+                "specs": [{ type: 'proj', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "baseMods": [
+                    {def: 'speed added 500', type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
+                    {def: 'physDmg added 5 perLevel', type: 'dmg'},
+                    {def: 'projCount added 1 perLevel', type: 'dmg'},
+                    {def: 'cooldownTime added 3000', type: 'dmg'}
+                ]
+            },
         },
         "card": {
             "proto-skeleton": {
@@ -1229,10 +1243,10 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "legs",
             },
-            "lmp": {
+            "more projectiles": {
                 "mods": [
                     {"def": "projCount added 1 perLevel", "type": "dmg"},
-                    {"def": "angle added 30", "type": "dmg"},
+                    {"def": "angle more 20", "type": "dmg"},
                 ],
                 "slot": "skill",
             },
@@ -1829,7 +1843,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "elf king" : {
                 "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"]],
-                "skills": ["speed shot", "poison arrow", "basic range"],
+                "skills": ["deadly volley", "speed shot", "poison arrow", "basic range"],
                 "sourceCards": [
                     ["proto-boss", 0],
                     ["proto-elf", 0],
@@ -2033,12 +2047,13 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["small stature", 1],
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
-                    ["putrified", 1]
+                    ["putrified", 1],
+                    ["more projectiles", 2]
                 ],
             },
             "imp shaman": {
                 "items": [["weapon", "star wand"]],
-                "skills": ["poison ball", "poison nova", "basic spell"],
+                "skills": ["poison ball", "poison spray", "poison nova", "basic spell"],
                 "sourceCards": [
                     ["berserking", 1],
                     ["small stature", 1],
@@ -2371,7 +2386,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "angle": "Angle",
             "projRange": "Projectile Range",
             "projRadius": "Projectile Radius",
-            "projSpeed": "Projectile Speed"
+            "projSpeed": "Projectile Speed",
+            "projCount": "Additional Projectiles"
         }
 
     };

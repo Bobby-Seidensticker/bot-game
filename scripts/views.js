@@ -322,9 +322,13 @@ namespace.module('bot.views', function (exports, require) {
             this.template = _.template($('#item-slot-template').html());
             this.canSelect = canSelect;
             this.canUnequip = canUnequip;
-
+            this.listenTo(gl.DirtyListener, 'cards:newchange', this.renderr);
             this.listenTo(gl.UIEvents, 'mouseover', this.onGlobalMouseover);
             this.listenTo(gl.UIEvents, 'mouseout', this.onGlobalMouseout);
+            this.render();
+        },
+
+        renderr: function() {
             this.render();
         },
 
@@ -365,7 +369,14 @@ namespace.module('bot.views', function (exports, require) {
                 this.showNew = false;
             }
             if(this.model && this.tabName == "Cards" && !this.isCard) {
-                this.showNew = false;
+                var loc = this.equippedModel.name;
+                if (loc == "Skillchain" && this.equippedModel.newCards) {
+                    this.showNew = true;
+                } else if (loc == "Equipped" && this.equippedModel.newCards[this.slot]) {
+                    this.showNew = true;
+                } else {
+                    this.showNew = false;
+                }
                 //console.log(this.model.name);
             }
             

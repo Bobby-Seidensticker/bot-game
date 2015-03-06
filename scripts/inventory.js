@@ -581,7 +581,8 @@ namespace.module('bot.inv', function (exports, require) {
                     }
                 }
             }, this);
-            console.log("NEW!: ", this);
+            gl.DirtyQueue.mark('cards:newchange');
+            //console.log("NEW!: ", this);
         },
 
         addDrops: function(drops) {
@@ -593,7 +594,8 @@ namespace.module('bot.inv', function (exports, require) {
                     drop.update(existingCard);
                 } else {
                     this.models.push(drop.make());
-                    log.warning('New Card dropped: %s', drop.name);                    
+                    log.warning('New Card dropped: %s', drop.name);
+                    this.updateNews();
                 }
                 messages.push(drop.message());
                 gl.DirtyQueue.mark('cards:new');

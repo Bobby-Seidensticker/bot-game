@@ -1076,6 +1076,7 @@ namespace.module('bot.views', function (exports, require) {
         className: 'help',
 
         initialize: function(options, game) {
+            this.template = _.template($('#help-template').html());
             this.zone = game.zone;
 
             this.tvm = new TabVisibilityManager('help', this.$el, this.render.bind(this), 'footer:buttons:help',
@@ -1101,7 +1102,7 @@ namespace.module('bot.views', function (exports, require) {
             if (!this.tvm.visible) {
                 return this;
             }
-            this.$holder.html('<div>biiiiiiiiiitch</div>');
+            this.$holder.html(this.template);
             return this;
         }
     });

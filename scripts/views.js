@@ -11,20 +11,35 @@ namespace.module('bot.views', function (exports, require) {
     // highlight open tab
     // show unequip X on hover
 
+    var VisibleTabsInterface = gl.Model.extend({
+        initialize: function(tabs) {
+            this.tabNames = ['config', 'stats', 'inv', 'help', 'map', 'cards'];
+            this.objects = _.object(this.tabNames, tabs);
+        },
+
+        visible: function(name) {
+            return this.objects[name].visible;
+        }
+    });
+
     var GameView = Backbone.View.extend({
         el: $('body'),
 
         initialize: function(options, game) {
             log.info('GameView initialize');
 
+            this.configTab = new ConfigTab({}, game);
             this.statsTab = new StatsTab({}, game);
             this.itemTab = new ItemTab({}, game);
-            this.cardTab = new CardTab({}, game);
-            this.mapTab = new MapTab({}, game);
-            this.footerView = new FooterView({}, game);
-            this.infoBox = new InfoBox();
-            this.configTab = new ConfigTab({}, game);
             this.helpTab = new HelpTab({}, game);
+            this.mapTab = new MapTab({}, game);
+            this.cardTab = new CardTab({}, game);
+
+            var vti = new VisibleTabsInterface([this.configTab, this.statsTab, this.itemTab,
+                                            this.helpTab, this.mapTab, this.cardTab]);
+
+            this.footerView = new FooterView({}, game, vti);
+            this.infoBox = new InfoBox();
 
             this.visView = new VisView({}, game, this);
             this.$el.append(this.visView.render().el);
@@ -75,12 +90,14 @@ namespace.module('bot.views', function (exports, require) {
             this.visible = true;
             this.$el.removeClass('hidden');
             this.render();
+            gl.DirtyQueue.mark('tabVisibility');
         },
 
         hide: function() {
             log.info('Hiding %s tab', this.name);
             this.visible = false;
             this.$el.addClass('hidden');
+            gl.DirtyQueue.mark('tabVisibility');
         },
 
         toggleVisible: function() {
@@ -262,7 +279,7 @@ namespace.module('bot.views', function (exports, require) {
         className: 'itemSlot',
 
         events: {
-            'click': 'onClick',
+            'mousedown': 'onClick',
             'mouseover': 'onMouseover',
             'mouseout': 'onMouseout',
         },
@@ -829,13 +846,30 @@ namespace.module('bot.views', function (exports, require) {
         className: 'buttons',
         template: _.template($('#buttons-footer-template').html()),
 
+        initialize: function(options, visibleTabsInterface) {
+            this.vti = visibleTabsInterface;
+            this.listenTo(gl.DirtyListener, 'tabVisibility', this.clickAny);
+        },
+
         events: {
-            'click .config-button': 'clickConfig',
-            'click .help-button': 'clickHelp',
-            'click .stats-button': 'clickStats',
-            'click .map-button': 'clickMap',
-            'click .inv-button': 'clickInv',
-            'click .cards-button': 'clickCards'
+            //'mousedown': 'clickAny',
+            'mousedown .config-button': 'clickConfig',
+            'mousedown .help-button': 'clickHelp',
+            'mousedown .stats-button': 'clickStats',
+            'mousedown .map-button': 'clickMap',
+            'mousedown .inv-button': 'clickInv',
+            'mousedown .cards-button': 'clickCards'
+        },
+
+        clickAny: function() {
+            log.warning('click any');
+            _.each(this.vti.tabNames, function(name) {
+                if (this.vti.visible(name)) {
+                    this.$('.' + name + '-button').addClass('open');
+                } else {
+                    this.$('.' + name + '-button').removeClass('open');
+                }
+            }, this);
         },
 
         clickConfig: function() { gl.DirtyQueue.mark('footer:buttons:config'); console.log('stat click'); },
@@ -844,8 +878,6 @@ namespace.module('bot.views', function (exports, require) {
         clickMap: function() { gl.DirtyQueue.mark('footer:buttons:map'); console.log('map click'); },
         clickInv: function() { gl.DirtyQueue.mark('footer:buttons:inv'); console.log('inv click'); },
         clickCards: function() { gl.DirtyQueue.mark('footer:buttons:cards'); console.log('cards click'); },
-
-        initialize: function(options) {},
 
         render: function() {
             this.$el.html(this.template(this.zone));
@@ -857,7 +889,7 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'footer',
 
-        initialize: function(options, game) {
+        initialize: function(options, game, visibleTabsInterface) {
             this.resize();
             $(window).on('resize', this.resize.bind(this));
 
@@ -867,7 +899,7 @@ namespace.module('bot.views', function (exports, require) {
             this.heroBodyView = new HeroFooterView({model: this.hero});
             this.zoneView = new ZoneFooterView({}, this.zone);
             this.skillchainView = new SkillchainFooterView({}, this.hero);
-            this.buttons = new FooterButtonsView({});
+            this.buttons = new FooterButtonsView({}, visibleTabsInterface);
         },
 
         resize: function() {
@@ -895,7 +927,7 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#zone-map-tab-template').html()),
 
         events: {
-            'click': 'onClick',
+            'mousedown': 'onClick',
         },
 
         onClick: function() {

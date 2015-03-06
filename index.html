@@ -100,7 +100,11 @@
       <% } %>
       <% if (model.itemType === 'skill' && model.equipped) { %>
         <div class="infoitem skilldmg">Total Damage: <%= model.getTotalDmg() %></div>
-        <div class="infoitem skilldmg">DPS: <%= model.getDps() %></div>      
+        <div class="infoitem skilldmg">DPS: <%= model.getDps() %></div>
+        <div class="infoitem skilldmg">Range: <%= model.range %></div>
+        <div class="infoitem skilldmg">Duration: <%= model.speed %>ms</div>
+        <div class="infoitem skilldmg">Cooldown: <%= model.cooldownTime %>ms</div>
+        <div class="infoitem skilldmg">Mana Cost: <%= Math.floor(model.manaCost*100) / 100 %></div>        
       <% } %>
     <% } %>
   </script>

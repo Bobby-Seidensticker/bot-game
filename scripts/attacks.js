@@ -76,7 +76,6 @@ namespace.module('bot.attacks', function (exports, require) {
                     this.newAttacks.push.apply(this.newAttacks, newChildProjs(spec, this, enemy));
                     log.info('Added new child projs to new attacks, len: %d', this.newAttacks.length);
                 } else if (spec.type === 'cone') {
-                    log.warning('creating new cone');
                     this.newAttacks.push(newChildCone(spec, this, enemy));
                 } else if (spec.type === 'circle') {
                     this.newAttacks.push(newChildCircle(spec, this, enemy));
@@ -225,8 +224,6 @@ namespace.module('bot.attacks', function (exports, require) {
             this.vector = vector.unitVector().mult(this.aoeSpeed);
             this.z = 0;
             if (!this.color) { this.color = '#fff'; }
-
-            log.warning('Cone created, pos: %s, vector: %s', this.pos, this.vector);
         },
 
         tick: function(enemies) {
@@ -288,8 +285,6 @@ namespace.module('bot.attacks', function (exports, require) {
             this.vector = vector.unitVector().mult(this.aoeSpeed);
             this.z = 0;
             if (!this.color) { this.color = '#fff'; }
-
-            log.warning('Circle created, pos: %s, vector: %s', this.pos, this.vector);
         },
 
         tick: function(enemies) {

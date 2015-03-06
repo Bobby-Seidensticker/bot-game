@@ -1066,8 +1066,9 @@ namespace.module('bot.views', function (exports, require) {
         className: 'config',
 
         initialize: function(options, game) {
+            this.template = _.template($('#config-template').html());
             this.zone = game.zone;
-
+            
             this.tvm = new TabVisibilityManager('config', this.$el, this.render.bind(this), 'footer:buttons:config',
                                                 'footer:buttons:map', 'footer:buttons:help', 'footer:buttons:stats');
 
@@ -1091,8 +1092,13 @@ namespace.module('bot.views', function (exports, require) {
             if (!this.tvm.visible) {
                 return this;
             }
-            this.$holder.html('<div>I said I said I said I said</div>');
+            this.$holder.html(this.template);
+            this.$('#namebutton').bind('click', this.nameButton);
             return this;
+        },
+
+        nameButton: function() {
+            gl.game.hero.name = $('#charname').val();
         }
     });
 

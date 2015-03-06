@@ -304,7 +304,11 @@ namespace.module('bot.views', function (exports, require) {
 
         onMouseout: function() {
             if (this.model) {
-                this.model.isNew = false;
+                if(this.tabName == "Items" || this.equippedModel === undefined ||
+                   this.equippedModel.name != "Equipped" &&
+                   this.equippedModel.name != "Skillchain") {
+                    this.model.isNew = false;
+                }
             }
             this.render();
             this.$el.removeClass('hovering');
@@ -312,8 +316,11 @@ namespace.module('bot.views', function (exports, require) {
             gl.UIEvents.trigger('mouseout');
         },
 
-        initialize: function(options, slot, equippedModel, canSelect, canUnequip) {
+        initialize: function(options, slot, equippedModel, canSelect, canUnequip, tabName, isCard) {
             this.slot = slot;
+            this.showNew = false;
+            this.tabName = tabName;
+            this.isCard = isCard;
             this.equippedModel = equippedModel;
             this.template = _.template($('#item-slot-template').html());
             this.canSelect = canSelect;
@@ -355,6 +362,17 @@ namespace.module('bot.views', function (exports, require) {
         },
         
         render: function() {
+            if(this.model && this.model.isNew) {
+                this.showNew = true;
+            } else {
+                this.showNew = false;
+            }
+            if(this.model && this.tabName == "Cards" && !this.isCard) {
+                this.showNew = false;
+                //console.log(this.model.name);
+            }
+            
+            
             this.$el.html(this.template(this));
             if (this.model && this.model.disabled) {
                 this.$el.addClass('red');
@@ -449,7 +467,7 @@ namespace.module('bot.views', function (exports, require) {
         newItemSlot: function(model, slot, parent) {
             var canSelect = slot === undefined;
             var canUnequip = slot !== undefined && model;
-            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip);
+            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip, this.name);
             this.listenTo(view, 'click', this.onClick);
             this.listenTo(view, 'unequip', this.onUnequip);
             this.listenTo(view, 'hovering', this.onHover);
@@ -599,10 +617,8 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         newItemSlot: function(model, slot, parent, canSelect, canUnequip, isCard) {
-            var view = new ItemSlot({model: model}, slot, parent);
-            view.canSelect = canSelect;
-            view.canUnequip = canUnequip;
-            view.isCard = isCard;
+            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip, "Cards", isCard);
+
             view.isUnequipped = slot === undefined;
 
             this.listenTo(view, 'click', this.onClick);
@@ -622,6 +638,7 @@ namespace.module('bot.views', function (exports, require) {
             if (!this.visible) {
                 return this;
             }
+
 
             this.$el.html(this.template());
 

@@ -295,6 +295,7 @@ namespace.module('bot.inv', function (exports, require) {
     var Skillchain = gl.Model.extend({
         initialize: function() {
             this.skills = [undefined, undefined, undefined, undefined, undefined];
+            this.name = "Skillchain";
             // this.on('add remove', this.countChange, this);
         },
 
@@ -376,6 +377,7 @@ namespace.module('bot.inv', function (exports, require) {
             // this line and event object is used exclusively for equipment card changes to propogate through here
             // and up to the hero so the egm doesn't have to listen and stop listening every equip
             this.listenTo(gl.EquipEvents, 'change', this.propChange);
+            this.name = "Equipped";
         },
 
         propChange: function() { this.trigger('change'); },

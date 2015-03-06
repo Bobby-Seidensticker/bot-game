@@ -1094,6 +1094,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'physDmg added 5 perLevel', type: 'dmg'},
                     {def: 'projCount added 1 perLevel', type: 'dmg'},
+                    {def: 'projCount added 1', type: 'dmg'},
                     {def: 'cooldownTime added 3000', type: 'dmg'}
                 ]
             },
@@ -1908,7 +1909,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-elf", 0],
                     ["dexterous hands", 2],
                     ["practiced", 2],                    
-                    ["sharpened", 2]
+                    ["sharpened", 2],
                 ],
                 "flavor": "He knows you've been naughty"
             },

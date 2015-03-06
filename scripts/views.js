@@ -23,6 +23,8 @@ namespace.module('bot.views', function (exports, require) {
             this.mapTab = new MapTab({}, game);
             this.footerView = new FooterView({}, game);
             this.infoBox = new InfoBox();
+            this.configTab = new ConfigTab({}, game);
+            this.helpTab = new HelpTab({}, game);
 
             this.visView = new VisView({}, game, this);
             this.$el.append(this.visView.render().el);
@@ -33,6 +35,8 @@ namespace.module('bot.views', function (exports, require) {
             this.$el.append(this.cardTab.render().el);
             this.$el.append(this.infoBox.el);
             this.$el.append(this.footerView.render().el);
+            this.$el.append(this.configTab.render().el);
+            this.$el.append(this.helpTab.render().el);
         },
 
         getCenter: function() {
@@ -41,6 +45,10 @@ namespace.module('bot.views', function (exports, require) {
                 left = this.statsTab.$el.width();
             } else if (this.mapTab.visible) {
                 left = this.mapTab.$el.width();
+            } else if (this.helpTab.visible) {
+                left = this.helpTab.$el.width();
+            } else if (this.configTab.visible) {
+                left = this.configTab.$el.width();
             } else {
                 left = 0;
             }
@@ -167,15 +175,14 @@ namespace.module('bot.views', function (exports, require) {
             this.zone = game.zone;
             this.last = {};
             this.heroView = new EntityView({model: this.zone.hero});
-            this.monsterViews = [];
             this.render();
             this.listenTo(gl.DirtyListener, 'zoneTick', this.render);
 
-            // Related to MenuTabMixin
-            this.name = 'Stats';
             this.hide();
-            this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.toggleVisible);
             this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:help', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:config', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.toggleVisible);
 
             this.$el.append('<div class="holder"></div>');
             this.$holder = this.$('.holder');
@@ -207,13 +214,7 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
             var diffs = this.diffs();
-
-            var frag = document.createDocumentFragment();
-            frag.appendChild(this.heroView.render().el);
-
-                
-            this.$holder.html(frag);
-
+            this.$holder.html(this.heroView.render().el);
             return this;
         },
     }).extend(MenuTabMixin);
@@ -917,9 +918,10 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function(options, game) {
             this.zone = game.zone;
 
-            this.name = 'Map';
             this.hide();
             this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:help', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:config', this.hide);
             this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.toggleVisible);
 
             this.$el.html('<div class="holder"></div>');
@@ -936,31 +938,6 @@ namespace.module('bot.views', function (exports, require) {
             this.$holder.css({
                 height: window.innerHeight - FOOTER_HEIGHT
             });
-        },
-
-        show: function() {
-            log.info('Showing MapTab');
-            this.visible = true;
-            this.$el.removeClass('hidden');
-            this.render();
-        },
-
-        hide: function() {
-            log.info('Hiding MapTab');
-            this.visible = false;
-            this.$el.addClass('hidden');
-        },
-
-        toggleVisible: function() {
-            if (this.visible) {
-                this.hide();
-                gl.visLeft = 0;
-                gl.visWidth = window.innerWidth;
-            } else {
-                this.show();
-                gl.visLeft = this.$el.width();
-                gl.visWidth = window.innerWidth - this.$el.width();
-            }
         },
 
         zoneClick: function(zoneName) {
@@ -992,6 +969,82 @@ namespace.module('bot.views', function (exports, require) {
             }, this);
 
             this.$holder.html(frag);
+            return this;
+        }
+    }).extend(MenuTabMixin);
+
+    var ConfigTab = Backbone.View.extend({
+        tagName: 'div',
+        className: 'config',
+
+        initialize: function(options, game) {
+            this.zone = game.zone;
+
+            this.hide();
+            this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:help', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:config', this.toggleVisible);
+
+            this.$el.html('<div class="holder"></div>');
+            this.$holder = this.$('.holder');
+
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+        },
+
+        resize: function() {
+            this.$el.css({
+                height: window.innerHeight - FOOTER_HEIGHT
+            });
+            this.$holder.css({
+                height: window.innerHeight - FOOTER_HEIGHT
+            });
+        },
+
+        render: function() {
+            if (!this.visible) {
+                return this;
+            }
+            this.$holder.html('<div>I said I said I said I said</div>');
+            return this;
+        }
+    }).extend(MenuTabMixin);
+
+    var HelpTab = Backbone.View.extend({
+        tagName: 'div',
+        className: 'config',
+
+        initialize: function(options, game) {
+            this.zone = game.zone;
+
+            this.hide();
+            this.listenTo(gl.DirtyListener, 'footer:buttons:stats', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:map', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:config', this.hide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:help', this.toggleVisible);
+
+            this.$el.html('<div class="holder"></div>');
+            this.$holder = this.$('.holder');
+
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+        },
+
+        resize: function() {
+            this.$el.css({
+                height: window.innerHeight - FOOTER_HEIGHT
+            });
+            this.$holder.css({
+                height: window.innerHeight - FOOTER_HEIGHT
+            });
+        },
+
+        render: function() {
+            if (!this.visible) {
+                return this;
+            }
+            this.$holder.html('<div>biiiiiiiiiitch</div>');
             return this;
         }
     }).extend(MenuTabMixin);

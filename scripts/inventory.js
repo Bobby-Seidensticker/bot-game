@@ -466,6 +466,7 @@ namespace.module('bot.inv', function (exports, require) {
                 new ArmorModel('balsa helmet'),
             ];
             this.sort();
+            this.listenTo(gl.ItemEvents, 'newchange', this.checkForNews);
         },
 
         byId: function(id) {
@@ -493,8 +494,23 @@ namespace.module('bot.inv', function (exports, require) {
                 messages.push(drop.message());
                 log.warning('Item dropped: %s', drop.name);
                 gl.DirtyQueue.mark('inventory:new');
+                this.checkForNews();
             }, this);
             return messages;
+        },
+
+        checkForNews: function() {
+            var any = false;
+            _.each(this.models, function(item) {
+                if(item.isNew) {
+                    any = true;
+                }
+            }, this);
+            if (any) {
+                gl.DirtyQueue.mark('footer:buttons:invshownew');
+            } else {
+                gl.DirtyQueue.mark('footer:buttons:invhidenew');
+            }
         }
     });
 
@@ -568,12 +584,14 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         updateNews: function() {
+            var any = false;
             this.skillchain.newCards = false;
             _.each(this.equipped.slots, function(slot) {
                 this.equipped.newCards[slot] = false;
             }, this);
             _.each(this.models, function(card) {
                 if(card.isNew) {
+                    any = true;
                     if(card.slot == "skill") {
                         this.skillchain.newCards = true;
                     } else {
@@ -581,6 +599,11 @@ namespace.module('bot.inv', function (exports, require) {
                     }
                 }
             }, this);
+            if(any) {
+                gl.DirtyQueue.mark('footer:buttons:cardshownew')
+            } else {
+                gl.DirtyQueue.mark('footer:buttons:cardhidenew')
+            }
             gl.DirtyQueue.mark('cards:newchange');
             //console.log("NEW!: ", this);
         },

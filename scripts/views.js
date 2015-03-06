@@ -322,13 +322,9 @@ namespace.module('bot.views', function (exports, require) {
             this.template = _.template($('#item-slot-template').html());
             this.canSelect = canSelect;
             this.canUnequip = canUnequip;
-            this.listenTo(gl.DirtyListener, 'cards:newchange', this.renderr);
+            this.listenTo(gl.DirtyListener, 'cards:newchange', this.render);
             this.listenTo(gl.UIEvents, 'mouseover', this.onGlobalMouseover);
             this.listenTo(gl.UIEvents, 'mouseout', this.onGlobalMouseout);
-            this.render();
-        },
-
-        renderr: function() {
             this.render();
         },
 
@@ -874,8 +870,25 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function() {
             this.listenTo(gl.UIEvents, 'tabShow', this.onTabShow);
             this.listenTo(gl.UIEvents, 'tabHide', this.onTabHide);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:invshownew', this.invShowNew);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:invhidenew', this.invHideNew);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:cardshownew', this.cardShowNew);
+            this.listenTo(gl.DirtyListener, 'footer:buttons:cardhidenew', this.cardHideNew);
         },
-
+        
+        invShowNew: function() {
+            this.$('.invnewflag').show();
+        },
+        invHideNew: function() {
+            this.$('.invnewflag').hide();
+        },
+        cardShowNew: function() {
+            this.$('.cardnewflag').show();
+        },
+        cardHideNew: function() {
+            this.$('.cardnewflag').hide();
+        },
+        
         events: {
             'mousedown .config-button': 'clickConfig',
             'mousedown .help-button': 'clickHelp',

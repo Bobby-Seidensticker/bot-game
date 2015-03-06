@@ -7,9 +7,9 @@ namespace.module('bot.itemref', function (exports, require) {
     var BASE_SPELL_RANGE = 400000
 
     var PHYS_COLOR = "#777";    
-    var FIRE_COLOR = '#a52a2a';
+    var FIRE_COLOR = 'rgba(255, 130, 0, 0.6)';
     var COLD_COLOR = 'rgba(0, 255, 255, 0.6)';
-    var LIGHT_COLOR = 'rgba(85, 26, 139, 0.6)';
+    var LIGHT_COLOR = 'rgba(173, 7, 194, 0.6)';
     var POIS_COLOR = 'rgba(85, 255, 139, 0.6)';    
 
     var ref = {
@@ -635,6 +635,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
                 "anim": ["#f00"],
+                "specs": [{ type: 'melee', color: FIRE_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
@@ -672,7 +673,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "exploding strike": {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
-                "specs": [{ type: 'melee', quals: [],
+                "specs": [{ type: 'melee', quals: [], color: FIRE_COLOR,
                           onHit: [{ type: 'circle', quals: ['dmg more -20'], onHit: [], onKill: [], onRemove: []}],
                           onKill: [],
                           onRemove: []
@@ -693,7 +694,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "types": ["melee", "fire"],
                 "specs": [{ type: 'melee', quals: [],
-                            onHit: [{ type: 'cone', color: 'rgba(255, 120, 0, 0.6)', quals: ['dmg more -20'], onHit: [], onKill: [], onRemove: []}],
+                            onHit: [{ type: 'cone', color: FIRE_COLOR, quals: ['dmg more -20'], onHit: [], onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []
                           }],
@@ -712,6 +713,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "types": ["melee", "cold"],
                 "anim": ["#00f"],
+                "specs": [{ type: 'melee', color: COLD_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
@@ -727,6 +729,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "types": ["melee", "lightning"],
                 "anim": ["#ff0"],
+                "specs": [{ type: 'melee', color: LIGHT_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
@@ -742,6 +745,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic melee"],
                 "types": ["melee", "poison"],
                 "anim": ["#0f0"],
+                "specs": [{ type: 'melee', color: POIS_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
@@ -771,6 +775,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj", "fire"],
                 "anim": ["#f00"],
+                "specs": [{ type: 'proj', color: FIRE_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
@@ -785,6 +790,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj", "cold"],
                 "anim": ["#00f"],
+                "specs": [{ type: 'proj', color: COLD_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
@@ -799,6 +805,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj", "lightning"],
                 "anim": ["#ff0"],
+                "specs": [{ type: 'proj', color: LIGHT_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
@@ -813,6 +820,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "range",
                 "types": ["proj", "poison"],
                 "anim": ["#0f0"],
+                "specs": [{ type: 'proj', color: POIS_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
@@ -826,7 +834,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],                
+                "specs": [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],                
                 "baseMods": [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
@@ -841,6 +849,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "spell",
                 "types": ["proj", "fire", "spell"],
                 "anim": ["#f00"],
+                "specs": [{ type: 'cone', color: FIRE_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'speed added 100', type: 'dmg'},
@@ -853,14 +862,15 @@ namespace.module('bot.itemref', function (exports, require) {
             "poison spray": {
                 "prototype": ["basic spell"],
                 "class": "spell",
-                "types": ["aoecone", "pois", "spell"],
-                "spec": [{type: "aoecone", color: POIS_COLOR}],
+                "types": ["cone", "pois", "spell"],
+                "specs": [{type: "cone", color: POIS_COLOR}],
                 "baseMods": [
-                    {def: 'manaCost added 5', type: 'dmg'},
+                    {def: 'manaCost added 1', type: 'dmg'},
                     {def: 'speed added 100', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
-                    {def: 'poisDmg added 2', type: 'dmg'},
-                    {def: 'poisDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},
+                    {def: 'poisDmg added 4', type: 'dmg'},
+                    {def: 'poisDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 poisDmg', type: 'dmg'}
                 ]
             },
@@ -869,8 +879,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "spell",
                 "types": ["proj", "fire", "spell"],
                 "anim": ["#f00"],
+                "specs": [{ type: "proj", color: FIRE_COLOR}],
                 "baseMods": [
-                    {def: 'manaCost added 7', type: 'dmg'},
+                    {def: 'manaCost added 2', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -887,8 +898,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "spell",
                 "types": ["proj", "cold", "spell"],
                 "anim": ["#00f"],
+                "specs": [{type: "proj", color: COLD_COLOR}],
                 "baseMods": [
-                    {def: 'manaCost added 7', type: 'dmg'},
+                    {def: 'manaCost added 2', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -896,6 +908,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'coldDmg added 3', type: 'dmg'},
                     {def: 'coldDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'projRadius more 200', type: 'dmg'},                    
                 ]
             },
             "lightning ball": {
@@ -903,8 +916,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "class": "spell",
                 "types": ["proj", "lightning", "spell"],
                 "anim": ["#ff0"],
+                "specs": [{type: "proj", color: LIGHT_COLOR}],
                 "baseMods": [
-                    {def: 'manaCost added 7', type: 'dmg'},
+                    {def: 'manaCost added 2', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -912,6 +926,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'lightDmg added 3', type: 'dmg'},
                     {def: 'lightDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'projRadius more 200', type: 'dmg'},                    
                 ]
             },
             "poison ball": {
@@ -929,6 +944,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'poisDmg added 3', type: 'dmg'},
                     {def: 'poisDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'projRadius more 200', type: 'dmg'},                    
                 ]
             },
             "ice blast": {
@@ -962,6 +978,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "spell"],
+                "specs": [{type: "proj", color: '#000'}],
                 "baseMods": [
                     {def: 'manaCost added 10', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},
@@ -988,12 +1005,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "circle" , "spell"],
-                "specs": [{ type: 'circle', color: 'rgba(85, 26, 139, 0.6)', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'circle', color: LIGHT_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
+                    {def: 'cooldownTime added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE / 2, type: 'dmg'},
-                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},
                     {def: 'lightDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
@@ -1001,40 +1019,49 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
+                "specs": [{ type: 'circle', color: FIRE_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
+                    {def: 'cooldownTime added 500', type: 'dmg'},                    
                     {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
                     {def: 'fireDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},                    
                 ]
             },
             "ice nova": {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
+                "specs": [{ type: 'circle', color: COLD_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
+                    {def: 'cooldownTime added 500', type: 'dmg'},                    
                     {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},                    
                 ]
             },
             "poison nova": {
                 "prototype": ["basic spell"],
                 "class": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
+                "specs": [{ type: 'circle', color: POIS_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
+                    {def: 'cooldownTime added 500', type: 'dmg'},                    
                     {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
                     {def: 'poisDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},                    
                 ]
             },
             "flame cone": {
                 "prototype": ["basic"],
                 "class": "melee",
                 "types": ["cone" , "melee"],
-                "specs": [{ type: 'cone', color: 'rgba(255, 120, 0, 0.6)', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'cone', color: FIRE_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
@@ -1061,7 +1088,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "prototype": ["basic"],
                 "class": "range",
                 "types": ["proj"],
-                "specs": [{ type: 'proj', color: '#a52a2a', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                "specs": [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -1907,7 +1934,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "toxic golem" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["super smash", "basic melee"],
+                "skills": ["poison spray"],//, "super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
                     ["putrified", 1]
@@ -2069,7 +2096,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
                     ["putrified", 1],
-                    ["more projectiles", 2]
+                    ["more projectiles", 1]
                 ],
             },
             "imp shaman": {
@@ -2331,7 +2358,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "level": 40,
             },
             "dojo": {
-                "choices": ["dummy"],
+                "choices": ["toxic golem"],
                 "weights": [1],
                 "boss": "dummy",
                 "roomCount": 10,

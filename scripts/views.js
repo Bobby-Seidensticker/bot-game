@@ -829,12 +829,16 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#buttons-footer-template').html()),
 
         events: {
+            'click .config-button': 'clickConfig',
+            'click .help-button': 'clickHelp',
             'click .stats-button': 'clickStats',
             'click .map-button': 'clickMap',
             'click .inv-button': 'clickInv',
             'click .cards-button': 'clickCards'
         },
 
+        clickConfig: function() { gl.DirtyQueue.mark('footer:buttons:config'); console.log('stat click'); },
+        clickHelp: function() { gl.DirtyQueue.mark('footer:buttons:help'); console.log('map click'); },
         clickStats: function() { gl.DirtyQueue.mark('footer:buttons:stats'); console.log('stat click'); },
         clickMap: function() { gl.DirtyQueue.mark('footer:buttons:map'); console.log('map click'); },
         clickInv: function() { gl.DirtyQueue.mark('footer:buttons:inv'); console.log('inv click'); },

@@ -220,7 +220,6 @@ namespace.module('bot.entity', function (exports, require) {
     });
 
     var MonsterSpec = EntitySpec.extend({
-
         // TODO: fn signature needs to be (name, level)
         initialize: function(name, level) {
             // All you need is a name
@@ -235,7 +234,7 @@ namespace.module('bot.entity', function (exports, require) {
             
             this.mods = _.map(this.items, function(item) {
                 var expanded = itemref.expand(item[0], item[1]);
-                if(item[0] == "weapon") {
+                if (item[0] == "weapon") {
                     this.weaponType = expanded.type;
                 }
                 return expanded.mods;

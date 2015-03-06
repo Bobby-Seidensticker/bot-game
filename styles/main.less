@@ -173,7 +173,6 @@ body .stats {
         .itemSlot.yellow .filter {
             background-color: yellow;
         }
-
         .itemSlot.selected {
             border-color: rgba(244, 184, 38, 1);
         }
@@ -361,15 +360,20 @@ body .stats {
             width: 63px;
             line-height: 43px;
             text-align: center;
+
+            .open {
+                background-color:  rgba(244, 184, 38, 0.2);
+            }
         }
     }
 }
 
 .map {
-    /*background-color: @color-primary-0;*/
     background-image: url("../assets/bg.png");
     background-repeat: repeat;
-    float: left;
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100%;
     width: 380px;
     overflow: hidden;
@@ -399,6 +403,38 @@ body .stats {
     }
     .zone.running {
         background-color: rgba(190,190,180,0.2);/*@color-secondary-1-1;*/
+    }
+}
+
+.config {
+    background-image: url("../assets/bg.png");
+    background-repeat: repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 380px;
+    overflow: hidden;
+
+    .holder {
+        width: 405px;
+        overflow: auto;
+    }
+}
+
+.help {
+    background-image: url("../assets/bg.png");
+    background-repeat: repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 380px;
+    overflow: hidden;
+
+    .holder {
+        width: 405px;
+        overflow: auto;
     }
 }
 

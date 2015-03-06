@@ -127,6 +127,11 @@ namespace.module('bot.entity', function (exports, require) {
                 //{def: 'strength gainedas 1 meleeDmg', type: 'dmg'},
                 //{def: 'dexterity gainedas 1 rangeDmg', type: 'dmg'},
                 //{def: 'wisdom gainedas 1 spellDmg', type: 'dmg'},                
+
+                {def: 'meleeDmg added 1', type: 'dmg'},
+                {def: 'rangeDmg added 1', type: 'dmg'},
+                {def: 'spellDmg added 1', type: 'dmg'},                
+
                 
                 {def: 'eleResistAll added 1', type: 'def'},
 

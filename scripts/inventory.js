@@ -200,7 +200,7 @@ namespace.module('bot.inv', function (exports, require) {
             _.each(arr, function(stat) {
                 this[stat] = utils.computeStat(this.dmgStats, stat);
                 if (this.class + "Dmg" === stat) {
-                    typeMoreMod *= 1 + (this[stat] / 100); //attackType modifiers are percentage based
+                    typeMoreMod *= this[stat]; //attackType modifiers are percentage based
                 }
             }, this);
 

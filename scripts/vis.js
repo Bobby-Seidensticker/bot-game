@@ -298,6 +298,7 @@ namespace.module('bot.vis', function (exports, require) {
     });
 
     function drawMessages(ctx, msgs) {
+        // TODO: fix offset for separating messages about multiple item drops from the same entity
         _.each(msgs, function(msg) {
             ctx.fillStyle = msg.color;
             ctx.textAlign = 'center';

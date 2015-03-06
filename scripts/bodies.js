@@ -269,6 +269,7 @@ namespace.module('bot.bodies', function(exports, require) {
                     var color = (message.slice(0,3) == "New" || message.slice(0,7) == "Leveled") ? 'rgba(255, 140, 0, 0.8)' : 'rgba(255, 100, 0, 0.6)';
                     gl.MessageEvents.trigger(
                         'message',
+                        // TODO: Fix the offset here
                         newZoneMessage(message, 'drop', target.pos, color, 1000, target.spec.height / 2 + index * 30000)
                     );
                 }, this);

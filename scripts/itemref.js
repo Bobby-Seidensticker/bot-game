@@ -332,7 +332,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "velvet tunic": {
                 "mods": [
                     {def: 'manaRegen added 5', type: 'def'},
-                    {def: 'manaRegen added 2 perLevel', type: 'def'}
+                    {def: 'manaRegen added 1 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
@@ -939,11 +939,11 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'poisDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE * 0.7, type: 'dmg'},
+                    {def: 'poisDmg added 5 perLevel', type: 'dmg'},
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
-                    {def: 'poisDmg added 3', type: 'dmg'},
-                    {def: 'poisDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'poisDmg added 5', type: 'dmg'},
+                    {def: 'poisDmg more 2 perLevel', type: 'dmg'},
                     {def: 'projRadius more 200', type: 'dmg'},                    
                 ]
             },
@@ -1838,6 +1838,16 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["life on hit", 1]
                 ]
             },
+            "skeleton embermage" : {
+                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"]],
+                "skills": ["incinerate", "fire ball", "basic spell"],
+                "sourceCards": [
+                    ["proto-skeleton", 0],
+                    ["life on hit", 2],
+                    ["mana on hit", 2],
+                    ["pyromania", 1]
+                ]
+            },
             "skeleton king" : {
                 "items": [["weapon", "hand axe"], ["armor", "collander"], ["armor", "leather armor"], ["armor", "gardening gloves"], ["armor", "leather boots"]],
                 "skills": ["lethal strike", "super smash", "basic melee"],
@@ -1855,6 +1865,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "items": [["weapon", "cardboard sword"]],
                 "skills": ["basic melee"],
                 "sourceCards": [
+                    ["small stature", 1],
                     ["nimble", 1],
                     ["compression shorts", 3],
                     ["life on hit", 2]
@@ -2278,8 +2289,8 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "zone": {
             "spooky dungeon": {
-                "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton"],
-                "weights": [20, 10, 5, 5],
+                "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],
+                "weights": [20, 10, 5, 5, 3],
                 "boss": "skeleton king",
                 "roomCount": 20,
                 "quantity": [1, 1, 3],

@@ -817,7 +817,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         calc: function() {
-            var SIZE = 90;
+            var SIZE = 73;
             var useWidth = 0;
 
             for (var i = 0; i < this.data.length; i++) {
@@ -868,6 +868,37 @@ namespace.module('bot.views', function (exports, require) {
             this.adjust();
             return this;
         },
+    });
+
+    var PotionView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'potion-holder',
+        template: _.template($('#potion-template').html()),
+
+        events: {
+            'mousedown': 'use'
+        },
+
+        initialize: function(options, hero) {
+            this.hero = hero;
+            this.listenTo(gl.DirtyListener, 'tick', this.adjust);
+        },
+
+        use: function() {
+            this.hero.tryUsePotion();
+        },
+
+        adjust: function() {
+            var SIZE = 73;
+            var pct = (this.hero.potionCoolAt - gl.time) / 10000;
+            this.$cd.css('height', pct * SIZE);
+        },
+
+        render: function() {
+            this.$el.html(this.template());
+            this.$cd = this.$('.cooldown');
+            return this;
+        }
     });
 
     var ZoneFooterView = Backbone.View.extend({
@@ -958,6 +989,7 @@ namespace.module('bot.views', function (exports, require) {
             this.heroBodyView = new HeroFooterView({model: this.hero});
             this.zoneView = new ZoneFooterView({}, this.zone);
             this.skillchainView = new SkillchainFooterView({}, this.hero);
+            this.potionView = new PotionView({}, this.hero);
             this.buttons = new FooterButtonsView({}, visibleTabsInterface);
         },
 
@@ -974,6 +1006,7 @@ namespace.module('bot.views', function (exports, require) {
             frag.appendChild(this.heroBodyView.render().el);
             frag.appendChild(this.zoneView.render().el);
             frag.appendChild(this.skillchainView.render().el);
+            frag.appendChild(this.potionView.render().el);
             frag.appendChild(this.buttons.render().el);
             this.$el.html(frag);
             return this;

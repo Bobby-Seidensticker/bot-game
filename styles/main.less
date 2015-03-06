@@ -119,6 +119,7 @@ body .stats {
             }
 
             .newflag {
+                font-weight: bold;
                 color: #FFF;
                 position: absolute;
                 z-index: 2;
@@ -270,12 +271,12 @@ body .stats {
         margin: 5px;
     }
 
-    .skillchain {
+    .skillchain, .potion-holder {
         float: left;
         height: 100px;
         margin: 5px;
 
-        .skill {
+        .skill, .potion {
             float: left;
             margin-top: 10px;
             margin-left: 10px;
@@ -333,6 +334,7 @@ body .stats {
     }
 
     .buttons {
+        position: relative;
         font-size: 16px;
         float: right;
         /* full size, margins handled in buttons */
@@ -340,30 +342,34 @@ body .stats {
         width: 225px;
 
         /*
-         110 px size:
-         5 px margin
-         2 px border
-         div
-         2 px border
-         5px margin
-         2 px border
-         div
-         2px border
-         5px margin
-       */
+          110 px size:
+          5 px margin
+          2 px border
+          div
+          2 px border
+          5px margin
+          2 px border
+          div
+          2px border
+          5px margin
+          */
 
         .invnewflag {
+            font-weight: bold;
             position: absolute;
             color: #FFF;
-            top: -16px;
+            top: -14px;
+            left: 2px;
+            display: none;
             font-size: 14px;
         }
 
         .cardnewflag {
+            font-weight: bold;
             position: absolute;
             color: #FFF;
-            top: -16px;
-            left: 16px;
+            top: -14px;
+            left: 2px;
             display: none;
             font-size: 14px;
         }  
@@ -373,9 +379,9 @@ body .stats {
             border: 2px solid @button-border;
             border-radius: 5px;
             /*border-top: 2px solid #333;
-           border-left: 2px solid #333;
-           border-right: 2px solid #111;
-           border-bottom: 2px solid #111;*/
+              border-left: 2px solid #333;
+              border-right: 2px solid #111;
+              border-bottom: 2px solid #111;*/
             margin: 5px 0 0 5px;
             position:relative;
             float: left;
@@ -442,11 +448,11 @@ body .stats {
         width: 405px;
         overflow: auto;
         > div {
-          margin-left: 10px;
+            margin-left: 10px;
         }
         #devmsg {
-          height:150px;
-          width:300px;
+            height:150px;
+            width:300px;
         }
     }
 }

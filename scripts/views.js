@@ -303,6 +303,10 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseout: function() {
+            if (this.model) {
+                this.model.isNew = false;
+            }
+            this.render();
             this.$el.removeClass('hovering');
             this.trigger('hovering');
             gl.UIEvents.trigger('mouseout');

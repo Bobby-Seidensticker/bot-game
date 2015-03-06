@@ -11,6 +11,7 @@ namespace.module('bot.inv', function (exports, require) {
     var GearModel = gl.Model.extend({
         initialize: function() {
             this.xp = 0;
+            this.isNew = true;
             this.level = 1;
             this.baseMods = [];
             this.cards = [];
@@ -500,6 +501,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.equipped = false;
             this.qp = 0;
             this.level = 1;
+            this.isNew = true;
         },
 
         getMods: function() {

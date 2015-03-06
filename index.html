@@ -9,7 +9,8 @@
 
   <script id="item-slot-template" type="text/template">
     <% if (model) { %>
-      <img src="assets/<%= utils.spaceToUnderscore(model.name) %>.png" />
+    <img src="assets/<%= utils.spaceToUnderscore(model.name) %>.png" />
+      <div class="newflag"><%= model.isNew ? "New!": "" %></div>
       <div class="corner corner-level"><%= model.level %></div>
       <div class="xpbar" style="width: <%= 63 * model.pctLeveled() %>px;"></div>
       <div class="filter"></div>

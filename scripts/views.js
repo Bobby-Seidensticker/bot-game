@@ -1138,6 +1138,7 @@ namespace.module('bot.views', function (exports, require) {
         devButton: function() {
             var msg = $('#devmsg').val();
             gl.FB.child('feedback').push(localStorage.getItem('uid') + " says:" + msg);
+            $('#devmsg').val('');
         },
         
     });

@@ -16,12 +16,12 @@ namespace.module('bot.log', function (exports, require) {
         if(error) {
             console.log("anon login failed", error);
             gl.FBuid = "failedauth";
-            gl.FBL = gl.FB.child(uid);
+            gl.FBL = gl.FB.child('logs').child(uid);
             gl.FBL.push("starting with failed auth");
         } else {
             //info('Good anon auth: %s', authData.uid);
             gl.FBuid = authData.uid.slice(11);
-            gl.FBL = gl.FB.child(uid);
+            gl.FBL = gl.FB.child('logs').child(uid);
             gl.FBUI = gl.FBL.child("UI");
             gl.FBL.push("starting");
         }

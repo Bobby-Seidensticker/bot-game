@@ -135,48 +135,48 @@ namespace.module('bot.itemref', function (exports, require) {
             "knobby wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 3 perLevel', type: 'dmg'}
                 ],
                 "type": "spell",
             },
             "pewter wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 5 perLevel', type: 'dmg'}
                 ],
                 "type": "spell",
             },
             "delicate wand": {
                 "mods": [
-                    {def: 'spellDmg more 15', type: 'dmg'},
+                    {def: 'spellDmg more 25', type: 'dmg'},
                     {def: 'spellDmg more 2 perLevel', type: 'dmg'}
                 ],
                 "type": "spell",
             },
             "dragonstone wand": {
                 "mods": [
-                    {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'fireDmg more 15', type: 'dmg'},
+                    {def: 'fireDmg more 3 perLevel', type: 'dmg'}
                 ],
                 "type": "spell",
             },
             "fairy wand": {
                 "mods": [
-                    {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 25', type: 'dmg'},
+                    {def: 'spellDmg more 4 perLevel', type: 'dmg'}
                 ],
                 "type": "spell",
             },
             "star wand": {
                 "mods": [
-                    {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 25', type: 'dmg'},
+                    {def: 'spellDmg more 3 perLevel', type: 'dmg'}
                 ],
                 "type": "spell",
             },
             "demon wand": {
                 "mods": [
-                    {def: 'spellDmg more 15', type: 'dmg'},
+                    {def: 'spellDmg more 50', type: 'dmg'},
                     {def: 'spellDmg more 2 perLevel', type: 'dmg'}
                 ],
                 "type": "spell",
@@ -195,35 +195,35 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "collander": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor added 7', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "type": "head",
             },
             "conquistador helm": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor added 9', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "type": "head",
             },
             "crusader helm": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor added 15', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "type": "head",
             },
             "gladiator helm": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor added 22', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "type": "head",
             },
             "apollo helmet": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor added 30', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "type": "head",
@@ -240,92 +240,91 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "leather armor": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 8', type: 'def'},
+                    {def: 'armor added 3 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "goblin leather": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 4 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "leatherscale armor": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 20', type: 'def'},
+                    {def: 'armor added 5 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "leatherplate armor": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 20', type: 'def'},
+                    {def: 'armor added 3 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "hammered chestplate": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 50', type: 'def'},
+                    {def: 'armor added 5 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "iron chestplate": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 50', type: 'def'},
+                    {def: 'armor more 2 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "copper chestplate": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 50', type: 'def'},
+                    {def: 'armor more 3 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "muscle plate": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 50', type: 'def'},
+                    {def: 'armor more 4 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "elegant plate": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 55', type: 'def'},
+                    {def: 'armor more 5 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "raider armor": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'physDmg more 5 perLevel', type: 'dmg'}
                 ],
                 "type": "chest",
             },
             "shadow armor": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'dodge added 50', type: 'def'},
+                    {def: 'dodge added 5 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "scout leather": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'dodge added 20', type: 'def'},
+                    {def: 'dodge more 2 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "studded leather": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'dodge added 50', type: 'def'},
+                    {def: 'dodge more 4 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
@@ -338,29 +337,29 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "war robe": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'manaRegen added 10', type: 'def'},
+                    {def: 'armor added 5 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "winged leather": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 100', type: 'def'},
+                    {def: 'armor added 10 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "cultist robe": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'manaRegen added 15', type: 'def'},
+                    {def: 'manaRegen added 2 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
             "embroidered silks": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'manaRegen added 20', type: 'def'},
+                    {def: 'manaRegen added 2 perLevel', type: 'def'}
                 ],
                 "type": "chest",
             },
@@ -377,49 +376,49 @@ namespace.module('bot.itemref', function (exports, require) {
             "jeans": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 1 perLevel', type: 'def'}
                 ],
                 "type": "legs",
             },
             "leather boots": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor added 10', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "type": "legs",
             },
             "elf boots": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
+                    {def: 'dodge added 5', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "type": "legs",
             },
             "mage boots": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'manaRegen added 3', type: 'def'},
+                    {def: 'manaRegen added 1 perLevel', type: 'def'}
                 ],
                 "type": "legs",
             },
             "arcane boots": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'manaRegen added 5', type: 'def'},
+                    {def: 'manaRegen added 2 perLevel', type: 'def'}
                 ],
                 "type": "legs",
             },
             "buckaneer boots": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 25', type: 'def'},
+                    {def: 'armor added 5 perLevel', type: 'def'}
                 ],
                 "type": "legs",
             },
             "suess boots": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 500', type: 'def'},
+                    {def: 'armor added 20 perLevel', type: 'def'}
                 ],
                 "type": "legs",
             },
@@ -429,56 +428,56 @@ namespace.module('bot.itemref', function (exports, require) {
             "latex gloves": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 1 perLevel', type: 'def'}
                 ],
                 "type": "hands",
             },
             "gardening gloves": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
+                    {def: 'armor added 7', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "type": "hands",
             },
             "leather gloves": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 10', type: 'def'},
+                    {def: 'armor added 3 perLevel', type: 'def'}
                 ],
                 "type": "hands",
             },
             "velvet gloves": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'manaRegen added 2', type: 'def'},
+                    {def: 'manaRegen added 1 perLevel', type: 'def'}
                 ],
                 "type": "hands",
             },
             "handmail": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 15', type: 'def'},
+                    {def: 'armor added 3 perLevel', type: 'def'}
                 ],
                 "type": "hands",
             },
             "fancy gauntlets": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 25', type: 'def'},
+                    {def: 'armor added 4 perLevel', type: 'def'}
                 ],
                 "type": "hands",
             },
             "polished gauntlets": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 30', type: 'def'},
+                    {def: 'armor added 4 perLevel', type: 'def'}
                 ],
                 "type": "hands",
             },
             "goldenscale gauntlets": {
                 "mods": [
-                    {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor added 50', type: 'def'},
+                    {def: 'armor added 5 perLevel', type: 'def'}
                 ],
                 "type": "hands",
             },

@@ -76,6 +76,11 @@ namespace.module('bot.bodies', function(exports, require) {
                 this.lastManaFullTime = gl.time;
                 this.manaRegened = 0;
             }
+            if (this.mana < 0) {
+                this.mana = 0;
+                this.lastManaFullTime = gl.time;
+                this.manaRegened = 0;
+            }
         },
 
         regen: function() {

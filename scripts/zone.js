@@ -19,7 +19,7 @@ namespace.module('bot.zone', function (exports, require) {
     var ZoneManager = gl.Model.extend({
         initialize: function(hero) {
             this.allZones = itemref.ref.zone;
-            this.zoneProgression = itemref.ref.zoneProgression;  // to be used later for rank increases
+            this.zoneOrder = itemref.ref.zoneOrder.order;  // to be used later for rank increases
 
             this.hero = new HeroBody(hero);
             this.attackManager = new namespace.bot.attacks.AttackManager();
@@ -29,6 +29,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.messages = new ZoneMessages();
 
             this.nextZone = 'spooky dungeon';
+            this.unlockedZones = 0;
             this.newZone(this.nextZone);
         },
 
@@ -191,11 +192,28 @@ namespace.module('bot.zone', function (exports, require) {
                 room.hero = this.hero;
                 this.attackManager.nextRoom(this.rooms[this.heroPos]);
                 room.attackManager = this.attackManager;
-
+                this.tryUnlockNextZone();
                 gl.DirtyQueue.mark('zone:nextRoom');
             }
             var room = this.rooms[this.heroPos];
             return room;
+        },
+
+        tryUnlockNextZone: function() {
+            if( this.zoneOrder.indexOf(this.nextZone) == this.unlockedZones &&
+                this.heroPos == 29) {
+                this.unlockedZones += 1;
+                this.messages.addMessage({
+                    text: "New Map Unlocked!",
+                    type: "newlevel",
+                    pos: this.hero.pos,
+                    color: "#FFF",
+                    lifespan: 5000,
+                    verticalOffset: 0,
+                    time: gl.time,
+                    expires: gl.time + 5000});
+                gl.DirtyQueue.mark('zone:unlocked');                
+            } 
         },
 
         atExit: function() {

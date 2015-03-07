@@ -2287,6 +2287,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
         },
+        "zoneOrder": {
+            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle"] 
+        },
         "zone": {
             "spooky dungeon": {
                 "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],
@@ -2385,7 +2388,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "level": 1,
             },
         },
-        "zoneProgression": ["spooky dungeon", "dark forest"],
         "test": {
             "hngg": {"a": 10},
             "fwah": {"b": 10},

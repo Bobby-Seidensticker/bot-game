@@ -1050,6 +1050,7 @@ namespace.module('bot.views', function (exports, require) {
 
             this.resize();
             $(window).on('resize', this.resize.bind(this));
+            this.listenTo(gl.DirtyListener, 'zone:unlocked', this.render);
         },
 
         resize: function() {
@@ -1079,15 +1080,17 @@ namespace.module('bot.views', function (exports, require) {
             this.subs = [];
 
             var frag = document.createDocumentFragment();
-            var data, sub;
+            var data, sub, name, zoneRef;
 
-            _.each(this.zone.allZones, function(zoneRef, name) {
+            for(var i = 0; i < this.zone.unlockedZones +1; i++) {
+                var name = this.zone.zoneOrder[i];
+                var zoneRef = this.zone.allZones[name];
                 data = _.extend({name: name, running: name === this.zone.nextZone}, zoneRef);
                 sub = new ZoneMapTab({model: data});
                 this.listenTo(sub, 'click', this.zoneClick);
                 this.subs.push(sub);
                 frag.appendChild(sub.render().el);
-            }, this);
+            }
 
             this.$holder.html(frag);
             return this;

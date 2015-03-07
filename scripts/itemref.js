@@ -1309,28 +1309,28 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "physDmg converted 20 fireDmg", "type": "dmg"},
                     {"def": "fireDmg more 2 perLevel", "type": "dmg"},                    
                 ],
-                "slot": "weapon",
+                "slot": "skill",
             },
             "frosted": {
                 "mods": [
                     {"def": "physDmg converted 20 coldDmg", "type": "dmg"},
                     {"def": "coldDmg more 2 perLevel", "type": "dmg"},                    
                 ],
-                "slot": "weapon",
+                "slot": "skill",
             },
             "charged": {
                 "mods": [
                     {"def": "physDmg converted 20 lightDmg", "type": "dmg"},
                     {"def": "lightDmg more 2 perLevel", "type": "dmg"},                    
                 ],
-                "slot": "weapon",
+                "slot": "skill",
             },
             "putrified": {
                 "mods": [
                     {"def": "physDmg converted 20 poisDmg", "type": "dmg"},
                     {"def": "poisDmg more 2 perLevel", "type": "dmg"},
                 ],
-                "slot": "weapon",
+                "slot": "skill",
             },
             "heart of granite": {
                 "mods": [
@@ -1465,8 +1465,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "swamp armor": {
                 "mods": [
-                    {"def": "poisResist more -5 perLevel", "type": "def"},
-                    {"def": "poisResist more -10", "type": "def"},                    
+                    {"def": "poisResist more -5 perLevel", "type": "eleResist"},
+                    {"def": "poisResist more -10", "type": "eleResist"},                    
                 ],
                 "slot": "chest",
             },

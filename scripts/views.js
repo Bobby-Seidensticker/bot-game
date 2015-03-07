@@ -1101,6 +1101,10 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'config',
 
+        events: {
+            'click #wipebutton': 'wipe'
+        },
+
         initialize: function(options, game) {
             this.template = _.template($('#config-template').html());
             this.zone = game.zone;
@@ -1130,8 +1134,13 @@ namespace.module('bot.views', function (exports, require) {
             }
             this.$holder.html(this.template);
             this.$('#namebutton').bind('click', this.nameButton);
-            this.$('#devbutton').bind('click', this.devButton);            
+            this.$('#devbutton').bind('click', this.devButton);
             return this;
+        },
+
+        wipe: function() {
+            localStorage.removeItem('data');
+            location.reload();
         },
 
         nameButton: function() {

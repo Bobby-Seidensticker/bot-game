@@ -12,7 +12,6 @@ namespace.module('bot.main', function (exports, require) {
 
     function onReady() {
 
-
         /*gl.FB = new Firebase("https://fiery-heat-4226.firebaseio.com");
 
         gl.FB.authAnonymously(function(error, authData) {
@@ -27,7 +26,7 @@ namespace.module('bot.main', function (exports, require) {
                 gl.FBL.push("page loading");
             }
         });*/
-        
+
         //localStorage.clear();
 
         log.info('onReady');
@@ -57,8 +56,6 @@ namespace.module('bot.main', function (exports, require) {
             this.cardInv.equipped = this.hero.equipped;
             this.cardInv.skillchain = this.hero.skillchain;
             this.zone = new zone.ZoneManager(this.hero);
-
-            // localStorage.removeItem('data');
 
             var loadSuccess = this.load();
             if (!loadSuccess) {

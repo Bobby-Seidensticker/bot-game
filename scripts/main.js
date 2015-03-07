@@ -154,8 +154,12 @@ namespace.module('bot.main', function (exports, require) {
     }
 
     KeyHandler.prototype.onKeydown = function(event) {
+        if (! isNaN(parseInt(localStorage.getItem('uid')))) {
+            return;
+        }
+        
         var gameModel = this.gameModel;
-
+        
         var SPACE = 32, EKEY = 69, TKEY = 84, UP = 38, DN = 40, CKEY = 67, PKEY = 80, HKEY = 72, XKEY = 88, VKEY = 86;
         var key = event.keyCode;
 

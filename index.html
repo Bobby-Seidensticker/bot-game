@@ -143,8 +143,8 @@
   <script id="hero-footer-template" type="text/template">
     <table>
       <tbody>
-        <tr><td>Health</td>  <td class="hp"><% print(Math.ceil(hp)) %></td>      <td>/</td> <td><%= spec.maxHp %></td></tr>
-        <tr><td>Mana</td>    <td class="mana"><% print(Math.ceil(mana)) %></td>  <td>/</td> <td><%= spec.maxMana %></td></tr>
+        <tr><td>Health</td>  <td class="hp"><% print(Math.ceil(hp)) %></td>      <td>/</td> <td><%= Math.ceil(spec.maxHp) %></td></tr>
+        <tr><td>Mana</td>    <td class="mana"><% print(Math.ceil(mana)) %></td>  <td>/</td> <td><%= Math.ceil(spec.maxMana) %></td></tr>
         <tr><td>Level</td>    <td class="level"><%= spec.level %></td></tr>
         <tr><td>Xp</td>    <td class="xp"><% print(Math.floor(spec.xp)) %></td>  <td>/</td> <td><% print(spec.getNextLevelXp()) %></td></tr>
       </tbody>

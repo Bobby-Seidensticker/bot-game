@@ -89,7 +89,7 @@ namespace.module('bot.main', function (exports, require) {
                 'equipped': this.hero.equipped.toJSON(),
             };
             localStorage.setItem('data', JSON.stringify(data));
-            log.warning('saved');
+            log.info('saved');
         },
 
         load: function() {

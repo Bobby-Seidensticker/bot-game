@@ -309,7 +309,7 @@ namespace.module('bot.views', function (exports, require) {
                 }
                 this.render();
             }
-            log.warning('onMouseleave');
+            log.info('onMouseleave');
             this.$el.removeClass('hovering');
             this.trigger('hovering');
             gl.UIEvents.trigger('mouseleave');

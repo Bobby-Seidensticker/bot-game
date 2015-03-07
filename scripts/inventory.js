@@ -420,7 +420,6 @@ namespace.module('bot.inv', function (exports, require) {
 
         fromJSON: function(data, inv) {
             _.each(data, function(itemName, slot) {
-                console.log('asdflkjasdflkjasdflkjsadf', itemName, slot, _.findWhere(inv.models, {name: itemName}));
                 this.equip(_.findWhere(inv.models, {name: itemName}), slot);
             }, this);
         },

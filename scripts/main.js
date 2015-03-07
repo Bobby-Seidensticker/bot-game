@@ -44,6 +44,7 @@ namespace.module('bot.main', function (exports, require) {
         initialize: function() {
             gl.time = 0;
             this.timeCoefficient = 1;
+            this.lastSave = 0;
 
             this.running = false;
             this.inZone = false;
@@ -71,12 +72,14 @@ namespace.module('bot.main', function (exports, require) {
             this.listenTo(gl.GameEvents, 'togglePause', this.toggle);
 
             this.start();
-
-            setInterval(this.save.bind(this), 1000);
         },
 
-        save: function() {
-            log.warning('saving');
+        trySave: function() {
+            var now = new Date().getTime();
+            if (now - this.lastSave < 1000) {
+                return;
+            }
+            this.lastSave = now;
             var data = {
                 'cardInv': this.cardInv.toJSON(),
                 'inv': this.inv.toJSON(),
@@ -86,7 +89,6 @@ namespace.module('bot.main', function (exports, require) {
                 'equipped': this.hero.equipped.toJSON(),
             };
             localStorage.setItem('data', JSON.stringify(data));
-            console.log(localStorage.getItem('data'));
             log.warning('saved');
         },
 
@@ -164,6 +166,7 @@ namespace.module('bot.main', function (exports, require) {
 
             gl.DirtyQueue.triggerAll(gl.DirtyListener);
 
+            this.trySave();
             requestAnimFrame(this.tick.bind(this));
         },
 

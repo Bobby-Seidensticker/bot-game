@@ -1465,7 +1465,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "swamp armor": {
                 "mods": [
-                    {"def": "armor added 10 perLevel", "type": "def"},
+                    {"def": "poisResist more -5 perLevel", "type": "def"},
+                    {"def": "poisResist more -10", "type": "def"},                    
                 ],
                 "slot": "chest",
             },
@@ -2288,7 +2289,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
         },
         "zoneOrder": {
-            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle"] 
+            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "scary clockwork ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle"] 
         },
         "zone": {
             "spooky dungeon": {
@@ -2347,13 +2348,69 @@ namespace.module('bot.itemref', function (exports, require) {
                 "quantity": [3,3,6],
                 "level": 30,
             },
+            "spookier dungeon": {
+                "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],
+                "weights": [20, 10, 5, 5, 3],
+                "boss": "skeleton king",
+                "roomCount": 20,
+                "quantity": [1, 1, 3],
+                "level": 35
+            },
+            "darker forest": {
+                "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
+                "weights": [20, 15, 15, 5],
+                "boss": "elf king",
+                "roomCount": 20,
+                "quantity": [2, 2, 3],
+                "level": 40,
+            },
+            "scary clockwork ruins": {
+                "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
+                "weights": [20, 10, 10, 10, 5, 5, 5, 0],
+                "boss": "sir mechs-a-lot",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 45,
+            },
+            "even-more-aggro crag": {
+                "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
+                "weights": [20, 10, 10, 10, 10, 0],
+                "boss":"flame dragon",
+                "roomCount": 20,
+                "quantity": [2,2,3],
+                "level": 50,
+            },
+            "even-more-hostile marsh": {
+                "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
+                "weights": [20, 10, 10, 10, 10, 10, 0, 10 ,10],
+                "boss":"scalp collector",
+                "roomCount": 20,
+                "quantity": [4,2,4],
+                "level": 55,
+            },
+            "really icy tunnel": {
+                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn"],
+                "weights": [20, 10, 10, 10 ,10, 0],
+                "boss": "walter wight",
+                "roomCount": 20,
+                "quantity": [2,3,4],
+                "level": 60,
+            },
+            "gothicker castle": {
+                "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
+                "weights": [20, 10, 10, 10, 10, 10, 10],
+                "boss": "shadow knight",
+                "roomCount": 20,
+                "quantity": [3,3,6],
+                "level": 65,
+            },
             "hordecave": {
                 "choices": ["vampire"],
                 "weights": [1],
                 "boss": "bat",
                 "roomCount": 20,
                 "quantity": [20, 500, 5000],
-                "level": 35
+                "level": 70
             },
             "demonic laboroatory": {
                 "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],
@@ -2371,6 +2428,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "quantity": [3,3,6],
                 "level": 40,
             },
+            
             "dojo": {
                 "choices": ["toxic golem"],
                 "weights": [1],

@@ -1140,7 +1140,7 @@ namespace.module('bot.views', function (exports, require) {
         
         devButton: function() {
             var msg = $('#devmsg').val();
-            gl.FB.child('feedback').push(localStorage.getItem('uid') + " says:" + msg);
+            gl.FB.child('feedback').push(localStorage.getItem('uid') + " - " + gl.game.hero.name + " says:" + msg);
             $('#devmsg').val('');
         },
         

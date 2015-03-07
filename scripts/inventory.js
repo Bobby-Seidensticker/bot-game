@@ -11,14 +11,31 @@ namespace.module('bot.inv', function (exports, require) {
     var GearModel = gl.Model.extend({
         initialize: function() {
             this.xp = 0;
-            this.isNew = true;
             this.level = 1;
             this.baseMods = [];
             this.cards = [];
             this.equipped = false;
             this.maxCards = 5;
             this.ensureCardArray();
-            gl.ItemEvents.trigger('newchange');
+            this.isNew = false;
+        },
+
+        toJSON: function() {
+            return {
+                xp: this.xp,
+                level: this.level,
+                cardNames: _.pluck(_.compact(this.cards), 'name'),
+                isNew: this.isNew,
+                itemType: this.itemType,
+                name: this.name
+            };
+        },
+
+        fromJSON: function(data, cardInv) {
+            _.extend(this, data);
+            _.each(this.cardNames, function(name, i) {
+                this.equipCard(_.findWhere(cardInv.models, {name: name}), i);
+            }, this);
         },
 
         applyXp: function(xp) {
@@ -296,6 +313,16 @@ namespace.module('bot.inv', function (exports, require) {
             // this.on('add remove', this.countChange, this);
         },
 
+        toJSON: function() {
+            return _.pluck(_.compact(this.skills), 'name');
+        },
+
+        fromJSON: function(data, inv) {
+            _.each(data, function(skillName, slot) {
+                this.equip(_.findWhere(inv.models, {name: skillName}), slot, false);
+            }, this);
+        },
+
         equip: function(skill, slot, isMonster) {
             log.info('skillchain equip');
             if (skill === undefined) {
@@ -379,6 +406,25 @@ namespace.module('bot.inv', function (exports, require) {
             this.listenTo(gl.ItemEvents, 'newchange', this.findNews);
         },
 
+        toJSON: function() {
+            var slot;
+            var obj = {};
+            for (var i = 0; i < this.slots.length; i++) {
+                slot = this.slots[i];
+                if (this[slot]) {
+                    obj[slot] = this[slot].name;
+                }
+            }
+            return obj;
+        },
+
+        fromJSON: function(data, inv) {
+            _.each(data, function(itemName, slot) {
+                console.log('asdflkjasdflkjasdflkjsadf', itemName, slot, _.findWhere(inv.models, {name: itemName}));
+                this.equip(_.findWhere(inv.models, {name: itemName}), slot);
+            }, this);
+        },
+
         propChange: function() { this.trigger('change'); },
 
         equip: function(item, slot) {
@@ -455,14 +501,42 @@ namespace.module('bot.inv', function (exports, require) {
     var ItemCollection = gl.Model.extend({
         initialize: function() {
             this.models = [
-                new WeaponModel('cardboard sword'),
+                /*new WeaponModel('cardboard sword'),
                 new SkillModel('basic melee'),
                 new SkillModel('basic range'),
-                new SkillModel('basic spell'),                
-                new ArmorModel('balsa helmet'),
+                new SkillModel('basic spell'),
+                new ArmorModel('balsa helmet'),*/
             ];
             this.sort();
             this.listenTo(gl.ItemEvents, 'newchange', this.checkForNews);
+        },
+
+        noobGear: function() {
+            this.models = [new WeaponModel('cardboard sword'),
+                           new SkillModel('basic melee'),
+                           new SkillModel('basic range'),
+                           new SkillModel('basic spell'),
+                           new ArmorModel('balsa helmet')];
+        },
+
+        toJSON: function() {
+            return _.map(this.models, function(model) { return model.toJSON(); });
+        },
+
+        fromJSON: function(data, cardInv) {
+            this.models = _.map(data, function(model) {
+                var item;
+                if (model.itemType === 'skill') {
+                    item = new SkillModel(model.name);
+                } else if (model.itemType === 'weapon') {
+                    item = new WeaponModel(model.name);
+                } else if (model.itemType === 'armor') {
+                    item = new ArmorModel(model.name);
+                }
+                item.fromJSON(model, cardInv);
+                return item;
+            }, this);
+            this.sort();
         },
 
         byId: function(id) {
@@ -518,8 +592,21 @@ namespace.module('bot.inv', function (exports, require) {
             this.equipped = false;
             this.qp = 0;
             this.level = 1;
-            this.isNew = true;
-            gl.ItemEvents.trigger('newchange');
+            this.isNew = false;
+        },
+
+        toJSON: function() {
+            return {
+                name: this.name,
+                qp: this.qp,
+                level: this.level,
+                //equipped: this.equipped,  // needs to be false so the gear model can equip it itself
+                isNew: this.isNew
+            };
+        },
+
+        fromJSON: function(data) {
+            _.extend(this, data);
         },
 
         getMods: function() {
@@ -579,6 +666,19 @@ namespace.module('bot.inv', function (exports, require) {
             this.listenTo(gl.ItemEvents, 'newchange', this.updateNews);
         },
 
+        toJSON: function() {
+            return _.map(this.models, function(model) { return model.toJSON(); });
+        },
+
+        fromJSON: function(data) {
+            this.models = _.map(data, function(cardData) {
+                var c = new CardModel(cardData.name);
+                c.fromJSON(cardData);
+                return c;
+            });
+            this.updateNews();
+        },
+
         updateNews: function() {
             var any = false;
             this.skillchain.newCards = false;
@@ -586,22 +686,21 @@ namespace.module('bot.inv', function (exports, require) {
                 this.equipped.newCards[slot] = false;
             }, this);
             _.each(this.models, function(card) {
-                if(card.isNew) {
+                if (card.isNew) {
                     any = true;
-                    if(card.slot == "skill") {
+                    if (card.slot === 'skill') {
                         this.skillchain.newCards = true;
                     } else {
                         this.equipped.newCards[card.slot] = true;
                     }
                 }
             }, this);
-            if(any) {
+            if (any) {
                 gl.DirtyQueue.mark('footer:buttons:cardshownew')
             } else {
                 gl.DirtyQueue.mark('footer:buttons:cardhidenew')
             }
             gl.DirtyQueue.mark('cards:newchange');
-            //console.log("NEW!: ", this);
         },
 
         addDrops: function(drops) {

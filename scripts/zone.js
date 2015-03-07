@@ -32,6 +32,17 @@ namespace.module('bot.zone', function (exports, require) {
             this.newZone(this.nextZone);
         },
 
+        toJSON: function() {
+            return {
+                nextZone: this.nextZone
+            };
+        },
+
+        fromJSON: function(data) {
+            _.extend(this, data);
+            this.newZone(this.nextZone);  // this is redundent
+        },
+
         newZone: function(name) {
             this.iuid = _.uniqueId('inst');
 

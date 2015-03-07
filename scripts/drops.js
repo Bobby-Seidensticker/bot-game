@@ -39,6 +39,7 @@ namespace.module('bot.drops', function (exports, require) {
         var card = new inventory.CardModel(this.name);
         var qp = Math.pow(10, this.level - 1);
         card.applyQp(qp);
+        card.isNew = true;
         return card;
     }
 
@@ -66,12 +67,15 @@ namespace.module('bot.drops', function (exports, require) {
     }
 
     ItemDrop.prototype.make = function() {
+        var item;
         if (this.itemType === 'weapon') {
-            return new inventory.WeaponModel(this.name);
+            item = new inventory.WeaponModel(this.name);
         }
         if (this.itemType === 'armor') {
-            return new inventory.ArmorModel(this.name);
+            item = new inventory.ArmorModel(this.name);
         }
+        item.isNew = true;
+        return item;
     }
 
     ItemDrop.prototype.message = function() {
@@ -84,7 +88,9 @@ namespace.module('bot.drops', function (exports, require) {
     }
 
     SkillDrop.prototype.make = function() {
-        return new inventory.SkillModel(this.name);
+        var skill = new inventory.SkillModel(this.name);
+        skill.isNew = true;
+        return skill;
     }
 
     SkillDrop.prototype.message = function() {

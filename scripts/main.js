@@ -58,6 +58,13 @@ namespace.module('bot.main', function (exports, require) {
             this.cardInv.skillchain = this.hero.skillchain;
             this.zone = new zone.ZoneManager(this.hero);
 
+            // localStorage.removeItem('data');
+
+            var loadSuccess = this.load();
+            if (!loadSuccess) {
+                this.noobGear();
+            }
+
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;
             this.deaths = 0;
@@ -67,6 +74,48 @@ namespace.module('bot.main', function (exports, require) {
             this.listenTo(gl.GameEvents, 'togglePause', this.toggle);
 
             this.start();
+
+            setInterval(this.save.bind(this), 1000);
+        },
+
+        save: function() {
+            log.warning('saving');
+            var data = {
+                'cardInv': this.cardInv.toJSON(),
+                'inv': this.inv.toJSON(),
+                'zone': this.zone.toJSON(),
+                'hero': this.hero.toJSON(),
+                'skillchain': this.hero.skillchain.toJSON(),
+                'equipped': this.hero.equipped.toJSON(),
+            };
+            localStorage.setItem('data', JSON.stringify(data));
+            console.log(localStorage.getItem('data'));
+            log.warning('saved');
+        },
+
+        load: function() {
+            log.warning('loading');
+            var data = JSON.parse(localStorage.getItem('data'));
+            if (data) {
+                this.cardInv.fromJSON(data.cardInv);
+                this.inv.fromJSON(data.inv, this.cardInv);
+                this.zone.fromJSON(data.zone);
+                this.hero.fromJSON(data.hero);
+                this.hero.skillchain.fromJSON(data.skillchain, this.inv);
+                this.hero.equipped.fromJSON(data.equipped, this.inv);
+                return true;
+            }
+            return false;
+        },
+
+        noobGear: function() {
+            log.warning('noob gear');
+            console.log(this.inv.models.length);
+            this.inv.noobGear();
+            console.log(this.inv.models.length);
+            this.hero.equipped.equip(_.findWhere(this.inv.models, {name: 'cardboard sword'}), 'weapon');
+            this.hero.equipped.equip(_.findWhere(this.inv.models, {name: 'balsa helmet'}), 'head');
+            this.hero.skillchain.equip(_.findWhere(this.inv.models, {name: 'basic melee'}), 0);
         },
 
         start: function() {

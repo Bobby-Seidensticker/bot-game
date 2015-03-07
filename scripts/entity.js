@@ -181,6 +181,17 @@ namespace.module('bot.entity', function (exports, require) {
             this.listenTo(this.equipped, 'change', this.computeAttrs);
         },
 
+        toJSON: function() {
+            return {
+                name: this.name,
+                level: this.level,
+            };
+        },
+
+        fromJSON: function(data) {
+            _.extend(this, data);
+        },
+
         getMods: function() {
             var mods = EntitySpec.prototype.getMods.call(this);
             return mods.concat(this.equipped.getMods());
@@ -295,11 +306,11 @@ namespace.module('bot.entity', function (exports, require) {
         // stopgap measures: basic equipped stuff
         var heroName = 'some newbie';
         var equipped = new inventory.EquippedGearModel();
-        equipped.equip(_.findWhere(inv.models, {name: 'cardboard sword'}), 'weapon');
-        equipped.equip(_.findWhere(inv.models, {name: 'balsa helmet'}), 'head');
+        //equipped.equip(_.findWhere(inv.models, {name: 'cardboard sword'}), 'weapon');
+        //equipped.equip(_.findWhere(inv.models, {name: 'balsa helmet'}), 'head');
 
         var skillchain = new inventory.Skillchain()
-        skillchain.equip(_.findWhere(inv.models, {name: 'basic melee'}), 0);
+        //skillchain.equip(_.findWhere(inv.models, {name: 'basic melee'}), 0);
 
         var hero = new HeroSpec(heroName, skillchain, inv, equipped, cardInv);
 

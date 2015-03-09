@@ -1580,8 +1580,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "coldDmg gainedas 30 poisDmg", "type": "dmg"},
                     {"def": "coldDmg more 3 perLevel", "type": "dmg"}
                 ],
-                "slot": "gloves",
+                "slot": "hands",
                 "rarity": "rare",
+                "flavor": "I am not in danger, I am the danger.",
             },
             "shadow walker": {
                 "mods": [
@@ -1851,6 +1852,44 @@ namespace.module('bot.itemref', function (exports, require) {
                 "slot": "skill",
                 "flavor": "Ready... Aim... FIRE!",
             },
+            "conductive suit": {
+                "mods": [
+                    {"def": "lightDmg more 20", "type": "dmg"},
+                    {"def": "lightResist more -20", "type": "eleResist"},
+                    {"def": "lightResist more -2 perLevel", "type": "eleResist"},
+                    {"def": "lightDmg more 2 perLevel", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "flavor": "Fortunately the path of least resistance is no longer through your heart.",
+            },
+            "antibiotics": {
+                "mods": [
+                    {"def": "poisResist more -20", "type": "eleResist"},
+                    {"def": "poisResist more -2 perLevel", "type": "eleResist"},
+                ],
+                "slot": "hands",
+            },
+            "forest spirit": {
+                "mods": [
+                    {"def": "maxHp gainedas 2 hpRegen", "type": "def"},
+                    {"def": "maxHp more 1 perLevel", "type": "def"}
+                ],
+                "slot": "head"
+            },
+            "armor plating": {
+                "mods": [
+                    {"def": "armor added 10 perLevel", "type": "def"},
+                    {"def": "armor more 2 perLevel", "type": "def"}
+                ],
+                "slot": "hands"
+            },
+            "mind expansion": {
+                "mods": [
+                    {"def": "wisdom added 10 perLevel", "type": "def"},
+                    {"def": "wisdom gainedas 100 maxMana", "type": "def"}
+                ],
+                "slot": "head"
+            },
         },
         "monster": {
             "skeleton" : {
@@ -1948,7 +1987,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["strong back", 2],
-                    ["thwomping", 2]
+                    ["thwomping", 2],
+                    ["forest spirit", 1],
                 ]
             },
             "elf" : {
@@ -1970,6 +2010,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["dexterous hands", 2],
                     ["practiced", 2],                    
                     ["sharpened", 2],
+                    ["forest spirit", 1],
                 ],
                 "flavor": "He knows you've been naughty"
             },
@@ -2014,10 +2055,11 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "gnome" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["quick hit", "basic melee"],
+                "skills": ["lightning slash", "quick hit", "basic melee"],
                 "sourceCards": [
                     ["small stature", 1],
-                    ["keen wit", 1]
+                    ["keen wit", 1],
+                    ["conductive suit", 1]
                 ],
             },
             "gnome electrician" : {
@@ -2028,7 +2070,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["keen wit", 1],
                     ["electrified", 1],
                     ["healing charm", 3],
-                    ["blood pact", 3]
+                    ["blood pact", 3],
+                    ["conductive suit", 1]
                 
                 ],
             },
@@ -2081,7 +2124,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["clockwork", 1],
                     ["mecha heart", 1],
                     ["charged", 1],
-                    ["steam powered", 1]
+                    ["steam powered", 1],
+                    ["conductive suit", 1],
                 ],
             },
             "sir mechs-a-lot" : {
@@ -2105,6 +2149,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["goblin toe", 1],
                     ["berserking", 1],
                     ["simple minded", 1],
+                    ["armor plating", 1]
                 ],
             },
             "goblin priest" : {
@@ -2161,6 +2206,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["small stature", 1],
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
+                    ["antibiotics", 1],
                 ],
             },
             "dart imp" : {
@@ -2172,7 +2218,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
                     ["putrified", 1],
-                    ["more projectiles", 1]
+                    ["more projectiles", 1],
+                    ["antibiotics", 1],                    
                 ],
             },
             "imp shaman": {
@@ -2183,6 +2230,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["small stature", 1],
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
+                    ["antibiotics", 1],                    
                 ],
             },
             "marshwalker": {
@@ -2204,14 +2252,15 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "scalp collector": {
-                "items": [["weapon", "composite bow"]],
+                "items": [["weapon", "composite bow"], ["armor", "plague doctor"]],
                 "skills": ["headshot", "basic range"],
                 "sourceCards": [
                     ["indigenous toxins", 1],
                     ["putrified", 1],
                     ["precise", 1],
                     ["vest pockets", 1],
-                    ["semi automatic", 1]
+                    ["semi automatic", 1],
+                    ["antibiotics", 1],                    
                 ],
             },
             "frost skeleton": {
@@ -2267,7 +2316,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["fur hat", 1],
                     ["ethereal", 1],
-                    ["shadow walker", 1]
+                    ["shadow walker", 1],
+                    ["mind expansion", 1]
                 ],
             },
             "walter wight": {
@@ -2277,12 +2327,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-boss", 0],
                     ["fleece lining", 1],
                     ["frosted", 1],
+                    ["blue ice", 3],
                     ["fur hat", 1],
                     ["ethereal", 1],
                     ["shadow walker", 1],
                     ["keen wit", 4],
                     ["mana on hit", 3],
-                    ["blue ice", 3],
                 ],
             },
             "shadow knight": {
@@ -2293,7 +2343,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["full plating", 1],
                     ["sharpened", 1],
                     ["hateful blade", 1],
-                    ["ethereal", 1]
+                    ["ethereal", 1],
+                    ["armor plating", 1]
                 ],
             },
             "ghoul": {
@@ -2315,7 +2366,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["bloodsucker", 1],
                     ["soulsucker", 1],
                     ["shadow walker", 1],
-                    ["flying", 1]
+                    ["flying", 1],
+                    ["mind expansion", 1]
                 ],
             },
             "living statue": {

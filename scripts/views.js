@@ -627,7 +627,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.render();
                 return;
             }
-            log.error('Was not selectable, unequipped, or card');
+            log.warning('Was not selectable, unequipped, or card');
         },
 
         onUnequip: function(clickedView) {

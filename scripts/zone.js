@@ -35,7 +35,8 @@ namespace.module('bot.zone', function (exports, require) {
 
         toJSON: function() {
             return {
-                nextZone: this.nextZone
+                nextZone: this.nextZone,
+                unlockedZones: this.unlockedZones
             };
         },
 
@@ -200,8 +201,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         tryUnlockNextZone: function() {
-            if( this.zoneOrder.indexOf(this.nextZone) == this.unlockedZones &&
-                this.heroPos == 29) {
+            if (this.zoneOrder.indexOf(this.nextZone) === this.unlockedZones && this.heroPos === 29) {
                 this.unlockedZones += 1;
                 this.messages.addMessage({
                     text: "New Map Unlocked!",

@@ -1082,7 +1082,8 @@ namespace.module('bot.views', function (exports, require) {
             var frag = document.createDocumentFragment();
             var data, sub, name, zoneRef;
 
-            for(var i = 0; i < this.zone.unlockedZones +1; i++) {
+            var len = Math.min(this.zone.unlockedZones + 1, this.zone.zoneOrder.length);
+            for (var i = 0; i < len; i++) {
                 var name = this.zone.zoneOrder[i];
                 var zoneRef = this.zone.allZones[name];
                 data = _.extend({name: name, running: name === this.zone.nextZone}, zoneRef);

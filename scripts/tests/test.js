@@ -34,7 +34,7 @@ namespace.module('bot.test', function (exports, require) {
             }
             return arr;
         }
-        function fuckarr(a) {
+        function fudgearr(a) {
             var arr = [];
             for (var i = 0; i < a.length; i++) {
                 arr.push(a[i] / a[Math.floor(a.length / 2)]);
@@ -45,9 +45,9 @@ namespace.module('bot.test', function (exports, require) {
         window.a2 = fillarr(100, 40);
         window.a3 = fillarr(5, 7);
 
-        window.b1 = fuckarr(window.a1);
-        window.b2 = fuckarr(window.a2);
-        window.b3 = fuckarr(window.a3);
+        window.b1 = fudgearr(window.a1);
+        window.b2 = fudgearr(window.a2);
+        window.b3 = fudgearr(window.a3);
 
         
 

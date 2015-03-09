@@ -6,7 +6,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
         this.x = x;
         this.y = y;
         if (isNaN(this.x)) {
-            throw('shit');
+            throw('shoot');
         }
     }
 
@@ -232,7 +232,7 @@ namespace.module('bot.utils', function (exports, require) {
             }
         } else {
             console.log('addMod about to barf with state ', dict, def);
-            throw('shit');
+            throw('shoot');
         }
     }
 

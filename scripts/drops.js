@@ -26,7 +26,7 @@ namespace.module('bot.drops', function (exports, require) {
         if (type === 'skill') {
             return new SkillDrop(refData);
         }
-        throw('shit, drop factory called with invalid type argument: ' + type);
+        throw('shoot, drop factory called with invalid type argument: ' + type);
     }
 
     function CardDrop(refData) {

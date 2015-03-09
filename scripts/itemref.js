@@ -2512,17 +2512,17 @@ namespace.module('bot.itemref', function (exports, require) {
     };
 
     /*
-      fuck: a = 1
+      fudge: a = 1
       fwah: a = 3
-      shit: a = 2
+      sherbet: a = 2
 
-      asdf: [fuck(2), shit(3)]
+      asdf: [fudge(2), sherbet(3)]
 
       fdsa: [fwah(5)]
 
       buh: [asdf(1), fdsa(4)]
 
-      [asdf, fuck, shit, fdsa, fwah]
+      [asdf, fudge, sherbet, fdsa, fwah]
     */
 
     function recExtend(name, r, names) {
@@ -2539,7 +2539,7 @@ namespace.module('bot.itemref', function (exports, require) {
     function expand(type, name) {
         if (!(type in ref) || !(name in ref[type])) {
             log.error('Could not find reference for a %s named %s', type, name);
-            throw('fuck');
+            throw('fudge');
             return;
         }
 

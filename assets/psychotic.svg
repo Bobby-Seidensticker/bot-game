@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="mind expansion.svg"
+   height="100%"
+   width="100%"
+   inkscape:version="0.48.4 r9939"
+   version="1.1"
+   id="svg2"
+   viewBox="0 0 512 512"
+   inkscape:export-filename="C:\Users\Chris\Documents\GitHub\bot-game\assets\mind_expansion.png"
+   inkscape:export-xdpi="12.832031"
+   inkscape:export-ydpi="12.832031">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1185"
+     inkscape:window-height="1030"
+     id="namedview44"
+     showgrid="false"
+     inkscape:zoom="1.0067985"
+     inkscape:cx="249.09205"
+     inkscape:cy="306.47941"
+     inkscape:window-x="100"
+     inkscape:window-y="100"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <metadata
+     id="metadata48">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs46">
+    <linearGradient
+       id="linearGradient3926">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="0"
+         id="stop3928" />
+      <stop
+         id="stop3934"
+         offset="0.5"
+         style="stop-color:#ffffff;stop-opacity:0.49803922;" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3930" />
+    </linearGradient>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:menu-tooltip="Increase or decrease lightness and contrast"
+       inkscape:menu="Color"
+       inkscape:label="Lightness-Contrast"
+       height="1"
+       width="1"
+       y="0"
+       x="0"
+       id="filter3108">
+      <feFlood
+         flood-color="rgb(0,0,0)"
+         flood-opacity="1"
+         result="result1"
+         id="feFlood3110" />
+      <feBlend
+         result="result2"
+         mode="normal"
+         in2="SourceGraphic"
+         id="feBlend3112" />
+      <feComposite
+         result="result3"
+         operator="arithmetic"
+         k2="1"
+         in2="SourceGraphic"
+         id="feComposite3114" />
+      <feComposite
+         operator="in"
+         in2="SourceGraphic"
+         id="feComposite3116" />
+    </filter>
+  </defs>
+  <rect
+     y="-0.49661246"
+     x="-0.23969027"
+     height="518.513"
+     width="516.97894"
+     id="rect3171"
+     style="opacity:0.98999999;fill:#0a0a0a;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+  <rect
+     style="opacity:0.98999999;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+     id="rect3156"
+     width="76.367531"
+     height="57.982758"
+     x="-94.752312"
+     y="319.66696" />
+</svg>

@@ -110,6 +110,10 @@ namespace.module('bot.bodies', function(exports, require) {
                 if (this.isHero()) {
                     this.tryMove(enemies, distances, room);
                 }
+                _.each(_.compact(this.skills), function(skill) {
+                    skill.oom = skill.spec.manaCost > this.mana;
+                    skill.oor = true;
+                }, this);
                 return;
             }
 
@@ -122,13 +126,20 @@ namespace.module('bot.bodies', function(exports, require) {
         tryAttack: function(enemies, distances, room) {
             var minIndex = distances.minIndex();
             var minDist = distances[minIndex];
+            var skills = _.compact(this.skills);
+            var skill;
 
-            for (var si = 0; si < this.skills.length; si++) {      // use first skill that:
-                if (this.skills[si] && 
-                    this.skills[si].coolAt <= gl.time &&           // is cool
-                    this.skills[si].spec.manaCost <= this.mana &&  // has enough mana
-                    this.skills[si].spec.range >= minDist) {       // is in range
-                        this.attackTarget(enemies[minIndex], this.skills[si], room);
+            for (var i = skills.length; i--;) {
+                skill = skills[i];
+                if (skill === undefined) { continue; }
+                skill.oom = skill.spec.manaCost > this.mana;
+                skill.oor = skill.spec.range < minDist;
+            }
+
+            for (var i = 0; i < skills.length; i++) {  // use first skill that:
+                skill = skills[i];
+                if (skill.coolAt <= gl.time && !skill.oom && !skill.oor) {
+                    this.attackTarget(enemies[minIndex], skill, room);
                     return;
                 }
             }
@@ -146,12 +157,14 @@ namespace.module('bot.bodies', function(exports, require) {
             // Need some way of determining what range you move until
 
             var dist = this.spec.moveSpeed * gl.lastTimeIncr;
-            var range = 1000;  // TODO range needs to come from somewhere
+
             var newPos;
             if (enemies.length === 0) {
                 newPos = this.pos.closer(room.exit, dist, 0);
             } else {
                 var target = enemies[distances.minIndex()];
+                var range = _.map(_.compact(this.skills), function(skill) { return skill.spec.range * .99; }).min();
+                if (!range) { range = 1; }
                 newPos = this.pos.closer(target.pos, dist, range);
             }
             this.pos = newPos;

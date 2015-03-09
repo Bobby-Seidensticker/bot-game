@@ -29,6 +29,8 @@ namespace.module('bot.main', function (exports, require) {
 
         //localStorage.clear();
 
+        gl.VERSION_NUMBER = "v0-1-1";
+        
         log.info('onReady');
 
         var gameModel = new GameModel();

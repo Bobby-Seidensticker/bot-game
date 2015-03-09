@@ -627,7 +627,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.render();
                 return;
             }
-            log.error('Was not selectable, unequipped, or card');
+            log.warning('Was not selectable, unequipped, or card');
         },
 
         onUnequip: function(clickedView) {
@@ -1155,7 +1155,9 @@ namespace.module('bot.views', function (exports, require) {
         
         devButton: function() {
             var msg = $('#devmsg').val();
-            gl.FB.child('feedback').push(localStorage.getItem('uid') + " - " + gl.game.hero.name + " says:" + msg);
+            if(msg != "") {
+                gl.FB.child(gl.VERSION_NUMBER).child('feedback').push(localStorage.getItem('uid') + " - " + gl.game.hero.name + " says:" + msg);
+            }
             $('#devmsg').val('');
         },
         

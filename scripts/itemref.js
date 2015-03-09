@@ -2114,17 +2114,19 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["goblin toe", 1],
                     ["berserking", 1],
                     ["simple minded", 1],
-                    ["pyromania", 1]
+                    ["pyromania", 1],
+                    ["hot blooded", 1],
                 ],
             },
             "goblin artillery" : {
                 "items": [["weapon", "crossbow"], ["armor", "goblin leather"]],
-                "skills": ["basic range"],
+                "skills": ["fire arrow", "basic range"],
                 "sourceCards": [
                     ["goblin toe", 1],
                     ["berserking", 1],
                     ["simple minded", 1],
-                    ["ignited", 2]
+                    ["ignited", 2],
+                    ["hot blooded", 1]
                 ],
             },
             "flame dragon" : {
@@ -2137,7 +2139,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["keen wit", 3],
                     ["brain juice", 3],
                     ["mana on hit", 3],
-                    ["telescoping handle", 3]
+                    ["telescoping handle", 3],
+                    ["hot blooded", 1]
                 ],
             },
             
@@ -2208,6 +2211,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["putrified", 1],
                     ["precise", 1],
                     ["vest pockets", 1],
+                    ["semi automatic", 1]
                 ],
             },
             "frost skeleton": {
@@ -2229,6 +2233,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["keen wit", 1],
                     ["fur hat", 1],
+                    ["cold blooded", 1]
                 ],
             },
             "frozen warrior": {
@@ -2251,6 +2256,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["chinchilla lining", 1],
                     ["clawed", 1],
                     ["yeti fur", 1]
+                    ["cold blooded", 1]
                 ],
             },
             "wight": {
@@ -2297,6 +2303,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["shambling", 1],
                     ["simple minded", 1],
                     ["bloodsucker", 1],
+                    ["careful aim", 1]
                 ],
             },
             "vampire": {

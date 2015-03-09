@@ -164,6 +164,7 @@ namespace.module('bot.bodies', function(exports, require) {
             } else {
                 var target = enemies[distances.minIndex()];
                 var range = _.map(_.compact(this.skills), function(skill) { return skill.spec.range * .99; }).min();
+                if (!range) { range = 1; }
                 newPos = this.pos.closer(target.pos, dist, range);
             }
             this.pos = newPos;

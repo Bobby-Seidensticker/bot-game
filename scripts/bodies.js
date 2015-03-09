@@ -157,12 +157,13 @@ namespace.module('bot.bodies', function(exports, require) {
             // Need some way of determining what range you move until
 
             var dist = this.spec.moveSpeed * gl.lastTimeIncr;
-            var range = 1000;  // TODO range needs to come from somewhere
+
             var newPos;
             if (enemies.length === 0) {
                 newPos = this.pos.closer(room.exit, dist, 0);
             } else {
                 var target = enemies[distances.minIndex()];
+                var range = _.map(_.compact(this.skills), function(skill) { return skill.spec.range * .99; }).min();
                 newPos = this.pos.closer(target.pos, dist, range);
             }
             this.pos = newPos;

@@ -228,6 +228,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "type": "head",
             },
+            "plague doctor": {
+                "mods": [
+                    {def: 'poisResist more -10', type: 'eleResist'},
+                    {def: 'poisResist more -0.5 perLevel', type: 'eleResist'}
+                ],
+                "type": "head",
+            },
             ////////////////////
             ///// CHEST ////////
             ////////////////////
@@ -851,7 +858,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "specs": [{ type: 'cone', color: FIRE_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'speed added 100', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
                     {def: 'fireDmg added 2', type: 'dmg'},
                     {def: 'fireDmg added 2 perLevel', type: 'dmg'},
@@ -865,7 +873,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "specs": [{type: "cone", color: POIS_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 1', type: 'dmg'},
-                    {def: 'speed added 100', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},                    
+                    {def: 'speed added 250', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
                     {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},
                     {def: 'poisDmg added 4', type: 'dmg'},
@@ -1614,6 +1623,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "hpOnHit added 1 perLevel", "type": "dmg"},
                     {"def": "manaCost added 1", "type": "dmg"},
+                    {"def": "aoeRadius more -30", "type":"dmg"},
                 ],
                 "slot": "skill",
             },
@@ -1790,7 +1800,57 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "hpRegen added -5 perLevel", "type": "def"},                    
                 ],
                 "slot": "head",
-            }
+            },
+            "jet pack": {
+                "mods": [
+                    {"def": "moveSpeed more 50", "type": "def"},
+                    {"def": "moveSpeed more 10 perLevel", "type": "def"},                    
+                    {"def": "dodge more -50", "type": "def"},
+                ],
+                "slot": "chest",
+                "flavor": "Burning out his fuse up here alone",
+            },
+            "cold blooded": {
+                "mods": [
+                    {"def": "coldDmg more 30", "type": "dmg"},
+                    {"def": "fireDmg more -30", "type": "dmg"},
+                    {"def": "coldResist more -20", "type": "eleResist"},
+                    {"def": "fireResist more 20", "type": "eleResist"},                    
+                    {"def": "coldResist more -2 perLevel", "type": "eleResist"},
+                    {"def": "coldDmg more 3 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "chest",
+                "flavor": "Ice-water in his veins...",
+            },
+            "hot blooded": {
+                "mods": [
+                    {"def": "coldDmg more -30", "type": "dmg"},
+                    {"def": "fireDmg more 30", "type": "dmg"},
+                    {"def": "coldResist more 20", "type": "eleResist"},
+                    {"def": "fireResist more -20", "type": "eleResist"},
+                    {"def": "fireResist more -2 perLevel", "type": "eleResist"},
+                    {"def": "fireDmg more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "flavor": "Magma in his veins...",
+            },
+            "semi automatic": {
+                "mods": [
+                    {"def": "cooldownTime more -20", "type": "dmg"},
+                    {"def": "cooldownTime more -2 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "weapon",
+                "flavor": "NOW I HAVE A MACHINE GUN HO-HO-HO",
+            },
+            "careful aim": {
+                "mods": [
+                    {"def": "physDmg more 100", "type": "dmg"},
+                    {"def": "cooldownTime added 2000", "type": "dmg"},
+                    {"def": "physDmg more 4 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "skill",
+                "flavor": "Ready... Aim... FIRE!",
+            },
         },
         "monster": {
             "skeleton" : {
@@ -1999,6 +2059,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["mecha heart", 1],
                     ["ignited", 1],
                     ["steam powered", 1],
+                    ["jet pack", 1]
                 ],
             },
             "mechfridgerator": {
@@ -2100,7 +2161,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "dart imp" : {
-                "items": [["weapon", "hand crossbow"]],
+                "items": [["weapon", "hand crossbow"], ["armor", "plague doctor"]],
                 "skills": ["poison arrow", "speed shot", "basic range"],
                 "sourceCards": [
                     ["berserking", 1],
@@ -2112,7 +2173,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "imp shaman": {
-                "items": [["weapon", "star wand"]],
+                "items": [["weapon", "star wand"], ["armor", "plague doctor"]],
                 "skills": ["poison ball", "poison spray", "poison nova", "basic spell"],
                 "sourceCards": [
                     ["berserking", 1],
@@ -2214,7 +2275,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["ethereal", 1],
                     ["shadow walker", 1],
                     ["keen wit", 4],
-                    ["mana on hit", 3]
+                    ["mana on hit", 3],
+                    ["blue ice", 3],
                 ],
             },
             "shadow knight": {

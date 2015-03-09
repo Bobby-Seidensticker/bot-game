@@ -185,6 +185,7 @@ namespace.module('bot.entity', function (exports, require) {
             return {
                 name: this.name,
                 level: this.level,
+                xp: this.xp
             };
         },
 

@@ -81,15 +81,14 @@ namespace.module('bot.main', function (exports, require) {
             }
             this.lastSave = now;
             var data = {
-                'cardInv': this.cardInv.toJSON(),
-                'inv': this.inv.toJSON(),
-                'zone': this.zone.toJSON(),
-                'hero': this.hero.toJSON(),
-                'skillchain': this.hero.skillchain.toJSON(),
-                'equipped': this.hero.equipped.toJSON(),
+                cardInv: this.cardInv.toJSON(),
+                inv: this.inv.toJSON(),
+                zone: this.zone.toJSON(),
+                hero: this.hero.toJSON(),
+                skillchain: this.hero.skillchain.toJSON(),
+                equipped: this.hero.equipped.toJSON(),
             };
             localStorage.setItem('data', JSON.stringify(data));
-            log.warning('saved');
         },
 
         load: function() {
@@ -109,9 +108,7 @@ namespace.module('bot.main', function (exports, require) {
 
         noobGear: function() {
             log.warning('noob gear');
-            console.log(this.inv.models.length);
             this.inv.noobGear();
-            console.log(this.inv.models.length);
             this.hero.equipped.equip(_.findWhere(this.inv.models, {name: 'cardboard sword'}), 'weapon');
             this.hero.equipped.equip(_.findWhere(this.inv.models, {name: 'balsa helmet'}), 'head');
             this.hero.skillchain.equip(_.findWhere(this.inv.models, {name: 'basic melee'}), 0);

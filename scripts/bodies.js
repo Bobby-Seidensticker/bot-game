@@ -200,7 +200,10 @@ namespace.module('bot.bodies', function(exports, require) {
 
             if (this.spec.team === TEAM_HERO) {
                 log.debug('Team Hero taking %.2f damage', -totalDmg);
-                totalDmg *= 0.5;
+                totalDmg *= 0.8;
+                if(totalDmg > this.hp) {
+                    log.error("Hero (lvl %d) killed in %s by %s", this.spec.level, gl.game.zone.name, attack.attacker.spec.name);
+                }
             }
             this.modifyHp(-totalDmg);
 

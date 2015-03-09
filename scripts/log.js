@@ -21,7 +21,7 @@ namespace.module('bot.log', function (exports, require) {
         } else {
             //info('Good anon auth: %s', authData.uid);
             gl.FBuid = authData.uid.slice(11);
-            gl.FBL = gl.FB.child('logs').child(uid);
+            gl.FBL = gl.FB.child(gl.VERSION_NUMBER).child('logs').child(uid);
             gl.FBUI = gl.FBL.child("UI");
             gl.FBL.push("starting");
         }
@@ -71,9 +71,9 @@ namespace.module('bot.log', function (exports, require) {
 
     function warning() {
         var a = arguments;
-        if (gl.FBL) {
+        /*if (gl.FBL) {
             gl.FBL.push("WARNING: " + sprintf.apply(null,a) + "  @" + gl.time);
-        }
+        }*/
         a[0] = 'WARNING ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: orange');
     }
@@ -97,9 +97,9 @@ namespace.module('bot.log', function (exports, require) {
 
     function UI() {
         var a = arguments;
-        if (gl.FBUI) {
+        /*if (gl.FBUI) {
             gl.FBUI.push("UI:" + sprintf.apply(null,a) + "  @" + gl.time);
-        }
+        }*/
         a[0] = 'UI: ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: cyan');
     }

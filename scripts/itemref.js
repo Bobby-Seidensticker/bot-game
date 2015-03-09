@@ -2233,7 +2233,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["keen wit", 1],
                     ["fur hat", 1],
-                    ["cold blooded", 1]
+                    ["cold blooded", 1],
                 ],
             },
             "frozen warrior": {
@@ -2255,8 +2255,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["chinchilla lining", 1],
                     ["clawed", 1],
-                    ["yeti fur", 1]
-                    ["cold blooded", 1]
+                    ["yeti fur", 1],
+                    ["cold blooded", 1],
                 ],
             },
             "wight": {

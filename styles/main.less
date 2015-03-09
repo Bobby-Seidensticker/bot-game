@@ -305,6 +305,27 @@ body .stats {
                     height: 0;
                     width: 100%;
                 }
+
+                .indicator {
+                    position: absolute;
+                    top: 5px;
+                    width: 18px;
+                    height: 18px;
+                    line-height: 18px;
+                    font-size: 16px;
+                    border-radius: 10px;
+                    color: #111;
+                    background-color: rgba(0, 255, 0, 0.6);
+                    text-align: center;
+                }
+
+                .range-indicator {
+                    left: 5px;
+                }
+
+                .mana-indicator {
+                    left: 25px;
+                }
             }
 
             .use-holder {
@@ -324,6 +345,8 @@ body .stats {
                 }
             }
         }
+        .skill.oor .range-indicator { background-color: rgba(255, 0, 0, 0.8); }
+        .skill.oom .mana-indicator { background-color: rgba(255, 0, 0, 0.8); }
     }
 
     .zone {

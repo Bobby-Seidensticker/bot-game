@@ -62,6 +62,7 @@ namespace.module('bot.main', function (exports, require) {
             if (!loadSuccess) {
                 this.noobGear();
             }
+            this.zone.newZone(this.zone.nextZone);
 
             this.lastTime = new Date().getTime();
             this.zonesCleared = 0;

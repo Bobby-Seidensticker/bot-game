@@ -801,6 +801,7 @@ namespace.module('bot.views', function (exports, require) {
                     skill: s,
                     cdHeight: 0,
                     useWidth: 0,
+                    $skill: undefined,
                     $cd: undefined,
                     $use: undefined
                 };
@@ -808,9 +809,11 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         getEls: function() {
+            var $skills = this.$('.skill');
             var $cds = this.$('.cooldown');
             var $uses = this.$('.use-bar');
             for (var i = 0; i < this.data.length; i++) {
+                this.data[i].$skill = $($skills[i]);
                 this.data[i].$cd = $($cds[i]);
                 this.data[i].$use = $($uses[i]);
             }
@@ -853,6 +856,8 @@ namespace.module('bot.views', function (exports, require) {
             this.calc();
 
             _.each(this.data, function(d) {
+                if (d.skill.oom) { d.$skill.addClass('oom'); } else { d.$skill.removeClass('oom'); }
+                if (d.skill.oor) { d.$skill.addClass('oor'); } else { d.$skill.removeClass('oor'); }
                 d.$cd.css('height', d.cdHeight);
                 d.$use.css('width', d.useWidth);
             });

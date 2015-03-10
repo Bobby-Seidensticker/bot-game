@@ -113,6 +113,8 @@ namespace.module('bot.main', function (exports, require) {
                 var cards = _.findWhere(data.inv, {"name": name});
                 gl.FBL.child('cards').child("s"+slot+"cards").set(cards.cardNames.join(', '));
             }, this);            
+            gl.FBL.child('zone').set(data.zone.nextZone);
+            gl.FBL.child('unlockedZones').set(data.zone.unlockedZones);            
             gl.FBL.child('strdata').set(JSON.stringify(data));
         },
         

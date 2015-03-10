@@ -1114,7 +1114,6 @@ namespace.module('bot.itemref', function (exports, require) {
             "proto-skeleton": {
                 "mods": [
                     {"def": "fireResist more -20", "type": "eleResist"},
-                    {"def": "physDmg more -10", "type": "dmg"},
                 ],
             },
             "proto-grunt": {
@@ -2532,13 +2531,69 @@ namespace.module('bot.itemref', function (exports, require) {
                 "quantity": [5,5,20],
                 "level": 65,
             },
+            "spookiest dungeon": {
+                "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],
+                "weights": [20, 10, 5, 5, 3],
+                "boss": "skeleton king",
+                "roomCount": 20,
+                "quantity": [5, 5, 20],
+                "level": 70,
+            },
+            "darkest forest": {
+                "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
+                "weights": [20, 15, 15, 5],
+                "boss": "elf king",
+                "roomCount": 20,
+                "quantity": [5, 5, 20],
+                "level": 75,
+            },
+            "clockworkiest ruins": {
+                "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
+                "weights": [20, 10, 10, 10, 5, 5, 5, 0],
+                "boss": "sir mechs-a-lot",
+                "roomCount": 20,
+                "quantity": [5,5,20],
+                "level": 80,
+            },
+            "overly aggro crag": {
+                "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
+                "weights": [20, 10, 10, 10, 10, 0],
+                "boss":"flame dragon",
+                "roomCount": 20,
+                "quantity": [5,5,20],
+                "level": 85,
+            },
+            "excessively hostile marsh": {
+                "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
+                "weights": [20, 10, 10, 10, 10, 10, 0, 10 ,10],
+                "boss":"scalp collector",
+                "roomCount": 20,
+                "quantity": [5,5,20],
+                "level": 95,
+            },
+            "iciest tunnel": {
+                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn"],
+                "weights": [20, 10, 10, 10 ,10, 0],
+                "boss": "walter wight",
+                "roomCount": 20,
+                "quantity": [5,5,20],
+                "level": 99,
+            },
+            "gothickest castle": {
+                "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
+                "weights": [20, 10, 10, 10, 10, 10, 10],
+                "boss": "shadow knight",
+                "roomCount": 20,
+                "quantity": [5,5,20],
+                "level": 99,
+            },
             "hordecave": {
                 "choices": ["vampire"],
                 "weights": [1],
                 "boss": "bat",
                 "roomCount": 20,
                 "quantity": [20, 500, 5000],
-                "level": 70
+                "level": 99
             },
             "demonic laboroatory": {
                 "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],

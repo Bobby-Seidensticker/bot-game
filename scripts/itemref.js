@@ -1114,7 +1114,6 @@ namespace.module('bot.itemref', function (exports, require) {
             "proto-skeleton": {
                 "mods": [
                     {"def": "fireResist more -20", "type": "eleResist"},
-                    {"def": "physDmg more -10", "type": "dmg"},
                 ],
             },
             "proto-grunt": {

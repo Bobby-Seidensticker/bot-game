@@ -13,10 +13,10 @@
       <div class="newflag"><%= showNew ? "New!": "" %></div>
       <div class="corner corner-level"><%= model.level %></div>
       <div class="xpbar" style="width: <%= 63 * model.pctLeveled() %>px;"></div>
-      <div class="filter"></div>
+      <div class="overlay"></div>
       <div class="corner corner-x">X</div>
     <% } else { %>
-      <div class="filter"></div>
+      <div class="overlay"></div>
     <% } %>
   </script>
 

@@ -241,7 +241,7 @@ namespace.module('bot.entity', function (exports, require) {
 
 
             this.droppableCards = _.filter(this.sourceCards, function(card) { return card[0].slice(0, 5) !== 'proto'; }, this);
-
+            
             this.skillchain = new inventory.Skillchain();
             _.each(this.skills, function(skill, i) {
                 var skill = new inventory.SkillModel(skill);
@@ -262,13 +262,15 @@ namespace.module('bot.entity', function (exports, require) {
             var any = false;
             if (Math.random() < 1) { // 0.03 * 10) {
                 if (this.droppableCards.length) {
+                    var card = this.droppableCards[prob.pyRand(0, this.droppableCards.length)];
+                    card[1] = prob.pyRand(1, card[1] + Math.ceil(this.level/10));
                     cardDrops.push(
-                        dropLib.dropFactory('card', this.droppableCards[prob.pyRand(0, this.droppableCards.length)])
+                        dropLib.dropFactory('card', card)
                     );
                     any = true;
                 }
             }
-            if (Math.random() < 1) { // 0.001 * 50) {
+            if (Math.random() < 0.1) { // 0.001 * 50) {
                 if (this.items.length) {
                     gearDrops.push(
                         dropLib.dropFactory('item', this.items[prob.pyRand(0, this.items.length)])
@@ -276,7 +278,7 @@ namespace.module('bot.entity', function (exports, require) {
                     any = true;
                 }
             }
-            if (Math.random() < 1) { // 0.001 * 50) {
+            if (Math.random() < 0.2) { // 0.001 * 50) {
                 if (this.skills.length) {
                     gearDrops.push(
                         dropLib.dropFactory('skill', this.skills[prob.pyRand(0, this.skills.length)])

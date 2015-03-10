@@ -566,7 +566,7 @@ namespace.module('bot.inv', function (exports, require) {
         applyQp: function(qp) {
             var levels = 0;
             this.qp += qp;
-            if (this.canLevel()) {
+            while (this.canLevel()) {
                 this.qp -= this.getNextLevelQp();
                 this.level++;
                 levels++;

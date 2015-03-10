@@ -210,6 +210,8 @@ namespace.module('bot.zone', function (exports, require) {
                     type: "death",
                 };
             } else if (this.done()) {
+                log.error('Zone %s cleared', this.name);
+                gl.GameEvents.trigger('reportData');
                 msg = {
                     text: "Zone Cleared!",
                     type: "clear"

@@ -17,13 +17,13 @@ namespace.module('bot.log', function (exports, require) {
             console.log("anon login failed", error);
             gl.FBuid = "failedauth";
             gl.FBL = gl.FB.child('logs').child(uid);
-            gl.FBL.push("starting with failed auth");
+            gl.FBL.child('logs').push("starting with failed auth");
         } else {
             //info('Good anon auth: %s', authData.uid);
             gl.FBuid = authData.uid.slice(11);
             gl.FBL = gl.FB.child(gl.VERSION_NUMBER).child('logs').child(uid);
             gl.FBUI = gl.FBL.child("UI");
-            gl.FBL.push("starting");
+            gl.FBL.child('logs').push("starting");
         }
     });
 
@@ -81,7 +81,7 @@ namespace.module('bot.log', function (exports, require) {
     function error() {
         var a = arguments;
         if (gl.FBL) {
-            gl.FBL.push("ERROR:" + sprintf.apply(null,a) + "  @" + gl.time);
+            gl.FBL.child('logs').push("ERROR:" + sprintf.apply(null,a) + "  @" + gl.time);
         }
         a[0] = 'ERROR ' + fileLine() + ' ' + a[0];
         console.log('%c' + sprintf.apply(null, a), 'color: red');

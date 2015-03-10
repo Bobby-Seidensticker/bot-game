@@ -29,7 +29,7 @@ namespace.module('bot.main', function (exports, require) {
 
         //localStorage.clear();
 
-        gl.VERSION_NUMBER = "v0-1-1";
+        gl.VERSION_NUMBER = "v0-1-1b";
         
         log.info('onReady');
 
@@ -73,7 +73,8 @@ namespace.module('bot.main', function (exports, require) {
             this.listenTo(gl.GameEvents, 'unpause', this.start);
             this.listenTo(gl.GameEvents, 'pause', this.pause);
             this.listenTo(gl.GameEvents, 'togglePause', this.toggle);
-
+            this.listenTo(gl.GameEvents, 'reportData', this.reportData);
+            
             this.start();
         },
 
@@ -83,6 +84,10 @@ namespace.module('bot.main', function (exports, require) {
                 return;
             }
             this.lastSave = now;
+            localStorage.setItem('data', JSON.stringify(this.toJSON()));
+        },
+
+        toJSON: function() {
             var data = {
                 cardInv: this.cardInv.toJSON(),
                 inv: this.inv.toJSON(),
@@ -91,9 +96,20 @@ namespace.module('bot.main', function (exports, require) {
                 skillchain: this.hero.skillchain.toJSON(),
                 equipped: this.hero.equipped.toJSON(),
             };
-            localStorage.setItem('data', JSON.stringify(data));
+            return data;
         },
 
+        reportData: function() {
+            gl.FBL.child('name').set(this.hero.name);
+            gl.FBL.child('level').set(this.hero.level);
+            var data = this.toJSON();
+            gl.FBL.child('equipped').set(data.equipped);
+
+            gl.FBL.child('skillchain').set(data.skillchain);
+            gl.FBL.child('strdata').set(JSON.stringify(data));
+            gl.FBL.child('data').set(data);            
+        },
+        
         load: function() {
             log.warning('loading');
             var data = JSON.parse(localStorage.getItem('data'));

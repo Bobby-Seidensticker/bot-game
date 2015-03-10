@@ -120,6 +120,23 @@ namespace.module('bot.vectorutils', function (exports, require) {
         return new Point(this.x * cs - this.y * sn, this.x * sn + this.y * cs);
     }
 
+    Point.prototype.inBounds = function(size) {
+        var p = this.clone();
+        if (p.x < 0) {
+            p.x = 0;
+        }
+        if (p.x > size.x) {
+            p.x = size.x;
+        }
+        if (p.y < 0) {
+            p.y = 0;
+        }
+        if (p.y > size.y) {
+            p.y = size.y;
+        }
+        return p;
+    }
+
     function hit(s, e, t, r1, r2) {
         var r = r1 + r2;
         var r2 = r * r;

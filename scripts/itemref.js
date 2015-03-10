@@ -769,7 +769,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj"],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'manaCost more 20 perLevel', type: 'dmg'},
+                    {def: 'manaCost more 10 perLevel', type: 'dmg'},
                     {def: 'physDmg more -30', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},                    
                     {def: 'speed added 200', type: 'dmg'},
@@ -1100,9 +1100,10 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'physDmg added 5 perLevel', type: 'dmg'},
-                    {def: 'projCount added 1 perLevel', type: 'dmg'},
-                    {def: 'projCount added 1', type: 'dmg'},
+                    {def: 'manaCost added 2 perLevel', type: 'dmg'},
+                    {def: 'physDmg added -2 perLevel', type: 'dmg'},
+                    {def: 'projCount added 2 perLevel', type: 'dmg'},
+                    {def: 'angle more -70', type: 'dmg'},                    
                     {def: 'cooldownTime added 3000', type: 'dmg'}
                 ]
             },
@@ -1143,7 +1144,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "proto-elf": {
                 "mods": [
                     {"def": "speed more -20", "type": "dmg"},
-                    {"def": "dexterity added 50", "type": "def"}
+                    {"def": "dexterity added 10 perLevel", "type": "def"},
+                    {"def": "physDmg more 10 perLevel", "type": "dmg"},
                 ],
             },
             "sharpened": {
@@ -1302,8 +1304,10 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "more projectiles": {
                 "mods": [
-                    {"def": "projCount added 1 perLevel", "type": "dmg"},
+                    {"def": "projCount added 2 perLevel", "type": "dmg"},
                     {"def": "angle more 20", "type": "dmg"},
+                    {"def": "speed more -30", "type": "dmg"},
+                    {"def": "manaCost added 2 perLevel", "type": "dmg"}
                 ],
                 "slot": "skill",
             },
@@ -2410,7 +2414,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
         },
         "zoneOrder": {
-            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "scary clockwork ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle"] 
+            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "clockworkier ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle", "hordecave"] 
         },
         "zone": {
             "spooky dungeon": {
@@ -2474,7 +2478,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 5, 5, 3],
                 "boss": "skeleton king",
                 "roomCount": 20,
-                "quantity": [1, 1, 3],
+                "quantity": [5, 5, 20],
                 "level": 35
             },
             "darker forest": {
@@ -2482,15 +2486,15 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 15, 15, 5],
                 "boss": "elf king",
                 "roomCount": 20,
-                "quantity": [2, 2, 3],
+                "quantity": [5, 5, 20],
                 "level": 40,
             },
-            "scary clockwork ruins": {
+            "clockworkier ruins": {
                 "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
                 "weights": [20, 10, 10, 10, 5, 5, 5, 0],
                 "boss": "sir mechs-a-lot",
                 "roomCount": 20,
-                "quantity": [2,2,3],
+                "quantity": [5,5,20],
                 "level": 45,
             },
             "even-more-aggro crag": {
@@ -2498,7 +2502,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10, 10, 10, 0],
                 "boss":"flame dragon",
                 "roomCount": 20,
-                "quantity": [2,2,3],
+                "quantity": [5,5,20],
                 "level": 50,
             },
             "even-more-hostile marsh": {
@@ -2506,7 +2510,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10, 10, 10, 10, 0, 10 ,10],
                 "boss":"scalp collector",
                 "roomCount": 20,
-                "quantity": [4,2,4],
+                "quantity": [5,5,20],
                 "level": 55,
             },
             "really icy tunnel": {
@@ -2514,7 +2518,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10, 10 ,10, 0],
                 "boss": "walter wight",
                 "roomCount": 20,
-                "quantity": [2,3,4],
+                "quantity": [5,5,20],
                 "level": 60,
             },
             "gothicker castle": {
@@ -2522,7 +2526,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "weights": [20, 10, 10, 10, 10, 10, 10],
                 "boss": "shadow knight",
                 "roomCount": 20,
-                "quantity": [3,3,6],
+                "quantity": [5,5,20],
                 "level": 65,
             },
             "hordecave": {

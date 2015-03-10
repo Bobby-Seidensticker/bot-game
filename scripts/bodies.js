@@ -23,6 +23,7 @@ namespace.module('bot.bodies', function(exports, require) {
             this.revive();
             this.pos = new Point(0, 0);
             this.nextAction = 0;
+            this.moveStart = -1;
         },
 
         createSkillchain: function() {
@@ -32,7 +33,7 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         revive: function() {
-            this.hasMoved = false;
+            this.moveStart = -1;
 
             this.takeAction(0);
             this.hp = this.spec.maxHp;
@@ -100,7 +101,6 @@ namespace.module('bot.bodies', function(exports, require) {
 
         tryDoStuff: function(room, enemies) {
             this.regen();
-            this.hasMoved = false;
 
             if (!this.isAlive() || this.busy()) {
                 return;
@@ -146,13 +146,16 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         takeAction: function(duration) {
+            this.moveStart = -1;
             this.nextAction = gl.time + duration;
             this.lastDuration = duration;
         },
 
         tryMove: function(enemies, distances, room) {
             if (this.busy()) { return; }
-            this.hasMoved = true;
+            if (this.moveStart === -1) {
+                this.moveStart = gl.time;
+            }
 
             // Need some way of determining what range you move until
 

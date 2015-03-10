@@ -216,6 +216,7 @@ namespace.module('bot.zone', function (exports, require) {
                 };
             }
             if (msg) {
+                this.hero.moveStart = -1;
                 this.messages.addMessage(_.extend(msg, {
                     pos: this.hero.pos,
                     color: "#FFF",

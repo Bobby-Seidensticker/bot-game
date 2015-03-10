@@ -396,8 +396,8 @@ namespace.module('bot.vis', function (exports, require) {
 
         // draw body, legs
         var legFrame = 0;
-        if (this.body.hasMoved) {
-            legFrame = Math.abs(Math.floor(gl.time % 400 / 20) - 10);
+        if (this.body.moveStart > -1) {
+            legFrame = Math.abs(Math.floor((gl.time - this.body.moveStart) % 400 / 20));
         }
         ctx.beginPath();
         lines(ctx,

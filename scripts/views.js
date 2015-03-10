@@ -243,6 +243,29 @@ namespace.module('bot.views', function (exports, require) {
 
             this.listenTo(gl.DirtyListener, 'footer:buttons', this.hide);
             this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
+
+            this.listenTo(gl.UIEvents, 'tabShow', this.onTabShow);
+            this.listenTo(gl.UIEvents, 'tabHide', this.onTabHide);
+
+            this.visibleTabs = {};
+        },
+
+        onTabShow: function(name) {
+            this.visibleTabs[name] = true;
+            this.updateRight();
+        },
+
+        onTabHide: function(name) {
+            this.visibleTabs[name] = false;
+            this.updateRight();
+        },
+
+        updateRight: function() {
+            if (this.visibleTabs['cards'] || this.visibleTabs['inv']) {
+                this.$el.css('right', 410);
+            } else {
+                this.$el.css('right', 5);
+            }
         },
 
         show: function(view) {
@@ -792,7 +815,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseenter: function() {
-            gl.UIEvents.trigger('mouseenter', this);
+            gl.UIEvents.trigger('mouseenter', {model: this.model.spec});
         },
 
         onMouseleave: function() {

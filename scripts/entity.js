@@ -92,7 +92,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         computeSkillAttrs: function() {
-            log.info('entity computeSkillAttrs');
+            log.error('entity computeSkillAttrs, weaponType: %s', this.weaponType);
             this.skillchain.computeAttrs(this.baseDmg, this.weaponType);
         },
 
@@ -231,8 +231,8 @@ namespace.module('bot.entity', function (exports, require) {
             
             this.mods = _.map(this.items, function(item) {
                 var expanded = itemref.expand(item[0], item[1]);
-                if (item[0] == "weapon") {
-                    this.weaponType = expanded.type;
+                if (item[0] === "weapon") {
+                    this.weaponType = expanded.weaponType;
                 }
                 return expanded.mods;
             }, this);

@@ -42,10 +42,7 @@ namespace.module('bot.entity', function (exports, require) {
             log.info('compute attrs on: %s', this.name);
 
             if (this.team === TEAM_HERO) {
-                this.weaponType = 'melee'
-                if (this.team === TEAM_HERO && this.equipped.weapon) {
-                    this.weaponType = this.equipped.weapon.type
-                }
+                this.weaponType = this.equipped.weapon === undefined ? 'melee' : this.equipped.weapon.weaponType;
             }
             var all = {};
 
@@ -216,19 +213,7 @@ namespace.module('bot.entity', function (exports, require) {
                 this.computeAttrs();
             }
             return levels;
-        },
-
-        /*
-        equipClick: function(item) {
-            var itemType = item.itemType;
-            if (itemType === 'armor') {
-                this.equipped.equip(item, item.type);
-            } else if (itemType === 'weapon') {
-                this.equipped.equip(item, 'weapon');
-            } else if (itemType === 'skill') {
-                this.skillchain.add(item);
-            }
-        },*/
+        }
     });
 
     var MonsterSpec = EntitySpec.extend({

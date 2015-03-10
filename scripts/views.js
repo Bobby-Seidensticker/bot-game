@@ -367,42 +367,11 @@ namespace.module('bot.views', function (exports, require) {
         unselect: function() { this.selected = false; this.$el.removeClass('selected'); },
 
         onGlobalMouseenter: function(hoveredSlot) {
-            if (hoveredSlot.slot !== undefined) { return; }
-
-            if (hoveredSlot.model.itemType === 'card') {
-                if (this.slot !== undefined &&
-                    (this.slot === hoveredSlot.model.slot || (typeof(this.slot) === 'number' && hoveredSlot.model.slot === 'skill'))) {
+            if (hoveredSlot.slot === undefined && this.slot !== undefined) {
+                if (this.slot === hoveredSlot.model.slot ||
+                    (typeof(this.slot) === 'number' && hoveredSlot.model.itemType === 'skill')) {
                     this.yellow = true;
                     this.$el.addClass('yellow');
-                }
-            } else {
-                if (hoveredSlot.model.itemType === 'skill') {
-                    if (typeof(this.slot) === 'number') {
-                        this.yellow = true;
-                        this.$el.addClass('yellow');
-                    }
-                } else {
-                    if (this.slot) {
-                        if (this.model) {
-                            if (hoveredSlot.model.itemType === this.model.itemType) {
-                                if ((hoveredSlot.model.itemType === 'weapon') ||
-                                    (hoveredSlot.model.type === this.model.type)) {
-                                    this.yellow = true;
-                                    this.$el.addClass('yellow');
-                                }
-                            }
-                        } else {
-                            if (hoveredSlot.model.itemType === 'weapon') {
-                                if (hoveredSlot.model.itemType === this.slot) {
-                                    this.yellow = true;
-                                    this.$el.addClass('yellow');
-                                }
-                            } else if (hoveredSlot.model.type === this.slot) {
-                                this.yellow = true;
-                                this.$el.addClass('yellow');
-                            }
-                        }
-                    }
                 }
             }
         },

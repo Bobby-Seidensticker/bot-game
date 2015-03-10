@@ -13,10 +13,8 @@ namespace.module('bot.inv', function (exports, require) {
             this.xp = 0;
             this.level = 1;
             this.baseMods = [];
-            this.cards = [];
+            this.cards = [undefined, undefined, undefined, undefined, undefined];
             this.equipped = false;
-            this.maxCards = 5;
-            this.ensureCardArray();
             this.isNew = false;
         },
 
@@ -42,7 +40,8 @@ namespace.module('bot.inv', function (exports, require) {
             var levels = 0;
             this.xp += xp;
             if (this.canLevel()) {
-                this.levelUp();
+                this.xp -= this.getNextLevelXp();
+                this.level++;
                 levels++;
             }
             return levels;
@@ -60,58 +59,30 @@ namespace.module('bot.inv', function (exports, require) {
             return this.xp / this.getNextLevelXp();
         },
 
-        levelUp: function() {
-            var type = this.itemType;
-            this.xp -= this.getNextLevelXp();
-            this.level += 1;
-
-            this.ensureCardArray(this.maxCards);
-        },
-
-        ensureCardArray: function() {
-            _.each(_.compact(this.cards), function(card) {
-                if (!card || card.itemType !== 'card') {
-                    throw('Error, GearModel\'s this.cards has a improper card');
-                }
-            }, this);
-
-            if (this.maxCards === this.cards.length) {
-                return;
-            }
-            if (this.maxCards < this.cards.length) {
-                log.error('Somehow ensureCardArray was called with maxCards less than the current cards array\'s length.');
-                return;
-            }
-            while (this.cards.length < this.maxCards) {
-                this.cards.push(undefined);
-            }
-        },
-
         getMods: function() {
             var cards = _.compact(this.cards);
             var mods = _.flatten(_.map(cards, function(card) { return card.getMods(); }));
             return mods.concat(utils.applyPerLevels(this.baseMods, this.level));
         },
 
-        equipCard: function(card, slotIndex) {
-            if (slotIndex >= this.cards.length) {
-                log.error('Cannot equip card in slotIndex %d when item only has %d slots', slotIndex, this.cards.length);
+        equipCard: function(card, slot) {
+            if (slot >= this.cards.length) {
+                log.error('Cannot equip card in slot %d when item only has %d slots', slot, this.cards.length);
                 return false;
             }
             if (card && card.equipped) {
                 log.error('Cannot equip already equipped card, %s', card.name);
                 return false;
             }
-            if (this.cards[slotIndex]) {
-                log.warning("Unequipping card %s at slot %d of item: %s", this.cards[slotIndex].name, slotIndex, this.name);
-                this.cards[slotIndex].equipped = false;  // model.unequip(this.cards[slotIndex].level);
-                this.cards[slotIndex] = undefined;
-
+            if (this.cards[slot]) {
+                log.warning("Unequipping card %s at slot %d of item: %s", this.cards[slot].name, slot, this.name);
+                this.cards[slot].equipped = false;
+                this.cards[slot] = undefined;
             }
             if (card) {
-                card.equipped = true;  // model.equip(card.level);
-                this.cards[slotIndex] = card;
-                log.warning("Equipped card %s into slot %d of item: %s", card.name, slotIndex, this.name);
+                card.equipped = true;
+                this.cards[slot] = card;
+                log.warning("Equipped card %s into slot %d of item: %s", card.name, slot, this.name);
             }
 
             log.info('equipCard, now have %d cards equipped', _.compact(this.cards).length);
@@ -135,54 +106,50 @@ namespace.module('bot.inv', function (exports, require) {
     function getSortKey(model) {
         var num = 0;
         if (model.itemType === 'weapon') {
-            return 'a' + {melee: 'a', range: 'b', spell: 'c'}[model.type] + model.name;
+            return 'a' + {melee: 'a', range: 'b', spell: 'c'}[model.weaponType] + model.name;
         } else if (model.itemType === 'armor') {
-            return 'b' + {head: 'a', chest: 'b', legs: 'c', hands: 'd'}[model.type] + model.name;
+            return 'b' + {head: 'a', chest: 'b', legs: 'c', hands: 'd'}[model.slot] + model.name;
         } else if (model.itemType === 'skill') {
             return 'c' + model.name.toLowerCase();
         }
     }
 
+    // itemType -> slot
+    // weapon  type -> weaponType
+    // skill class -> skillType
+
     var ArmorModel = GearModel.extend({
         initialize: function(name) {
-            GearModel.prototype.initialize.call(this)
+            GearModel.prototype.initialize.call(this);
+            _.extend(this, itemref.expand('armor', name));
+
             this.name = name;
-            _.extend(this, itemref.expand('armor', this.name));            
             this.itemType = 'armor';
             this.baseMods = this.mods;
-
             this.key = getSortKey(this);
-
-            log.debug('Made a new armor name: %s', this.name);
         }
     });
 
     var WeaponModel = GearModel.extend({
         initialize: function(name) {
             GearModel.prototype.initialize.call(this)
+            _.extend(this, itemref.expand('weapon', name));
+
             this.name = name;
-            _.extend(this, itemref.expand('weapon', this.name));
-            
             this.itemType = 'weapon';
-
+            this.slot = 'weapon';
             this.baseMods = this.mods;
-
             this.key = getSortKey(this);
-
-            log.debug('Made a new weapon name: %s', this.name);
         }
     });
 
     var SkillModel = GearModel.extend({
         initialize: function(name) {
-            this.itemType = 'skill';
-            this.name = name;
             GearModel.prototype.initialize.call(this);
+            _.extend(this, itemref.expand('skill', name));
 
-            // might go away forever? this.ensureCardArray(1);
-            log.debug('loading skill %s from file', this.name);
-            _.extend(this, itemref.expand('skill', this.name));
-
+            this.name = name;
+            this.itemType = 'skill';
             this.key = getSortKey(this);
         },
 
@@ -193,8 +160,8 @@ namespace.module('bot.inv', function (exports, require) {
 
             log.debug('Skill compute attrs');
 
-            //remove added baseDmg amounts from spells (they can only be modified by cards on skill or by more increases)
-            if (this.class === 'spell') {
+            // remove added baseDmg amounts from spells (they can only be modified by cards on skill or by more increases)
+            if (this.skillType === 'spell') {
                 _.each(actualDmgKeys, function(dmgType) {        
                     this.dmgStats[dmgType].added = 0;
                 }, this);
@@ -208,14 +175,14 @@ namespace.module('bot.inv', function (exports, require) {
             var arr = ['meleeDmg', 'rangeDmg', 'spellDmg'];
 
             var typeMoreMod = 1;
-            if (this.class !== 'spell' && this.class !== weaponType) {
+            if (this.skillType !== 'spell' && this.skillType !== weaponType) {
                 typeMoreMod = 0;
             }
 
             _.each(arr, function(stat) {
                 this[stat] = utils.computeStat(this.dmgStats, stat);
-                if (this.class + "Dmg" === stat) {
-                    typeMoreMod *= this[stat]; //attackType modifiers are percentage based
+                if (this.skillType + "Dmg" === stat) {
+                    typeMoreMod *= this[stat];  // attackType modifiers are percentage based
                 }
             }, this);
 
@@ -310,7 +277,6 @@ namespace.module('bot.inv', function (exports, require) {
         initialize: function() {
             this.skills = [undefined, undefined, undefined, undefined, undefined];
             this.name = "Skillchain";
-            // this.on('add remove', this.countChange, this);
         },
 
         toJSON: function() {
@@ -325,32 +291,38 @@ namespace.module('bot.inv', function (exports, require) {
 
         equip: function(skill, slot, isMonster) {
             log.info('skillchain equip');
+
+            var change = false;
+
             if (skill === undefined) {
-                if (this.skills[slot]) {
-                    this.skills[slot].equipped = false;
-                    this.skills[slot].disabled = false;
-                    this.skills[slot].unequipCards();
-                }
-                log.warning('Skillchain unequipping %s from slot %d', this.skills[slot].name, slot);
-                this.skills[slot] = undefined;
-            } else {
-                if (skill.itemType !== 'skill') {
-                    return false;
-                }
-                if (this.skills[slot]) {
-                    this.skills[slot].equipped = false;
-                    this.skills[slot].disabled = false;
-                    this.skills[slot].unequipCards();
-                }
+                change = this.unequip(slot);
+            } else if (skill.itemType === 'skill') {
+                this.unequip(slot);
                 skill.equipped = true;
                 this.skills[slot] = skill;
-                if(!isMonster) {
-                    log.warning('Skillchain equipped %s into slot %d', this.skills[slot].name, slot);
+                if (!isMonster) {
+                    log.warning('Skillchain equipped %s into slot %d', skill, slot);
                 }
+                change = true;
             }
 
-            this.trigger('change');
-            return true;
+            if (change) {
+                this.trigger('change');
+            }
+            return change;
+        },
+
+        unequip: function(slot) {
+            var skill = this.skills[slot];
+            if (skill !== undefined) {
+                skill.equipped = false;
+                skill.disabled = false;
+                skill.unequipCards();  // TODO save equipped cards
+                log.warning('Skillchain unequipping %s from slot %d', skill.name, slot);
+                this.skills[slot] = undefined;
+                return true;
+            }
+            return false;
         },
 
         ranges: function() {
@@ -429,52 +401,32 @@ namespace.module('bot.inv', function (exports, require) {
         equip: function(item, slot) {
             log.info('equipped gear model equip');
 
-            /*
-              Slot empty, filling with item: fill slot
-              Slot empty, filling with nothing: error
-              Slot full, filling with item: unequip old, fill new
-              Slot full, filling with nothing: unequip old, empty slot
-              Slot full, trying to equip same item, error
-              When equipping, ensure it's a valid operation
-
-              If no error, fire appropriate events
-            */
+            var change = false;
 
             if (item === undefined) {
-                if (this[slot] === undefined) {
-                    log.info('Equip: Slot empty, filling with nothing, returning...');
-                    return false;
-                }
-                log.warning('EquipGearModel unequipping %s from slot %s', this[slot].name, slot);
-                this[slot].equipped = false;
-                this[slot].unequipCards();
-            } else {
-                if (item.itemType === 'skill') {
-                    return false;
-                }
-                if (this[slot] !== undefined) {
-                    if (this[slot].id === item.id) {
-                        return false;
-                    }
-                    this[slot].equipped = false;
-                    this[slot].unequipCards();
-                }
-
-                if (item.itemType === 'armor' && item.type !== slot) {
-                    log.error('Tried to equip armor %s of type %s in slot %s, returning...', item.name, item.type, slot);
-                    return false;
-                }
-                if (item.itemType === 'weapon' && slot !== 'weapon') {
-                    log.error('Tried to equip weapon %s in slot %s, can only be weapon, returning...', item.name, slot);
-                    return false;
-                }
+                change = this.unequip(slot);
+            } else if (item.slot === slot) {
+                this.unequip(slot);
+                this[slot] = item;
                 item.equipped = true;
-                log.warning('EquipGearModel equipping %s into slot %s', item.name, slot);
+                change = true;
             }
 
-            this[slot] = item;
-            this.trigger('change');
-            return true;
+            if (change) {
+                this.trigger('change');
+            }
+            return change;
+        },
+
+        unequip: function(slot) {
+            var item = this[slot];
+            if (item !== undefined) {
+                item.equipped = false;
+                item.unequipCards();  // TODO save equipped cards
+                this[slot] = undefined;
+                return true;
+            }
+            return false;
         },
 
         getMods: function() {
@@ -599,7 +551,6 @@ namespace.module('bot.inv', function (exports, require) {
                 name: this.name,
                 qp: this.qp,
                 level: this.level,
-                //equipped: this.equipped,  // needs to be false so the gear model can equip it itself
                 isNew: this.isNew
             };
         },
@@ -609,7 +560,6 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getMods: function() {
-            log.debug('CardModel.getMods. name: %s, level: %d', this.name, this.level);
             return utils.applyPerLevels(this.mods, this.level);
         },
 
@@ -617,7 +567,8 @@ namespace.module('bot.inv', function (exports, require) {
             var levels = 0;
             this.qp += qp;
             while (this.canLevel()) {
-                this.levelUp();
+                this.qp -= this.getNextLevelQp();
+                this.level++;
                 levels++;
             }
             if (levels && this.equipped) {
@@ -636,12 +587,6 @@ namespace.module('bot.inv', function (exports, require) {
 
         pctLeveled: function() {
             return this.qp / this.getNextLevelQp();
-        },
-
-        levelUp: function() {
-            this.qp -= this.getNextLevelQp();
-            this.level += 1;
-            log.info('card %s leveling up to %d', this.name, this.level);
         },
 
         addCard: function(level) {

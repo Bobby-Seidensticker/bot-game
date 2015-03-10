@@ -10,11 +10,11 @@
    sodipodi:docname="cold blooded.svg"
    height="100%"
    width="100%"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.48.5 r10040"
    version="1.1"
    id="svg2"
    viewBox="0 0 512 512"
-   inkscape:export-filename="C:\Users\Chris\Documents\GitHub\bot-game\assets\cold_blooded.png"
+   inkscape:export-filename="/Users/chriskoss/src/bot-game/assets/wat.png"
    inkscape:export-xdpi="12.832031"
    inkscape:export-ydpi="12.832031">
   <sodipodi:namedview
@@ -27,14 +27,14 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1185"
-     inkscape:window-height="1030"
+     inkscape:window-height="756"
      id="namedview44"
      showgrid="false"
      inkscape:zoom="0.35595703"
      inkscape:cx="-143.40321"
      inkscape:cy="202.99055"
-     inkscape:window-x="100"
-     inkscape:window-y="100"
+     inkscape:window-x="41"
+     inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <metadata
@@ -174,13 +174,6 @@
      width="516.97894"
      id="rect3171"
      style="opacity:0.98999999;fill:#0c0000;fill-opacity:1;fill-rule:nonzero;stroke:none" />
-  <rect
-     style="opacity:0.98999999;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
-     id="rect3156"
-     width="76.367531"
-     height="57.982758"
-     x="-94.752312"
-     y="319.66696" />
   <g
      id="g3789"
      transform="matrix(0.31485176,0.33286128,-0.37223017,0.3520906,60.030217,381.62565)">

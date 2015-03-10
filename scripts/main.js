@@ -235,25 +235,22 @@ namespace.module('bot.main', function (exports, require) {
             log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
         } else if (key === CKEY || key === XKEY || key === VKEY) {
             log.error('Melee Equipment cheat');
-            var item;
-            
+            var items = this.gameModel.inv.models;
+            var egm = this.gameModel.hero.equipped;
+            var sc = this.gameModel.hero.skillchain;
+
             if (key === CKEY) {
-                this.gameModel.inv.addDrops([                
+                this.gameModel.inv.addDrops([
                     dropsLib.dropFactory('item', ['weapon', 'spikey mace']),                
                     dropsLib.dropFactory('skill', 'lethal strike'),
                     dropsLib.dropFactory('skill', 'flaming debris'),
                     dropsLib.dropFactory('skill', 'ground smash'),
                 ]);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "spikey mace"});
-                this.gameModel.hero.equipped.equip(item, "weapon");
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "ground smash"});
-                this.gameModel.hero.skillchain.equip(item, 0);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "lethal strike"});
-                this.gameModel.hero.skillchain.equip(item, 1);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "flaming debris"});
-                this.gameModel.hero.skillchain.equip(item, 2);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "basic melee"});
-                this.gameModel.hero.skillchain.equip(item, 4);
+                egm.equip(_.findWhere(items, {name: 'spikey mace'}), 'weapon');
+                sc.equip(_.findWhere(items, {name: 'ground smash'}), 0);
+                sc.equip(_.findWhere(items, {name: 'lethal strike'}), 1);
+                sc.equip(_.findWhere(items, {name: 'flaming debris'}), 2);
+                sc.equip(_.findWhere(items, {name: 'basic melee'}), 4);
             } else if (key === XKEY) {
                 this.gameModel.inv.addDrops([
                     dropsLib.dropFactory('item', ['weapon', 'composite bow']),
@@ -263,14 +260,10 @@ namespace.module('bot.main', function (exports, require) {
                 this.gameModel.cardInv.addDrops([
                     dropsLib.dropFactory('card', ['more projectiles', 2]),
                 ]);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "composite bow"});
-                this.gameModel.hero.equipped.equip(item, "weapon");
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "headshot"});
-                this.gameModel.hero.skillchain.equip(item, 0);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "speed shot"});
-                this.gameModel.hero.skillchain.equip(item, 1);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "basic range"});
-                this.gameModel.hero.skillchain.equip(item, 4);
+                egm.equip(_.findWhere(items, {name: 'composite bow'}), 'weapon');
+                sc.equip(_.findWhere(items, {name: 'headshot'}), 0);
+                sc.equip(_.findWhere(items, {name: 'speed shot'}), 1);
+                sc.equip(_.findWhere(items, {name: 'basic range'}), 4);
             } else if (key === VKEY) {
                 this.gameModel.inv.addDrops([
                     dropsLib.dropFactory('item', ['weapon', 'star wand']),
@@ -281,49 +274,31 @@ namespace.module('bot.main', function (exports, require) {
                     dropsLib.dropFactory('skill', 'ice blast'),
                     dropsLib.dropFactory('skill', 'nova'),
                 ]);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "star wand"});
-                this.gameModel.hero.equipped.equip(item, "weapon");
-                //item = _.find(this.gameModel.inv.models, function(item) {return item.name == "fire ball"});
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "nova"});
-                this.gameModel.hero.skillchain.equip(item, 0);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "poison ball"});
-                this.gameModel.hero.skillchain.equip(item, 1);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "ice ball"});
-                this.gameModel.hero.skillchain.equip(item, 2);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "lightning ball"});
-                this.gameModel.hero.skillchain.equip(item, 3);
-                item = _.find(this.gameModel.inv.models, function(item) {return item.name == "basic spell"});
-                this.gameModel.hero.skillchain.equip(item, 4);
+                egm.equip(_.findWhere(items, {name: 'star wand'}), 'weapon');
+                sc.equip(_.findWhere(items, {name: 'nova'}), 0);
+                sc.equip(_.findWhere(items, {name: 'poison ball'}), 1);
+                sc.equip(_.findWhere(items, {name: 'ice ball'}), 2);
+                sc.equip(_.findWhere(items, {name: 'lightning ball'}), 3);
+                sc.equip(_.findWhere(items, {name: 'basic spell'}), 4);
             }
 
             this.gameModel.inv.addDrops([
-
                 dropsLib.dropFactory('item', ['armor', 'crusader helm']),
                 dropsLib.dropFactory('item', ['armor', 'leatherplate armor']),
                 dropsLib.dropFactory('item', ['armor', 'buckaneer boots']),
                 dropsLib.dropFactory('item', ['armor', 'goldenscale gauntlets']),
-
             ]);
 
-            item = _.find(this.gameModel.inv.models, function(item) {return item.name == "crusader helm"});
-            this.gameModel.hero.equipped.equip(item, "head");
-            item = _.find(this.gameModel.inv.models, function(item) {return item.name == "leatherplate armor"});
-            this.gameModel.hero.equipped.equip(item, "chest");
-            item = _.find(this.gameModel.inv.models, function(item) {return item.name == "buckaneer boots"});
-            this.gameModel.hero.equipped.equip(item, "legs");
-            item = _.find(this.gameModel.inv.models, function(item) {return item.name == "goldenscale gauntlets"});
-            this.gameModel.hero.equipped.equip(item, "hands");
+            egm.equip(_.findWhere(items, {name: 'crusader helm'}), 'head');
+            egm.equip(_.findWhere(items, {name: 'leatherplate armor'}), 'chest');
+            egm.equip(_.findWhere(items, {name: 'buckaneer boots'}), 'legs');
+            egm.equip(_.findWhere(items, {name: 'goldenscale gauntlets'}), 'hands');
 
-
-            
             this.gameModel.cardInv.addDrops([
                 dropsLib.dropFactory('card', ['heart juice', 4]),
                 dropsLib.dropFactory('card', ['brain juice', 4]),
                 dropsLib.dropFactory('card', ['hot sword', 4])
             ]);
-
-            //this.gameModel.autoEquip();
-            //this.gameModel.autoEquip();
         } else if (key === PKEY) {
             log.warning('Time Test / Cheat!');
             var start = new Date().getTime();

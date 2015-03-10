@@ -58,14 +58,14 @@
 
   <script id="info-box-template" type="text/template">
     <% if (model) { %>
-      <% if (model.itemType && model.itemType !== 'card') { %>
+      <% if (model.itemType !== 'card') { %>
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
         <% if (model.itemType === "armor") { %>
-          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.type) %> Armor</div>
+          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.slot) %> Armor</div>
         <% } else if (model.itemType === "weapon") { %>
-          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.type) %> Weapon</div>
+          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.weaponType) %> Weapon</div>
         <% } else if (model.itemType === "skill") { %>
-          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.class) %> Skill</div>
+          <div class="infoitem"><%= namespace.bot.utils.firstCap(model.skillType) %> Skill</div>
         <% } %>
         <div class="infoitem">Level <%= model.level %></div>
         <div class="infoitem">XP <%= model.xp %> / <% print(model.getNextLevelXp()); %></div>

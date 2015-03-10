@@ -22,38 +22,38 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 6', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             "hand axe": {
                 "mods": [
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             "stone hammer": {
                 "mods": [
                     {def: 'speed more 20', type: 'dmg'},
-                    {def: 'physDmg added 10', type: 'dmg'},                    
+                    {def: 'physDmg added 10', type: 'dmg'},
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             "falchion": {
                 "mods": [
-                    {def: 'speed more -20', type: 'dmg'},                    
+                    {def: 'speed more -20', type: 'dmg'},
                     {def: 'physDmg added 8', type: 'dmg'},
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             "morning star": {
                 "mods": [
-                    {def: 'speed more 20', type: 'dmg'},                    
+                    {def: 'speed more 20', type: 'dmg'},
                     {def: 'physDmg added 14', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             "long sword": {
                 "mods": [
@@ -61,7 +61,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 16', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             "spikey mace": {
                 "mods": [
@@ -69,7 +69,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 16', type: 'dmg'},                    
                     {def: 'physDmg added 4 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             "spiked battle axe": {
                 "mods": [
@@ -77,7 +77,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 20', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             "winged axe": {
                 "mods": [
@@ -86,7 +86,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 19', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
-                "type": "melee",
+                "weaponType": "melee",
             },
             ////////////////////
             ///// RANGED ///////
@@ -96,7 +96,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 5', type: 'dmg'},
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
-                "type": "range",
+                "weaponType": "range",
             },
             "hand crossbow": {
                 "mods": [
@@ -104,7 +104,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed more -30', type: 'dmg'},                    
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
-                "type": "range",
+                "weaponType": "range",
             },
             "crossbow": {
                 "mods": [
@@ -112,7 +112,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 9', type: 'dmg'},
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ],
-                "type": "range",
+                "weaponType": "range",
             },
             "composite bow": {
                 "mods": [
@@ -120,7 +120,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 10', type: 'dmg'},
                     {def: 'physDmg added 3 perLevel', type: 'dmg'}
                 ],
-                "type": "range",
+                "weaponType": "range",
             },
             ////////////////////
             ////// SPELL ///////
@@ -130,56 +130,56 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'spellDmg more 15', type: 'dmg'},
                     {def: 'spellDmg more 2 perLevel', type: 'dmg'}
                 ],
-                "type": "spell",
+                "weaponType": "spell",
             },
             "knobby wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
                     {def: 'spellDmg more 3 perLevel', type: 'dmg'}
                 ],
-                "type": "spell",
+                "weaponType": "spell",
             },
             "pewter wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
                     {def: 'spellDmg more 5 perLevel', type: 'dmg'}
                 ],
-                "type": "spell",
+                "weaponType": "spell",
             },
             "delicate wand": {
                 "mods": [
                     {def: 'spellDmg more 25', type: 'dmg'},
                     {def: 'spellDmg more 2 perLevel', type: 'dmg'}
                 ],
-                "type": "spell",
+                "weaponType": "spell",
             },
             "dragonstone wand": {
                 "mods": [
                     {def: 'fireDmg more 15', type: 'dmg'},
                     {def: 'fireDmg more 3 perLevel', type: 'dmg'}
                 ],
-                "type": "spell",
+                "weaponType": "spell",
             },
             "fairy wand": {
                 "mods": [
                     {def: 'spellDmg more 25', type: 'dmg'},
                     {def: 'spellDmg more 4 perLevel', type: 'dmg'}
                 ],
-                "type": "spell",
+                "weaponType": "spell",
             },
             "star wand": {
                 "mods": [
                     {def: 'spellDmg more 25', type: 'dmg'},
                     {def: 'spellDmg more 3 perLevel', type: 'dmg'}
                 ],
-                "type": "spell",
+                "weaponType": "spell",
             },
             "demon wand": {
                 "mods": [
                     {def: 'spellDmg more 50', type: 'dmg'},
                     {def: 'spellDmg more 2 perLevel', type: 'dmg'}
                 ],
-                "type": "spell",
+                "weaponType": "spell",
             },
         },
         "armor": {
@@ -191,49 +191,49 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "head",
+                "slot": "head",
             },
             "collander": {
                 "mods": [
                     {def: 'armor added 7', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "head",
+                "slot": "head",
             },
             "conquistador helm": {
                 "mods": [
                     {def: 'armor added 9', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "head",
+                "slot": "head",
             },
             "crusader helm": {
                 "mods": [
                     {def: 'armor added 15', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "head",
+                "slot": "head",
             },
             "gladiator helm": {
                 "mods": [
                     {def: 'armor added 22', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "head",
+                "slot": "head",
             },
             "apollo helmet": {
                 "mods": [
                     {def: 'armor added 30', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "head",
+                "slot": "head",
             },
             "plague doctor": {
                 "mods": [
                     {def: 'poisResist more -10', type: 'eleResist'},
                     {def: 'poisResist more -0.5 perLevel', type: 'eleResist'}
                 ],
-                "type": "head",
+                "slot": "head",
             },
             ////////////////////
             ///// CHEST ////////
@@ -243,139 +243,139 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "leather armor": {
                 "mods": [
                     {def: 'armor added 8', type: 'def'},
                     {def: 'armor added 3 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "goblin leather": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor added 4 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "leatherscale armor": {
                 "mods": [
                     {def: 'armor more 20', type: 'def'},
                     {def: 'armor added 5 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "leatherplate armor": {
                 "mods": [
                     {def: 'armor added 20', type: 'def'},
                     {def: 'armor added 3 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "hammered chestplate": {
                 "mods": [
                     {def: 'armor added 50', type: 'def'},
                     {def: 'armor added 5 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "iron chestplate": {
                 "mods": [
                     {def: 'armor added 50', type: 'def'},
                     {def: 'armor more 2 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "copper chestplate": {
                 "mods": [
                     {def: 'armor added 50', type: 'def'},
                     {def: 'armor more 3 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "muscle plate": {
                 "mods": [
                     {def: 'armor added 50', type: 'def'},
                     {def: 'armor more 4 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "elegant plate": {
                 "mods": [
                     {def: 'armor added 55', type: 'def'},
                     {def: 'armor more 5 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "raider armor": {
                 "mods": [
                     {def: 'physDmg more 5 perLevel', type: 'dmg'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "shadow armor": {
                 "mods": [
                     {def: 'dodge added 50', type: 'def'},
                     {def: 'dodge added 5 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "scout leather": {
                 "mods": [
                     {def: 'dodge added 20', type: 'def'},
                     {def: 'dodge more 2 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "studded leather": {
                 "mods": [
                     {def: 'dodge added 50', type: 'def'},
                     {def: 'dodge more 4 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "velvet tunic": {
                 "mods": [
                     {def: 'manaRegen added 5', type: 'def'},
                     {def: 'manaRegen added 1 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "war robe": {
                 "mods": [
                     {def: 'manaRegen added 10', type: 'def'},
                     {def: 'armor added 5 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "winged leather": {
                 "mods": [
                     {def: 'armor added 100', type: 'def'},
                     {def: 'armor added 10 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "cultist robe": {
                 "mods": [
                     {def: 'manaRegen added 15', type: 'def'},
                     {def: 'manaRegen added 2 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "embroidered silks": {
                 "mods": [
                     {def: 'manaRegen added 20', type: 'def'},
                     {def: 'manaRegen added 2 perLevel', type: 'def'}
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             "batsuit": {
                 "mods": [
                     {def: 'speed more -20', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},
                 ],
-                "type": "chest",
+                "slot": "chest",
             },
             ////////////////////
             ///// LEGS /////////
@@ -385,49 +385,49 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'}
                 ],
-                "type": "legs",
+                "slot": "legs",
             },
             "leather boots": {
                 "mods": [
                     {def: 'armor added 10', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "legs",
+                "slot": "legs",
             },
             "elf boots": {
                 "mods": [
                     {def: 'dodge added 5', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "legs",
+                "slot": "legs",
             },
             "mage boots": {
                 "mods": [
                     {def: 'manaRegen added 3', type: 'def'},
                     {def: 'manaRegen added 1 perLevel', type: 'def'}
                 ],
-                "type": "legs",
+                "slot": "legs",
             },
             "arcane boots": {
                 "mods": [
                     {def: 'manaRegen added 5', type: 'def'},
                     {def: 'manaRegen added 2 perLevel', type: 'def'}
                 ],
-                "type": "legs",
+                "slot": "legs",
             },
             "buckaneer boots": {
                 "mods": [
                     {def: 'armor added 25', type: 'def'},
                     {def: 'armor added 5 perLevel', type: 'def'}
                 ],
-                "type": "legs",
+                "slot": "legs",
             },
             "suess boots": {
                 "mods": [
                     {def: 'armor added 500', type: 'def'},
                     {def: 'armor added 20 perLevel', type: 'def'}
                 ],
-                "type": "legs",
+                "slot": "legs",
             },
             ////////////////////
             ///// GLOVES ///////
@@ -437,56 +437,56 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor added 1 perLevel', type: 'def'}
                 ],
-                "type": "hands",
+                "slot": "hands",
             },
             "gardening gloves": {
                 "mods": [
                     {def: 'armor added 7', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
-                "type": "hands",
+                "slot": "hands",
             },
             "leather gloves": {
                 "mods": [
                     {def: 'armor added 10', type: 'def'},
                     {def: 'armor added 3 perLevel', type: 'def'}
                 ],
-                "type": "hands",
+                "slot": "hands",
             },
             "velvet gloves": {
                 "mods": [
                     {def: 'manaRegen added 2', type: 'def'},
                     {def: 'manaRegen added 1 perLevel', type: 'def'}
                 ],
-                "type": "hands",
+                "slot": "hands",
             },
             "handmail": {
                 "mods": [
                     {def: 'armor added 15', type: 'def'},
                     {def: 'armor added 3 perLevel', type: 'def'}
                 ],
-                "type": "hands",
+                "slot": "hands",
             },
             "fancy gauntlets": {
                 "mods": [
                     {def: 'armor added 25', type: 'def'},
                     {def: 'armor added 4 perLevel', type: 'def'}
                 ],
-                "type": "hands",
+                "slot": "hands",
             },
             "polished gauntlets": {
                 "mods": [
                     {def: 'armor added 30', type: 'def'},
                     {def: 'armor added 4 perLevel', type: 'def'}
                 ],
-                "type": "hands",
+                "slot": "hands",
             },
             "goldenscale gauntlets": {
                 "mods": [
                     {def: 'armor added 50', type: 'def'},
                     {def: 'armor added 5 perLevel', type: 'def'}
                 ],
-                "type": "hands",
+                "slot": "hands",
             },
         },
         /*
@@ -574,7 +574,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "basic melee": {
                 "prototype": ["basic"],
-                "class": "melee",
+                "skillType": "melee",
                 "types": ["melee"],
                 "specs": [{ type: 'melee', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
@@ -585,7 +585,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "basic range": {
                 "prototype": ["basic"],
-                "class": "range",
+                "skillType": "range",
                 "types": ["proj"],
                 "specs": [{ type: 'proj', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
@@ -596,7 +596,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "basic spell": {
                 "prototype": ["basic"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj"],
                 "specs": [{ type: 'proj', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
@@ -765,7 +765,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "speed shot": {
                 "prototype": ["basic range"],
-                "class": "range",
+                "skillType": "range",
                 "types": ["proj"],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
@@ -778,7 +778,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "fire arrow": {
                 "prototype": ["basic range"],
-                "class": "range",
+                "skillType": "range",
                 "types": ["proj", "fire"],
                 "anim": ["#f00"],
                 "specs": [{ type: 'proj', color: FIRE_COLOR}],
@@ -793,7 +793,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "cold arrow": {
                 "prototype": ["basic range"],
-                "class": "range",
+                "skillType": "range",
                 "types": ["proj", "cold"],
                 "anim": ["#00f"],
                 "specs": [{ type: 'proj', color: COLD_COLOR}],
@@ -808,7 +808,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "lightning arrow": {
                 "prototype": ["basic range"],
-                "class": "range",
+                "skillType": "range",
                 "types": ["proj", "lightning"],
                 "anim": ["#ff0"],
                 "specs": [{ type: 'proj', color: LIGHT_COLOR}],
@@ -823,7 +823,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "poison arrow": {
                 "prototype": ["basic range"],
-                "class": "range",
+                "skillType": "range",
                 "types": ["proj", "poison"],
                 "anim": ["#0f0"],
                 "specs": [{ type: 'proj', color: POIS_COLOR}],
@@ -838,7 +838,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "headshot": {
                 "prototype": ["basic"],
-                "class": "range",
+                "skillType": "range",
                 "types": ["proj"],
                 "specs": [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],                
                 "baseMods": [
@@ -852,7 +852,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "incinerate": {                
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "fire", "spell"],
                 "anim": ["#f00"],
                 "specs": [{ type: 'cone', color: FIRE_COLOR}],
@@ -868,7 +868,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "poison spray": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["cone", "pois", "spell"],
                 "specs": [{type: "cone", color: POIS_COLOR}],
                 "baseMods": [
@@ -884,7 +884,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "fire ball": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "fire", "spell"],
                 "anim": ["#f00"],
                 "specs": [{ type: "proj", color: FIRE_COLOR}],
@@ -903,7 +903,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "ice ball": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "cold", "spell"],
                 "anim": ["#00f"],
                 "specs": [{type: "proj", color: COLD_COLOR}],
@@ -921,7 +921,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "lightning ball": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "lightning", "spell"],
                 "anim": ["#ff0"],
                 "specs": [{type: "proj", color: LIGHT_COLOR}],
@@ -939,7 +939,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "poison ball": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "poison", "spell"],
                 "anim": ["#0f0"],
                 "specs": [{ type: 'proj', color: POIS_COLOR }],
@@ -957,7 +957,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "ice blast": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["cone", "cold", "spell"],
                 "specs": [{ type: 'cone', color: COLD_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
@@ -972,7 +972,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "pressure wave": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "spell"],
                 "baseMods": [
                     {def: 'manaCost added 10', type: 'dmg'},
@@ -984,7 +984,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "shadow dagger": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "spell"],
                 "specs": [{type: "proj", color: '#000'}],
                 "baseMods": [
@@ -997,7 +997,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "health suck": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "spell"],
                 "baseMods": [
                     {def: 'manaCost added 1', type: 'dmg'},
@@ -1011,7 +1011,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "nova": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "circle" , "spell"],
                 "specs": [{ type: 'circle', color: LIGHT_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
@@ -1025,7 +1025,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "fire nova": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
                 "specs": [{ type: 'circle', color: FIRE_COLOR}],
                 "baseMods": [
@@ -1039,7 +1039,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "ice nova": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
                 "specs": [{ type: 'circle', color: COLD_COLOR}],
                 "baseMods": [
@@ -1053,7 +1053,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "poison nova": {
                 "prototype": ["basic spell"],
-                "class": "spell",
+                "skillType": "spell",
                 "types": ["proj", "aoecircle" , "spell"],
                 "specs": [{ type: 'circle', color: POIS_COLOR}],
                 "baseMods": [
@@ -1067,7 +1067,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "flame cone": {
                 "prototype": ["basic"],
-                "class": "melee",
+                "skillType": "melee",
                 "types": ["cone" , "melee"],
                 "specs": [{ type: 'cone', color: FIRE_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
@@ -1080,7 +1080,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "lethal strike": {
                 "prototype": ["basic melee"],
-                "class": "melee",
+                "skillType": "melee",
                 "types": ["melee"],
                 "baseMods": [
                     {def: 'manaCost added 20', type: 'dmg'},
@@ -1094,7 +1094,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "deadly volley": {
                 "prototype": ["basic"],
-                "class": "range",
+                "skillType": "range",
                 "types": ["proj"],
                 "specs": [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [

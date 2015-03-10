@@ -228,6 +228,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "type": "head",
             },
+            "plague doctor": {
+                "mods": [
+                    {def: 'poisResist more -10', type: 'eleResist'},
+                    {def: 'poisResist more -0.5 perLevel', type: 'eleResist'}
+                ],
+                "type": "head",
+            },
             ////////////////////
             ///// CHEST ////////
             ////////////////////
@@ -851,7 +858,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "specs": [{ type: 'cone', color: FIRE_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'speed added 100', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
                     {def: 'fireDmg added 2', type: 'dmg'},
                     {def: 'fireDmg added 2 perLevel', type: 'dmg'},
@@ -865,7 +873,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "specs": [{type: "cone", color: POIS_COLOR}],
                 "baseMods": [
                     {def: 'manaCost added 1', type: 'dmg'},
-                    {def: 'speed added 100', type: 'dmg'},
+                    {def: 'manaCost added 1 perLevel', type: 'dmg'},                    
+                    {def: 'speed added 250', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
                     {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},
                     {def: 'poisDmg added 4', type: 'dmg'},
@@ -1571,8 +1580,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "coldDmg gainedas 30 poisDmg", "type": "dmg"},
                     {"def": "coldDmg more 3 perLevel", "type": "dmg"}
                 ],
-                "slot": "gloves",
+                "slot": "hands",
                 "rarity": "rare",
+                "flavor": "I am not in danger, I am the danger.",
             },
             "shadow walker": {
                 "mods": [
@@ -1614,6 +1624,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "hpOnHit added 1 perLevel", "type": "dmg"},
                     {"def": "manaCost added 1", "type": "dmg"},
+                    {"def": "aoeRadius more -30", "type":"dmg"},
                 ],
                 "slot": "skill",
             },
@@ -1790,7 +1801,95 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "hpRegen added -5 perLevel", "type": "def"},                    
                 ],
                 "slot": "head",
-            }
+            },
+            "jet pack": {
+                "mods": [
+                    {"def": "moveSpeed more 50", "type": "def"},
+                    {"def": "moveSpeed more 10 perLevel", "type": "def"},                    
+                    {"def": "dodge more -50", "type": "def"},
+                ],
+                "slot": "chest",
+                "flavor": "Burning out his fuse up here alone",
+            },
+            "cold blooded": {
+                "mods": [
+                    {"def": "coldDmg more 30", "type": "dmg"},
+                    {"def": "fireDmg more -30", "type": "dmg"},
+                    {"def": "coldResist more -20", "type": "eleResist"},
+                    {"def": "fireResist more 20", "type": "eleResist"},                    
+                    {"def": "coldResist more -2 perLevel", "type": "eleResist"},
+                    {"def": "coldDmg more 3 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "chest",
+                "flavor": "Ice-water in his veins...",
+            },
+            "hot blooded": {
+                "mods": [
+                    {"def": "coldDmg more -30", "type": "dmg"},
+                    {"def": "fireDmg more 30", "type": "dmg"},
+                    {"def": "coldResist more 20", "type": "eleResist"},
+                    {"def": "fireResist more -20", "type": "eleResist"},
+                    {"def": "fireResist more -2 perLevel", "type": "eleResist"},
+                    {"def": "fireDmg more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "flavor": "Magma in his veins...",
+            },
+            "semi automatic": {
+                "mods": [
+                    {"def": "cooldownTime more -20", "type": "dmg"},
+                    {"def": "cooldownTime more -2 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "weapon",
+                "flavor": "NOW I HAVE A MACHINE GUN HO-HO-HO",
+            },
+            "careful aim": {
+                "mods": [
+                    {"def": "physDmg more 100", "type": "dmg"},
+                    {"def": "cooldownTime added 2000", "type": "dmg"},
+                    {"def": "physDmg more 4 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "skill",
+                "flavor": "Ready... Aim... FIRE!",
+            },
+            "conductive suit": {
+                "mods": [
+                    {"def": "lightDmg more 20", "type": "dmg"},
+                    {"def": "lightResist more -20", "type": "eleResist"},
+                    {"def": "lightResist more -2 perLevel", "type": "eleResist"},
+                    {"def": "lightDmg more 2 perLevel", "type": "dmg"},
+                ],
+                "slot": "chest",
+                "flavor": "Fortunately the path of least resistance is no longer through your heart.",
+            },
+            "antibiotics": {
+                "mods": [
+                    {"def": "poisResist more -20", "type": "eleResist"},
+                    {"def": "poisResist more -2 perLevel", "type": "eleResist"},
+                ],
+                "slot": "hands",
+            },
+            "forest spirit": {
+                "mods": [
+                    {"def": "maxHp gainedas 2 hpRegen", "type": "def"},
+                    {"def": "maxHp more 1 perLevel", "type": "def"}
+                ],
+                "slot": "head"
+            },
+            "armor plating": {
+                "mods": [
+                    {"def": "armor added 10 perLevel", "type": "def"},
+                    {"def": "armor more 2 perLevel", "type": "def"}
+                ],
+                "slot": "hands"
+            },
+            "mind expansion": {
+                "mods": [
+                    {"def": "wisdom added 10 perLevel", "type": "def"},
+                    {"def": "wisdom gainedas 100 maxMana", "type": "def"}
+                ],
+                "slot": "head"
+            },
         },
         "monster": {
             "skeleton" : {
@@ -1888,7 +1987,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["strong back", 2],
-                    ["thwomping", 2]
+                    ["thwomping", 2],
+                    ["forest spirit", 1],
                 ]
             },
             "elf" : {
@@ -1910,6 +2010,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["dexterous hands", 2],
                     ["practiced", 2],                    
                     ["sharpened", 2],
+                    ["forest spirit", 1],
                 ],
                 "flavor": "He knows you've been naughty"
             },
@@ -1954,10 +2055,11 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "gnome" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["quick hit", "basic melee"],
+                "skills": ["lightning slash", "quick hit", "basic melee"],
                 "sourceCards": [
                     ["small stature", 1],
-                    ["keen wit", 1]
+                    ["keen wit", 1],
+                    ["conductive suit", 1]
                 ],
             },
             "gnome electrician" : {
@@ -1968,7 +2070,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["keen wit", 1],
                     ["electrified", 1],
                     ["healing charm", 3],
-                    ["blood pact", 3]
+                    ["blood pact", 3],
+                    ["conductive suit", 1]
                 
                 ],
             },
@@ -1999,6 +2102,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["mecha heart", 1],
                     ["ignited", 1],
                     ["steam powered", 1],
+                    ["jet pack", 1]
                 ],
             },
             "mechfridgerator": {
@@ -2020,7 +2124,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["clockwork", 1],
                     ["mecha heart", 1],
                     ["charged", 1],
-                    ["steam powered", 1]
+                    ["steam powered", 1],
+                    ["conductive suit", 1],
                 ],
             },
             "sir mechs-a-lot" : {
@@ -2044,6 +2149,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["goblin toe", 1],
                     ["berserking", 1],
                     ["simple minded", 1],
+                    ["armor plating", 1]
                 ],
             },
             "goblin priest" : {
@@ -2053,17 +2159,19 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["goblin toe", 1],
                     ["berserking", 1],
                     ["simple minded", 1],
-                    ["pyromania", 1]
+                    ["pyromania", 1],
+                    ["hot blooded", 1],
                 ],
             },
             "goblin artillery" : {
                 "items": [["weapon", "crossbow"], ["armor", "goblin leather"]],
-                "skills": ["basic range"],
+                "skills": ["fire arrow", "basic range"],
                 "sourceCards": [
                     ["goblin toe", 1],
                     ["berserking", 1],
                     ["simple minded", 1],
-                    ["ignited", 2]
+                    ["ignited", 2],
+                    ["hot blooded", 1]
                 ],
             },
             "flame dragon" : {
@@ -2076,7 +2184,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["keen wit", 3],
                     ["brain juice", 3],
                     ["mana on hit", 3],
-                    ["telescoping handle", 3]
+                    ["telescoping handle", 3],
+                    ["hot blooded", 1]
                 ],
             },
             
@@ -2097,10 +2206,11 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["small stature", 1],
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
+                    ["antibiotics", 1],
                 ],
             },
             "dart imp" : {
-                "items": [["weapon", "hand crossbow"]],
+                "items": [["weapon", "hand crossbow"], ["armor", "plague doctor"]],
                 "skills": ["poison arrow", "speed shot", "basic range"],
                 "sourceCards": [
                     ["berserking", 1],
@@ -2108,17 +2218,19 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
                     ["putrified", 1],
-                    ["more projectiles", 1]
+                    ["more projectiles", 1],
+                    ["antibiotics", 1],                    
                 ],
             },
             "imp shaman": {
-                "items": [["weapon", "star wand"]],
+                "items": [["weapon", "star wand"], ["armor", "plague doctor"]],
                 "skills": ["poison ball", "poison spray", "poison nova", "basic spell"],
                 "sourceCards": [
                     ["berserking", 1],
                     ["small stature", 1],
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
+                    ["antibiotics", 1],                    
                 ],
             },
             "marshwalker": {
@@ -2140,13 +2252,15 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "scalp collector": {
-                "items": [["weapon", "composite bow"]],
+                "items": [["weapon", "composite bow"], ["armor", "plague doctor"]],
                 "skills": ["headshot", "basic range"],
                 "sourceCards": [
                     ["indigenous toxins", 1],
                     ["putrified", 1],
                     ["precise", 1],
                     ["vest pockets", 1],
+                    ["semi automatic", 1],
+                    ["antibiotics", 1],                    
                 ],
             },
             "frost skeleton": {
@@ -2168,6 +2282,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["keen wit", 1],
                     ["fur hat", 1],
+                    ["cold blooded", 1],
                 ],
             },
             "frozen warrior": {
@@ -2189,7 +2304,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["chinchilla lining", 1],
                     ["clawed", 1],
-                    ["yeti fur", 1]
+                    ["yeti fur", 1],
+                    ["cold blooded", 1],
                 ],
             },
             "wight": {
@@ -2200,7 +2316,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["fur hat", 1],
                     ["ethereal", 1],
-                    ["shadow walker", 1]
+                    ["shadow walker", 1],
+                    ["mind expansion", 1]
                 ],
             },
             "walter wight": {
@@ -2210,11 +2327,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-boss", 0],
                     ["fleece lining", 1],
                     ["frosted", 1],
+                    ["blue ice", 3],
                     ["fur hat", 1],
                     ["ethereal", 1],
                     ["shadow walker", 1],
                     ["keen wit", 4],
-                    ["mana on hit", 3]
+                    ["mana on hit", 3],
                 ],
             },
             "shadow knight": {
@@ -2225,7 +2343,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["full plating", 1],
                     ["sharpened", 1],
                     ["hateful blade", 1],
-                    ["ethereal", 1]
+                    ["ethereal", 1],
+                    ["armor plating", 1]
                 ],
             },
             "ghoul": {
@@ -2235,6 +2354,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["shambling", 1],
                     ["simple minded", 1],
                     ["bloodsucker", 1],
+                    ["careful aim", 1]
                 ],
             },
             "vampire": {
@@ -2246,7 +2366,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["bloodsucker", 1],
                     ["soulsucker", 1],
                     ["shadow walker", 1],
-                    ["flying", 1]
+                    ["flying", 1],
+                    ["mind expansion", 1]
                 ],
             },
             "living statue": {

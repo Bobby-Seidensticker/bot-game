@@ -171,18 +171,16 @@
     </table>
   </script>
 
-  <script id="skillchain-footer-template" type="text/template">
-    <% _.each(data, function(skill) { %>
+  <script id="skill-footer-template" type="text/template">
     <div class="skill">
       <div class="box">
-        <img src="assets/<%= utils.spaceToUnderscore(skill.name) %>.png" />
+        <img src="assets/<%= utils.spaceToUnderscore(model.spec.name) %>.png" />
         <div class="cooldown"></div>
         <div class="indicator range-indicator">R</div>
         <div class="indicator mana-indicator">M</div>
       </div>
       <div class="use-holder"><div class="use-bar"></div></div>
     </div>
-    <% }); %>
   </script>
 
   <script id="potion-template" type="text/template">

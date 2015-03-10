@@ -27,6 +27,7 @@ namespace.module('bot.zone', function (exports, require) {
             // Expose attack manager functions for EntityBodies and chaining projectiles
             gl.addAttack = this.attackManager.addAttack.bind(this.attackManager);
             this.messages = new ZoneMessages();
+            this.waitingUntil = 0;
 
             this.nextZone = 'spooky dungeon';
             this.unlockedZones = 0;
@@ -177,11 +178,10 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         ensureRoom: function() {
-            if (!this.hero.isAlive() || this.done()) {
-                log.info('Getting new zone');
-                this.hero.revive();
-                this.newZone(this.nextZone);
+            if (this.waitingUntil) {
+                return this.rooms[this.heroPos];
             }
+
             if (this.roomCleared() && this.atExit()) {
                 var room = this.rooms[this.heroPos];
                 room.hero = undefined;
@@ -196,12 +196,41 @@ namespace.module('bot.zone', function (exports, require) {
                 this.tryUnlockNextZone();
                 gl.DirtyQueue.mark('zone:nextRoom');
             }
-            var room = this.rooms[this.heroPos];
-            return room;
+            return this.rooms[this.heroPos];
+        },
+
+        checkDone: function() {
+            if (this.waitingUntil) {
+                return;
+            }
+            var msg;
+            if (!this.hero.isAlive()) {
+                msg = {
+                    text: "You Died!",
+                    type: "death",
+                };
+            } else if (this.done()) {
+                msg = {
+                    text: "Zone Cleared!",
+                    type: "clear"
+                };
+            }
+            if (msg) {
+                this.messages.addMessage(_.extend(msg, {
+                    pos: this.hero.pos,
+                    color: "#FFF",
+                    lifespan: 2000,
+                    verticalOffset: 0,
+                    time: gl.time,
+                    expires: gl.time + 2000
+                }));
+                this.waiting = true;
+                this.waitingUntil = gl.time + 2000;
+            }
         },
 
         tryUnlockNextZone: function() {
-            if (this.zoneOrder.indexOf(this.nextZone) === this.unlockedZones && this.heroPos === 29) {
+            if (this.heroPos === 29 && this.zoneOrder.indexOf(this.nextZone) === this.unlockedZones) {
                 this.unlockedZones += 1;
                 this.messages.addMessage({
                     text: "New Map Unlocked!",
@@ -224,22 +253,28 @@ namespace.module('bot.zone', function (exports, require) {
         zoneTick: function() {
             var room, mons, heroes;
 
-            room = this.ensureRoom();
-            mons = this.liveMons();
-            this.hero.tryDoStuff(room, mons);
+            if (this.waitingUntil) {
+                if (gl.time > this.waitingUntil) {
+                    log.info('Getting new zone');
+                    this.hero.revive();
+                    this.newZone(this.nextZone);
+                    this.waitingUntil = 0;
+                }
+            } else {
+                room = this.ensureRoom();
+                mons = this.liveMons();
+                this.hero.tryDoStuff(room, mons);
 
-            if (this.done()) {
-                return;
+                room = this.ensureRoom();
+
+                mons = this.liveMons();
+                _.each(mons, function(mon, i) {
+                    mon.tryDoStuff(room, this.liveHeroes());
+                }, this);
             }
-
-            room = this.ensureRoom();
-
-            mons = this.liveMons();
-            _.each(mons, function(mon, i) {
-                mon.tryDoStuff(room, this.liveHeroes());
-            }, this);
-
             this.attackManager.tick([this.liveHeroes(), this.liveMons()]);
+
+            this.checkDone();
 
             gl.DirtyQueue.mark('zoneTick');
         },

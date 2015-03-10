@@ -246,7 +246,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         show: function(view) {
-            if(view.model !== undefined) {
+            if (view.model !== undefined) {
                 this.view = view;
                 this.render();
             }
@@ -781,96 +781,90 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
 
-    var SkillchainFooterView = Backbone.View.extend({
+    var SkillFooterView = Backbone.View.extend({
         tagName: 'div',
         className: 'skillchain',
-        template: _.template($('#skillchain-footer-template').html()),
+        template: _.template($('#skill-footer-template').html()),
+
+        events: {
+            'mouseenter .skill': 'onMouseenter',
+            'mouseleave .skill': 'onMouseleave'
+        },
+
+        onMouseenter: function() {
+            gl.UIEvents.trigger('mouseenter', this);
+        },
+
+        onMouseleave: function() {
+            gl.UIEvents.trigger('mouseleave');
+        },
 
         initialize: function(options, hero) {
             this.hero = hero;
-            this.listenTo(gl.DirtyListener, 'bodySkillchainUpdated', this.render);
             this.listenTo(gl.DirtyListener, 'tick', this.adjust);
         },
 
-        getSkills: function() {
-            this.data = _.compact(this.hero.skills);
-            for (var i = 0; i < this.data.length; i++) {
-                var s = this.data[i];
-                this.data[i] = {
-                    name: s.spec.name,
-                    skill: s,
-                    cdHeight: 0,
-                    useWidth: 0,
-                    $skill: undefined,
-                    $cd: undefined,
-                    $use: undefined
-                };
-            }
-        },
-
-        getEls: function() {
-            var $skills = this.$('.skill');
-            var $cds = this.$('.cooldown');
-            var $uses = this.$('.use-bar');
-            for (var i = 0; i < this.data.length; i++) {
-                this.data[i].$skill = $($skills[i]);
-                this.data[i].$cd = $($cds[i]);
-                this.data[i].$use = $($uses[i]);
-            }
-        },
-
-        calc: function() {
+        adjust: function() {
             var SIZE = 73;
+            var cdHeight = 0;
             var useWidth = 0;
 
-            for (var i = 0; i < this.data.length; i++) {
-                var d = this.data[i];
-                d.useWidth = 0;
+            if (this.model.coolAt > gl.time) {
+                var durPct = (this.hero.nextAction - gl.time) / this.hero.lastDuration;
 
-                if (d.skill.coolAt <= gl.time) {
-                    d.cdHeight = 0;
-                    d.useWidth = 0;
+                // cooling down but doesn't have cooldown, must be last used
+                if (this.model.spec.cooldownTime === 0) {
+                    useWidth = durPct;  // grep in use wipe while being in use
+                    cdHeight = 0;       // red no cooldown wipe
                 } else {
-                    var durPct = (this.hero.nextAction - gl.time) / this.hero.lastDuration;
-
-                    // cooling down but doesn't have cooldown, must be last used
-                    if (d.skill.spec.cooldownTime === 0) {
-                        d.useWidth = durPct;  // grep in use wipe while being in use
-                        d.cdHeight = 0;       // red no cooldown wipe
+                    cdHeight = (this.model.coolAt - gl.time) / this.model.spec.cooldownTime;
+                    if (cdHeight > 1) {  // if in use and has cooldown, cap cooldown wipe height, grey in use wipe
+                        useWidth = durPct;
+                        cdHeight = 1;
                     } else {
-                        d.cdHeight = (d.skill.coolAt - gl.time) / d.skill.spec.cooldownTime;
-                        if (d.cdHeight > 1) {  // if in use and has cooldown, cap cooldown wipe height, grey in use wipe
-                            d.useWidth = durPct;
-                            d.cdHeight = 1;
-                        } else {
-                            d.useWidth = 0;  // if just cooling down, no in use wipe
-                        }
+                        useWidth = 0;  // if just cooling down, no in use wipe
                     }
-                    d.useWidth *= SIZE;
-                    d.cdHeight *= SIZE;
                 }
+                useWidth *= SIZE;
+                cdHeight *= SIZE;
             }
-        },
 
-        adjust: function() {
-            this.calc();
-
-            _.each(this.data, function(d) {
-                if (d.skill.oom) { d.$skill.addClass('oom'); } else { d.$skill.removeClass('oom'); }
-                if (d.skill.oor) { d.$skill.addClass('oor'); } else { d.$skill.removeClass('oor'); }
-                d.$cd.css('height', d.cdHeight);
-                d.$use.css('width', d.useWidth);
-            });
+            if (this.model.oom) { this.$skill.addClass('oom'); } else { this.$skill.removeClass('oom'); }
+            if (this.model.oor) { this.$skill.addClass('oor'); } else { this.$skill.removeClass('oor'); }
+            this.$cd.css('height', cdHeight);
+            this.$use.css('width', useWidth);
         },
 
         render: function() {
-            this.getSkills();
-
             this.$el.html(this.template(this));
-
-            this.getEls();
-
+            this.$skill = this.$('.skill');
+            this.$cd = this.$('.cooldown');
+            this.$use = this.$('.use-bar');
             this.adjust();
+            return this;
+        },
+        
+    });
+
+
+    var SkillchainFooterView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'skillchain',
+
+        initialize: function(options, hero) {
+            this.hero = hero;
+            this.views = [];
+            this.listenTo(gl.DirtyListener, 'bodySkillchainUpdated', this.render);
+        },
+
+        render: function() {
+            this.$el.empty();
+
+            this.views = _.map(this.hero.skills, function(model) { return new SkillFooterView({model: model}, this.hero); }, this);
+            var frag = document.createDocumentFragment();
+            _.each(this.views, function(view) { frag.appendChild(view.render().el); });
+            this.$el.append(frag);
+
             return this;
         },
     });

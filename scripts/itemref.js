@@ -231,6 +231,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "plague doctor": {
                 "mods": [
                     {def: 'poisResist more -10', type: 'eleResist'},
+                    {def: 'poisDmg gainedas 1 hpLeech', type: 'dmg'},
                     {def: 'poisResist more -0.5 perLevel', type: 'eleResist'}
                 ],
                 "type": "head",
@@ -634,6 +635,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'speed added 250', type: 'dmg'},
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                 ]
             },
@@ -963,11 +965,11 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 2', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE / 2, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE *0.6, type: 'dmg'},
                     {def: 'aoeRadius added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'manaCost added 0.4 perLevel', type: 'dmg'},
                     {def: 'coldDmg added 6', type: 'dmg'},
-                    {def: 'coldDmg added 3 perLevel', type: 'dmg'},
+                    {def: 'coldDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
             "pressure wave": {
@@ -1307,6 +1309,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "projCount added 2 perLevel", "type": "dmg"},
                     {"def": "angle more 20", "type": "dmg"},
                     {"def": "speed more -30", "type": "dmg"},
+                    {"def": "spellDmg more -30", "type": "dmg"},
                     {"def": "manaCost added 2 perLevel", "type": "dmg"}
                 ],
                 "slot": "skill",
@@ -2027,7 +2030,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "fire golem" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["super smash", "basic melee"],
+                "skills": ["ground smash", "super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
                     ["ignited", 1]
@@ -2148,7 +2151,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "goblin" : {
                 "items": [["weapon", "spikey mace"], ["armor", "goblin leather"]],
-                "skills": ["ground smash", "basic melee"],
+                "skills": ["ground smash", "flaming debris", "basic melee"],
                 "sourceCards": [
                     ["goblin toe", 1],
                     ["berserking", 1],

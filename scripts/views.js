@@ -472,6 +472,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.selected.unselect();
                 this.selected = undefined;
             }
+            this.hovering = undefined;
 
             itemSlot.unselect();
             var unequipSuccess = itemSlot.equippedModel.equip(undefined, itemSlot.slot);
@@ -479,11 +480,6 @@ namespace.module('bot.views', function (exports, require) {
 
         onHover: function(itemSlot) {
             this.hovering = itemSlot;
-            /*if (itemSlot && itemSlot.canUnequip) {
-                this.hovering = itemSlot;
-            } else {
-                this.hovering = undefined;
-            }*/
         },
 
         newItemSlot: function(model, slot, parent) {

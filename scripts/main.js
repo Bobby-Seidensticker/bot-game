@@ -104,10 +104,16 @@ namespace.module('bot.main', function (exports, require) {
             gl.FBL.child('level').set(this.hero.level);
             var data = this.toJSON();
             gl.FBL.child('equipped').set(data.equipped);
-
+            _.each(data.equipped, function(name, slot) {
+                var cards = _.findWhere(data.inv, {"name": name});
+                gl.FBL.child('cards').child(slot+"cards").set(cards.cardNames.join(', '));
+            }, this);
             gl.FBL.child('skillchain').set(data.skillchain);
+            _.each(data.skillchain, function(name, slot) {
+                var cards = _.findWhere(data.inv, {"name": name});
+                gl.FBL.child('cards').child("s"+slot+"cards").set(cards.cardNames.join(', '));
+            }, this);            
             gl.FBL.child('strdata').set(JSON.stringify(data));
-            gl.FBL.child('data').set(data);            
         },
         
         load: function() {

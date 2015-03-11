@@ -1341,7 +1341,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "skill",
             },
-            "putrified": {
+            "putrefied": {
                 "mods": [
                     {"def": "physDmg converted 20 poisDmg", "type": "dmg"},
                     {"def": "poisDmg more 2 perLevel", "type": "dmg"},
@@ -2057,7 +2057,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["poison spray"],//, "super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
-                    ["putrified", 1]
+                    ["putrefied", 1]
                 ],
             },
             "gnome" : {
@@ -2224,7 +2224,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["small stature", 1],
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
-                    ["putrified", 1],
+                    ["putrefied", 1],
                     ["more projectiles", 1],
                     ["antibiotics", 1],                    
                 ],
@@ -2245,7 +2245,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["poison slash", "poison nova", "basic melee"],
                 "sourceCards": [
                     ["indigenous toxins", 1],
-                    ["putrified", 1],
+                    ["putrefied", 1],
                     ["swamp armor", 1]
                 ],
             },
@@ -2263,7 +2263,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["headshot", "basic range"],
                 "sourceCards": [
                     ["indigenous toxins", 1],
-                    ["putrified", 1],
+                    ["putrefied", 1],
                     ["precise", 1],
                     ["vest pockets", 1],
                     ["semi automatic", 1],

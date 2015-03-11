@@ -263,8 +263,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (Math.random() < 1) { // 0.03 * 10) {
                 if (this.droppableCards.length) {
                     var card = this.droppableCards[prob.pyRand(0, this.droppableCards.length)];
-                    var maxlvl = card[1] + Math.ceil(this.level/10);
-                    card[1] = prob.pProb(Math.ceil(maxlvl/3), maxlvl);  
+                    card[1] += Math.ceil(this.level / 10)
                     cardDrops.push(
                         dropLib.dropFactory('card', card)
                     );

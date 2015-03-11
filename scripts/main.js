@@ -11,25 +11,8 @@ namespace.module('bot.main', function (exports, require) {
     var STEP_SIZE = 10;
 
     function onReady() {
-
-        /*gl.FB = new Firebase("https://fiery-heat-4226.firebaseio.com");
-
-        gl.FB.authAnonymously(function(error, authData) {
-            if(error) {
-                console.log("anon login failed", error);
-                gl.FBuid = "failedauth";
-            } else {
-                console.log("Good anon auth", authData);
-                gl.FBuid = authData.uid.slice(11);
-                console.log(gl.FBuid);
-                gl.FBL = gl.FB.child(gl.FBuid);
-                gl.FBL.push("page loading");
-            }
-        });*/
-
-        //localStorage.clear();
-
-        gl.VERSION_NUMBER = "v0-1-1b";
+        gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2'];
+        gl.VERSION_NUMBER = '0-1-2';
         
         log.info('onReady');
 
@@ -89,6 +72,7 @@ namespace.module('bot.main', function (exports, require) {
 
         toJSON: function() {
             var data = {
+                version: gl.VERSION_NUMBER,
                 cardInv: this.cardInv.toJSON(),
                 inv: this.inv.toJSON(),
                 zone: this.zone.toJSON(),
@@ -127,6 +111,7 @@ namespace.module('bot.main', function (exports, require) {
             log.warning('loading');
             var data = JSON.parse(localStorage.getItem('data'));
             if (data) {
+                data = this.upgradeData(data);
                 this.cardInv.fromJSON(data.cardInv);
                 this.inv.fromJSON(data.inv, this.cardInv);
                 this.zone.fromJSON(data.zone);
@@ -136,6 +121,21 @@ namespace.module('bot.main', function (exports, require) {
                 return true;
             }
             return false;
+        },
+
+        upgradeData: function(data) {
+            switch (data.version) {
+            case undefined:
+                log.error('Upgrading data from v0-1-1b to 0-1-2');
+                data = JSON.parse(JSON.stringify(data).replace(/putrified/g, 'putrefied'));
+                data.version = '0-1-2';
+                _.each(data.cardInv, function(card) { card.qp = 0; });
+
+                break;
+            default:
+                log.error('No data upgrade required');
+            }
+            return data;
         },
 
         noobGear: function() {

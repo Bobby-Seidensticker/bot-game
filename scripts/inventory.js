@@ -583,7 +583,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getNextLevelQp: function() {
-            return Math.pow(10, this.level);
+            return Math.pow(3, this.level);
         },
 
         pctLeveled: function() {

@@ -397,18 +397,20 @@ namespace.module('bot.vis', function (exports, require) {
         // draw body, legs
         var legFrame = 0;
         if (this.body.moveStart > -1) {
-            legFrame = Math.abs(Math.floor((gl.time - this.body.moveStart) % 400 / 20));
+            // range 0 to 2.  
+            var secPerWidth = this.body.spec.width / this.body.spec.moveSpeed * 8;  // the * 8 makes it 8x slower than real
+            legFrame = ((gl.time - this.body.moveStart) % secPerWidth) / secPerWidth * 2;
         }
         ctx.beginPath();
         lines(ctx,
               coords.sub(bodyPos[0]),
               coords.sub(bodyPos[1]),
-              coords.add(new Point(width / 2 * (1 - legFrame / 10), 0))
+              coords.add(new Point(width / 2 * (1 - legFrame), 0))
              );
 
         lines(ctx,
               coords.sub(bodyPos[1]),
-              coords.sub(new Point(width / 2 * (1 - legFrame / 10), 0))
+              coords.sub(new Point(width / 2 * (1 - legFrame), 0))
              );
 
         // arms

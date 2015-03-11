@@ -2,7 +2,7 @@ namespace.module('bot.itemref', function (exports, require) {
     var log = namespace.bot.log;
     var prob = namespace.bot.prob;
 
-    var BASE_MELEE_RANGE = 30000
+    var BASE_MELEE_RANGE = 40000
     var BASE_RANGE_RANGE = 500000
     var BASE_SPELL_RANGE = 400000
 
@@ -1114,6 +1114,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "proto-skeleton": {
                 "mods": [
                     {"def": "fireResist more -20", "type": "eleResist"},
+                    {"def": "physDmg more -30", "type": "dmg"},
                 ],
             },
             "proto-grunt": {
@@ -1998,7 +1999,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "elf" : {
-                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"]],
+                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"], ["armor", "gardening gloves"]],
                 "skills": ["poison arrow", "basic range"],
                 "sourceCards": [
                     ["dexterous hands", 1],
@@ -2364,8 +2365,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "vampire": {
-                "items": [["weapon", "long sword"]],
-                "skills": ["health suck", "super smash", "basic melee"],
+                "items": [["weapon", "demon wand"]],
+                "skills": ["health suck", "basic spell"],
                 "sourceCards": [
                     ["vampyric touch", 1],
                     ["vampyric embrace", 1],
@@ -2373,7 +2374,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["soulsucker", 1],
                     ["shadow walker", 1],
                     ["flying", 1],
-                    ["mind expansion", 1]
+                    ["mind expansion", 1],
+                    ["practiced", 1],
+                    ["bloodfingers", 1]
                 ],
             },
             "living statue": {
@@ -2416,7 +2419,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
         },
         "zoneOrder": {
-            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "clockworkier ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle", "hordecave"] 
+            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "clockworkier ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle", "spookiest dungeon", "darkest forest", "clockworkiest ruins", "overly aggro crag", "excessively hostile marsh", "iciest tunnel", "gothickest castle", "hordecave"] 
         },
         "zone": {
             "spooky dungeon": {
@@ -2588,8 +2591,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "level": 99,
             },
             "hordecave": {
-                "choices": ["vampire"],
-                "weights": [1],
+                "choices": ["vampire", "shadow knight"],
+                "weights": [1,1],
                 "boss": "bat",
                 "roomCount": 20,
                 "quantity": [20, 500, 5000],

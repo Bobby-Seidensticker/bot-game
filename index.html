@@ -86,7 +86,7 @@
         <div class="titlebox"><%= namespace.bot.utils.firstCap(model.name) %></div>
         <div class="infoitem"><%= namespace.bot.utils.firstCap(model.slot) %> Card</div>
         <div class="infoitem">Level <%= model.level %></div>
-        <div class="infoitem"><%= model.qp %> / <% print(model.getNextLevelQp()) %> QP</div>
+        <div class="infoitem"><%= Math.floor(model.qp) %> / <% print(model.getNextLevelQp()) %> QP</div>
         <div class="xpbox"><div class="xpearned" style="width: <%= model.qp / model.getNextLevelQp() * 100 %>px"></div></div>
         <div class="mods">
         <% _.each(namespace.bot.utils.prettifyMods(model.mods, model.level), function(modstr) {%>

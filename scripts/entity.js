@@ -92,7 +92,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         computeSkillAttrs: function() {
-            log.error('entity computeSkillAttrs, weaponType: %s', this.weaponType);
+            log.info('entity computeSkillAttrs, weaponType: %s', this.weaponType);
             this.skillchain.computeAttrs(this.baseDmg, this.weaponType);
         },
 
@@ -263,7 +263,8 @@ namespace.module('bot.entity', function (exports, require) {
             if (Math.random() < 1) { // 0.03 * 10) {
                 if (this.droppableCards.length) {
                     var card = this.droppableCards[prob.pyRand(0, this.droppableCards.length)];
-                    card[1] = prob.pyRand(1, card[1] + Math.ceil(this.level/10));
+                    var maxlvl = card[1] + Math.ceil(this.level/10);
+                    card[1] = prob.pProb(Math.ceil(maxlvl/3), maxlvl);  
                     cardDrops.push(
                         dropLib.dropFactory('card', card)
                     );

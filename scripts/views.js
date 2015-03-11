@@ -1234,7 +1234,8 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         nameButton: function() {
-            gl.game.hero.name = $('#charname').val();
+            var userInput = $('#charname').val();
+            gl.game.hero.name = userInput.length < 64 ? userInput : "SMARTASS";
         },
         
         devButton: function() {

@@ -211,7 +211,11 @@ namespace.module('bot.zone', function (exports, require) {
                 };
             } else if (this.done()) {
                 log.error('Zone %s cleared', this.name);
+                if(this.name == "hordecave") {
+                    gl.GameEvents.trigger('beatgame');
+                }
                 gl.GameEvents.trigger('reportData');
+                
                 msg = {
                     text: "Zone Cleared!",
                     type: "clear"

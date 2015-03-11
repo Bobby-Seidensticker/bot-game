@@ -74,7 +74,7 @@ namespace.module('bot.main', function (exports, require) {
             this.listenTo(gl.GameEvents, 'pause', this.pause);
             this.listenTo(gl.GameEvents, 'togglePause', this.toggle);
             this.listenTo(gl.GameEvents, 'reportData', this.reportData);
-            
+            this.listenTo(gl.GameEvents, 'beatgame', this.beatGame);
             this.start();
         },
 
@@ -116,6 +116,11 @@ namespace.module('bot.main', function (exports, require) {
             gl.FBL.child('zone').set(data.zone.nextZone);
             gl.FBL.child('unlockedZones').set(data.zone.unlockedZones);            
             gl.FBL.child('strdata').set(JSON.stringify(data));
+        },
+
+        beatGame: function() {
+            var uid = localStorage.getItem('uid');
+            gl.FB.child(gl.VERSION_NUMBER).child('winners').push(uid);
         },
         
         load: function() {

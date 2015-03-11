@@ -405,6 +405,82 @@ namespace.module('bot.views', function (exports, require) {
         }
     });
 
+    var FilterView = Backbone.View.extend({
+        tagName: 'span',
+        events: {
+            'mousedown': 'onSelfClick'
+        },
+
+        initialize: function(options, text, itemKey, value, uid) {
+            this.el.innerHTML = text;
+            this.itemKey = itemKey;
+            this.value = value;
+            this.clickEventStr = 'filterClick:' + uid;
+            this.selected = false;
+            this.listenTo(gl.UIEvents, this.clickEventStr, this.onOtherClick);
+        },
+
+        onSelfClick: function() {
+            gl.UIEvents.trigger(this.clickEventStr, this.value);
+            this.$el.toggleClass('selected');
+            this.selected = !this.selected;
+            gl.UIEvents.trigger('filterChange');
+        },
+
+        onOtherClick: function(value) {
+            log.error('filter view this.value: %s, value: %s', this.value, value);
+            if (this.value !== value) {
+                this.$el.removeClass('selected');
+                this.selected = false;
+            }
+        },
+
+        filter: function(inv) {
+            if (this.selected) {
+                return _.filter(inv, this.filterFn, this);
+            }
+            return inv;
+        },
+
+        filterFn: function(item) {
+            return item[this.itemKey] === this.value;
+        }
+    });
+
+    var FilterBarView = Backbone.View.extend({
+        tagName: 'div',
+
+        initialize: function(options, itemKey, texts, values, uid) {
+            this.itemKey = itemKey;
+            this.texts = texts;
+            this.values = values;
+            this.uid = uid;
+            this.views = [];
+        },
+
+        render: function() {
+            var frag = document.createDocumentFragment();
+            var view;
+            for (var i = 0; i < this.texts.length; i++) {
+                view = new FilterView({}, this.texts[i], this.itemKey, this.values[i], this.uid);
+                if (this.values[i] === undefined) {
+                    view.filter = function(inv) { return inv; }
+                }
+                frag.appendChild(view.render().el);
+                this.views.push(view);
+            }
+            this.$el.append(frag);
+            return this;
+        },
+
+        filter: function(inv) {
+            for (var i = 0; i < this.views.length; i++) {
+                inv = this.views[i].filter(inv);
+            }
+            return inv;
+        },
+    });
+
     var ItemTab = Backbone.View.extend({
         tagName: 'div',
         className: 'itemTab',
@@ -418,13 +494,23 @@ namespace.module('bot.views', function (exports, require) {
             this.selected = undefined;
             this.hovering = undefined;
 
+            this.renderedOnce = false;
+
             this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
             this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
             this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
             this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
+            this.listenTo(gl.UIEvents, 'filterChange', this.render);
 
             this.tvm = new TabVisibilityManager('inv', this.$el, this.render.bind(this), 'footer:buttons:inv',
                                                 'footer:buttons:cards');
+
+            this.fb1 = new FilterBarView({}, 'weaponType',
+                                         ['All', 'Ml', 'Ra', 'Sp'],
+                                         [undefined, 'melee', 'range', 'spell'], '1').render();
+            this.fb2 = new FilterBarView({}, 'slot',
+                                         ['All', 'We', 'He', 'Ch', 'Ha', 'Lg', 'Sk'],
+                                         [undefined, 'weapon', 'head', 'chest', 'hands', 'legs', 'skill'], '2').render();
 
             this.resize();
             $(window).on('resize', this.resize.bind(this));
@@ -498,7 +584,13 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
 
-            this.$el.html(this.template());
+            if (!this.renderedOnce) {
+                this.$el.html(this.template());
+                this.$('.filters').append(this.fb1.el);
+                this.$('.filters').append(this.fb2.el);
+            }
+
+            this.renderedOnce = true;
 
             // properly remove all views
             _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);
@@ -520,6 +612,8 @@ namespace.module('bot.views', function (exports, require) {
             var items = _.filter(this.inventory.models, function(model) {
                 return !model.equipped;
             });
+            items = this.fb1.filter(items);
+            items = this.fb2.filter(items);
             _.each(items, function(model) {
                 var view = this.newItemSlot(model);
                 $unequipped.append(view.el);
@@ -790,6 +884,8 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function(options, hero) {
             this.hero = hero;
             this.listenTo(gl.DirtyListener, 'tick', this.adjust);
+            this.oom = !!this.model.oom;
+            this.oor = !!this.model.oor;
         },
 
         adjust: function() {
@@ -817,8 +913,14 @@ namespace.module('bot.views', function (exports, require) {
                 cdHeight *= SIZE;
             }
 
-            if (this.model.oom) { this.$skill.addClass('oom'); } else { this.$skill.removeClass('oom'); }
-            if (this.model.oor) { this.$skill.addClass('oor'); } else { this.$skill.removeClass('oor'); }
+            if (this.oom !== this.model.oom) {
+                this.oom = !this.oom;
+                this.$skill.toggleClass('oom');
+            }
+            if (this.oor !== this.model.oor) {
+                this.oor = !this.oor;
+                this.$skill.toggleClass('oor');
+            }
             this.$cd.css('height', cdHeight);
             this.$use.css('width', useWidth);
         },

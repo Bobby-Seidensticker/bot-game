@@ -150,6 +150,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             this.name = name;
             this.itemType = 'skill';
+            this.slot = 'skill';
             this.key = getSortKey(this);
         },
 

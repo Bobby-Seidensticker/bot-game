@@ -197,7 +197,8 @@ body .stats {
         div {
             display: block;
             float: left;
-            border-radius: 3px;
+            overflow: hidden;
+            border-radius: 5px;
             border-spacing: 0;
             border: 1px solid black;
 
@@ -208,6 +209,17 @@ body .stats {
                 border: 1px solid black;
                 background-color: rgba(0, 0, 10, 0.5);
                 min-width: 33px;
+            }
+            span:first-child {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+            }
+            span:last-child {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+            span.selected {
+                background-color: rgba(255, 255, 0, 0.3);
             }
         }
         div:last-child {

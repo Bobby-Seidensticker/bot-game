@@ -102,6 +102,9 @@ namespace.module('bot.bodies', function(exports, require) {
         tryDoStuff: function(room, enemies) {
             this.regen();
 
+            if (this.isHero() && enemies.length) {
+                this.setSkillRangeMana(enemies);
+            }
             if (!this.isAlive() || this.busy()) {
                 return;
             }
@@ -129,13 +132,6 @@ namespace.module('bot.bodies', function(exports, require) {
             var skills = _.compact(this.skills);
             var skill;
 
-            for (var i = skills.length; i--;) {
-                skill = skills[i];
-                if (skill === undefined) { continue; }
-                skill.oom = skill.spec.manaCost > this.mana;
-                skill.oor = skill.spec.range < minDist;
-            }
-
             for (var i = 0; i < skills.length; i++) {  // use first skill that:
                 skill = skills[i];
                 if (skill.coolAt <= gl.time && !skill.oom && !skill.oor) {
@@ -143,6 +139,22 @@ namespace.module('bot.bodies', function(exports, require) {
                     return;
                 }
             }
+        },
+
+        setSkillRangeMana: function(enemies) {
+            var mana = this.mana;
+            var pos = this.pos;
+            var minDist2 = pos.dist2(enemies[0].pos);
+            var t;
+            for (var i = enemies.length; i--;) {
+                t = pos.dist2(enemies[i].pos);
+                if (t < minDist2) { minDist2 = t; }
+            }
+            _.each(_.compact(this.skills), function(skill) {
+                var r = skill.spec.range;
+                skill.oom = skill.spec.manaCost > mana;
+                skill.oor = (r * r) < minDist2;
+            });
         },
 
         takeAction: function(duration) {

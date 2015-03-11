@@ -48,11 +48,23 @@
     </div>
 
     <div class="container equipped-cards">
-      <div class="header">Equipped Cards</div>
+      <div class="header">
+        <% if (selectedItem !== undefined) { %>
+        Equipped <%= namespace.bot.utils.presentableSlot(selectedItem.model.slot) %> Cards
+        <% } else { %>
+        Click an item to equip cards
+        <% } %>
+      </div>
     </div>
 
     <div class="container unequipped">
-      <div class="header">Unequipped Cards</div>
+      <div class="header">
+        <% if (selectedItem !== undefined) { %>
+        Unequipped <%= namespace.bot.utils.presentableSlot(selectedItem.model.slot) %> Cards
+        <% } else { %>
+        All Unequipped Cards
+        <% } %>
+      </div>
     </div>
   </script>
 
@@ -172,19 +184,17 @@
   </script>
 
   <script id="skill-footer-template" type="text/template">
-    <div class="skill">
-      <div class="box">
-        <img src="assets/<%= utils.spaceToUnderscore(model.spec.name) %>.png" />
-        <div class="cooldown"></div>
-        <div class="indicator range-indicator">R</div>
-        <div class="indicator mana-indicator">M</div>
-      </div>
-      <div class="use-holder"><div class="use-bar"></div></div>
+    <div class="box">
+      <img src="assets/<%= utils.spaceToUnderscore(model.spec.name) %>.png" />
+      <div class="cooldown"></div>
+      <div class="indicator range-indicator">R</div>
+      <div class="indicator mana-indicator">M</div>
     </div>
+    <div class="use-holder"><div class="use-bar"></div></div>
   </script>
 
   <script id="potion-template" type="text/template">
-    <div class="skill">
+    <div class="potion">
       <div class="box">
         <img src="assets/health_potion.png" />
         <div class="cooldown"></div>

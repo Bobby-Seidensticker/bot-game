@@ -49,7 +49,13 @@ namespace.module('bot.vectorutils', function (exports, require) {
     }
 
     Point.prototype.dist = function(p) {
-        return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
+        return Math.sqrt(this.dist2(p));
+    }
+
+    Point.prototype.dist2 = function(p) {
+        var x = this.x - p.x;
+        var y = this.y - p.y;
+        return x * x + y * y;
     }
 
     Point.prototype.len = function() {
@@ -387,26 +393,40 @@ namespace.module('bot.utils', function (exports, require) {
     }
 
     function firstCap(str) {
-        if(str === undefined) {
-            log.error("utils.firstCap called with undefined string");
+        if (str === undefined) {
+            log.error('utils.firstCap called with undefined string');
             return;
         }
         var words = str.split(' ');
         _.each(words, function(word, i) {
             words[i] = word[0].toUpperCase() + word.slice(1);
         });
-        return words.join(" ");
+        return words.join(' ');
+    }
+
+    var presentableSlotDict = {
+        'weapon': 'Weapon',
+        'head': 'Head',
+        'chest': 'Chest',
+        'hands': 'Hand',
+        'legs': 'Leg',
+        'skill': 'Skill'
+    }
+
+    function presentableSlot(slotStr) {
+        var res = presentableSlotDict[slotStr];
+        if (!res) { res = slotStr; }
+        return res;
     }
 
     function spaceToUnderscore(str) {
-        var arr =str.split(' ');
+        var arr = str.split(' ');
         return arr.join('_');
     }
     
     function addAllMods(all, mods) {
         for (var i = 0; i < mods.length; i++) {
-            //addMod(all, mods[i]);
-            if(mods[i].def == undefined) {
+            if (mods[i].def == undefined) {
                 log.error('wtf', mods[i].def);
             }               
             addMod(all[mods[i].type], mods[i].def);
@@ -433,6 +453,7 @@ namespace.module('bot.utils', function (exports, require) {
         computeStat: computeStat,
         firstCap: firstCap,
         spaceToUnderscore: spaceToUnderscore,
+        presentableSlot: presentableSlot
     });
 
 });

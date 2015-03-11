@@ -920,8 +920,8 @@ namespace.module('bot.views', function (exports, require) {
                 cdHeight *= SIZE;
             }
 
-            if (this.model.oom) { this.$skill.addClass('oom') } else { this.$skill.removeClass('oom'); }
-            if (this.model.oor) { this.$skill.addClass('oor') } else { this.$skill.removeClass('oor'); }
+            if (this.model.oom) { this.$el.addClass('oom') } else { this.$el.removeClass('oom'); }
+            if (this.model.oor) { this.$el.addClass('oor') } else { this.$el.removeClass('oor'); }
             
             this.$cd.css('height', cdHeight);
             this.$use.css('width', useWidth);
@@ -929,7 +929,6 @@ namespace.module('bot.views', function (exports, require) {
 
         render: function() {
             this.$el.html(this.template(this));
-            this.$skill = this.$('.skill');
             this.$cd = this.$('.cooldown');
             this.$use = this.$('.use-bar');
             this.adjust();

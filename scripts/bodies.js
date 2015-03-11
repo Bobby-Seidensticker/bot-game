@@ -132,6 +132,8 @@ namespace.module('bot.bodies', function(exports, require) {
             var skills = _.compact(this.skills);
             var skill;
 
+            this.setSkillRangeMana(enemies);
+
             for (var i = 0; i < skills.length; i++) {  // use first skill that:
                 skill = skills[i];
                 if (skill.coolAt <= gl.time && !skill.oom && !skill.oor) {

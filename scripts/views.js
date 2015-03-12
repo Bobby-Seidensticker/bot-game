@@ -1084,6 +1084,11 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'footer',
 
+        events: {
+            'mouseenter': 'onMouseenter'
+        },
+        onMouseenter: function() { gl.UIEvents.trigger('mouseleave'); },
+
         initialize: function(options, game, visibleTabsInterface) {
             this.resize();
             $(window).on('resize', this.resize.bind(this));

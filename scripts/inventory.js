@@ -529,9 +529,9 @@ namespace.module('bot.inv', function (exports, require) {
                 }
             }, this);
             if (any) {
-                gl.DirtyQueue.mark('footer:buttons:invshownew');
+                gl.DirtyQueue.mark('footer:invshownew');
             } else {
-                gl.DirtyQueue.mark('footer:buttons:invhidenew');
+                gl.DirtyQueue.mark('footer:invhidenew');
             }
         }
     });
@@ -641,9 +641,9 @@ namespace.module('bot.inv', function (exports, require) {
                 }
             }, this);
             if (any) {
-                gl.DirtyQueue.mark('footer:buttons:cardshownew')
+                gl.DirtyQueue.mark('footer:cardshownew')
             } else {
-                gl.DirtyQueue.mark('footer:buttons:cardhidenew')
+                gl.DirtyQueue.mark('footer:cardhidenew')
             }
             gl.DirtyQueue.mark('cards:newchange');
         },

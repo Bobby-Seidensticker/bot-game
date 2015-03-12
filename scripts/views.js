@@ -240,7 +240,6 @@ namespace.module('bot.views', function (exports, require) {
             this.listenTo(gl.UIEvents, 'mouseenter', this.show);
             this.listenTo(gl.UIEvents, 'mouseleave', this.hide);
 
-            this.listenTo(gl.DirtyListener, 'footer:buttons', this.hide);
             this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
 
             this.listenTo(gl.UIEvents, 'tabShow', this.onTabShow);
@@ -331,7 +330,6 @@ namespace.module('bot.views', function (exports, require) {
                 }
                 this.render();
             }
-            log.info('onMouseleave');
             this.$el.removeClass('hovering');
             this.trigger('hovering');
             gl.UIEvents.trigger('mouseleave');
@@ -502,6 +500,13 @@ namespace.module('bot.views', function (exports, require) {
         className: 'itemTab',
         template: _.template($('#item-tab-template').html()),
 
+        events: {
+            'mouseleave': 'onMouseleave',
+        },
+        onMouseleave: function() {
+            gl.UIEvents.trigger('mouseleave');
+        },
+
         initialize: function(options, game) {
             this.equipped = game.hero.equipped;
             this.skillchain = game.hero.skillchain;
@@ -657,6 +662,13 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'itemTab',
         template: _.template($('#card-tab-template').html()),
+
+        events: {
+            'mouseleave': 'onMouseleave'
+        },
+        onMouseleave: function() {
+            gl.UIEvents.trigger('mouseleave');
+        },
 
         initialize: function(options, game) {
             this.name = 'Card';
@@ -1019,10 +1031,10 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function() {
             this.listenTo(gl.UIEvents, 'tabShow', this.onTabShow);
             this.listenTo(gl.UIEvents, 'tabHide', this.onTabHide);
-            this.listenTo(gl.DirtyListener, 'footer:buttons:invshownew', this.invShowNew);
-            this.listenTo(gl.DirtyListener, 'footer:buttons:invhidenew', this.invHideNew);
-            this.listenTo(gl.DirtyListener, 'footer:buttons:cardshownew', this.cardShowNew);
-            this.listenTo(gl.DirtyListener, 'footer:buttons:cardhidenew', this.cardHideNew);
+            this.listenTo(gl.DirtyListener, 'footer:invshownew', this.invShowNew);
+            this.listenTo(gl.DirtyListener, 'footer:invhidenew', this.invHideNew);
+            this.listenTo(gl.DirtyListener, 'footer:cardshownew', this.cardShowNew);
+            this.listenTo(gl.DirtyListener, 'footer:cardhidenew', this.cardHideNew);
         },
         
         invShowNew: function() {

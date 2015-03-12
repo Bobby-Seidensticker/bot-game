@@ -1018,7 +1018,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE / 4, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 5, type: 'dmg'},
                     {def: 'aoeRadius more -50', type: 'dmg'},
                     {def: 'lightDmg added 3 perLevel', type: 'dmg'},
                 ]
@@ -1032,7 +1032,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/4, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/5, type: 'dmg'},
                     {def: 'fireDmg added 3 perLevel', type: 'dmg'},
                     {def: 'aoeRadius more -50', type: 'dmg'},                    
                 ]
@@ -1046,7 +1046,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/4, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/5, type: 'dmg'},
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
                     {def: 'aoeRadius more -50', type: 'dmg'},                    
                 ]
@@ -1060,7 +1060,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/4, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/5, type: 'dmg'},
                     {def: 'poisDmg added 3 perLevel', type: 'dmg'},
                     {def: 'aoeRadius more -50', type: 'dmg'},                    
                 ]

@@ -437,6 +437,9 @@ namespace.module('bot.utils', function (exports, require) {
     // [['hot sword', 1], ['hard head', 1]] => [{mods: [(hot sword mods)], level: 1}, {mods: [(hard head mods)], level: 1}]
     function expandSourceCards(sourceCards, level) {
         return _.flatten(_.map(sourceCards, function(card) {
+            if(card[0] == undefined) {
+                throw('crap! did you forget a comma after card line in itemref?');
+            }
             return applyPerLevels(itemref.ref.card[card[0]].mods, card[1] + level);
         }, this));
     }

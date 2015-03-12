@@ -1001,13 +1001,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skillType": "spell",
                 "types": ["proj", "spell"],
                 "baseMods": [
-                    {def: 'manaCost added 1', type: 'dmg'},
-                    {def: 'manaCost more 25 perLevel', type: 'dmg'},
+                    {def: 'manaCost added 25', type: 'dmg'},
                     {def: 'speed added 150', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'physDmg added 9', type:'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg gainedas 100 hpLeech', type: 'dmg'}
+                    {def: 'physDmg gainedas 50 hpLeech', type: 'dmg'}
                 ]
             },
             "nova": {
@@ -2070,7 +2069,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["small stature", 1],
                     ["nimble", 1],
                     ["compression shorts", 3],
-                    ["life on hit", 2]
+                    ["life on hit", 2],
+                    ["hobbit foot", 1],
                 ]
             },
             "bat" : {
@@ -2081,7 +2081,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["nimble", 1],
                     ["bloodsucker", 1],
                     ["life on hit", 1],
-                    ["clawed", 1]
+                    ["clawed", 1],
+                    ["good circulation", 1],
                 ]
             },
             "ent" : {
@@ -2091,6 +2092,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["strong back", 2],
                     ["thwomping", 2],
                     ["forest spirit", 1],
+                    ["hobbit foot", 1],
                 ]
             },
             "elf" : {
@@ -2100,7 +2102,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["dexterous hands", 1],
                     ["proto-elf", 0],
                     ["practiced", 2],
-                    ["sharpened", 2]
+                    ["sharpened", 2],
+                    ["clown shoes", 1],
                 ]
             },
             "elf king" : {
@@ -2129,7 +2132,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["heart of granite", 1],
                     ["ignited", 1],
-                    ["flame ritual"],
+                    ["flame ritual", 1],
                 ],
             },
             "ice golem" : {
@@ -2152,11 +2155,11 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "toxic golem" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["poison spray"],//, "super smash", "basic melee"],
+                "skills": ["poison spray"],
                 "sourceCards": [
                     ["heart of granite", 1],
-                    ["plague ritual", 1]
-                    ["putrefied", 1]
+                    ["plague ritual", 1],
+                    ["putrefied", 1],
                 ],
             },
             "gnome" : {
@@ -2321,7 +2324,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["shambling", 1],
                     ["simple minded", 1],
                     ["knee pads", 1],
-                    ["hazmat boots", 1]
+                    ["hazmat boots", 1],
                 ],
             },
             "angry imp" : {
@@ -2347,7 +2350,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["putrefied", 1],
                     ["more projectiles", 1],
                     ["antibiotics", 1],
-                    ["plague ritual", 1]
+                    ["plague ritual", 1],
                 ],
             },
             "imp shaman": {
@@ -2361,6 +2364,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["antibiotics", 1],
                     ["plague ritual", 1],
                     ["potion holster", 1],
+                    ["increased radius", 1]
                 ],
             },
             "marshwalker": {
@@ -2375,9 +2379,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["hazmat boots", 1],
                     ["potion holster", 1],
                     ["hobbit foot", 1],
-                    ["reduced radius", 1]
+                    ["reduced radius", 1],
                     ["putrefied", 1],
-
                 ],
             },
             "mad ape": {
@@ -2390,8 +2393,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["clown shoes", 1],
                     ["happy feet", 1],
                     ["good circulation", 1],
-                    ["potion holster", 1]
-                    
+                    ["potion holster", 1],
                 ],
             },
             "scalp collector": {
@@ -2404,7 +2406,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["vest pockets", 1],
                     ["semi automatic", 1],
                     ["antibiotics", 1],
-                    ["bloodsucker", 1]
+                    ["bloodsucker", 1],
                 ],
             },
             "frost skeleton": {
@@ -2487,7 +2489,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["keen wit", 4],
                     ["mana on hit", 3],
                     ["frost ritual", 1],
-                    ["prismatic toe ring", 1]
+                    ["prismatic toe ring", 1],
+                    ["increased radius", 1]
                 ],
             },
             "shadow knight": {
@@ -2727,7 +2730,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"scalp collector",
                 "roomCount": 20,
                 "quantity": [5,5,20],
-                "level": 95,
+                "level": 90,
             },
             "iciest tunnel": {
                 "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn"],
@@ -2735,7 +2738,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "walter wight",
                 "roomCount": 20,
                 "quantity": [5,5,20],
-                "level": 99,
+                "level": 95,
             },
             "gothickest castle": {
                 "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],

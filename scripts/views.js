@@ -307,9 +307,9 @@ namespace.module('bot.views', function (exports, require) {
             var cls = event.target.classList[0];
             if (cls === 'corner' && this.canUnequip) {
                 this.trigger('unequip', this);
-                return;
+            } else {
+                this.trigger('click', this);
             }
-            this.trigger('click', this);
         },
 
         onMouseenter: function() {
@@ -690,9 +690,15 @@ namespace.module('bot.views', function (exports, require) {
             if (clickedView.isUnequipped) {
                 log.info('clicking unequipped card %s', clickedView.model.name);
                 // unequipped card selecting logic
+
                 if (this.selectedCard && clickedView.model.id === this.selectedCard.model.id) {
                     this.selectedCard.unselect();
                     this.selectedCard = undefined;
+                } else if (this.selectedCard && clickedView.model.id !== this.selectedCard.model.id) {
+                    this.selectedCard.unselect();
+                    this.selectedCard = undefined;
+                    clickedView.select();
+                    this.selectedCard = clickedView;
                 } else {
                     clickedView.select();
                     this.selectedCard = clickedView;

@@ -237,8 +237,7 @@ namespace.module('bot.entity', function (exports, require) {
                 return expanded.mods;
             }, this);
             this.mods = _.flatten(this.mods);
-            this.mods = this.mods.concat(utils.expandSourceCards(this.sourceCards, Math.ceil(this.level / 10)));
-
+            this.mods = this.mods.concat(utils.expandSourceCards(this.sourceCards, Math.floor(this.level / 10)));
 
             this.droppableCards = _.filter(this.sourceCards, function(card) { return card[0].slice(0, 5) !== 'proto'; }, this);
             
@@ -263,8 +262,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (Math.random() < 1) { // 0.03 * 10) {
                 if (this.droppableCards.length) {
                     var card = this.droppableCards[prob.pyRand(0, this.droppableCards.length)];
-                    var maxlvl = card[1] + Math.ceil(this.level/10);
-                    card[1] = prob.pProb(Math.ceil(maxlvl/3), maxlvl);  
+                    card = [card[0], card[1] + Math.floor(this.level / 10)];
                     cardDrops.push(
                         dropLib.dropFactory('card', card)
                     );

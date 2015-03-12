@@ -42,21 +42,21 @@ namespace.module('bot.views', function (exports, require) {
 
         getCenter: function() {
             var left, right;
-            if (this.statsTab.visible) {
+            if (this.statsTab.tvm.visible) {
                 left = this.statsTab.$el.width();
-            } else if (this.mapTab.visible) {
+            } else if (this.mapTab.tvm.visible) {
                 left = this.mapTab.$el.width();
-            } else if (this.helpTab.visible) {
+            } else if (this.helpTab.tvm.visible) {
                 left = this.helpTab.$el.width();
-            } else if (this.configTab.visible) {
+            } else if (this.configTab.tvm.visible) {
                 left = this.configTab.$el.width();
             } else {
                 left = 0;
             }
 
-            if (this.itemTab.visible) {
+            if (this.itemTab.tvm.visible) {
                 right = this.itemTab.$el.width();
-            } else if (this.cardTab.visible) {
+            } else if (this.cardTab.tvm.visible) {
                 right = this.cardTab.$el.width();
             } else {
                 right = 0;
@@ -107,6 +107,7 @@ namespace.module('bot.views', function (exports, require) {
             } else {
                 this.show();
             }
+            gl.DirtyQueue.mark('centerChange');
         }
     });
 
@@ -148,21 +149,19 @@ namespace.module('bot.views', function (exports, require) {
                 var arr = [];
                 skill = this.model.skills[i];
                 _.each(entity.dmgKeys, function(key) {
-                    if(key == "projCount" && skill.spec.projCount <= 1) {
+                    if (key === "projCount" && skill.spec.projCount <= 1) {
                         return;
                     }
-                    if(key == "decayRange"){
+                    if (key === "decayRange") {
                         return;
                     }
-                    if(key == "radius" || key == "rate" || key == "angle"){ //todo only if not aoe
+                    if (key === "radius" || key === "rate" || key === "angle") {  // todo only if not aoe
                         return;
                     }
-
-                    
-                    
                     statname = namespace.bot.itemref.ref.statnames[key];
                     arr.push([statname, skill.spec[key].toFixed(2)]);
                 }, this);
+
                 var coolIn = Math.max(0, skill.coolAt - gl.time);
                 arr.push(['Cool In', Math.floor(coolIn)]);
                 skilldata[skill.spec.name] = arr;
@@ -878,8 +877,8 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#skill-footer-template').html()),
 
         events: {
-            'mouseenter .skill': 'onMouseenter',
-            'mouseleave .skill': 'onMouseleave'
+            'mouseenter': 'onMouseenter',
+            'mouseleave': 'onMouseleave'
         },
 
         onMouseenter: function() {

@@ -1,11 +1,12 @@
 namespace.module('bot.drops', function (exports, require) {
 
     var inventory;
+    var log;
     $(function() {
         inventory = namespace.bot.inv;
         itemref = namespace.bot.itemref;
         utils = namespace.bot.utils;
-        
+        log = namespace.bot.log;
     });
 
     /*
@@ -37,7 +38,7 @@ namespace.module('bot.drops', function (exports, require) {
 
     CardDrop.prototype.make = function() {
         var card = new inventory.CardModel(this.name);
-        var qp = Math.pow(10, this.level - 1);
+        var qp = Math.floor(Math.pow(2.5, this.level - 1));
         card.applyQp(qp);
         card.isNew = true;
         return card;
@@ -45,9 +46,9 @@ namespace.module('bot.drops', function (exports, require) {
 
     // Extra function for cards.  What is called if there already exists that card but it needs xp
     CardDrop.prototype.update = function(existingCard) {
-        var qp = Math.pow(10, this.level - 1);
-        if(existingCard.applyQp(qp) > 0) {
-            this.storedMessage = "Leveled Up: " + utils.firstCap(this.name);
+        var qp = Math.floor(Math.pow(2.5, this.level - 1));
+        if (existingCard.applyQp(qp) > 0) {
+            this.storedMessage = 'Leveled Up: ' + utils.firstCap(this.name);
         } else {
             this.storedMessage = '+' + qp + ' ' + utils.firstCap(this.name) + ' QP';
         }

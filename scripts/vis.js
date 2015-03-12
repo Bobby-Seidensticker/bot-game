@@ -137,6 +137,7 @@ namespace.module('bot.vis', function (exports, require) {
                     ctx.drawImage(this.img, i, j, scaled.x, scaled.y);
                 }
             }
+            gl.DirtyQueue.mark('centerChange');
         }
     });
 
@@ -464,6 +465,9 @@ namespace.module('bot.vis', function (exports, require) {
     }
 
     function drawNameHealth(ctx, tcanvas, text, pos, hpPct) {
+        if (hpPct < 0) {
+            hpPct = 0;
+        }
         text = text.toUpperCase();
 
         var fontHeight = Math.floor(vvs.ratio * 30000);

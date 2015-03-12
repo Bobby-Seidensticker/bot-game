@@ -862,7 +862,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
-                    {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 4, type: 'dmg'},
                     {def: 'fireDmg added 2', type: 'dmg'},
                     {def: 'fireDmg added 2 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
@@ -878,7 +878,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},                    
                     {def: 'speed added 250', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
-                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},
+                    {def: 'aoeRadius more -20', type: 'dmg'},
                     {def: 'poisDmg added 4', type: 'dmg'},
                     {def: 'poisDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 100 poisDmg', type: 'dmg'}
@@ -965,8 +965,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 2', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE *0.6, type: 'dmg'},
-                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 4, type: 'dmg'},
                     {def: 'manaCost added 0.4 perLevel', type: 'dmg'},
                     {def: 'coldDmg added 6', type: 'dmg'},
                     {def: 'coldDmg added 1 perLevel', type: 'dmg'},
@@ -1020,8 +1019,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE / 2, type: 'dmg'},
-                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 4, type: 'dmg'},
+                    {def: 'aoeRadius more -50', type: 'dmg'},
                     {def: 'lightDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
@@ -1034,9 +1033,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/4, type: 'dmg'},
                     {def: 'fireDmg added 3 perLevel', type: 'dmg'},
-                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},                    
+                    {def: 'aoeRadius more -50', type: 'dmg'},                    
                 ]
             },
             "ice nova": {
@@ -1048,9 +1047,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/4, type: 'dmg'},
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
-                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},                    
+                    {def: 'aoeRadius more -50', type: 'dmg'},                    
                 ]
             },
             "poison nova": {
@@ -1062,9 +1061,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 1 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/2, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/4, type: 'dmg'},
                     {def: 'poisDmg added 3 perLevel', type: 'dmg'},
-                    {def: 'aoeRadius added ' + BASE_SPELL_RANGE * 0.3, type: 'dmg'},                    
+                    {def: 'aoeRadius more -50', type: 'dmg'},                    
                 ]
             },
             "flame cone": {
@@ -1076,7 +1075,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
-                    {def: 'aoeRadius added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
+                    {def: 'aoeRadius more 50', type: 'dmg'},
                     {def: 'fireDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
@@ -1168,29 +1167,22 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "weapon",
             },
-            "surprisingly hot sword": {
-                "mods": [
-                    {"def": "fireDmg more 1 perLevel", "type": "dmg"}
-                ],
-                "slot": "weapon",
-            },
             "honed blade": {
                 "mods": [
                     {"def": "physDmg added 2 perLevel", "type": "dmg"}
                 ],
                 "slot": "weapon",
             },
-
             "breadhat": {
                 "mods": [
-                    {"def": "armor added 4 perLevel", "type": "def"}
+                    {"def": "armor added 10 perLevel", "type": "def"}
                 ],
                 "slot": "head",
             },            
             "six pack": {
                 "mods": [
                     {"def": "lineWidth added 1", "type": "vis"},                                        
-                    {"def": "armor added 8 perLevel", "type": "def"}
+                    {"def": "armor added 10 perLevel", "type": "def"}
                 ],
                 "slot": "chest",
             },
@@ -1200,13 +1192,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "legs",
             },
-            "extra plating": {
-                "mods": [
-                    {"def": "armor added 3 perLevel", "type": "def"}
-                ],
-                "slot": "hands",
-            },
-            
             "quenching blade": {
                 "mods": [
                     {"def": "fireResist more -5 perLevel", "type": "eleResist"}
@@ -1226,7 +1211,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "legs",
             },
-
             "asbestos lining": {
                 "mods": [
                     {"def": "fireResist more -5 perLevel", "type": "eleResist"}
@@ -1306,11 +1290,10 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "more projectiles": {
                 "mods": [
-                    {"def": "projCount added 2 perLevel", "type": "dmg"},
+                    {"def": "projCount added 2", "type": "dmg"},
                     {"def": "angle more 20", "type": "dmg"},
-                    {"def": "speed more -30", "type": "dmg"},
-                    {"def": "spellDmg more -30", "type": "dmg"},
-                    {"def": "manaCost added 2 perLevel", "type": "dmg"}
+                    {"def": "speed more -1 perLevel", "type": "dmg"},
+                    {"def": "manaCost added 2", "type": "dmg"}
                 ],
                 "slot": "skill",
             },
@@ -1347,13 +1330,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {"def": "poisDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
-            },
-            "heart of granite": {
-                "mods": [
-                    {"def": "armor added 5 perLevel", "type": "def"},
-                    {"def": "armor more 3 perLevel", "type": "def"},
-                ],
-                "slot": "chest",
             },
             "heart of granite": {
                 "mods": [
@@ -1897,6 +1873,125 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "head"
             },
+            "roller skates": {
+                "mods": [
+                    {"def": "moveSpeed more 5 perLevel", "type": "def"},
+                ],
+                "slot": "legs"
+            },
+            "prismatic toe ring": {
+                "mods": [
+                    {"def": "eleResistAll more -10", "type": "def"},
+                    {"def": "eleResistAll more -0.5 perLevel", "type": "def"}
+                ],
+                "slot": "legs"
+            },
+            "hobbit foot": {
+                "mods": [
+                    {"def": "maxHp more 10", "type": "def"},
+                    {"def": "maxHp more 1 perLevel", "type": "def"}
+                ],
+                "slot": "legs"
+            },
+            "clown shoes": {
+                "mods": [
+                    {"def": "maxHp added 20 perLevel", "type": "def"},
+                    {"def": "moveSpeed more -30", "type": "def"}
+                ],
+                "slot": "legs"
+            },
+            "happy feet": {
+                "mods": [
+                    {"def": "maxHp added 10 perLevel", "type": "def"},
+                    {"def": "maxHp more 20", "type": "def"},                    
+                ],
+                "slot": "legs"
+            },
+            "ice spikes": {
+                "mods": [
+                    {"def": "physDmg added 5", "type": "dmg"},
+                    {"def": "coldResist more -10", "type": "eleResist"},                    
+                    {"def": "coldResist more -0.5 perLevel", "type": "eleResist"}
+                ],
+                "slot": "legs"
+            },
+            "knee pads": {
+                "mods": [
+                    {"def": "armor more 10", "type": "def"},
+                    {"def": "armor more 0.5 perLevel", "type": "def"},
+                ],
+                "slot": "legs"
+            },
+            "hazmat boots": {
+                "mods": [
+                    {"def": "eleResistAll more -15", "type": "def"},
+                    {"def": "eleResistAll more -0.3 perLevel", "type": "def"}
+                ],
+                "slot": "legs"
+            },
+            "rubber boots": {
+                "mods": [
+                    {"def": "lightResist more -10", "type": "eleResist"},
+                    {"def": "lightResist more -0.5 perLevel", "type": "eleResist"}
+                ],
+                "slot": "legs"
+            },
+            "good circulation": {
+                "mods": [
+                    {"def": "maxHp more 20", "type": "def"},
+                    {"def": "maxHp added 5 perLevel", "type": "def"}
+                ],
+                "slot": "legs"
+            },
+            "reduced radius": {
+                "mods": [
+                    {"def": "aoeRadius more -30", "type": "dmg"},
+                    {"def": "aoeRadius more -0.5 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "skill"
+            },
+            "increased radius": {
+                "mods": [
+                    {"def": "aoeRadius more 30", "type": "dmg"},
+                    {"def": "aoeRadius more 1 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill"
+            },
+            "potion holster": {
+                "mods": [
+                    {"def": "vitality added 5 perLevel", "type": "def"},
+                    {"def": "vitality more 20", "type": "def"},
+                ],
+                "slot": "hands"
+            },
+            "flame ritual": {
+                "mods": [
+                    {"def": "fireDmg gainedas 1 hpLeech", "type": "dmg"},
+                    {"def": "fireDmg more 1 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill"
+            },
+            "frost ritual": {
+                "mods": [
+                    {"def": "coldDmg gainedas 1 hpLeech", "type": "dmg"},
+                    {"def": "coldDmg more 1 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill"
+            },
+            "shock ritual": {
+                "mods": [
+                    {"def": "lightDmg gainedas 1 hpLeech", "type": "dmg"},
+                    {"def": "lightDmg more 1 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill"
+            },
+            "plague ritual": {
+                "mods": [
+                    {"def": "poisDmg gainedas 1 hpLeech", "type": "dmg"},
+                    {"def": "poisDmg more 1 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill"
+            },
         },
         "monster": {
             "skeleton" : {
@@ -2033,7 +2128,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["ground smash", "super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
-                    ["ignited", 1]
+                    ["ignited", 1],
+                    ["flame ritual"],
                 ],
             },
             "ice golem" : {
@@ -2041,7 +2137,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
-                    ["frosted", 1]
+                    ["frosted", 1],
+                    ["frost ritual", 1],
                 ],
             },
             "shock golem" : {
@@ -2049,7 +2146,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
-                    ["charged", 1]
+                    ["charged", 1],
+                    ["shock ritual", 1]
                 ],
             },
             "toxic golem" : {
@@ -2057,7 +2155,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "skills": ["poison spray"],//, "super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
-                    ["putrified", 1]
+                    ["putrified", 1],
+                    ["plague ritual", 1]
                 ],
             },
             "gnome" : {
@@ -2066,7 +2165,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["small stature", 1],
                     ["keen wit", 1],
-                    ["conductive suit", 1]
+                    ["conductive suit", 1],
+                    ["shock ritual", 1]
                 ],
             },
             "gnome electrician" : {
@@ -2078,7 +2178,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["electrified", 1],
                     ["healing charm", 3],
                     ["blood pact", 3],
-                    ["conductive suit", 1]
+                    ["conductive suit", 1],
+                    ["shock ritual", 1],
+                    ["rubber boots", 1]
                 
                 ],
             },
@@ -2088,7 +2190,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["flying", 1],
                     ["nimble", 1],
-                    ["proto-rofl", 1]
+                    ["proto-rofl", 1],
+                    ["clown shoes", 1],
+                    ["happy feet", 1],
                 ],
             },
             "harpy" : {
@@ -2109,7 +2213,10 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["mecha heart", 1],
                     ["ignited", 1],
                     ["steam powered", 1],
-                    ["jet pack", 1]
+                    ["jet pack", 1],
+                    ["flame ritual", 1],
+                    ["roller skates", 1],
+                    
                 ],
             },
             "mechfridgerator": {
@@ -2120,7 +2227,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["clockwork", 1],
                     ["mecha heart", 1],
                     ["frosted", 1],
-                    ["steam powered", 1]
+                    ["steam powered", 1],
+                    ["frost ritual", 1],
+                    ["roller skates", 1]
                 ],
             },
             "mecha watt" : {
@@ -2133,6 +2242,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["charged", 1],
                     ["steam powered", 1],
                     ["conductive suit", 1],
+                    ["shock ritual", 1],
+                    ["roller skates", 1]
                 ],
             },
             "sir mechs-a-lot" : {
@@ -2146,7 +2257,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["charged", 1],
                     ["steam powered", 4],
                     ["frosted", 1],
-                    ["ignited", 1]
+                    ["ignited", 1],
+                    ["shock ritual", 1],
+                    ["roller skates", 1]
                 ],
             },
             "goblin" : {
@@ -2156,7 +2269,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["goblin toe", 1],
                     ["berserking", 1],
                     ["simple minded", 1],
-                    ["armor plating", 1]
+                    ["armor plating", 1],
+                    ["knee pads", 1]                    
                 ],
             },
             "goblin priest" : {
@@ -2168,10 +2282,11 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["simple minded", 1],
                     ["pyromania", 1],
                     ["hot blooded", 1],
+                    ["flame ritual", 1]
                 ],
             },
             "goblin artillery" : {
-                "items": [["weapon", "crossbow"], ["armor", "goblin leather"]],
+                "items": [["weapon", "crossbow"], ["armor", "goblin leather"], ["armor", "conquistador helm"]],
                 "skills": ["fire arrow", "basic range"],
                 "sourceCards": [
                     ["goblin toe", 1],
@@ -2182,7 +2297,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "flame dragon" : {
-                "items": [["weapon", "dragonstone wand"]],
+                "items": [["weapon", "dragonstone wand"], ["armor", "fancy gauntlets"], ["armor", "iron chestplate"], ["armor", "buckaneer boots"], ["armor", "handmail"]],
                 "skills": ["fire ball", "incinerate", "basic spell"],
                 "sourceCards": [
                     ["ignited", 3],
@@ -2192,21 +2307,25 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["brain juice", 3],
                     ["mana on hit", 3],
                     ["telescoping handle", 3],
-                    ["hot blooded", 1]
+                    ["hot blooded", 1],
+                    ["flame ritual", 1],
+                    ["increased radius", 1],
                 ],
             },
             
             "zombie" : {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["poison slash", "basic melee"],
                 "sourceCards": [
                     ["unwashed hands", 1],
                     ["shambling", 1],
                     ["simple minded", 1],
+                    ["knee pads", 1],
+                    ["hazmat boots", 1]
                 ],
             },
             "angry imp" : {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["poison slash", "quick hit", "basic melee"],
                 "sourceCards": [
                     ["berserking", 1],
@@ -2214,10 +2333,11 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
                     ["antibiotics", 1],
+                    ["happy feet", 1]
                 ],
             },
             "dart imp" : {
-                "items": [["weapon", "hand crossbow"], ["armor", "plague doctor"]],
+                "items": [["weapon", "hand crossbow"], ["armor", "plague doctor"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["poison arrow", "speed shot", "basic range"],
                 "sourceCards": [
                     ["berserking", 1],
@@ -2226,40 +2346,55 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["indigenous toxins", 1],
                     ["putrified", 1],
                     ["more projectiles", 1],
-                    ["antibiotics", 1],                    
+                    ["antibiotics", 1],
+                    ["plague ritual", 1]
                 ],
             },
             "imp shaman": {
-                "items": [["weapon", "star wand"], ["armor", "plague doctor"]],
+                "items": [["weapon", "star wand"], ["armor", "plague doctor"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["poison ball", "poison spray", "poison nova", "basic spell"],
                 "sourceCards": [
                     ["berserking", 1],
                     ["small stature", 1],
                     ["simple minded", 1],
                     ["indigenous toxins", 1],
-                    ["antibiotics", 1],                    
+                    ["antibiotics", 1],
+                    ["plague ritual", 1],
+                    ["potion holster", 1],
                 ],
             },
             "marshwalker": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["poison slash", "poison nova", "basic melee"],
                 "sourceCards": [
                     ["indigenous toxins", 1],
                     ["putrified", 1],
-                    ["swamp armor", 1]
+                    ["swamp armor", 1],
+                    ["good circulation", 1],
+                    ["happy feet", 1],
+                    ["plague ritual", 1],
+                    ["hazmat boots", 1],
+                    ["potion holster", 1],
+                    ["hobbit foot", 1],
+                    ["reduced radius", 1]
                 ],
             },
             "mad ape": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["big", 1],
                     ["berserking", 1],
-                    ["buff", 1]
+                    ["buff", 1],
+                    ["clown shoes", 1],
+                    ["happy feet", 1],
+                    ["good circulation", 1],
+                    ["potion holster", 1]
+                    
                 ],
             },
             "scalp collector": {
-                "items": [["weapon", "composite bow"], ["armor", "plague doctor"]],
+                "items": [["weapon", "composite bow"], ["armor", "plague doctor"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["headshot", "basic range"],
                 "sourceCards": [
                     ["indigenous toxins", 1],
@@ -2267,7 +2402,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["precise", 1],
                     ["vest pockets", 1],
                     ["semi automatic", 1],
-                    ["antibiotics", 1],                    
+                    ["antibiotics", 1],
+                    ["bloodsucker", 1]
                 ],
             },
             "frost skeleton": {
@@ -2278,11 +2414,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-skeleton", 0],
                     ["six pack", 1],
                     ["compression shorts", 1],
-                    ["fleece lining", 1]
+                    ["fleece lining", 1],
+                    ["ice spikes", 1]
                 ]
             },
             "frost mage": {
-                "items": [["weapon", "knobby wand"]],
+                "items": [["weapon", "knobby wand"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["ice blast", "ice nova", "ice ball", "basic spell"],
                 "sourceCards": [
                     ["fleece lining", 1],
@@ -2290,20 +2427,23 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["keen wit", 1],
                     ["fur hat", 1],
                     ["cold blooded", 1],
+                    ["frost ritual", 1]
                 ],
             },
             "frozen warrior": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["ice slash", "basic melee"],
                 "sourceCards": [
                     ["fleece lining", 1],
                     ["frosted", 1],
                     ["chinchilla lining", 1],
                     ["ice plating", 1],
+                    ["good circulation", 1],
+                    ["frost ritual", 1]
                 ],
             },
             "yeti": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["big", 1],
@@ -2313,10 +2453,14 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["clawed", 1],
                     ["yeti fur", 1],
                     ["cold blooded", 1],
+                    ["happy feet", 1],
+                    ["good circulation", 1],
+                    ["hobbit foot", 1],
+                    ["prismatic toe ring", 1]
                 ],
             },
             "wight": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["ice blast", "ice nova", "ice ball", "basic melee"],
                 "sourceCards": [
                     ["fleece lining", 1],
@@ -2324,11 +2468,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["fur hat", 1],
                     ["ethereal", 1],
                     ["shadow walker", 1],
-                    ["mind expansion", 1]
+                    ["mind expansion", 1],
+                    ["frost ritual", 1]
                 ],
             },
             "walter wight": {
-                "items": [["weapon", "star wand"]],
+                "items": [["weapon", "star wand"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["ice blast", "ice nova", "ice ball", "basic spell"],
                 "sourceCards": [
                     ["proto-boss", 0],
@@ -2340,10 +2485,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["shadow walker", 1],
                     ["keen wit", 4],
                     ["mana on hit", 3],
+                    ["frost ritual", 1],
+                    ["prismatic toe ring", 1]
                 ],
             },
             "shadow knight": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor", "buckaneer boots"]],
                 "skills": ["masterful strike", "basic melee", "shadow dagger"],
                 "sourceCards": [
                     ["shadow walker", 1],
@@ -2351,7 +2498,10 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["sharpened", 1],
                     ["hateful blade", 1],
                     ["ethereal", 1],
-                    ["armor plating", 1]
+                    ["armor plating", 1],
+                    ["steel toed", 1],
+                    ["good circulation", 1],
+                    ["prismatic toe ring", 1],
                 ],
             },
             "ghoul": {
@@ -2365,7 +2515,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "vampire": {
-                "items": [["weapon", "demon wand"]],
+                "items": [["weapon", "demon wand"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor",  "buckaneer boots"]],
                 "skills": ["health suck", "basic spell"],
                 "sourceCards": [
                     ["vampyric touch", 1],
@@ -2380,7 +2530,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "living statue": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor",  "buckaneer boots"]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
@@ -2389,7 +2539,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "gargoyle": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor",  "buckaneer boots"]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
@@ -2400,16 +2550,20 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "minotaur": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor",  "buckaneer boots"]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["simple minded", 1],
                     ["big", 1],
-                    ["buff", 1]
+                    ["buff", 1],
+                    ["hobbit foot", 1],
+                    ["good circulation", 1],
+                    ["potion holster", 1],
+                    ["happy feet", 1],
                 ],
             },
             "wraith": {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor",  "buckaneer boots"]],
                 "skills": ["ice slash", "basic melee"],
                 "sourceCards": [
                     ["berserking", 1],

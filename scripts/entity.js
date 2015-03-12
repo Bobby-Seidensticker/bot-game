@@ -281,7 +281,7 @@ namespace.module('bot.entity', function (exports, require) {
                     any = true;
                 }
             }
-            if (Math.random() < 0.2) { // 0.001 * 50) {
+            if (Math.random() < 0.5) { // 0.001 * 50) {
                 if (this.skills.length) {
                     gearDrops.push(
                         dropLib.dropFactory('skill', this.skills[prob.pyRand(0, this.skills.length)])

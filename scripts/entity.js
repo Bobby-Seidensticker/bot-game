@@ -237,7 +237,11 @@ namespace.module('bot.entity', function (exports, require) {
                 return expanded.mods;
             }, this);
             this.mods = _.flatten(this.mods);
-            this.mods = this.mods.concat(utils.expandSourceCards(this.sourceCards, Math.floor(this.level / 10)));
+            try {
+                this.mods = this.mods.concat(utils.expandSourceCards(this.sourceCards, Math.floor(this.level / 10)));
+            } catch(e) {
+                console.log('asdf');
+            }
 
             this.droppableCards = _.filter(this.sourceCards, function(card) { return card[0].slice(0, 5) !== 'proto'; }, this);
             

@@ -228,6 +228,10 @@ namespace.module('bot.bodies', function(exports, require) {
                 attack.fireDmg * this.spec.fireResist +
                 attack.poisDmg * this.spec.poisResist;
 
+            if (isNaN(totalDmg)) {
+                throw('crap! totalDmg has NaN value. monster missing card level in itemref?');
+            }
+            
             if (this.spec.team === TEAM_HERO) {
                 log.debug('Team Hero taking %.2f damage', -totalDmg);
                 totalDmg *= 0.5 + (attack.attacker.spec.level * 0.01);

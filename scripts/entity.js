@@ -28,7 +28,7 @@ namespace.module('bot.entity', function (exports, require) {
         'physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg',
         'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech',
         // 'cooldownTime', 'manaCost',
-        'speed', 'range', 'projRange', 'projRadius', 'aoeRadius', 'projCount',
+        'speed', 'range', 'projRange', 'projRadius', 'aoeRadius', 'projCount', 'accuracy',
         'angle', 'projSpeed', 'aoeSpeed'];
     var attackSpecDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg', 'hpLeech', 'manaLeech'];
 

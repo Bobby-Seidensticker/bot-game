@@ -57,7 +57,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "long sword": {
                 "mods": [
-                    {def: 'speed more -1 perLevel', type: 'dmg'},                    
+                    {def: 'speed more -0.5 perLevel', type: 'dmg'},                    
                     {def: 'physDmg added 16', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'}
                 ],
@@ -404,15 +404,15 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "mage boots": {
                 "mods": [
-                    {def: 'manaRegen added 3', type: 'def'},
-                    {def: 'manaRegen added 1 perLevel', type: 'def'}
+                    {def: 'manaRegen added 5', type: 'def'},
+                    {def: 'manaRegen more 5 perLevel', type: 'def'}
                 ],
                 "slot": "legs",
             },
             "arcane boots": {
                 "mods": [
-                    {def: 'manaRegen added 5', type: 'def'},
-                    {def: 'manaRegen added 2 perLevel', type: 'def'}
+                    {def: 'spellDmg more 20', type: 'dmg'},
+                    {def: 'manaRegen more 5 perLevel', type: 'def'}
                 ],
                 "slot": "legs",
             },
@@ -457,7 +457,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "velvet gloves": {
                 "mods": [
                     {def: 'manaRegen added 2', type: 'def'},
-                    {def: 'manaRegen added 1 perLevel', type: 'def'}
+                    {def: 'manaRegen more 3 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
@@ -744,7 +744,7 @@ namespace.module('bot.itemref', function (exports, require) {
                             onRemove: []
                           }],
                 "baseMods": [
-                    //{def: 'manaCost added 3', type: 'dmg'},
+                    {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
@@ -1273,7 +1273,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "bloodsucker": {
                 "mods": [
-                    {"def": "physDmg gainedas 5 hpLeech", "type": "dmg"},
+                    {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
                     {"def": "physDmg added 1 perLevel", "type": "dmg"}
                 ],
                 "slot": "head",
@@ -1505,14 +1505,14 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "vampyric touch": {
                 "mods": [
-                    {"def": "physDmg gainedas 5 hpLeech", "type": "dmg"},
+                    {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
                     {"def": "physDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "hands",
             },
             "vampyric embrace": {
                 "mods": [
-                    {"def": "physDmg gainedas 5 hpLeech", "type": "dmg"},
+                    {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
                     {"def": "physDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "chest",
@@ -1619,7 +1619,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "fireDmg more 8", "type": "dmg"},
                     {"def": "fireDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "fireDmg gainedas 5 hpLeech", "type": "dmg"},
+                    {"def": "fireDmg gainedas 3 hpLeech", "type": "dmg"},
                     {"def": "fireResist more 50", "type": "eleResist"},
                 ],
                 "slot": "head",
@@ -1853,7 +1853,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "physDmg more 50", "type": "dmg"},
                     {"def": "cooldownTime added 5000", "type": "dmg"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},                    
+                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                    {"def": "accuracy more 100", "type": "dmg"},
+                    {"def": "manaCost more 100", "type": "dmg"},
                 ],
                 "slot": "skill",
                 "flavor": "Ready... Aim... FIRE!",

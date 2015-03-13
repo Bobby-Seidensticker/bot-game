@@ -690,7 +690,6 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'manaCost added 4', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
-                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'},
@@ -1112,7 +1111,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg more 5 perLevel', type: 'dmg'},
                     {def: 'physDmg more 100', type: 'dmg'},
-                    {def: 'cooldownTime added 2000', type: 'dmg'},                                        
+                    {def: 'cooldownTime added 5000', type: 'dmg'},                                        
                 ]
             },
             "deadly volley": {
@@ -1852,9 +1851,9 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "careful aim": {
                 "mods": [
-                    {"def": "physDmg more 100", "type": "dmg"},
-                    {"def": "cooldownTime added 2000", "type": "dmg"},
-                    {"def": "physDmg more 4 perLevel", "type": "dmg"},                    
+                    {"def": "physDmg more 50", "type": "dmg"},
+                    {"def": "cooldownTime added 5000", "type": "dmg"},
+                    {"def": "physDmg more 2 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "skill",
                 "flavor": "Ready... Aim... FIRE!",
@@ -2858,7 +2857,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "fireDmg": "Fire Damage",
             "coldDmg": "Cold Damage",
             "lightDmg": "Lightning Damage",
-            "poisDmg": "Poison Damange",
+            "poisDmg": "Poison Damage",
             "hpOnHit": "Health Gained on Hit",
             "manaOnHit": "Mana Gained on Hit",
             "cooldownTime": "Cooldown Length",

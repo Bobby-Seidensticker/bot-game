@@ -683,7 +683,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["melee", "fire"],
                 "specs": [{ type: 'melee', quals: [], color: FIRE_COLOR,
                             onHit: [],
-                            onKill: [{ type: 'circle', color: FIRE_COLOR, quals: ['dmg more 200'], onHit: [], onKill: [], onRemove: []}],
+                            onKill: [{ type: 'circle', color: FIRE_COLOR, quals: ['dmg more 100'], onHit: [], onKill: [], onRemove: []}],
                             onRemove: []
                           }],
                 "baseMods": [
@@ -2842,6 +2842,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "maxMana": "Maximum Mana",
             "armor": "Armor",
             "dodge": "Dodge",
+            "accuracy": "Accuracy",
             "eleResistAll": "Elemental Damage Taken",
             "hpRegen": "Health Regenerated per Second",
             "manaRegen": "Mana Regenerated per Second",

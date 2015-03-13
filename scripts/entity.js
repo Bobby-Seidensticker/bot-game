@@ -19,7 +19,7 @@ namespace.module('bot.entity', function (exports, require) {
     var dmgKeys = ['meleeDmg', 'rangeDmg', 'spellDmg',
                    'physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg',
                    'hpOnHit', 'hpLeech', 'manaOnHit', 'manaLeech',
-                   'speed', 'cooldownTime',
+                   'speed', 'cooldownTime', 'accuracy',
                    'range', 'projRange', 'projRadius', 'aoeRadius', 'manaCost', 'projCount',
                    'angle', 'projSpeed', 'aoeSpeed'];
     var actualDmgKeys = ['physDmg', 'lightDmg', 'coldDmg', 'fireDmg', 'poisDmg'];
@@ -59,6 +59,12 @@ namespace.module('bot.entity', function (exports, require) {
                 this[stat] = utils.computeStat(all.def, stat);
             }, this);
 
+            //janky - can't gainedas across keys in all so, putting that stuff here.
+            all.dmg.accuracy.added += this.dexterity * 2;
+            all.dmg.meleeDmg.more *= 1 + (this.strength * 0.001);
+            all.dmg.rangeDmg.more *= 1 + (this.dexterity * 0.001);
+            all.dmg.spellDmg.more *= 1 + (this.wisdom * 0.001);            
+            
             this.eleResistAll *= Math.pow(0.997, this.wisdom);
 
             // note that eleResistAll is on the def keys because of the ordering
@@ -113,6 +119,7 @@ namespace.module('bot.entity', function (exports, require) {
 
                 {def: 'strength gainedas 200 armor', type: 'def'},
                 {def: 'dexterity gainedas 200 dodge', type: 'def'},
+                //{def: 'dexterity gainedas 200 accuracy', type: 'def'},
 
                 {def: 'moveSpeed added 300', type: 'def'},
 

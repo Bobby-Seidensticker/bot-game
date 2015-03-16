@@ -808,7 +808,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj"],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'manaCost more 10 perLevel', type: 'dmg'},
                     {def: 'physDmg more -30', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},                    
                     {def: 'speed added 200', type: 'dmg'},

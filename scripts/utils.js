@@ -356,7 +356,8 @@ namespace.module('bot.utils', function (exports, require) {
                 throw('weird mods in utils.flattenSameMods');
             }
         });
-        _.each(lookup, function(typeObj, typeKey) {
+        _.each(['added', 'more', 'converted', 'gainedas'], function(typeKey) {
+            var typeObj = lookup[typeKey];
             _.each(typeObj, function(statArr, statKey) {
                 var total;
                 if (typeKey === 'more') {

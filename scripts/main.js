@@ -10,6 +10,8 @@ namespace.module('bot.main', function (exports, require) {
 
     var STEP_SIZE = 10;
 
+    var globalStart = new Date().getTime();
+
     function onReady() {
         gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2'];
         gl.VERSION_NUMBER = '0-1-2';
@@ -53,12 +55,15 @@ namespace.module('bot.main', function (exports, require) {
             this.zonesCleared = 0;
             this.deaths = 0;
 
+            this.mspf = 1000 / 30;
+
             this.listenTo(gl.GameEvents, 'unpause', this.start);
             this.listenTo(gl.GameEvents, 'pause', this.pause);
             this.listenTo(gl.GameEvents, 'togglePause', this.toggle);
             this.listenTo(gl.GameEvents, 'reportData', this.reportData);
             this.listenTo(gl.GameEvents, 'beatgame', this.beatGame);
             this.start();
+            setInterval(this.intervalTick.bind(this), 1000);
         },
 
         trySave: function() {
@@ -150,7 +155,7 @@ namespace.module('bot.main', function (exports, require) {
             log.info('start');
             this.lastTime = new Date().getTime();
             this.running = true;
-            requestAnimFrame(this.tick.bind(this));
+            requestAnimFrame(this.onFrame.bind(this));
         },
 
         pause: function() {
@@ -173,10 +178,26 @@ namespace.module('bot.main', function (exports, require) {
             this.inZone = false;
         },
 
-        tick: function() {
-            log.debug('begin tick');
+        intervalTick: function() {
             var thisTime = new Date().getTime();
+            if (thisTime - this.lastTime > 10000) {
+                this.modelTick();
+            }
+        },
 
+        onFrame: function() {
+            if (new Date().getTime() - this.lastTime > this.mspf) {
+                this.modelTick();
+                this.visTick();
+            }
+
+            this.trySave();
+            requestAnimFrame(this.onFrame.bind(this));
+        },
+
+        modelTick: function() {
+            log.error('modelTick, %d', (new Date().getTime() - globalStart) / 1000);
+            var thisTime = new Date().getTime();
             var dt = (thisTime - this.lastTime) * this.timeCoefficient;
             this.lastTime = thisTime;
 
@@ -189,14 +210,12 @@ namespace.module('bot.main', function (exports, require) {
                     dt -= incBy;
                     this.zone.zoneTick();
                 }
-            }
+            }            
+        },
 
+        visTick: function() {
             gl.DirtyQueue.mark('tick');
-
             gl.DirtyQueue.triggerAll(gl.DirtyListener);
-
-            this.trySave();
-            requestAnimFrame(this.tick.bind(this));
         },
 
         bestGear: function(itemType, type) {

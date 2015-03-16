@@ -1213,7 +1213,10 @@ namespace.module('bot.views', function (exports, require) {
         className: 'config',
 
         events: {
-            'click #wipebutton': 'wipe'
+            'click #wipebutton': 'wipe',
+            'click #namebutton': 'nameButton',
+            'click #devbutton': 'devButton',
+            'click #donateButton': 'donate'
         },
 
         initialize: function(options, game) {
@@ -1228,6 +1231,22 @@ namespace.module('bot.views', function (exports, require) {
 
             this.resize();
             $(window).on('resize', this.resize.bind(this));
+            this.handler = StripeCheckout.configure({
+                key: 'pk_live_Udj2pXdBbHxWllQWuAzempnY',
+                image: '/img/documentation/checkout/marketplace.png',
+                bitcoin: true,
+                token: function(token) {
+                    // Use the token to create the charge with a server-side script.
+                    // You can access the token ID with `token.id`
+                }
+            });
+
+
+
+            // Close Checkout on page navigation
+            $(window).on('popstate', function() {
+                this.handler.close();
+            });
         },
 
         resize: function() {
@@ -1244,9 +1263,21 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
             this.$holder.html(this.template);
-            this.$('#namebutton').bind('click', this.nameButton);
-            this.$('#devbutton').bind('click', this.devButton);
+            /*this.$('#namebutton').on('click', this.nameButton.bind(this));
+            this.$('#devbutton').on('click', this.devButton.bind(this));
+            this.$('#donateButton').on('click', this.donate.bind(this));*/
             return this;
+        },
+
+        donate: function(e) {
+            var amount = Math.round(parseFloat($('#donationamount').val()) * 100);
+            amount = Math.max(100, amount);
+            this.handler.open({
+                name: 'DungeonsOfDerp',
+                description: 'Donate towards development',
+                amount: amount
+            });
+            e.preventDefault();
         },
 
         wipe: function() {

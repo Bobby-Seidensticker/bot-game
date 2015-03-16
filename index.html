@@ -385,9 +385,15 @@
       <p>Message to the devs?</p>
       <textarea id="devmsg" placeholder="Thanks for your feedback!" rows="5" cols="20" wrap="soft"/>
       <input type="button" value="OK" id="devbutton" />
+      <p>Donate to development of our game!</p>
+      <p>Enter an amount in USD (min $1)</p>
+      <input type="text" value="10.00" id="donationamount" />
+      <button id="donateButton">Donate (via Stripe)</button>
+      <p style="width:90%">All donations will be rolled forward into our in-game paid currency system once implemented (donate $10, get $10 of in-game currency later based on email address used to donate)</p>
       <p>Wipe your game data and reset?</p>
       <input type="button" value="WIPE SAVE AND RELOAD" id="wipebutton" />
-      <p>(no prestige bonuses coming soon)</p>
+      <p>(no prestige bonuses - coming soon)</p>
+
     </div>
   </script>
 
@@ -459,7 +465,8 @@
   <script type="text/javascript" src="scripts/backbone-mods.js"></script>
   <script type="text/javascript" src="scripts/libs/backbone.localStorage.js"></script>
   <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
-
+  <script src="https://checkout.stripe.com/checkout.js"></script>
+  
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

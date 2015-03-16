@@ -347,7 +347,8 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         tryUsePotion: function() {
-            if (Math.abs(this.spec.maxHp - this.hp) < 0.00001) {
+            if (Math.abs(this.spec.maxHp - this.hp) < 0.00001 ||
+                this.hp <= 0.00001) {
                 return;
             }
             if (this.potionCoolAt <= gl.time) {

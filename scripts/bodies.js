@@ -212,7 +212,9 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         takeDamage: function(attack) {
-            var dodgeChance = Math.pow(0.998, this.spec.dodge);
+            var effDodge = Math.max(this.spec.dodge - attack.accuracy, 0);
+            
+            var dodgeChance = Math.pow(0.998, effDodge);
 
             if (Math.random() > dodgeChance) {
                 log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);

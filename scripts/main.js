@@ -12,7 +12,7 @@ namespace.module('bot.main', function (exports, require) {
 
     function onReady() {
         gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2'];
-        gl.VERSION_NUMBER = '0-1-2';
+        gl.VERSION_NUMBER = '0-1-3';
         
         log.info('onReady');
 

@@ -75,7 +75,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
     }
 
     Point.prototype.equal = function(p) {
-        return this.x == p.x && this.y == p.y;
+        return this.x === p.x && this.y === p.y;
     }
 
     Point.prototype.angle = function() {
@@ -238,7 +238,7 @@ namespace.module('bot.utils', function (exports, require) {
     // mod restrictions:
     // can only have 4, cannot have a converted or gainedas as perlevel
     function addMod(dict, def) { //str, level) {
-        if(def === undefined) {
+        if (def === undefined) {
             log.error('addMod called with undefined def');
         }
         var s = def.split(' ');
@@ -262,7 +262,11 @@ namespace.module('bot.utils', function (exports, require) {
     function applyPerLevel(mod, level) {
         var s = mod.def.split(' ');
         if (s.length === 4 && s[3] === 'perLevel') {
-            s[2] = parseFloat(s[2]) * level;
+            if (s[1] === 'more') {
+                s[2] = Math.pow(1 + parseFloat(s[2]) / 100, level) * 100 - 100;
+            } else {
+                s[2] = parseFloat(s[2]) * level;
+            }
             s.pop();
             return {def: s.join(' '), type: mod.type};
         } else {
@@ -270,16 +274,10 @@ namespace.module('bot.utils', function (exports, require) {
         }
     }
 
-    function applyPerLevels(mods, levels) {
+    function applyPerLevels(mods, level) {
         var ret = [];
-        if (typeof(levels) === 'number') {
-            for (var i = 0; i < mods.length; i++) {
-                ret.push(applyPerLevel(mods[i], levels));
-            }
-        } else {
-            for (var i = 0; i < mods.length; i++) {
-                ret.push(applyPerLevel(mods[i], levels[i]));
-            }
+        for (var i = mods.length; i--;) {
+            ret.push(applyPerLevel(mods[i], level));
         }
         return ret;
     }
@@ -294,32 +292,33 @@ namespace.module('bot.utils', function (exports, require) {
         res = [];
 
         _.each(flatModDefs, function(flatmod) {
-            var finalmod = "";
+            var finalmod = '';
             var spl = flatmod.split(' ');
             var val = parseFloat(spl[2]);                
-            if(spl.length == 3) {
-                if(spl[1] == "added") {
-                    if(spl[2] >= 0) {
-                        finalmod = "+" + val + " " + namespace.bot.itemref.ref.statnames[spl[0]];
+            if (spl.length === 3) {
+                if (spl[1] === 'added') {
+                    if (spl[2] >= 0) {
+                        finalmod = '+' + val + ' ' + namespace.bot.itemref.ref.statnames[spl[0]];
                     } else {
-                        finalmod = val + " " + namespace.bot.itemref.ref.statnames[spl[0]];
+                        finalmod = val + ' ' + namespace.bot.itemref.ref.statnames[spl[0]];
                     }
-                } else if(spl[1] == "more") {
-                    if(spl[2] >= 0) {
-                        finalmod = val + "% More " + namespace.bot.itemref.ref.statnames[spl[0]];
+                } else if (spl[1] === 'more') {
+                    if (spl[2] >= 0) {
+                        finalmod = val + '% More ' + namespace.bot.itemref.ref.statnames[spl[0]];
                     } else {
-                        finalmod = Math.abs(val) + "% Less " + namespace.bot.itemref.ref.statnames[spl[0]];
+                        finalmod = Math.abs(val) + '% Less ' + namespace.bot.itemref.ref.statnames[spl[0]];
                     }
                 }
             } else {
-                if(spl[1] == "gainedas") {
-                    finalmod = val + "% of " + namespace.bot.itemref.ref.statnames[spl[0]] + " Gained As " + namespace.bot.itemref.ref.statnames[spl[3]];
-                } else if (spl[1] == "converted") {
-                    finalmod = val + "% of " + namespace.bot.itemref.ref.statnames[spl[0]] + " Converted To " + namespace.bot.itemref.ref.statnames[spl[3]];
+                if (spl[1] === 'gainedas') {
+                    finalmod = val + '% of ' + namespace.bot.itemref.ref.statnames[spl[0]] +
+                        ' Gained As ' + namespace.bot.itemref.ref.statnames[spl[3]];
+                } else if (spl[1] === 'converted') {
+                    finalmod = val + '% of ' + namespace.bot.itemref.ref.statnames[spl[0]] +
+                        ' Converted To ' + namespace.bot.itemref.ref.statnames[spl[3]];
                 } else {
-                    log.error("infobox display not configured for : " + flatmod);
-                    console.log("wat", flatmod);
-                    finalmod = flatmod + " unimplemented";
+                    log.error('infobox display not configured for : ' + flatmod);
+                    finalmod = flatmod + ' unimplemented';
                 }
             }
             res.push(finalmod);
@@ -330,38 +329,51 @@ namespace.module('bot.utils', function (exports, require) {
     function prettifyPerLvlMods(mods) {
         mods = _.filter(mods, function(mod) {
             var spl = mod.def.split(' ');
-            return spl[spl.length-1] == "perLevel";
+            return spl[spl.length - 1] === 'perLevel';
         });
         return prettifyMods(mods, 1);
     }
 
     function flattenSameMods(mods) {
         var fin = [];
+        var lookup = {};
+
         _.each(mods, function(mod) {
             var spl = mod.def.split(' ');
-            var found = false;
-            if (spl.length == 4) {
+            if (spl.length === 4) {
                 fin.push(mod.def);
-            } else if (spl.length == 3){
-                found = false;
-                for(var i = 0; i < fin.length; i++) {
-                    var fspl = fin[i].split(' ');
-                    if(fspl.length == 3 && fspl[0] == spl[0] && fspl[1] == spl[1]) {
-                        if(fspl[1] == "added") {
-                            fin[i] = fspl[0] + " " + fspl[1] + " " + (parseFloat(fspl[2]) + parseFloat(spl[2]));
-                        } else if (fspl[1] == "more") {
-                            var prod = parseFloat((((1 +(parseFloat(fspl[2])*0.01)) * (1 +(parseFloat(spl[2])*0.01)) - 1) * 100).toFixed(2));
-                            fin[i] = fspl[0] + " " + fspl[1] + " " + (prod);
-                        }
-                        found = true;
-                    }
+            } else if (spl.length === 3) {
+                var stat = spl[0];
+                var type = spl[1];
+                if (lookup[type] === undefined) {
+                    lookup[type] = {};
                 }
-                if (! found) {
-                    fin.push(mod.def);
+                if (lookup[type][stat] === undefined) {
+                    lookup[type][stat] = [];
                 }
+                lookup[type][stat].push(parseFloat(spl[2]));
             } else {
                 throw('weird mods in utils.flattenSameMods');
             }
+        });
+        _.each(lookup, function(typeObj, typeKey) {
+            _.each(typeObj, function(statArr, statKey) {
+                var total;
+                if (typeKey === 'more') {
+                    total = 1;
+                    for (var i = statArr.length; i--;) {
+                        total *= statArr[i] / 100 + 1;
+                    }
+                    total = (total - 1) * 100;
+                    fin.push(statKey + ' ' + typeKey + ' ' + total.toFixed(2));
+                } else {
+                    total = 0;
+                    for (var i = statArr.length; i--;) {
+                        total += statArr[i];
+                    }
+                    fin.push(statKey + ' ' + typeKey + ' ' + total);
+                }
+            });
         });
         return fin;
     }
@@ -426,7 +438,7 @@ namespace.module('bot.utils', function (exports, require) {
     
     function addAllMods(all, mods) {
         for (var i = 0; i < mods.length; i++) {
-            if (mods[i].def == undefined) {
+            if (mods[i].def === undefined) {
                 log.error('wtf', mods[i].def);
             }               
             addMod(all[mods[i].type], mods[i].def);
@@ -437,7 +449,7 @@ namespace.module('bot.utils', function (exports, require) {
     // [['hot sword', 1], ['hard head', 1]] => [{mods: [(hot sword mods)], level: 1}, {mods: [(hard head mods)], level: 1}]
     function expandSourceCards(sourceCards, level) {
         return _.flatten(_.map(sourceCards, function(card) {
-            if(card[0] == undefined) {
+            if (card[0] === undefined) {
                 throw('crap! did you forget a comma after card line in itemref?');
             }
             return applyPerLevels(itemref.ref.card[card[0]].mods, card[1] + level);

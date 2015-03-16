@@ -74,7 +74,7 @@ namespace.module('bot.views', function (exports, require) {
         //   shows or hides the appropriate tabs, and triggers tabShow and tabHide events for others to listen to.
         // Each TabView has an instance
 
-        initialize: function(name, $el, render, showEventStr) { // hideEventStr1, hideEventStr2,..., hideEventStrN
+        initialize: function(name, $el, render, showEventStr) { // hideEventStr1, hideEventStr2, ..., hideEventStrN
             this.name = name;
             this.$el = $el;
             this.render = render; // Make sure render is bound to the correct this context

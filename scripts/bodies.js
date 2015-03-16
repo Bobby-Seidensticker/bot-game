@@ -275,6 +275,11 @@ namespace.module('bot.bodies', function(exports, require) {
             log.info('HeroBody: updateSkillchain');
             var s = this.spec.skillchain;
 
+            this.lastHpFullTime = gl.time;
+            this.hpRegened = 0;
+            this.lastManaFullTime = gl.time;
+            this.manaRegened = 0;
+
             var lookup = {};
             for (var i = 0; i < this.skills.length; i++) {
                 lookup[this.skills[i].spec.name] = this.skills[i];

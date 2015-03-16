@@ -39,7 +39,7 @@ namespace.module('bot.inv', function (exports, require) {
         applyXp: function(xp) {
             var levels = 0;
             this.xp += xp;
-            if (this.canLevel()) {
+            while (this.canLevel()) {
                 this.xp -= this.getNextLevelXp();
                 this.level++;
                 levels++;

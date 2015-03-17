@@ -14,9 +14,15 @@
       <div class="corner corner-level"><%= model.level %></div>
       <div class="xpbar" style="width: <%= 63 * model.pctLeveled() %>px;"></div>
       <div class="overlay"></div>
-      <div class="corner corner-x">X</div>
+      <!--<div class="corner corner-x">X</div>-->
     <% } else { %>
       <div class="overlay"></div>
+    <% } %>
+  </script>
+
+  <script id="draggable-template" type="text/template">
+    <% if (model) { %>
+      <img src="assets/<%= namespace.bot.utils.spaceToUnderscore(model.name) %>.png" />
     <% } %>
   </script>
 
@@ -456,6 +462,7 @@
   <!-- Libs -->
   <script type="text/javascript" src="scripts/sugar.js"></script>
 
+  <script type="text/javascript" src="scripts/libs/interact.js"></script>
   <script type="text/javascript" src="scripts/libs/raf-shim.js"></script>
   <script type="text/javascript" src="scripts/libs/jquery.min.js"></script>
   <script type="text/javascript" src="scripts/libs/namespace-plus.js"></script>

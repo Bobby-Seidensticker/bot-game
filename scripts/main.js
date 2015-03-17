@@ -13,8 +13,10 @@ namespace.module('bot.main', function (exports, require) {
     var globalStart = new Date().getTime();
 
     function onReady() {
+
         gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2', '0-1-3'];
         gl.VERSION_NUMBER = '0-1-4';
+        $('title').html('Dungeons of Derp v' + gl.VERSION_NUMBER.replace(/\-/g, '.') + ' ALPHA');
         
         log.info('onReady');
 
@@ -109,7 +111,8 @@ namespace.module('bot.main', function (exports, require) {
 
         beatGame: function() {
             var uid = localStorage.getItem('uid');
-            gl.FB.child(gl.VERSION_NUMBER).child('winners').child('uid').set(new Date());
+            var tempdate = new Date();
+            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(uid).set(tempdate.toString());;
         },
         
         load: function() {

@@ -1405,7 +1405,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "clockwork": {
                 "mods": [
-                    {"def": "physDmg more 4 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
                     {"def": "speed more -15", "type": "dmg"},
                 ],
                 "slot": "chest",
@@ -1471,8 +1471,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "indigenous toxins": {
                 "mods": [
-                    {"def": "poisDmg added 5 perLevel", "type": "dmg"},
-                    {"def": "poisDmg more 3 perLevel", "type": "dmg"},
+                    {"def": "poisDmg added 3 perLevel", "type": "dmg"},
+                    {"def": "poisDmg more 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
             },
@@ -1603,7 +1603,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "hateful blade": {
                 "mods": [
                     {"def": "physDmg gainedas -5 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
             },
@@ -1979,6 +1979,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "aoeRadius more 50", "type": "dmg"},
                     {"def": "aoeRadius more 5 perLevel", "type": "dmg"},
+                    {"def": "manaCost more 100", "type": "dmg"},
                 ],
                 "slot": "skill"
             },
@@ -2603,7 +2604,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
         },
         "zoneOrder": {
-            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "clockworkier ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle", "spookiest dungeon", "darkest forest", "clockworkiest ruins", "overly aggro crag", "excessively hostile marsh", "iciest tunnel", "gothickest castle", "hordecave"] 
+            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "clockworkier ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle", "spookiest dungeon", "darkest forest", "clockworkiest ruins", "overly aggro crag", "excessively hostile marsh", "iciest tunnel", "gothickest castle", "hordecave", "halls of pain"] 
         },
         "zone": {
             "spooky dungeon": {
@@ -2781,6 +2782,14 @@ namespace.module('bot.itemref', function (exports, require) {
                 "roomCount": 20,
                 "quantity": [20, 500, 5000],
                 "level": 99
+            },
+            "halls of pain": {
+                "choices": ["vampire", "shadow knight", "skeleton king", "elf king", "sir mechs-a-lot", "flame dragon", "scalp collector", "walter wight"],
+                "weights": [1,1,1,1,1,1,1,1],
+                "boss": "vampire",
+                "roomCount": 20,
+                "quantity": [20, 500, 5000],
+                "level": 113
             },
             "demonic laboroatory": {
                 "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],

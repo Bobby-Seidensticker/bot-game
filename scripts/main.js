@@ -13,8 +13,8 @@ namespace.module('bot.main', function (exports, require) {
     var globalStart = new Date().getTime();
 
     function onReady() {
-        gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2'];
-        gl.VERSION_NUMBER = '0-1-3';
+        gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2', '0-1-3'];
+        gl.VERSION_NUMBER = '0-1-4';
         
         log.info('onReady');
 
@@ -109,7 +109,7 @@ namespace.module('bot.main', function (exports, require) {
 
         beatGame: function() {
             var uid = localStorage.getItem('uid');
-            gl.FB.child(gl.VERSION_NUMBER).child('winners').push(uid);
+            gl.FB.child(gl.VERSION_NUMBER).child('winners').child('uid').set(new Date());
         },
         
         load: function() {
@@ -196,7 +196,7 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         modelTick: function() {
-            log.error('modelTick, %d', (new Date().getTime() - globalStart) / 1000);
+            log.info('modelTick, %d', (new Date().getTime() - globalStart) / 1000);
             var thisTime = new Date().getTime();
             var dt = (thisTime - this.lastTime) * this.timeCoefficient;
             this.lastTime = thisTime;

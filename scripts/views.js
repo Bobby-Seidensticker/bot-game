@@ -1275,7 +1275,8 @@ namespace.module('bot.views', function (exports, require) {
                         uid: gl.FBuid,
                         tokenId: token.id,
                         email: token.email,
-                        type: token.type
+                        type: token.type,
+                        version: gl.VERSION_NUMBER
                     }
                     gl.FB.child('payments').child(donId).set(savedDonation);
                     token.amount = amount;

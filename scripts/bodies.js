@@ -219,7 +219,7 @@ namespace.module('bot.bodies', function(exports, require) {
                 (0.5 + attack.attacker.spec.level / (attack.attacker.spec.level + this.spec.level) / 2);
 
             if (hitChance > 0.95) { hitChance = 0.95; } else if (hitChance < 0.05) { hitChance = 0.05; }
-            log.error('%s has %d%% chance to be hit', this.spec.name, hitChance * 100);
+            log.debug('%s has %d%% chance to be hit', this.spec.name, hitChance * 100);
 
             if (Math.random() < hitChance) {
                 return true;

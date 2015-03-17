@@ -1978,7 +1978,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "increased radius": {
                 "mods": [
                     {"def": "aoeRadius more 50", "type": "dmg"},
-                    {"def": "aoeRadius more 5 perLevel", "type": "dmg"},
+                    {"def": "aoeRadius more 2 perLevel", "type": "dmg"},
                     {"def": "manaCost more 100", "type": "dmg"},
                 ],
                 "slot": "skill"

@@ -86,12 +86,13 @@ namespace.module('bot.attacks', function (exports, require) {
         hit: function(enemy) {
             this.hitHeight = enemy.fireHeight();
 
-            var dmgDealt = enemy.takeDamage(this);
-
-            this.attacker.handleHit(enemy, this);
-            this.handle('hit', enemy);
-            if (!enemy.isAlive()) {
-                this.handle('kill', enemy);
+            if (enemy.rollHit(this)) {
+                var result = enemy.takeDamage(this);
+                this.attacker.handleHit(enemy, this, result);
+                this.handle('hit', enemy);
+                if (!enemy.isAlive()) {
+                    this.handle('kill', enemy);
+                }
             }
         },
 

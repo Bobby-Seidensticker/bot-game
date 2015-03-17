@@ -1266,7 +1266,6 @@ namespace.module('bot.views', function (exports, require) {
             amount = Math.max(100, amount);
             this.handler = StripeCheckout.configure({
                 key: 'pk_live_Udj2pXdBbHxWllQWuAzempnY',
-                image: '/img/documentation/checkout/marketplace.png',
                 bitcoin: true,
                 token: function(token) {
                     var donId = new Date() + "-" + gl.FBuid;

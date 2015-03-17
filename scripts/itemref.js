@@ -142,7 +142,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "pewter wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 5 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 4 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },

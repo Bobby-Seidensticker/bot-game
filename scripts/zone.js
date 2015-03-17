@@ -211,7 +211,7 @@ namespace.module('bot.zone', function (exports, require) {
                 };
             } else if (this.done()) {
                 log.error('Zone %s cleared', this.name);
-                if(this.name == "hordecave") {
+                if(this.name == "halls of pain") {
                     gl.GameEvents.trigger('beatgame');
                 }
                 gl.GameEvents.trigger('reportData');

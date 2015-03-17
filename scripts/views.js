@@ -1216,7 +1216,8 @@ namespace.module('bot.views', function (exports, require) {
             'click #wipebutton': 'wipe',
             'click #namebutton': 'nameButton',
             'click #devbutton': 'devButton',
-            'click #donateButton': 'donate'
+            'click #donateButton': 'donate',
+            'click #enableBuildHotkeys': 'toggleEnableBuildHotkeys',
         },
 
         initialize: function(options, game) {
@@ -1233,13 +1234,14 @@ namespace.module('bot.views', function (exports, require) {
             $(window).on('resize', this.resize.bind(this));
 
 
-
+            
 
             // Close Checkout on page navigation
             $(window).on('popstate', function() {
                 this.handler.close();
             });
         },
+
 
         resize: function() {
             this.$el.css({
@@ -1255,6 +1257,7 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
             this.$holder.html(this.template);
+            $('#enableBuildHotkeys').prop('checked', gl.game.settings.enableBuildHotkeys)
             /*this.$('#namebutton').on('click', this.nameButton.bind(this));
             this.$('#devbutton').on('click', this.devButton.bind(this));
             this.$('#donateButton').on('click', this.donate.bind(this));*/
@@ -1291,6 +1294,12 @@ namespace.module('bot.views', function (exports, require) {
             });
             e.preventDefault();
         },
+
+        toggleEnableBuildHotkeys: function() {
+            gl.game.settings['enableBuildHotkeys'] = this.$('#enableBuildHotkeys').prop('checked');
+            console.log(gl.game.settings);
+        },
+        
 
         wipe: function() {
             localStorage.removeItem('data');

@@ -39,14 +39,17 @@ namespace.module('bot.main', function (exports, require) {
             this.inZone = false;
 
             gl.messages = new namespace.bot.messages.Messages();
-
+            gl.builds = [];
+            
+            
             this.inv = new inv.ItemCollection();
             this.cardInv = new inv.CardCollection();
             this.hero = new entity.newHeroSpec(this.inv, this.cardInv);
             this.cardInv.equipped = this.hero.equipped;
             this.cardInv.skillchain = this.hero.skillchain;
             this.zone = new zone.ZoneManager(this.hero);
-
+            this.settings = this.defaultSettings();
+            
             var loadSuccess = this.load();
             if (!loadSuccess) {
                 this.noobGear();
@@ -68,6 +71,12 @@ namespace.module('bot.main', function (exports, require) {
             setInterval(this.intervalTick.bind(this), 1000);
         },
 
+        defaultSettings: function() {
+            return {
+                "enableBuildHotkeys": false,
+            }
+        },
+
         trySave: function() {
             var now = new Date().getTime();
             if (now - this.lastSave < 1000) {
@@ -79,6 +88,7 @@ namespace.module('bot.main', function (exports, require) {
 
         toJSON: function() {
             var data = {
+                settings: this.settings,
                 version: gl.VERSION_NUMBER,
                 cardInv: this.cardInv.toJSON(),
                 inv: this.inv.toJSON(),
@@ -109,6 +119,37 @@ namespace.module('bot.main', function (exports, require) {
             gl.FBL.child('strdata').set(JSON.stringify(data));
         },
 
+        saveBuild: function(buildSlot) {
+            var build = {};
+            var data = this.toJSON();
+            build.equipped = data.equipped;
+            build.skillchain = data.skillchain;
+            build.inv = _.filter(data.inv, function(m) {return m.cardNames.length});
+            gl.builds[buildSlot] = build;
+            log.warning('Build saved to slot %d', buildSlot);            
+        },
+
+        loadBuild: function(buildSlot) {            
+            var items, invItem
+            var build = gl.builds[buildSlot];
+            if (build !== undefined) {
+                _.each(this.hero.equipped.slots, function(slot) {
+                    this.hero.equipped.unequip(slot);
+                }, this);
+                _.each(_.range(5), function(i) {
+                    this.hero.skillchain.equip(undefined, i);
+                }, this);
+                       
+                this.hero.skillchain.fromJSON(build.skillchain, this.inv);
+                this.hero.equipped.fromJSON(build.equipped, this.inv);
+                _.each(build.inv, function(loadItem) {
+                    var invItem = _.findWhere(this.inv.models, {name: loadItem.name});
+                    invItem.loadCards(loadItem.cardNames, this.cardInv);
+                },this);
+            }
+            log.warning('Build loaded from slot %d', buildSlot);
+        },
+
         beatGame: function() {
             var uid = localStorage.getItem('uid');
             var tempdate = new Date();
@@ -119,6 +160,7 @@ namespace.module('bot.main', function (exports, require) {
             log.warning('loading');
             var data = JSON.parse(localStorage.getItem('data'));
             if (data) {
+                this.settings = (data.settings !== undefined) ? data.settings : this.defaultSettings();
                 data = this.upgradeData(data);
                 this.cardInv.fromJSON(data.cardInv);
                 this.inv.fromJSON(data.inv, this.cardInv);
@@ -253,8 +295,41 @@ namespace.module('bot.main', function (exports, require) {
         this.gameModel = gameModel;
     }
 
+    KeyHandler.prototype.liveKeys = function(event, godmode) {
+        key = event.keyCode;
+        var SPACE = 32, UP = 38, DN = 40;
+        if (key == SPACE) {
+            gl.GameEvents.trigger('togglePause');
+        } else if (key === UP) {
+            this.gameModel.timeCoefficient *= 2;
+            if(!godmode) {
+                this.gameModel.timeCoefficient = Math.min(1, this.gameModel.timeCoefficient);
+            }
+            log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
+        } else if (key === DN) {
+            this.gameModel.timeCoefficient /= 2;
+            if(!godmode) {
+                this.gameModel.timeCoefficient = Math.max(0.25, this.gameModel.timeCoefficient);
+            }
+            log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
+        } else if (key >= 48 && key <= 57 && this.gameModel.settings.enableBuildHotkeys) {
+            var buildSlot = key - 48;
+            console.log(buildSlot, event.shiftKey);
+            if (event.shiftKey) {
+                this.gameModel.saveBuild(buildSlot);
+            } else {
+                this.gameModel.loadBuild(buildSlot);
+            }
+        }
+        
+            
+    }
+
     KeyHandler.prototype.onKeydown = function(event) {
-        if (! isNaN(parseInt(localStorage.getItem('uid')))) {
+        var godmode = isNaN(parseInt(localStorage.getItem('uid')))
+        this.liveKeys(event, godmode);
+        
+        if (!godmode) {
             return;
         }
         
@@ -265,25 +340,17 @@ namespace.module('bot.main', function (exports, require) {
 
         log.info('keydown, key: %d', event.keyCode);
 
-        if (key == SPACE) {
-            gl.GameEvents.trigger('togglePause');
-        } else if (key == EKEY) {
+        
+        if (key == EKEY) {
             //Cheat for adding 1000xp (for easier testing)
             log.warning("XP Cheat!");                
-            this.gameModel.hero.applyXp(1000);
+            this.gameModel.hero.applyXp(this.gameModel.hero.getNextLevelXp());
         } else if (key == HKEY) {
-            //Cheat for adding 1000xp (for easier testing)
             log.warning("Health Potion");
             this.gameModel.zone.hero.tryUsePotion();
         } else if (key == TKEY) {
             log.warning("Time Cheat!");
             this.gameModel.lastTime -= 1000 * 60 * 5;
-        } else if (key === UP) {
-            this.gameModel.timeCoefficient *= 2;
-            log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
-        } else if (key === DN) {
-            this.gameModel.timeCoefficient /= 2;
-            log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
         } else if (key === CKEY || key === XKEY || key === VKEY) {
             log.error('Melee Equipment cheat');
             var items = this.gameModel.inv.models;

@@ -218,13 +218,13 @@ namespace.module('bot.bodies', function(exports, require) {
                 attack.accuracy / (attack.accuracy + this.spec.dodge) *
                 (0.5 + attack.attacker.spec.level / (attack.attacker.spec.level + this.spec.level) / 2);
 
-            if (hitChance > 0.95) { hitChance = 0.95; } else if (hitChance < 0.05) { hitChance = 0.05; }
+            if (hitChance > 0.99) { hitChance = 0.99; } else if (hitChance < 0.01) { hitChance = 0.01; }
             log.debug('%s has %d%% chance to be hit', this.spec.name, hitChance * 100);
 
             if (Math.random() < hitChance) {
                 return true;
             }
-            gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.4)', 1000));
+            gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.2)', 1000));
             return false;
         },
 

@@ -880,12 +880,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj"],
                 "specs": [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],                
                 "baseMods": [
-                    {def: 'manaCost added 6', type: 'dmg'},
-                    {def: 'speed added 500', type: 'dmg'},
+                    {def: 'manaCost added 13', type: 'dmg'},
+                    {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'physDmg more 10 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 4 perLevel', type: 'dmg'},
                     {def: 'projSpeed more 200', type: 'dmg'},
-                    {def: 'cooldownTime added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 2000', type: 'dmg'},
                 ]
             },
             "incinerate": {                
@@ -1227,8 +1227,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "compression shorts": {
                 "mods": [
-                    {"def": "moveSpeed added 50", "type": "def"},
-                    {"def": "moveSpeed added 20 perLevel", "type": "def"},
+                    {"def": "moveSpeed more 20", "type": "def"},
+                    {"def": "moveSpeed more 3 perLevel", "type": "def"},
                 ],
                 "slot": "legs",
             },
@@ -1478,7 +1478,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "swamp armor": {
                 "mods": [
-                    {"def": "poisResist more -5 perLevel", "type": "eleResist"},
+                    {"def": "poisResist more -4 perLevel", "type": "eleResist"},
                     {"def": "poisResist more -10", "type": "eleResist"},                    
                 ],
                 "slot": "chest",
@@ -1532,8 +1532,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "vest pockets": {
                 "mods": [
-                    {"def": "speed added -1 perLevel", "type": "dmg"},
-                    {"def": "speed more -1 perLevel", "type": "dmg"},
+                    {"def": "speed more -2 perLevel", "type": "dmg"},
                 ],
                 "slot": "chest",
             },
@@ -1602,8 +1601,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "hateful blade": {
                 "mods": [
-                    {"def": "physDmg gainedas -5 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                    {"def": "physDmg gainedas -3 hpLeech", "type": "dmg"},
+                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
             },
@@ -2434,6 +2433,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["semi automatic", 1],
                     ["antibiotics", 1],
                     ["bloodsucker", 1],
+                    ["plague ritual", 1],
+                    ["sharpened", 1],
+                    ["telescoping handle", 1],
+                    ["soulsucker", 1],
+                    ["potion holster", 1],
+                    
                 ],
             },
             "frost skeleton": {

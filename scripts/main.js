@@ -88,6 +88,7 @@ namespace.module('bot.main', function (exports, require) {
 
         toJSON: function() {
             var data = {
+                builds: gl.builds,
                 settings: this.settings,
                 version: gl.VERSION_NUMBER,
                 cardInv: this.cardInv.toJSON(),
@@ -163,6 +164,7 @@ namespace.module('bot.main', function (exports, require) {
             log.warning('loading');
             var data = JSON.parse(localStorage.getItem('data'));
             if (data) {
+                gl.builds = (data.builds !== undefined) ? data.builds : [];
                 this.settings = (data.settings !== undefined) ? data.settings : this.defaultSettings();
                 data = this.upgradeData(data);
                 this.cardInv.fromJSON(data.cardInv);

@@ -101,6 +101,9 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         reportData: function() {
+            if(gl.FBL === undefined) {
+                return;
+            }
             gl.FBL.child('name').set(this.hero.name);
             gl.FBL.child('level').set(this.hero.level);
             var data = this.toJSON();

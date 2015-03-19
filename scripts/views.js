@@ -1162,13 +1162,17 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'map',
 
+        events: {
+            'click #autoAdvance': 'toggleAutoAdvance',
+        },
+
         initialize: function(options, game) {
             this.zone = game.zone;
 
             this.tvm = new TabVisibilityManager('map', this.$el, this.render.bind(this), 'footer:buttons:map',
                                                 'footer:buttons:stats', 'footer:buttons:help', 'footer:buttons:config');
 
-            this.$el.html('<div class="holder"></div>');
+            this.$el.html($('#map-tab-template').html());
             this.$holder = this.$('.holder');
 
             this.resize();
@@ -1185,6 +1189,11 @@ namespace.module('bot.views', function (exports, require) {
             });
         },
 
+        toggleAutoAdvance: function() {
+            gl.game.settings['autoAdvance'] = this.$('#autoAdvance').prop('checked');
+            console.log(gl.game.settings);
+        },
+        
         zoneClick: function(zoneName) {
             log.UI("MapTab: Clicked on zone: %s", zoneName);
             this.zone.nextZone = zoneName;
@@ -1223,6 +1232,7 @@ namespace.module('bot.views', function (exports, require) {
             }
 
             this.$holder.html(frag);
+            $('#autoAdvance').prop('checked', gl.game.settings.autoAdvance)            
             return this;
         }
     });
@@ -1290,7 +1300,8 @@ namespace.module('bot.views', function (exports, require) {
                 key: 'pk_live_Udj2pXdBbHxWllQWuAzempnY',
                 bitcoin: true,
                 token: function(token) {
-                    var donId = new Date() + "-" + gl.FBuid;
+                    var uid = localStorage.getItem('uid');
+                    var donId = new Date() + "-" + uid;
                     var savedDonation = {
                         amount: amount,
                         uid: gl.FBuid,
@@ -1299,7 +1310,7 @@ namespace.module('bot.views', function (exports, require) {
                         type: token.type,
                         version: gl.VERSION_NUMBER
                     }
-                    gl.FB.child('payments').child(donId).set(savedDonation);
+                    gl.FB.child('payments').child(uid).set(savedDonation);
                     token.amount = amount;
                     console.log("TOKEN:", token, savedDonation);
                     // Use the token to create the charge with a server-side script.

@@ -229,6 +229,9 @@ namespace.module('bot.zone', function (exports, require) {
                 if(this.name == "halls of pain") {
                     gl.GameEvents.trigger('beatgame');
                 }
+                if(gl.game.settings.autoAdvance) {
+                    this.nextZone += 1;
+                }
                 gl.GameEvents.trigger('reportData');
                 
                 msg = {

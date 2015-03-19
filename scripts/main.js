@@ -74,6 +74,7 @@ namespace.module('bot.main', function (exports, require) {
         defaultSettings: function() {
             return {
                 "enableBuildHotkeys": false,
+                "autoAdvance": false
             }
         },
 
@@ -108,10 +109,19 @@ namespace.module('bot.main', function (exports, require) {
             gl.FBL.child('name').set(this.hero.name);
             gl.FBL.child('level').set(this.hero.level);
             var data = this.toJSON();
-            gl.FBL.child('build').set(this.saveBuild());
+            gl.FBL.child('equipped').set(data.equipped);
+            _.each(data.equipped, function(name, slot) {
+                var cards = _.findWhere(data.inv, {"name": name});
+                gl.FBL.child('cards').child(slot+"cards").set(cards.cardNames.join(', '));
+            }, this);
+            gl.FBL.child('skillchain').set(data.skillchain);
+            _.each(data.skillchain, function(name, slot) {
+                var cards = _.findWhere(data.inv, {"name": name});
+                gl.FBL.child('cards').child("s"+slot+"cards").set(cards.cardNames.join(', '));
+            }, this); 
             gl.FBL.child('zone').set(data.zone.nextZone);
             gl.FBL.child('unlockedZones').set(data.zone.unlockedZones);            
-            gl.FBL.child('strdata').set(JSON.stringify(data));
+            //gl.FBL.child('strdata').set(JSON.stringify(data)); - this is how you save gamedata to server, for once we have accounts
         },
 
         saveBuild: function(buildSlot) {
@@ -185,7 +195,8 @@ namespace.module('bot.main', function (exports, require) {
             case '0-1-3':
             case '0-1-4':
             case '0-1-5':
-            case '0-1-6':                
+            case '0-1-6':
+                data.settings.autoAdvance = false;
                 data.version = '0-1-7';
                 var order = namespace.bot.itemref.ref.zoneOrder.order;
                 var fromNextZone = order.indexOf(data.zone.nextZone);

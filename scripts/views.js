@@ -665,8 +665,7 @@ namespace.module('bot.views', function (exports, require) {
             _.invoke(this.views, 'unselect');
             view.select();
             this.selectedValue = view.value;
-
-            this.trigger('filterChange');
+            gl.DirtyQueue.mark('filterChange');
         },
 
         filter: function() { throw('This is an abstract class'); },

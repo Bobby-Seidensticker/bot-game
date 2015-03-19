@@ -238,8 +238,8 @@ namespace.module('bot.views', function (exports, require) {
         template: _.template($('#info-box-template').html()),
 
         initialize: function() {
-            this.listenTo(gl.UIEvents, 'mouseenter', this.show);
-            this.listenTo(gl.UIEvents, 'mouseleave', this.hide);
+            this.listenTo(gl.UIEvents, 'itemSlotMouseenter', this.show);
+            this.listenTo(gl.UIEvents, 'itemSlotMouseleave', this.hide);
 
             this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
 
@@ -309,6 +309,7 @@ namespace.module('bot.views', function (exports, require) {
             $('body').on('mousedown ' + this.uid, this.onMousedown.bind(this));
             $('body').on('mousemove ' + this.uid, this.onMousemove.bind(this));
             $('body').on('mouseup ' + this.uid, this.onMouseup.bind(this));
+            this.$el.on('mousedown', function(e) { e.preventDefault(); });
         },
 
         remove: function() {
@@ -319,10 +320,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         updatePos: function(event) {
-            this.$el.css({
-                top: event.pageY - 36,
-                left: event.pageX - 36
-            });
+            this.$el.css({ top: event.pageY - 36, left: event.pageX - 36 });
         },
 
         startDragging: function(event) {
@@ -334,18 +332,16 @@ namespace.module('bot.views', function (exports, require) {
 
         stopDragging: function() {
             log.error('DROP');
-            var model = this.model;
-            this.model = undefined;  // has to be undefined because it gets state information in trigger
 
             this.state = this.DISABLED
             this.$el.css('display', 'none');
 
-            this.trigger('drop', new Point(event.pageX, event.pageY), model);
+            this.trigger('drop', new Point(event.pageX, event.pageY), this.model);
         },
 
         onViewMousedown: function(event, model) {
-            log.error('DOWN, %s', this.state);
             if (this.state === this.DISABLED) {
+                log.error('disabled to disabled wait');
                 this.state = this.DISABLED_WAIT;
                 this.model = model;
                 this.dragStart = new Point(event.pageX, event.pageY);
@@ -354,20 +350,21 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         isDraggingThis: function(model) {
-            return (this.state === this.UP_DRAG || this.state === this.DOWN_DRAG) &&
+            return (this.state === this.DOWN_DRAG || this.state === this.UP_DRAG) &&
                 this.model.id === model.id;
         },
 
         onMousedown: function(event) {
             if (this.state === this.UP_DRAG) {
+                log.error('up drag to down drag');
                 this.state = this.DOWN_DRAG;
             }
         },
 
         onMousemove: function(event) {
-            log.error('MOVE, %s', this.state);
             if (this.state === this.DISABLED_WAIT) {
                 if (this.dragStart.dist2(new Point(event.pageX, event.pageY)) > 25) {
+                    log.error('disabled wait to down drag');
                     this.state = this.DOWN_DRAG;
                     this.startDragging(event);
                 }
@@ -379,166 +376,15 @@ namespace.module('bot.views', function (exports, require) {
         onMouseup: function(event) {
             log.error('UP, %s', this.state);
             if (this.state === this.DISABLED_WAIT) {
+                log.error('Disabled wait to up drag');
                 this.state = this.UP_DRAG;
                 this.startDragging(event);
             } else if (this.state === this.DOWN_DRAG) {
+                log.error('down drag to disabled');
                 this.state = this.DISABLED;
                 this.stopDragging();
             }
         },
-    });
-
-    var DraggableItemTab = Backbone.View.extend({
-        tagName: 'div',
-        className: 'itemTab',
-        template: _.template($('#item-tab-template').html()),
-
-        events: {
-            'mouseleave': 'onMouseleave',
-        },
-
-        onMouseleave: function() {
-            gl.UIEvents.trigger('itemSlotMouseleave');
-        },
-
-        initialize: function(options, game) {
-            this.equipped = game.hero.equipped;
-            this.skillchain = game.hero.skillchain;
-            this.inventory = game.inv;
-
-            this.hovering = undefined;
-            this.renderedOnce = false;
-
-            this.dragHandler = new DragHandler();
-
-            this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
-            this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
-            this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
-            this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
-
-            this.tvm = new TabVisibilityManager('inv', this.$el, this.render.bind(this), 'footer:buttons:inv',
-                                                'footer:buttons:cards');
-
-            this.fb1 = new WeaponTypeFilterBarView({}, ['All', 'Ml', 'Ra', 'Sp'],
-                                                   [undefined, 'melee', 'range', 'spell']).render();
-            this.fb2 = new SlotTypeFilterBarView({}, ['All', 'We', 'He', 'Ch', 'Ha', 'Lg', 'Sk'],
-                                                 [undefined, 'weapon', 'head', 'chest', 'hands', 'legs', 'skill']).render();
-
-            this.listenTo(this.fb1, 'filterChange', this.render);
-            this.listenTo(this.fb2, 'filterChange', this.render);
-
-            this.resize();
-            $(window).on('resize', this.resize.bind(this));
-        },
-
-        resize: function() {
-            var size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
-            this.$el.css({
-                left: size.x - 405,
-                height: size.y
-            });
-        },
-
-        /*onClick: function(itemSlot) {
-            log.info('itemSlot on click, selected: %s', !!this.selected);
-
-            if (itemSlot.canSelect) {
-                var sameClicked = false;
-                if (this.selected) {
-                    sameClicked = itemSlot.model.id === this.selected.model.id;
-                    this.selected.unselect();
-                    this.selected = undefined;
-                }
-                if (!sameClicked) {
-                    itemSlot.select();
-                    this.selected = itemSlot;
-                }
-            } else {
-                if (this.selected) {
-                    var equipSuccess = itemSlot.equippedModel.equip(this.selected.model, itemSlot.slot);
-                    this.selected.unselect();
-                    this.selected = undefined;
-
-                    if (equipSuccess) {
-                        gl.DirtyQueue.mark('equipChange');
-                        this.render();
-                    }
-                }
-            }
-        },
-
-        onUnequip: function(itemSlot) {
-            log.UI('Unequipping: ' + itemSlot.model.name);
-            if (this.selected) {
-                this.selected.unselect();
-                this.selected = undefined;
-            }
-            this.hovering = undefined;
-
-            itemSlot.unselect();
-            var unequipSuccess = itemSlot.equippedModel.equip(undefined, itemSlot.slot);
-        },
-
-        onHover: function(itemSlot) {
-            this.hovering = itemSlot;
-        },*/
-
-        newItemSlot: function(model, slot, parent) {
-            var view = new DraggableItemSlot({model: model}, this.dragHandler, slot, parent);
-            /*this.listenTo(view, 'click', this.onClick);
-            this.listenTo(view, 'unequip', this.onUnequip);
-            this.listenTo(view, 'hovering', this.onHover);*/
-            this.listenTo(view, 'change', this.render);
-            this.allViews.push(view);
-            return view;
-        },
-
-        render: function() {
-            if (!this.tvm.visible) {
-                return this;
-            }
-
-            if (!this.renderedOnce) {
-                this.$el.html(this.template());
-                this.$('.filters').append(this.fb1.el);
-                this.$('.filters').append(this.fb2.el);
-                this.renderedOnce = true;
-            }
-
-            // properly remove all views
-            _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);
-            this.allViews = [];
-
-            var $equipped = this.$('.equipped');
-            _.each(this.equipped.slots, function(slot) {
-                var view = this.newItemSlot(this.equipped[slot], slot, this.equipped);
-                $equipped.append(view.el);
-            }, this);
-
-            var $skillchain = this.$('.skillchain');
-            _.each(this.skillchain.skills, function(skill, i) {
-                var view = this.newItemSlot(skill, i, this.skillchain);
-                $skillchain.append(view.el);
-            }, this);
-
-            var $unequipped = this.$('.unequipped');
-            var items = _.filter(this.inventory.models, function(model) {
-                return !model.equipped;
-            });
-            items = this.fb1.filter(items);
-            items = this.fb2.filter(items);
-            _.each(items, function(model) {
-                var view = this.newItemSlot(model);
-                $unequipped.append(view.el);
-            }, this);
-
-            /*if (this.hovering && this.hovering.model) {
-                this.hovering = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
-                this.hovering.onMouseenter();
-            }*/
-
-            return this;
-        },        
     });
 
     var DraggableItemSlot = Backbone.View.extend({
@@ -561,6 +407,7 @@ namespace.module('bot.views', function (exports, require) {
 
         onMouseenter: function() {
             gl.UIEvents.trigger('itemSlotMouseenter', this);
+            this.trigger('hovering', this.model);
         },
 
         onMouseleave: function() {
@@ -568,6 +415,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.model.isNew = false;
                 this.render();
             }
+            this.trigger('hovering');
             gl.UIEvents.trigger('itemSlotMouseleave');
         },
 
@@ -578,8 +426,8 @@ namespace.module('bot.views', function (exports, require) {
                 this.slot = slot;
                 this.equipper = equipper;
                 this.listenTo(this.dragHandler, 'drop', this.onDrop);
-                this.listenTo(this.dragHandler, 'dragstart', this.onDragstart);
             }
+            this.listenTo(this.dragHandler, 'dragstart', this.render);
 
             this.listenTo(gl.UIEvents, 'itemSlotMouseenter', this.onOtherMouseenter);
             this.listenTo(gl.UIEvents, 'itemSlotMouseleave', this.onOtherMouseleave);
@@ -628,6 +476,135 @@ namespace.module('bot.views', function (exports, require) {
             return this;
         }
     });
+
+    var DraggableItemTab = Backbone.View.extend({
+        tagName: 'div',
+        className: 'itemTab',
+        template: _.template($('#item-tab-template').html()),
+
+        events: {
+            'mouseleave': 'onMouseleave',
+        },
+
+        onMouseleave: function() {
+            gl.UIEvents.trigger('itemSlotMouseleave');
+        },
+
+        initialize: function(options, game) {
+            this.equipped = game.hero.equipped;
+            this.skillchain = game.hero.skillchain;
+            this.inventory = game.inv;
+
+            this.hovering = undefined;
+            this.renderedOnce = false;
+
+            this.dragHandler = new DragHandler();
+            this.listenTo(this.dragHandler, 'drop', this.onDrop);
+
+            this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
+            this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
+            this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
+            this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
+
+            this.tvm = new TabVisibilityManager('inv', this.$el, this.render.bind(this), 'footer:buttons:inv',
+                                                'footer:buttons:cards');
+
+            this.fb1 = new WeaponTypeFilterBarView({}, ['All', 'Ml', 'Ra', 'Sp'],
+                                                   [undefined, 'melee', 'range', 'spell']).render();
+            this.fb2 = new SlotTypeFilterBarView({}, ['All', 'We', 'He', 'Ch', 'Ha', 'Lg', 'Sk'],
+                                                 [undefined, 'weapon', 'head', 'chest', 'hands', 'legs', 'skill']).render();
+
+            this.listenTo(this.fb1, 'filterChange', this.render);
+            this.listenTo(this.fb2, 'filterChange', this.render);
+
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+        },
+
+        resize: function() {
+            var size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
+            this.$el.css({
+                left: size.x - 405,
+                height: size.y
+            });
+        },
+
+        onDrop: function(dropPos, model) {
+            var off = this.$('.unequipped').offset();
+            if (model.equipped && dropPos.x >= off.left && dropPos.y >= off.top) {
+                if (model.itemType === 'skill') {
+                    for (var i = 0; i < this.skillchain.skills.length; i++) {
+                        if (this.skillchain.skills[i].name === model.name) {
+                            break;
+                        }
+                    }
+                    this.skillchain.equip(undefined, i);
+                } else {
+                    this.equipped.equip(undefined, model.slot);
+                }
+            }
+        },
+
+        onHover: function(itemSlot) {
+            this.hovering = itemSlot;
+        },
+
+        newItemSlot: function(model, slot, parent) {
+            var view = new DraggableItemSlot({model: model}, this.dragHandler, slot, parent);
+            /*this.listenTo(view, 'click', this.onClick);
+            this.listenTo(view, 'unequip', this.onUnequip);*/
+            this.listenTo(view, 'hovering', this.onHover);
+            this.listenTo(view, 'change', this.render);
+            this.allViews.push(view);
+            return view;
+        },
+
+        render: function() {
+            if (!this.tvm.visible) {
+                return this;
+            }
+
+            if (!this.renderedOnce) {
+                this.$el.html(this.template());
+                this.$('.filters').append(this.fb1.el);
+                this.$('.filters').append(this.fb2.el);
+                this.renderedOnce = true;
+            }
+
+            // properly remove all views
+            _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);
+            this.allViews = [];
+
+            var $equipped = this.$('.equipped');
+            _.each(this.equipped.slots, function(slot) {
+                var view = this.newItemSlot(this.equipped[slot], slot, this.equipped);
+                $equipped.append(view.el);
+            }, this);
+
+            var $skillchain = this.$('.skillchain');
+            _.each(this.skillchain.skills, function(skill, i) {
+                var view = this.newItemSlot(skill, i, this.skillchain);
+                $skillchain.append(view.el);
+            }, this);
+
+            var $unequipped = this.$('.unequipped');
+            var items = _.where(this.inventory.models, {equipped: false});
+            items = this.fb1.filter(items);
+            items = this.fb2.filter(items);
+            _.each(items, function(model) {
+                var view = this.newItemSlot(model);
+                $unequipped.append(view.el);
+            }, this);
+
+            if (this.hovering && this.hovering.model) {
+                this.hovering = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
+                this.hovering.onMouseenter();
+            }
+
+            return this;
+        },        
+    });
+
 
     var ItemSlot = Backbone.View.extend({
         tagName: 'div',

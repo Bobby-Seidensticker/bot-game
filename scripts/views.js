@@ -1212,6 +1212,9 @@ namespace.module('bot.views', function (exports, require) {
             this.subs = [];
 
             var frag = document.createDocumentFragment();
+            var preTag = document.createElement('div');
+            preTag.innerHTML = '<p><input type="checkbox" id="autoAdvance" /> Auto-advance on zone clear</p>';
+            frag.appendChild(preTag);
             var data, sub, name, zoneRef;
 
             var len = this.zone.unlockedZones + 1;
@@ -1230,6 +1233,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.subs.push(sub);
                 frag.appendChild(sub.render().el);
             }
+
 
             this.$holder.html(frag);
             $('#autoAdvance').prop('checked', gl.game.settings.autoAdvance)            

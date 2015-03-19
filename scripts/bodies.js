@@ -216,10 +216,12 @@ namespace.module('bot.bodies', function(exports, require) {
         rollHit: function(attack) {
             var hitChance = 3 *
                 attack.accuracy / (attack.accuracy + this.spec.dodge) *
-                (0.5 + attack.attacker.spec.level / (attack.attacker.spec.level + this.spec.level) / 2);
+                (attack.attacker.spec.level / (attack.attacker.spec.level + this.spec.level));
 
             if (hitChance > 0.99) { hitChance = 0.99; } else if (hitChance < 0.01) { hitChance = 0.01; }
             log.info('%s has %d%% chance to be hit by %s', this.spec.name, hitChance * 100, attack.attacker.spec.name);
+
+            //log.error('%s has %d%% chance to be hit by %s', this.spec.name, hitChance * 100, attack.attacker.spec.name);
 
             if (Math.random() < hitChance) {
                 return true;

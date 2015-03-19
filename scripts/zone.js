@@ -226,7 +226,7 @@ namespace.module('bot.zone', function (exports, require) {
                 };
             } else if (this.done()) {
                 log.error('Zone %s cleared', this.name);
-                if(this.name == "halls of pain") {
+                if(this.nextZone >= 25) {
                     gl.GameEvents.trigger('beatgame');
                 }
                 if(gl.game.settings.autoAdvance) {

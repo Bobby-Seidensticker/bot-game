@@ -161,7 +161,7 @@ namespace.module('bot.main', function (exports, require) {
         beatGame: function() {
             var uid = localStorage.getItem('uid');
             var tempdate = new Date();
-            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(uid).set(tempdate.toString());;
+            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(uid).set(gl.game.zone.nextZone);
         },
         
         load: function() {

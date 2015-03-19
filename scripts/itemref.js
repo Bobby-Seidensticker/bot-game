@@ -2042,13 +2042,13 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "sure footing": {
                 "mods": [
-                    {"def": "accuracy more 5 perLevel", "type": "dmg"},
+                    {"def": "accuracy more 3 perLevel", "type": "dmg"},
                 ],
                 "slot": "legs"
             },
             "steady hands": {
                 "mods":[
-                    {"def": "accuracy more 5 perLevel", "type": "dmg"},
+                    {"def": "accuracy more 3 perLevel", "type": "dmg"},
                 ],
                 "slot": "hands"
             },
@@ -2070,7 +2070,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "pinpoint precision": {
                 "mods":[
-                    {"def": "accuracy more 3 perLevel", "type": "dmg"},
+                    {"def": "accuracy more 2 perLevel", "type": "dmg"},
                     {"def": "rangeDmg more 20", "type": "dmg"},                    
                 ],
                 "slot": "weapon"
@@ -2256,12 +2256,10 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["dexterous hands", 1],
                     ["proto-elf", 0],
-                    ["practiced", 2],
-                    ["sharpened", 2],
+                    ["practiced", 1],
                     ["clown shoes", 1],
                     ["balanced", 1],
                     ["accurate", 1],
-                    ["sure footing", 1],
                     ["steady hands", 1],
                     ["pinpoint precision", 1]
                 ]

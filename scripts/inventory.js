@@ -298,13 +298,18 @@ namespace.module('bot.inv', function (exports, require) {
             if (skill === undefined) {
                 change = this.unequip(slot);
             } else if (skill.itemType === 'skill') {
-                if (skill.equipped && this.skills[slot]) {  // if swapping, swap
-                    for (var i = 0; i < this.skills.length; i++) {
-                        if (this.skills[i] && this.skills[i].name === skill.name) { break; }
+                if (skill.equipped) {
+                    for (var otherSlot = 0; otherSlot < this.skills.length; otherSlot++) {
+                        if (this.skills[otherSlot] && this.skills[otherSlot].name === skill.name) { break; }
                     }
-                    if (i !== slot) {
-                        this.skills[i] = this.skills[slot];
-                        this.skills[slot] = skill;
+                    if (otherSlot !== slot) {
+                        if (this.skills[slot]) {
+                            this.skills[otherSlot] = this.skills[slot];
+                            this.skills[slot] = skill;
+                        } else {
+                            this.skills[slot] = this.skills[otherSlot];
+                            this.skills[otherSlot] = undefined;
+                        }
                         change = true;
                     }
                 } else {

@@ -452,15 +452,11 @@ namespace.module('bot.views', function (exports, require) {
             var off = this.$el.offset();
             var pos = new Point(off.left, off.top);
             var diff = dropPos.sub(pos);
-            if (this.slot === 0) {
-                console.log('right here');
-            }
 
             if (diff.x >= 0 && diff.x <= 73 && diff.y >= 0 && diff.y <= 73) {
-                log.error('equip');
                 this.equipper.equip(model, this.slot);
-                this.trigger('change');
             }
+            gl.DirtyQueue.mark('itemTab');
         },
 
         render: function() {
@@ -496,24 +492,21 @@ namespace.module('bot.views', function (exports, require) {
             this.hovering = undefined;
             this.renderedOnce = false;
 
-            this.dragHandler = new DragHandler();
+            this.dragHandler = new DragHandler();  // passed to itemSlots, used to detect unequip drops
             this.listenTo(this.dragHandler, 'drop', this.onDrop);
-
-            this.listenTo(gl.DirtyListener, 'inventory:new', this.render);
-            this.listenTo(gl.DirtyListener, 'hero:xp', this.render);
-            this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
-            this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
-
-            this.tvm = new TabVisibilityManager('inv', this.$el, this.render.bind(this), 'footer:buttons:inv',
-                                                'footer:buttons:cards');
 
             this.fb1 = new WeaponTypeFilterBarView({}, ['All', 'Ml', 'Ra', 'Sp'],
                                                    [undefined, 'melee', 'range', 'spell']).render();
             this.fb2 = new SlotTypeFilterBarView({}, ['All', 'We', 'He', 'Ch', 'Ha', 'Lg', 'Sk'],
                                                  [undefined, 'weapon', 'head', 'chest', 'hands', 'legs', 'skill']).render();
 
-            this.listenTo(this.fb1, 'filterChange', this.render);
-            this.listenTo(this.fb2, 'filterChange', this.render);
+            // Map dirty queue events to itemTab update
+            gl.DirtyQueue.mapMark(['inventory:new', 'hero:xp', 'computeAttrs', 'skillComputeAttrs', 'filterChange'], 'itemTab');
+            // render on itemTab dirty
+            this.listenTo(gl.DirtyListener, 'itemTab', this.render);
+
+            this.tvm = new TabVisibilityManager('inv', this.$el, this.render.bind(this), 'footer:buttons:inv',
+                                                'footer:buttons:cards');
 
             this.resize();
             $(window).on('resize', this.resize.bind(this));

@@ -216,6 +216,8 @@ namespace.module('bot.main', function (exports, require) {
         visTick: function() {
             gl.DirtyQueue.mark('tick');
             gl.DirtyQueue.triggerAll(gl.DirtyListener);
+            gl.DirtyQueue.triggerAll(gl.DirtyListener);
+            gl.DirtyQueue.triggerAll(gl.DirtyListener);
         },
 
         bestGear: function(itemType, type) {

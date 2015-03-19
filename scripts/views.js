@@ -175,6 +175,19 @@ namespace.module('bot.views', function (exports, require) {
                 key = specKeys[i];
                 statname = namespace.bot.itemref.ref.statnames[key];
                 data.spec.push([statname, this.model.spec[key].toFixed(2)]);
+                if (key === "dodge") {
+                    statname = "Approx. Dodge Chance (this zone)";
+                    var dodge = this.model.spec.dodge;
+                    var level = gl.game.zone.level;
+                    var attAcc = (9 + level) * 2;
+                    var chance = 1 -(3 * 0.5 * (attAcc/(attAcc + dodge)));
+                    data.spec.push([statname, chance.toFixed(2)]);
+                }
+                if (key === "armor") {
+                    var fakeDmg = 10 * Math.pow(1.06, gl.game.zone.level);
+                    var redFactor = fakeDmg / (fakeDmg + this.model.spec.armor);
+                    data.spec.push(["Est. Physical Damage Taken after Armor (this zone)", redFactor.toFixed(2)]);
+                }
             }
 
             this.$el.html(this.template({data: data, skilldata: skilldata}));
@@ -1275,7 +1288,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onClick: function() {
-            this.trigger('click', this.model.name);
+            this.trigger('click', this.model.zoneNum);
         },
 
         render: function() {
@@ -1291,13 +1304,17 @@ namespace.module('bot.views', function (exports, require) {
         tagName: 'div',
         className: 'map',
 
+        events: {
+            'click #autoAdvance': 'toggleAutoAdvance',
+        },
+
         initialize: function(options, game) {
             this.zone = game.zone;
 
             this.tvm = new TabVisibilityManager('map', this.$el, this.render.bind(this), 'footer:buttons:map',
                                                 'footer:buttons:stats', 'footer:buttons:help', 'footer:buttons:config');
 
-            this.$el.html('<div class="holder"></div>');
+            this.$el.html($('#map-tab-template').html());
             this.$holder = this.$('.holder');
 
             this.resize();
@@ -1314,6 +1331,11 @@ namespace.module('bot.views', function (exports, require) {
             });
         },
 
+        toggleAutoAdvance: function() {
+            gl.game.settings['autoAdvance'] = this.$('#autoAdvance').prop('checked');
+            console.log(gl.game.settings);
+        },
+        
         zoneClick: function(zoneName) {
             log.UI("MapTab: Clicked on zone: %s", zoneName);
             this.zone.nextZone = zoneName;
@@ -1332,20 +1354,31 @@ namespace.module('bot.views', function (exports, require) {
             this.subs = [];
 
             var frag = document.createDocumentFragment();
+            var preTag = document.createElement('div');
+            preTag.innerHTML = '<p><input type="checkbox" id="autoAdvance" /> Auto-advance on zone clear</p>';
+            frag.appendChild(preTag);
             var data, sub, name, zoneRef;
 
-            var len = Math.min(this.zone.unlockedZones + 1, this.zone.zoneOrder.length);
+            var len = this.zone.unlockedZones + 1;
             for (var i = 0; i < len; i++) {
-                var name = this.zone.zoneOrder[i];
+                var zoneCount = this.zone.zoneOrder.length;
+                var upgradeCount = Math.floor(i / zoneCount);
+                var zoneI = i % zoneCount;
+                var level = Math.max(1, i * 5);
+                
+                var name = this.zone.zoneOrder[zoneI];
                 var zoneRef = this.zone.allZones[name];
-                data = _.extend({name: name, running: name === this.zone.nextZone}, zoneRef);
+                var nameStr = upgradeCount >= 1 ? " " + (upgradeCount + 1) : ""
+                data = _.extend({name: name + nameStr, level: level, running: i === this.zone.nextZone, zoneNum: i}, zoneRef);                
                 sub = new ZoneMapTab({model: data});
                 this.listenTo(sub, 'click', this.zoneClick);
                 this.subs.push(sub);
                 frag.appendChild(sub.render().el);
             }
 
+
             this.$holder.html(frag);
+            $('#autoAdvance').prop('checked', gl.game.settings.autoAdvance)            
             return this;
         }
     });
@@ -1358,7 +1391,8 @@ namespace.module('bot.views', function (exports, require) {
             'click #wipebutton': 'wipe',
             'click #namebutton': 'nameButton',
             'click #devbutton': 'devButton',
-            'click #donateButton': 'donate'
+            'click #donateButton': 'donate',
+            'click #enableBuildHotkeys': 'toggleEnableBuildHotkeys',
         },
 
         initialize: function(options, game) {
@@ -1380,6 +1414,7 @@ namespace.module('bot.views', function (exports, require) {
             });
         },
 
+
         resize: function() {
             this.$el.css({
                 height: window.innerHeight - FOOTER_HEIGHT
@@ -1394,6 +1429,7 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
             this.$holder.html(this.template);
+            $('#enableBuildHotkeys').prop('checked', gl.game.settings.enableBuildHotkeys)
             /*this.$('#namebutton').on('click', this.nameButton.bind(this));
             this.$('#devbutton').on('click', this.devButton.bind(this));
             this.$('#donateButton').on('click', this.donate.bind(this));*/
@@ -1405,18 +1441,19 @@ namespace.module('bot.views', function (exports, require) {
             amount = Math.max(100, amount);
             this.handler = StripeCheckout.configure({
                 key: 'pk_live_Udj2pXdBbHxWllQWuAzempnY',
-                image: '/img/documentation/checkout/marketplace.png',
                 bitcoin: true,
                 token: function(token) {
-                    var donId = new Date() + "-" + gl.FBuid;
+                    var uid = localStorage.getItem('uid');
+                    var donId = new Date() + "-" + uid;
                     var savedDonation = {
                         amount: amount,
                         uid: gl.FBuid,
                         tokenId: token.id,
                         email: token.email,
-                        type: token.type
+                        type: token.type,
+                        version: gl.VERSION_NUMBER
                     }
-                    gl.FB.child('payments').child(donId).set(savedDonation);
+                    gl.FB.child('payments').child(uid).set(savedDonation);
                     token.amount = amount;
                     console.log("TOKEN:", token, savedDonation);
                     // Use the token to create the charge with a server-side script.
@@ -1430,6 +1467,12 @@ namespace.module('bot.views', function (exports, require) {
             });
             e.preventDefault();
         },
+
+        toggleEnableBuildHotkeys: function() {
+            gl.game.settings['enableBuildHotkeys'] = this.$('#enableBuildHotkeys').prop('checked');
+            console.log(gl.game.settings);
+        },
+        
 
         wipe: function() {
             localStorage.removeItem('data');

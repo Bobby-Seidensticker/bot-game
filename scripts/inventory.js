@@ -31,11 +31,15 @@ namespace.module('bot.inv', function (exports, require) {
 
         fromJSON: function(data, cardInv) {
             _.extend(this, data);
-            _.each(this.cardNames, function(name, i) {
+            this.loadCards(this.cardNames, cardInv);
+        },
+
+        loadCards: function(cardNames, cardInv) {
+            _.each(cardNames, function(name, i) {
                 this.equipCard(_.findWhere(cardInv.models, {name: name}), i);
             }, this);
         },
-
+        
         applyXp: function(xp) {
             var levels = 0;
             this.xp += xp;
@@ -242,9 +246,9 @@ namespace.module('bot.inv', function (exports, require) {
                 }, this);
             }
 
-            // Sum LGoH and leech for quick use in EntityBody.handleHit
-            spec.totalHpLeech = spec.hpOnHit + spec.hpLeech;
-            spec.totalManaLeech = spec.manaOnHit + spec.manaLeech;
+            // Total damage summed here for convenience.  Used in takeDamage to quickly figure out
+            //   how much damage was mitigated to adjsut the hpLeech and manaLeech
+            spec.totalDmg = spec.physDmg + spec.lightDmg + spec.coldDmg + spec.fireDmg + spec.poisDmg;
 
             // Ensure projCount and angle have sane values
             spec.projCount = Math.floor(spec.projCount);
@@ -482,6 +486,8 @@ namespace.module('bot.inv', function (exports, require) {
 
         noobGear: function() {
             this.models = [new WeaponModel('cardboard sword'),
+                           new WeaponModel('wooden bow'),
+                           new WeaponModel('simple wand'),
                            new SkillModel('basic melee'),
                            new SkillModel('basic range'),
                            new SkillModel('basic spell'),

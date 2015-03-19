@@ -118,7 +118,7 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'wisdom gainedas 100 maxMana', type: 'def'},
 
                 {def: 'strength gainedas 200 armor', type: 'def'},
-                {def: 'dexterity gainedas 200 dodge', type: 'def'},
+                {def: 'dexterity gainedas 300 dodge', type: 'def'},
                 //{def: 'dexterity gainedas 200 accuracy', type: 'def'},
 
                 {def: 'moveSpeed added 300', type: 'def'},
@@ -141,6 +141,7 @@ namespace.module('bot.entity', function (exports, require) {
 
                 {def: 'maxHp added 20 perLevel', type: 'def'},
                 {def: 'maxMana added 5 perLevel', type: 'def'},
+                {def: 'maxHp more 2 perLevel', type:'def'},
 
                 {def: 'maxMana gainedas 2 manaRegen', type: 'def'},
 

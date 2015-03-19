@@ -142,7 +142,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "pewter wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 5 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 4 perLevel', type: 'dmg'},
+                    {def: 'eleResistAll more 20', type: 'def'}
                 ],
                 "weaponType": "spell",
             },
@@ -177,7 +178,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "demon wand": {
                 "mods": [
                     {def: 'spellDmg more 50', type: 'dmg'},
-                    {def: 'spellDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 2.5 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },
@@ -298,20 +299,20 @@ namespace.module('bot.itemref', function (exports, require) {
             "muscle plate": {
                 "mods": [
                     {def: 'armor added 50', type: 'def'},
-                    {def: 'armor more 4 perLevel', type: 'def'}
+                    {def: 'armor more 3.5 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "elegant plate": {
                 "mods": [
                     {def: 'armor added 55', type: 'def'},
-                    {def: 'armor more 5 perLevel', type: 'def'}
+                    {def: 'armor more 3.7 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "raider armor": {
                 "mods": [
-                    {def: 'physDmg more 5 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'}
                 ],
                 "slot": "chest",
             },
@@ -332,14 +333,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "studded leather": {
                 "mods": [
                     {def: 'dodge added 50', type: 'def'},
-                    {def: 'dodge more 4 perLevel', type: 'def'}
+                    {def: 'dodge more 3 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "velvet tunic": {
                 "mods": [
                     {def: 'manaRegen added 5', type: 'def'},
-                    {def: 'manaRegen more 5 perLevel', type: 'def'}
+                    {def: 'manaRegen more 2 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
@@ -360,14 +361,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "cultist robe": {
                 "mods": [
                     {def: 'spellDmg more 20', type: 'dmg'},
-                    {def: 'manaRegen more 5 perLevel', type: 'def'}
+                    {def: 'manaRegen more 3 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "embroidered silks": {
                 "mods": [
                     {def: 'manaRegen added 20', type: 'def'},
-                    {def: 'manaRegen more 5 perLevel', type: 'def'}
+                    {def: 'manaRegen more 3 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
@@ -405,14 +406,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "mage boots": {
                 "mods": [
                     {def: 'manaRegen added 5', type: 'def'},
-                    {def: 'manaRegen more 5 perLevel', type: 'def'}
+                    {def: 'manaRegen more 2 perLevel', type: 'def'}
                 ],
                 "slot": "legs",
             },
             "arcane boots": {
                 "mods": [
                     {def: 'spellDmg more 20', type: 'dmg'},
-                    {def: 'manaRegen more 5 perLevel', type: 'def'}
+                    {def: 'manaRegen more 2 perLevel', type: 'def'}
                 ],
                 "slot": "legs",
             },
@@ -457,7 +458,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "velvet gloves": {
                 "mods": [
                     {def: 'manaRegen added 2', type: 'def'},
-                    {def: 'manaRegen more 3 perLevel', type: 'def'}
+                    {def: 'manaRegen more 2 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
@@ -649,7 +650,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
-                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg more 2 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
@@ -696,6 +697,25 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'aoeRadius more -40', type: 'dmg'},
                 ],
                 "flavor": "Creates fiery AoE explosions on kill dealing double damage",
+            },
+            "chain lightning": {
+                "prototype": ["basic melee"],
+                "types": ["melee", "lightning"],
+                "specs": [{ type: 'melee', quals: [], color: LIGHT_COLOR,
+                            onHit: [],
+                            onKill: [{ type: 'circle', color: LIGHT_COLOR, quals: ['dmg more 100'], onHit: [], onKill: [], onRemove: []}],
+                            onRemove: []
+                          }],
+                "baseMods": [
+                    {def: 'manaCost added 4', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
+                    {def: 'lightDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg converted 60 lightDmg', type: 'dmg'},
+                    {def: 'aoeRadius more -40', type: 'dmg'},
+                ],
+                "flavor": "Creates electical AoE explosions on kill dealing double damage",
             },
             "splashing hit": {
                 "prototype": ["basic melee"],
@@ -808,7 +828,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj"],
                 "baseMods": [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'manaCost more 10 perLevel', type: 'dmg'},
                     {def: 'physDmg more -30', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},                    
                     {def: 'speed added 200', type: 'dmg'},
@@ -826,7 +845,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'fireDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'fireDmg more 3 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 fireDmg', type: 'dmg'}
                 ]
             },
@@ -841,7 +860,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'coldDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'coldDmg more 3 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 coldDmg', type: 'dmg'}
                 ]
             },
@@ -856,7 +875,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'lightDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'lightDmg more 3 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 lightDmg', type: 'dmg'}
                 ]
             },
@@ -871,7 +890,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'poisDmg more 1 perLevel', type: 'dmg'},
+                    {def: 'poisDmg more 3 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 poisDmg', type: 'dmg'}
                 ]
             },
@@ -881,12 +900,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 "types": ["proj"],
                 "specs": [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],                
                 "baseMods": [
-                    {def: 'manaCost added 6', type: 'dmg'},
-                    {def: 'speed added 500', type: 'dmg'},
+                    {def: 'manaCost added 13', type: 'dmg'},
+                    {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'physDmg more 10 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 4 perLevel', type: 'dmg'},
                     {def: 'projSpeed more 200', type: 'dmg'},
-                    {def: 'cooldownTime added 1000', type: 'dmg'},
+                    {def: 'cooldownTime added 2000', type: 'dmg'},
                 ]
             },
             "incinerate": {                
@@ -912,7 +931,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "baseMods": [
                     {def: 'manaCost added 9', type: 'dmg'},
                     {def: 'speed added 350', type: 'dmg'},
-                    {def: 'range added ' + BASE_RANGE_RANGE * 0.3, type: 'dmg'},
+                    {def: 'range added ' + BASE_RANGE_RANGE * 0.2, type: 'dmg'},
                     {def: 'aoeRadius more -20', type: 'dmg'},
                     {def: 'poisDmg added 4', type: 'dmg'},
                     {def: 'poisDmg added 1 perLevel', type: 'dmg'},
@@ -996,13 +1015,16 @@ namespace.module('bot.itemref', function (exports, require) {
             "pressure wave": {
                 "prototype": ["basic spell"],
                 "skillType": "spell",
-                "types": ["proj", "spell"],
+                "types": ["cone", "spell"],
+                "specs": [{ type: 'cone', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 "baseMods": [
                     {def: 'manaCost added 10', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE/3, type: 'dmg'},
                     {def: 'physDmg added 5 perLevel', type: 'dmg'},
+                    {def: 'aoeSpeed more 300', type:'dmg'},
+                    {def: 'angle more 300', type: 'dmg'},
                 ]
             },
             "shadow dagger": {
@@ -1109,7 +1131,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg more 5 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
                     {def: 'physDmg more 100', type: 'dmg'},
                     {def: 'cooldownTime added 5000', type: 'dmg'},                                        
                 ]
@@ -1228,8 +1250,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "compression shorts": {
                 "mods": [
-                    {"def": "moveSpeed added 50", "type": "def"},
-                    {"def": "moveSpeed added 20 perLevel", "type": "def"},
+                    {"def": "moveSpeed more 20", "type": "def"},
+                    {"def": "moveSpeed more 3 perLevel", "type": "def"},
                 ],
                 "slot": "legs",
             },
@@ -1406,7 +1428,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "clockwork": {
                 "mods": [
-                    {"def": "physDmg more 4 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
                     {"def": "speed more -15", "type": "dmg"},
                 ],
                 "slot": "chest",
@@ -1472,14 +1494,14 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "indigenous toxins": {
                 "mods": [
-                    {"def": "poisDmg added 5 perLevel", "type": "dmg"},
-                    {"def": "poisDmg more 3 perLevel", "type": "dmg"},
+                    {"def": "poisDmg added 3 perLevel", "type": "dmg"},
+                    {"def": "poisDmg more 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "skill",
             },
             "swamp armor": {
                 "mods": [
-                    {"def": "poisResist more -5 perLevel", "type": "eleResist"},
+                    {"def": "poisResist more -4 perLevel", "type": "eleResist"},
                     {"def": "poisResist more -10", "type": "eleResist"},                    
                 ],
                 "slot": "chest",
@@ -1533,8 +1555,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "vest pockets": {
                 "mods": [
-                    {"def": "speed added -1 perLevel", "type": "dmg"},
-                    {"def": "speed more -1 perLevel", "type": "dmg"},
+                    {"def": "speed more -2 perLevel", "type": "dmg"},
                 ],
                 "slot": "chest",
             },
@@ -1603,8 +1624,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "hateful blade": {
                 "mods": [
-                    {"def": "physDmg gainedas -5 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "physDmg gainedas -3 hpLeech", "type": "dmg"},
+                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
             },
@@ -1979,7 +2000,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "increased radius": {
                 "mods": [
                     {"def": "aoeRadius more 50", "type": "dmg"},
-                    {"def": "aoeRadius more 5 perLevel", "type": "dmg"},
+                    {"def": "aoeRadius more 2 perLevel", "type": "dmg"},
+                    {"def": "manaCost more 100", "type": "dmg"},
                 ],
                 "slot": "skill"
             },
@@ -2018,6 +2040,109 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "skill"
             },
+            "sure footing": {
+                "mods": [
+                    {"def": "accuracy more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "legs"
+            },
+            "steady hands": {
+                "mods":[
+                    {"def": "accuracy more 3 perLevel", "type": "dmg"},
+                ],
+                "slot": "hands"
+            },
+            "planet buster": {
+                "mods":[
+                    {"def": "projRadius more 200", "type": "dmg"},
+                    {"def": "spellDmg more 100", "type": "dmg"},
+                    {"def": "spellDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "cooldownTime added 5000", "type": "dmg"},
+                    {"def": "manaCost more 100", "type": "dmg"},                    
+                ],
+                "slot": "skill"
+            },
+            "nanotube reinforcement": {
+                "mods":[
+                    {"def": "armor more 5 perLevel", "type": "def"},
+                ],
+                "slot": "weapon"
+            },
+            "pinpoint precision": {
+                "mods":[
+                    {"def": "accuracy more 2 perLevel", "type": "dmg"},
+                    {"def": "rangeDmg more 20", "type": "dmg"},                    
+                ],
+                "slot": "weapon"
+            },
+            "minimum tolerances": {
+                "mods":[
+                    {"def": "accuracy more 4 perLevel", "type": "dmg"},
+                    {"def": "accuracy more 20", "type": "dmg"},                    
+                ],
+                "slot": "weapon"
+            },
+            "hazmat suit": {
+                "mods":[
+                    {"def": "eleResistAll more -5 perLevel", "type": "def"},
+                ],
+                "slot": "chest"
+            },
+            "hazmat gloves": {
+                "mods":[
+                    {"def": "eleResistAll more -4 perLevel", "type": "def"},
+                ],
+                "slot": "hands"
+            },
+            "hazmat mask": {
+                "mods":[
+                    {"def": "eleResistAll more -4 perLevel", "type": "def"},
+                ],
+                "slot": "head"
+            },
+            "face training": {
+                "mods":[
+                    {"def": "strength more 5 perLevel", "type": "def"},
+                ],
+                "slot": "head"
+            },
+            "cosmic channeling": {
+                "mods":[
+                    {"def": "spellDmg more 50", "type": "dmg"},
+                    {"def": "rangeDmg more 50", "type": "dmg"},
+                    {"def": "meleeDmg more 50", "type": "dmg"},
+                    {"def": "cooldownTime added 2000", "type": "dmg"},
+                    {"def": "aoeSpeed more -50", "type": "dmg"},
+                    {"def": "aoeRadius more 5 perLevel", "type": "dmg"},
+                ],
+                "slot": "skill"
+            },
+            "electricians gloves": {
+                "mods":[
+                    {"def": "lightResist more -5 perLevel", "type": "eleResist"},
+                ],
+                "slot": "hands"
+            },
+            "basket hilt": {
+                "mods":[
+                    {"def": "armor more 5 perLevel", "type": "def"},
+                ],
+                "slot": "weapon"
+            },
+            "accurate": {
+                "mods":[
+                    {"def": "accuracy more 50", "type": "dmg"},
+                    {"def": "accuracy added 10 perLevel", "type": "dmg"},                    
+                ],
+                "slot": "skill"
+            },
+            "balanced": {
+                "mods":[
+                    {"def": "dexterity more 3 perLevel", "type": "def"},
+                ],
+                "slot": "head",
+            },
+            
         },
         "monster": {
             "skeleton" : {
@@ -2040,7 +2165,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-skeleton", 0],
                     ["six pack", 1],
                     ["compression shorts", 1],
-                    ["asbestos lining", 1]
+                    ["asbestos lining", 1],
+                    ["basket hilt", 1]
                 ]
             },
             "skeleton archer" : {
@@ -2082,8 +2208,9 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["proto-skeleton", 1],
                     ["proto-boss", 1],
-                    ["sharpened", 3],
                     ["hot sword", 3],
+                    ["sharpened", 1],
+                    ["precise", 1],
                     ["life on hit", 4],
                     ["telescoping handle", 2],
                     ["stinging", 4]
@@ -2098,6 +2225,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["compression shorts", 3],
                     ["life on hit", 2],
                     ["hobbit foot", 1],
+                    ["accurate", 1]
                 ]
             },
             "bat" : {
@@ -2128,9 +2256,12 @@ namespace.module('bot.itemref', function (exports, require) {
                 "sourceCards": [
                     ["dexterous hands", 1],
                     ["proto-elf", 0],
-                    ["practiced", 2],
-                    ["sharpened", 2],
+                    ["practiced", 1],
                     ["clown shoes", 1],
+                    ["balanced", 1],
+                    ["accurate", 1],
+                    ["steady hands", 1],
+                    ["pinpoint precision", 1]
                 ]
             },
             "elf king" : {
@@ -2140,9 +2271,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["proto-boss", 0],
                     ["proto-elf", 0],
                     ["dexterous hands", 2],
-                    ["practiced", 2],                    
-                    ["sharpened", 2],
                     ["forest spirit", 1],
+                    ["balanced", 1],
+                    ["accurate", 1],
+                    ["sure footing", 1],
+                    ["steady hands", 1],
+                    ["pinpoint precision", 1],
                 ],
                 "flavor": "He knows you've been naughty"
             },
@@ -2182,21 +2316,24 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "toxic golem" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["poison spray"],
+                "skills": ["poison spray", "poison nova"],
                 "sourceCards": [
                     ["heart of granite", 1],
                     ["plague ritual", 1],
                     ["putrefied", 1],
+                    ["cosmic channeling", 1],
+                    ["increased radius", 1],
+                    ["hazmat suit", 1]
                 ],
             },
             "gnome" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["lightning slash", "quick hit", "basic melee"],
+                "skills": ["lightning slash", "quick hit", "chain lightning", "basic melee"],
                 "sourceCards": [
                     ["small stature", 1],
                     ["keen wit", 1],
                     ["conductive suit", 1],
-                    ["shock ritual", 1]
+                    ["shock ritual", 1],
                 ],
             },
             "gnome electrician" : {
@@ -2210,7 +2347,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["blood pact", 3],
                     ["conductive suit", 1],
                     ["shock ritual", 1],
-                    ["rubber boots", 1]
+                    ["rubber boots", 1],
+                    ["electricians gloves", 1]
                 
                 ],
             },
@@ -2246,7 +2384,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["jet pack", 1],
                     ["flame ritual", 1],
                     ["roller skates", 1],
-                    
+                    ["nanotube reinforcement", 1],
+                    ["minimum tolerances", 1],
                 ],
             },
             "mechfridgerator": {
@@ -2259,7 +2398,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["steam powered", 1],
                     ["frost ritual", 1],
-                    ["roller skates", 1]
+                    ["roller skates", 1],
+                    ["nanotube reinforcement", 1],
+                    ["minimum tolerances", 1],                    
                 ],
             },
             "mecha watt" : {
@@ -2273,7 +2414,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["steam powered", 1],
                     ["conductive suit", 1],
                     ["shock ritual", 1],
-                    ["roller skates", 1]
+                    ["roller skates", 1],
+                    ["nanotube reinforcement", 1],
+                    ["minimum tolerances", 1],                    
                 ],
             },
             "sir mechs-a-lot" : {
@@ -2289,7 +2432,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frosted", 1],
                     ["ignited", 1],
                     ["shock ritual", 1],
-                    ["roller skates", 1]
+                    ["roller skates", 1],
+                    ["nanotube reinforcement", 1],
+                    ["minimum tolerances", 1],                    
                 ],
             },
             "goblin" : {
@@ -2391,7 +2536,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["antibiotics", 1],
                     ["plague ritual", 1],
                     ["potion holster", 1],
-                    ["increased radius", 1]
+                    ["increased radius", 1],
+                    ["pinpoint precision", 1],
                 ],
             },
             "marshwalker": {
@@ -2434,6 +2580,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["semi automatic", 1],
                     ["antibiotics", 1],
                     ["bloodsucker", 1],
+                    ["plague ritual", 1],
+                    ["sharpened", 1],
+                    ["telescoping handle", 1],
+                    ["soulsucker", 1],
+                    ["potion holster", 1],
+                    
                 ],
             },
             "frost skeleton": {
@@ -2460,6 +2612,20 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["frost ritual", 1]
                 ],
             },
+            "shiver spirit": {
+                "items": [["weapon", "knobby wand"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
+                "skills": ["ice ball", "basic spell"],
+                "sourceCards": [
+                    ["fleece lining", 1],
+                    ["frosted", 1],
+                    ["keen wit", 1],
+                    ["fur hat", 1],
+                    ["cold blooded", 1],
+                    ["frost ritual", 1],
+                    ["planet buster", 1],
+                    ["minimum tolerances", 1],
+                ],
+            },
             "frozen warrior": {
                 "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
                 "skills": ["ice slash", "basic melee"],
@@ -2469,7 +2635,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["chinchilla lining", 1],
                     ["ice plating", 1],
                     ["good circulation", 1],
-                    ["frost ritual", 1]
+                    ["frost ritual", 1],
+                    ["sure footing", 1]
                 ],
             },
             "yeti": {
@@ -2517,7 +2684,11 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["mana on hit", 3],
                     ["frost ritual", 1],
                     ["prismatic toe ring", 1],
-                    ["increased radius", 1]
+                    ["increased radius", 1],
+                    ["hazmat boots", 1],
+                    ["hazmat gloves", 1],
+                    ["hazmat suit", 1],
+                    ["hazmat mask", 1]
                 ],
             },
             "shadow knight": {
@@ -2533,6 +2704,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["steel toed", 1],
                     ["good circulation", 1],
                     ["prismatic toe ring", 1],
+                    ["basket hilt", 1],
+                    ["sure footing", 1],
+                    ["steady hands", 1],
                 ],
             },
             "ghoul": {
@@ -2567,6 +2741,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["heart of granite", 1],
                     ["simple minded", 1],
                     ["alabaster", 1],
+                    ["accurate", 1],
+                    ["clown shoes", 1],
+                    ["happy feet", 1],
+                    ["bloodfingers", 1],
+                    ["face training", 1]
+                   
                 ],
             },
             "gargoyle": {
@@ -2591,6 +2771,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["good circulation", 1],
                     ["potion holster", 1],
                     ["happy feet", 1],
+                    ["basket hilt", 1],
                 ],
             },
             "wraith": {
@@ -2604,7 +2785,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
         },
         "zoneOrder": {
-            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "clockworkier ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle", "spookiest dungeon", "darkest forest", "clockworkiest ruins", "overly aggro crag", "excessively hostile marsh", "iciest tunnel", "gothickest castle", "hordecave"] 
+            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle"],
         },
         "zone": {
             "spooky dungeon": {
@@ -2613,7 +2794,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "skeleton king",
                 "roomCount": 20,
                 "quantity": [1, 1, 3],
-                "level": 1
             },
             "dark forest": {
                 "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
@@ -2621,7 +2801,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2, 2, 3],
-                "level": 5,
             },
             "clockwork ruins": {
                 "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
@@ -2629,7 +2808,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "sir mechs-a-lot",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 10,
             },
             "aggro crag": {
                 "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
@@ -2637,7 +2815,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"flame dragon",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 15,
             },
             "hostile marsh": {
                 "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
@@ -2645,15 +2822,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"scalp collector",
                 "roomCount": 20,
                 "quantity": [4,2,4],
-                "level": 20,
             },
             "icy tunnel": {
-                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn"],
-                "weights": [20, 10, 10, 10 ,10, 0],
+                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn", "shiver spirit"],
+                "weights": [20, 10, 10, 10 ,10, 10, 0, 5],
                 "boss": "walter wight",
                 "roomCount": 20,
                 "quantity": [2,3,4],
-                "level": 25,
             },
             "gothic castle": {
                 "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
@@ -2661,7 +2836,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "shadow knight",
                 "roomCount": 20,
                 "quantity": [3,3,6],
-                "level": 30,
             },
             "spookier dungeon": {
                 "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],
@@ -2704,8 +2878,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "level": 55,
             },
             "really icy tunnel": {
-                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn"],
-                "weights": [20, 10, 10, 10 ,10, 0],
+                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn", "shiver spirit"],
+                "weights": [20, 10, 10, 10 ,10, 10, 0, 5],
                 "boss": "walter wight",
                 "roomCount": 20,
                 "quantity": [5,5,20],
@@ -2760,8 +2934,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 "level": 90,
             },
             "iciest tunnel": {
-                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn"],
-                "weights": [20, 10, 10, 10 ,10, 0],
+                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn", "shiver spirit"],
+                "weights": [20, 10, 10, 10 ,10, 10, 0, 5],
                 "boss": "walter wight",
                 "roomCount": 20,
                 "quantity": [5,5,20],
@@ -2783,6 +2957,14 @@ namespace.module('bot.itemref', function (exports, require) {
                 "quantity": [20, 500, 5000],
                 "level": 99
             },
+            "halls of pain": {
+                "choices": ["vampire", "shadow knight", "skeleton king", "elf king", "sir mechs-a-lot", "flame dragon", "scalp collector", "walter wight"],
+                "weights": [1,1,1,1,1,1,1,1],
+                "boss": "vampire",
+                "roomCount": 20,
+                "quantity": [20, 500, 5000],
+                "level": 113
+            },
             "demonic laboroatory": {
                 "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],
                 "weights": [20, 10, 10],
@@ -2801,12 +2983,12 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             
             "dojo": {
-                "choices": ["fire golem"],
+                "choices": ["skeleton king"],
                 "weights": [1],
                 "boss": "dummy",
                 "roomCount": 10,
-                "quantity": [1, 0, 0],
-                "level": 1,
+                "quantity": [10, 0, 0],
+                "level": 113,
             },
             "empty dojo": {
                 "choices": [],

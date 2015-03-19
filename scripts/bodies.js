@@ -198,32 +198,40 @@ namespace.module('bot.bodies', function(exports, require) {
             gl.addAttack(skill, this, target);
         },
 
-        handleHit: function(target, atk) {
-            this.handleLeech(atk);
+        handleHit: function(target, atk, dmgResult) {
+            this.handleLeech(atk, dmgResult);
             if (!target.isAlive()) {
                 this.onKill(target);
                 target.onDeath();
             }
         },
 
-        handleLeech: function(atk) {
-            if (atk.totalHpLeech) { this.modifyHp(atk.totalHpLeech); }
-            if (atk.totalManaLeech) { this.modifyMana(atk.totalManaLeech); }
+        handleLeech: function(atk, dmgResult) {
+            var hp = atk.hpOnHit + dmgResult.hpLeeched;
+            var mana = atk.manaOnHit + dmgResult.manaLeeched;
+            if (hp) { this.modifyHp(hp); }
+            if (mana) { this.modifyMana(mana); }
+        },
+
+        rollHit: function(attack) {
+            var hitChance = 3 *
+                attack.accuracy / (attack.accuracy + this.spec.dodge) *
+                (attack.attacker.spec.level / (attack.attacker.spec.level + this.spec.level));
+
+            if (hitChance > 0.99) { hitChance = 0.99; } else if (hitChance < 0.01) { hitChance = 0.01; }
+            log.info('%s has %d%% chance to be hit by %s', this.spec.name, hitChance * 100, attack.attacker.spec.name);
+
+            //log.error('%s has %d%% chance to be hit by %s', this.spec.name, hitChance * 100, attack.attacker.spec.name);
+
+            if (Math.random() < hitChance) {
+                return true;
+            }
+            gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.2)', 1000));
+            return false;
         },
 
         takeDamage: function(attack) {
-            var effDodge = Math.max(this.spec.dodge - attack.accuracy, 0);
-            
-            var dodgeChance = Math.pow(0.998, effDodge);
-
-            if (Math.random() > dodgeChance) {
-                log.debug('Dodged, chance was: %.2f%%', (1 - dodgeChance) * 100);
-                gl.MessageEvents.trigger('message', newZoneMessage('dodged!', 'dodge', this.pos, 'rgba(230, 230, 10, 0.4)', 1000));
-                return 0;
-            }
-
             var physDmg = attack.physDmg;
-
             var totalDmg = physDmg * physDmg / (physDmg + this.spec.armor) +
                 attack.lightDmg * this.spec.lightResist +
                 attack.coldDmg * this.spec.coldResist +
@@ -231,14 +239,23 @@ namespace.module('bot.bodies', function(exports, require) {
                 attack.poisDmg * this.spec.poisResist;
 
             if (isNaN(totalDmg)) {
-                throw('crap! totalDmg has NaN value. monster missing card level in itemref?');
+                throw('In body.takeDamage, totalDmg has NaN value.  Monster missing card level in itemref?');
             }
-            
+
+            var allowedPct = totalDmg / attack.totalDmg;
+            var result = {
+                hpLeeched: allowedPct * attack.hpLeech,
+                manaLeeched: allowedPct * attack.manaLeech,
+                totalDmg: totalDmg
+            };
+
             if (this.spec.team === TEAM_HERO) {
                 log.debug('Team Hero taking %.2f damage', -totalDmg);
                 totalDmg *= 0.5 + (attack.attacker.spec.level * 0.01);
-                if(totalDmg > this.hp) {
-                    log.error("Hero (lvl %d) killed in %s(%d) by %s", this.spec.level, gl.game.zone.name, gl.game.zone.heroPos, attack.attacker.spec.name);
+                if (totalDmg > this.hp) {
+                    log.warning('Hero (lvl %d) killed in %s(%d) by %s',
+                                this.spec.level, gl.game.zone.name, gl.game.zone.heroPos,
+                                attack.attacker.spec.name);
                 }
             }
             this.modifyHp(-totalDmg);
@@ -250,7 +267,7 @@ namespace.module('bot.bodies', function(exports, require) {
                 'message',
                 newDamageMessage(attack, this.pos, Math.ceil(totalDmg), 'rgba(230, 0, 0, 1)')
             );
-            return totalDmg;
+            return result;
         },
 
         busy: function() {
@@ -327,7 +344,7 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         onDeath: function() {
-            log.warning('your hero died');
+            log.debug('your hero died');
         },
 
         modifyHp: function(added) {
@@ -353,7 +370,7 @@ namespace.module('bot.bodies', function(exports, require) {
             }
             if (this.potionCoolAt <= gl.time) {
                 this.potionCoolAt = gl.time + 10000;  // 10 second cooldown
-                var addAmount = 10 + this.spec.level * 10;
+                var addAmount = 10 + this.spec.level * 20;
                 this.modifyHp(addAmount)
                 gl.MessageEvents.trigger('message', newZoneMessage('potion worked!', 'potion', this.pos, 'rgba(230, 230, 230, 0.7)', 1000));
             } else {

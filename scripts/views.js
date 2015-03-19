@@ -175,9 +175,9 @@ namespace.module('bot.views', function (exports, require) {
                 statname = namespace.bot.itemref.ref.statnames[key];
                 data.spec.push([statname, this.model.spec[key].toFixed(2)]);
                 if (key === "dodge") {
-                    statname = "Approx. Dodge Chance";
+                    statname = "Approx. Dodge Chance (this zone)";
                     var dodge = this.model.spec.dodge;
-                    var level = this.model.spec.level;
+                    var level = gl.game.zone.level;
                     var attAcc = (9 + level) * 2;
                     var chance = 1 -(3 * 0.5 * (attAcc/(attAcc + dodge)));
                     data.spec.push([statname, chance.toFixed(2)]);

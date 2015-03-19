@@ -698,6 +698,25 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "flavor": "Creates fiery AoE explosions on kill dealing double damage",
             },
+            "chain lightning": {
+                "prototype": ["basic melee"],
+                "types": ["melee", "lightning"],
+                "specs": [{ type: 'melee', quals: [], color: LIGHT_COLOR,
+                            onHit: [],
+                            onKill: [{ type: 'circle', color: LIGHT_COLOR, quals: ['dmg more 100'], onHit: [], onKill: [], onRemove: []}],
+                            onRemove: []
+                          }],
+                "baseMods": [
+                    {def: 'manaCost added 4', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
+                    {def: 'lightDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg converted 60 lightDmg', type: 'dmg'},
+                    {def: 'aoeRadius more -40', type: 'dmg'},
+                ],
+                "flavor": "Creates electical AoE explosions on kill dealing double damage",
+            },
             "splashing hit": {
                 "prototype": ["basic melee"],
                 "types": ["melee"],
@@ -2311,12 +2330,12 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "gnome" : {
                 "items": [["weapon", "long sword"]],
-                "skills": ["lightning slash", "quick hit", "basic melee"],
+                "skills": ["lightning slash", "quick hit", "chain lightning", "basic melee"],
                 "sourceCards": [
                     ["small stature", 1],
                     ["keen wit", 1],
                     ["conductive suit", 1],
-                    ["shock ritual", 1]
+                    ["shock ritual", 1],
                 ],
             },
             "gnome electrician" : {

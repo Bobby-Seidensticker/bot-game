@@ -187,17 +187,11 @@ namespace.module('bot.main', function (exports, require) {
             case undefined:
                 log.error('Upgrading data from v0-1-1b to 0-1-2');
                 data = JSON.parse(JSON.stringify(data).replace(/putrified/g, 'putrefied'));
-                data.version = '0-1-2';
                 _.each(data.cardInv, function(card) { card.qp = 0; });
-
-                break;
             case '0-1-2':
             case '0-1-3':
             case '0-1-4':
-            case '0-1-5':
-            case '0-1-6':
-                data.settings.autoAdvance = false;
-                data.version = '0-1-7';
+                log.error('Upgrading data from v0-1-3 to 0-1-4');
                 var order = namespace.bot.itemref.ref.zoneOrder.order;
                 var fromNextZone = order.indexOf(data.zone.nextZone);
                 var ul = Math.max(fromNextZone, data.zone.unlockedZones);
@@ -205,11 +199,19 @@ namespace.module('bot.main', function (exports, require) {
                     ul = order.length - 1;
                 }
                 data.zone.unlockedZones = ul;
-
+            case '0-1-5':
+                log.error('Upgrading data from v0-1-4 to 0-1-5');
+                data.settings = this.defaultSettings();
+            case '0-1-6':
+                log.error('Upgrading data from v0-1-5 to 0-1-6');
+                data.settings.autoAdvance = false;
                 break;
             default:
-                log.error('No data upgrade required');
+                log.error('No upgrade required');
+                break;
             }
+            data.version = gl.VERSION_NUMBER;
+            log.error('Data is up to version %s spec', data.version);
             return data;
         },
 

@@ -174,6 +174,19 @@ namespace.module('bot.views', function (exports, require) {
                 key = specKeys[i];
                 statname = namespace.bot.itemref.ref.statnames[key];
                 data.spec.push([statname, this.model.spec[key].toFixed(2)]);
+                if (key === "dodge") {
+                    statname = "Approx. Dodge Chance";
+                    var dodge = this.model.spec.dodge;
+                    var level = this.model.spec.level;
+                    var attAcc = (9 + level) * 2;
+                    var chance = 1 -(3 * 0.5 * (attAcc/(attAcc + dodge)));
+                    data.spec.push([statname, chance.toFixed(2)]);
+                }
+                if (key === "armor") {
+                    var fakeDmg = 10 * Math.pow(1.06, gl.game.zone.level);
+                    var redFactor = fakeDmg / (fakeDmg + this.model.spec.armor);
+                    data.spec.push(["Est. Physical Damage Taken after Armor (this zone)", redFactor.toFixed(2)]);
+                }
             }
 
             this.$el.html(this.template({data: data, skilldata: skilldata}));

@@ -14,8 +14,8 @@ namespace.module('bot.main', function (exports, require) {
 
     function onReady() {
 
-        gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2', '0-1-3', '0-1-4'];
-        gl.VERSION_NUMBER = '0-1-5';
+        gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2', '0-1-3', '0-1-4', '0-1-5'];
+        gl.VERSION_NUMBER = '0-1-6';
         $('title').html('Dungeons of Derp v' + gl.VERSION_NUMBER.replace(/\-/g, '.') + ' ALPHA');
         
         log.info('onReady');
@@ -190,7 +190,8 @@ namespace.module('bot.main', function (exports, require) {
             case '0-1-2':
             case '0-1-3':
             case '0-1-4':
-                data.version = '0-1-5'
+            case '0-1-5':
+                data.version = '0-1-6';
                 var order = namespace.bot.itemref.ref.zoneOrder.order;
                 var fromNextZone = order.indexOf(data.zone.nextZone);
                 var ul = Math.max(fromNextZone, data.zone.unlockedZones);

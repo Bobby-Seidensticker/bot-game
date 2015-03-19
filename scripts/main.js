@@ -14,8 +14,8 @@ namespace.module('bot.main', function (exports, require) {
 
     function onReady() {
 
-        gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2', '0-1-3', '0-1-4', '0-1-5'];
-        gl.VERSION_NUMBER = '0-1-6';
+        gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2', '0-1-3', '0-1-4', '0-1-5', '0-1-6'];
+        gl.VERSION_NUMBER = '0-1-7';
         $('title').html('Dungeons of Derp v' + gl.VERSION_NUMBER.replace(/\-/g, '.') + ' ALPHA');
         
         log.info('onReady');
@@ -108,16 +108,7 @@ namespace.module('bot.main', function (exports, require) {
             gl.FBL.child('name').set(this.hero.name);
             gl.FBL.child('level').set(this.hero.level);
             var data = this.toJSON();
-            gl.FBL.child('equipped').set(data.equipped);
-            _.each(data.equipped, function(name, slot) {
-                var cards = _.findWhere(data.inv, {"name": name});
-                gl.FBL.child('cards').child(slot+"cards").set(cards.cardNames.join(', '));
-            }, this);
-            gl.FBL.child('skillchain').set(data.skillchain);
-            _.each(data.skillchain, function(name, slot) {
-                var cards = _.findWhere(data.inv, {"name": name});
-                gl.FBL.child('cards').child("s"+slot+"cards").set(cards.cardNames.join(', '));
-            }, this);            
+            gl.FBL.child('build').set(this.saveBuild());
             gl.FBL.child('zone').set(data.zone.nextZone);
             gl.FBL.child('unlockedZones').set(data.zone.unlockedZones);            
             gl.FBL.child('strdata').set(JSON.stringify(data));
@@ -129,8 +120,11 @@ namespace.module('bot.main', function (exports, require) {
             build.equipped = data.equipped;
             build.skillchain = data.skillchain;
             build.inv = _.filter(data.inv, function(m) {return m.cardNames.length});
-            gl.builds[buildSlot] = build;
-            log.warning('Build saved to slot %d', buildSlot);            
+            if(buildSlot) {
+                gl.builds[buildSlot] = build;
+                log.warning('Build saved to slot %d', buildSlot);                
+            }
+            return build;
         },
 
         loadBuild: function(buildSlot) {            
@@ -191,7 +185,8 @@ namespace.module('bot.main', function (exports, require) {
             case '0-1-3':
             case '0-1-4':
             case '0-1-5':
-                data.version = '0-1-6';
+            case '0-1-6':                
+                data.version = '0-1-7';
                 var order = namespace.bot.itemref.ref.zoneOrder.order;
                 var fromNextZone = order.indexOf(data.zone.nextZone);
                 var ul = Math.max(fromNextZone, data.zone.unlockedZones);

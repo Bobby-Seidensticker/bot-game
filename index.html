@@ -10,20 +10,17 @@
   <script id="item-slot-template" type="text/template">
     <% if (model) { %>
       <img src="assets/<%= utils.spaceToUnderscore(model.name) %>.png" />
-      <div class="newflag"><%= showNew ? "New!": "" %></div>
+      <div class="newflag"><%= model.isNew ? "New!": "" %></div>
       <div class="corner corner-level"><%= model.level %></div>
       <div class="xpbar" style="width: <%= 63 * model.pctLeveled() %>px;"></div>
       <div class="overlay"></div>
-      <!--<div class="corner corner-x">X</div>-->
     <% } else { %>
       <div class="overlay"></div>
     <% } %>
   </script>
 
   <script id="draggable-template" type="text/template">
-    <% if (model) { %>
-      <img src="assets/<%= namespace.bot.utils.spaceToUnderscore(model.name) %>.png" />
-    <% } %>
+    <img src="assets/<%= namespace.bot.utils.spaceToUnderscore(name) %>.png" />
   </script>
 
   <script id="item-tab-template" type="text/template">

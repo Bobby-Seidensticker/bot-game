@@ -69,8 +69,28 @@ body .stats {
     }
 }
 
+.dragSlot {
+    position: absolute;
+    background-color: @button-bg;
+    border: 2px solid @button-border;
+    border-radius: 5px;
+    width: 73px;
+    height: 73px;
+    cursor: grabbing;
+    color: @menu-text;
+    font-size: 14px;
+    display: none;
+    z-index: 1;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
 .itemTab {
     position: absolute;
+    z-index: 0;
     top: 0;
     width: 425px;
 
@@ -141,12 +161,6 @@ body .stats {
                 opacity: 0.7;
                 background-color: #000;
             }
-            .corner-x {
-                display: none;
-                z-index: 1000;
-                opacity: 1;
-                background-color: #A22;
-            }
 
             .xpbar {
                 position: absolute;
@@ -165,15 +179,6 @@ body .stats {
                 height: 100%;
             }
         }
-        .itemSlot.hovering {
-            .corner-x {
-                display: block;
-            }
-            .corner-x:hover {
-                color: #fff;
-                background-color: #E11;
-            }
-        }
         .itemSlot.red .overlay {
             background-color: red;
         }
@@ -185,6 +190,10 @@ body .stats {
             .overlay {
                 background-color: yellow;
             }
+        }
+        .itemSlot.dragging img,
+        .itemSlot.dragging div {
+            visibility: hidden;
         }
     }
     .filters {

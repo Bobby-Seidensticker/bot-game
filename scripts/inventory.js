@@ -298,13 +298,25 @@ namespace.module('bot.inv', function (exports, require) {
             if (skill === undefined) {
                 change = this.unequip(slot);
             } else if (skill.itemType === 'skill') {
-                this.unequip(slot);
-                skill.equipped = true;
-                this.skills[slot] = skill;
-                if (!isMonster) {
-                    log.warning('Skillchain equipped %s into slot %d', skill, slot);
+                if (skill.equipped && this.skills[slot]) {  // if swapping, swap
+                    for (var i = 0; i < this.skills.length; i++) {
+                        if (this.skills[i] && this.skills[i].name === skill.name) { break; }
+                    }
+                    if (i !== slot) {
+                        this.skills[i] = this.skills[slot];
+                        this.skills[slot] = skill;
+                        change = true;
+                    }
+                } else {
+                    this.unequip(slot);
+                    skill.equipped = true;
+                    this.skills[slot] = skill;
+                    change = true;
+                    if (!isMonster) {
+                        log.warning('Skillchain equipped %s into slot %d', skill, slot);
+                    }
                 }
-                change = true;
+
             }
 
             if (change) {

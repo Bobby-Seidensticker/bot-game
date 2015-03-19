@@ -197,7 +197,6 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         modelTick: function() {
-            log.error('modelTick, %d', (new Date().getTime() - globalStart) / 1000);
             var thisTime = new Date().getTime();
             var dt = (thisTime - this.lastTime) * this.timeCoefficient;
             this.lastTime = thisTime;

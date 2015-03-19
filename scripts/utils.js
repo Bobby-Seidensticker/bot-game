@@ -18,6 +18,10 @@ namespace.module('bot.vectorutils', function (exports, require) {
         return new Point(this.x + p.x, this.y + p.y);
     }
 
+    Point.prototype.abs = function() {
+        return new Point(Math.abs(this.x), Math.abs(this.y));
+    }
+
     Point.prototype.dadd = function(p) {
         this.x += p.x;
         this.y += p.y;

@@ -59,10 +59,10 @@ namespace.module('bot.zone', function (exports, require) {
             var upgradeCount = Math.floor(zoneNum / zoneCount);
             var zoneI = zoneNum % zoneCount;
             //var zoneNum = 
-
+            var nameStr = upgradeCount > 0 ? " " + (upgradeCount + 1) : "";
 
             
-            this.name = this.zoneOrder[zoneI];
+            this.name = this.zoneOrder[zoneI] + nameStr;
             this.level = Math.max(1, zoneNum * 5);
             //console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
             _.extend(this, this.allZones[this.name]);

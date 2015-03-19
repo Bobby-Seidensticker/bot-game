@@ -342,7 +342,7 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         onDeath: function() {
-            log.warning('your hero died');
+            log.debug('your hero died');
         },
 
         modifyHp: function(added) {

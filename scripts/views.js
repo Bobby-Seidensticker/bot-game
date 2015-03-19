@@ -1146,7 +1146,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onClick: function() {
-            this.trigger('click', this.model.name);
+            this.trigger('click', this.model.zoneNum);
         },
 
         render: function() {
@@ -1205,11 +1205,17 @@ namespace.module('bot.views', function (exports, require) {
             var frag = document.createDocumentFragment();
             var data, sub, name, zoneRef;
 
-            var len = Math.min(this.zone.unlockedZones + 1, this.zone.zoneOrder.length);
+            var len = this.zone.unlockedZones + 1;
             for (var i = 0; i < len; i++) {
-                var name = this.zone.zoneOrder[i];
+                var zoneCount = this.zone.zoneOrder.length;
+                var upgradeCount = Math.floor(i / zoneCount);
+                var zoneI = i % zoneCount;
+                var level = Math.max(1, i * 5);
+                
+                var name = this.zone.zoneOrder[zoneI];
                 var zoneRef = this.zone.allZones[name];
-                data = _.extend({name: name, running: name === this.zone.nextZone}, zoneRef);
+                var nameStr = upgradeCount >= 1 ? " " + (upgradeCount + 1) : ""
+                data = _.extend({name: name + nameStr, level: level, running: i === this.zone.nextZone, zoneNum: i}, zoneRef);                
                 sub = new ZoneMapTab({model: data});
                 this.listenTo(sub, 'click', this.zoneClick);
                 this.subs.push(sub);

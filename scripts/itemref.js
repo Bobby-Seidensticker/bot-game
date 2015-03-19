@@ -2787,7 +2787,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
         },
         "zoneOrder": {
-            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle", "spookier dungeon", "darker forest", "clockworkier ruins", "even-more-aggro crag", "even-more-hostile marsh", "really icy tunnel", "gothicker castle", "spookiest dungeon", "darkest forest", "clockworkiest ruins", "overly aggro crag", "excessively hostile marsh", "iciest tunnel", "gothickest castle", "hordecave", "halls of pain"] 
+            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle"],
         },
         "zone": {
             "spooky dungeon": {
@@ -2796,7 +2796,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "skeleton king",
                 "roomCount": 20,
                 "quantity": [1, 1, 3],
-                "level": 1
             },
             "dark forest": {
                 "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
@@ -2804,7 +2803,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2, 2, 3],
-                "level": 5,
             },
             "clockwork ruins": {
                 "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
@@ -2812,7 +2810,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "sir mechs-a-lot",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 10,
             },
             "aggro crag": {
                 "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
@@ -2820,7 +2817,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"flame dragon",
                 "roomCount": 20,
                 "quantity": [2,2,3],
-                "level": 15,
             },
             "hostile marsh": {
                 "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
@@ -2828,7 +2824,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss":"scalp collector",
                 "roomCount": 20,
                 "quantity": [4,2,4],
-                "level": 20,
             },
             "icy tunnel": {
                 "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn", "shiver spirit"],
@@ -2836,7 +2831,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "walter wight",
                 "roomCount": 20,
                 "quantity": [2,3,4],
-                "level": 25,
             },
             "gothic castle": {
                 "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
@@ -2844,7 +2838,6 @@ namespace.module('bot.itemref', function (exports, require) {
                 "boss": "shadow knight",
                 "roomCount": 20,
                 "quantity": [3,3,6],
-                "level": 30,
             },
             "spookier dungeon": {
                 "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],

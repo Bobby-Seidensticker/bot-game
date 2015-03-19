@@ -29,7 +29,7 @@ namespace.module('bot.zone', function (exports, require) {
             this.messages = new ZoneMessages();
             this.waitingUntil = 0;
 
-            this.nextZone = 'spooky dungeon';
+            this.nextZone = 0;
             this.unlockedZones = 0;
             this.newZone(this.nextZone);
         },
@@ -46,21 +46,36 @@ namespace.module('bot.zone', function (exports, require) {
             this.newZone(this.nextZone);  // this is redundent
         },
 
-        newZone: function(name) {
+        newZone: function(zoneNum) {
+            if (typeof(zoneNum) !== "number") {
+                zoneNum = 0;
+            }
+            
             this.iuid = _.uniqueId('inst');
 
             var i, j, rooms, monsters, count, data;
 
-            this.name = name;
-            _.extend(this, this.allZones[this.name]);
+            var zoneCount = this.zoneOrder.length; 
+            var upgradeCount = Math.floor(zoneNum / zoneCount);
+            var zoneI = zoneNum % zoneCount;
+            //var zoneNum = 
 
+
+            
+            this.name = this.zoneOrder[zoneI];
+            this.level = Math.max(1, zoneNum * 5);
+            //console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
+            _.extend(this, this.allZones[this.name]);
+            
+            
+            
             this.rooms = this.generator();
             for (i = 0; i < this.rooms.length; i++) {
                 monsters = [];
                 if (i % 2 === 0) {  // if this is not a corridor
-                    count = this.quantity[0] + prob.pProb(this.quantity[1], this.quantity[2]);
+                    count = this.quantity[0] + prob.pProb(this.quantity[1] + upgradeCount, this.quantity[2] + upgradeCount * 2);
                     //max room pop is i+1 (first room always only one monster)
-                    count = Math.min((i / 2 + 1) * this.quantity[0], count);
+                    count = Math.min((i / 2 + 1) * (this.quantity[0] + upgradeCount), count);
                     for (var j = 0; j < count; j++) {
                         monsters.push(new MonsterBody(this.choices[prob.pick(this.weights)], this.level));
                     }
@@ -237,7 +252,7 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         tryUnlockNextZone: function() {
-            if (this.heroPos === 29 && this.zoneOrder.indexOf(this.nextZone) === this.unlockedZones) {
+            if (this.heroPos === 29 && this.nextZone === this.unlockedZones) {
                 this.unlockedZones += 1;
                 this.messages.addMessage({
                     text: "New Map Unlocked!",

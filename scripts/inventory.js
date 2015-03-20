@@ -70,31 +70,52 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         equipCard: function(card, slot) {
-            if (slot >= this.cards.length) {
-                log.error('Cannot equip card in slot %d when item only has %d slots', slot, this.cards.length);
+            if (slot >= this.cards.length || card.itemType !== 'card') {
                 return false;
-            }
-            if (card && card.equipped) {
-                log.error('Cannot equip already equipped card, %s', card.name);
-                return false;
-            }
-            if (this.cards[slot]) {
-                log.warning("Unequipping card %s at slot %d of item: %s", this.cards[slot].name, slot, this.name);
-                this.cards[slot].equipped = false;
-                this.cards[slot] = undefined;
-            }
-            if (card) {
-                card.equipped = true;
-                this.cards[slot] = card;
-                log.warning("Equipped card %s into slot %d of item: %s", card.name, slot, this.name);
             }
 
-            log.info('equipCard, now have %d cards equipped', _.compact(this.cards).length);
+            if (card === undefined) {
+                if (this.cards[slot]) {
+                    this.cards[slot].equipped = false;
+                    this.cards[slot] = undefined;
+                }
+                return false;
+            }
+
+            if (card.equipped) {  // card already equipped
+                var curSlot = this.getCardSlot(card);
+                if (slot === curSlot) {
+                    return false;
+                }
+                if (this.cards[slot]) {
+                    this.cards[curSlot] = this.cards[slot];
+                    this.cards[slot] = card;
+                } else {
+                    this.cards[curSlot] = undefined;
+                    this.cards[slot] = card;
+                }
+            } else {
+                if (this.cards[slot]) {
+                    this.cards[slot].equipped = false;
+                }
+                card.equipped = true;
+                this.cards[slot] = card;
+            }
 
             // this trigger is exclusively for communication between gear and
             // equipped gear model so egm doesn't have to listenTo and stopListening on every single gear change
             gl.EquipEvents.trigger('change');  
             return true;
+        },
+
+        getCardSlot: function(card) {
+            if (!card) { return undefined; }
+            for (var i = this.cards.length; i--;) {
+                if (this.cards[i] && this.cards[i].name === card.name) {
+                    return i;
+                }
+            }
+            return undefined;
         },
 
         unequipCards: function() {

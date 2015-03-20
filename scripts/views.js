@@ -5,6 +5,7 @@ namespace.module('bot.views', function (exports, require) {
     var VisView = namespace.bot.vis.VisView;
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
+    var PointFromEvent = vu.PointFromEvent;
 
     var FOOTER_HEIGHT = 113;
 
@@ -23,7 +24,8 @@ namespace.module('bot.views', function (exports, require) {
             this.itemTab = new DraggableItemTab({}, game);
             this.helpTab = new HelpTab({}, game);
             this.mapTab = new MapTab({}, game);
-            this.cardTab = new CardTab({}, game);
+            //this.cardTab = new CardTab({}, game);
+            this.cardTab = new DraggableCardTab({}, game);
 
             this.footerView = new FooterView({}, game);
             this.infoBox = new InfoBox();
@@ -315,9 +317,10 @@ namespace.module('bot.views', function (exports, require) {
         UP_DRAG: 2,
         DOWN_DRAG: 3,
 
-        initialize: function() {
+        initialize: function(extraMDF) {
             this.uid = _.uniqueId('mml');
             this.state = this.DISABLED;
+            this.extraMDF = extraMDF;
             $('body').append(this.el);
             $('body').on('mousedown ' + this.uid, this.onMousedown.bind(this));
             $('body').on('mousemove ' + this.uid, this.onMousemove.bind(this));
@@ -329,12 +332,16 @@ namespace.module('bot.views', function (exports, require) {
                 log.info('disabled to disabled wait');
                 this.state = this.DISABLED_WAIT;
                 this.model = model;
-                this.dragStart = new Point(event.pageX, event.pageY);
+                this.dragStart = PointFromEvent(event);
                 this.$el.html(this.template(this.model));
             }
         },
 
         onMousedown: function(event) {
+            log.error('dh md');
+            if (this.extraMDF !== undefined) {
+                this.extraMDF(event);
+            }
             if (this.state === this.UP_DRAG) {
                 log.info('up drag to down drag');
                 this.state = this.DOWN_DRAG;
@@ -342,8 +349,9 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMousemove: function(event) {
+            log.error('dh mm');
             if (this.state === this.DISABLED_WAIT) {
-                if (this.dragStart.dist2(new Point(event.pageX, event.pageY)) > 25) {
+                if (this.dragStart.dist2(PointFromEvent(event)) > 25) {
                     log.info('disabled wait to down drag');
                     this.state = this.DOWN_DRAG;
                     this.startDragging(event);
@@ -354,6 +362,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseup: function(event) {
+            log.error('dh mu');
             if (this.state === this.DISABLED_WAIT) {
                 log.info('Disabled wait to up drag');
                 this.state = this.UP_DRAG;
@@ -384,7 +393,7 @@ namespace.module('bot.views', function (exports, require) {
             this.$el.css('display', 'none');
             var model = this.model;
             this.model = undefined;
-            this.trigger('drop', new Point(event.pageX, event.pageY), model);
+            this.trigger('drop', PointFromEvent(event), model);
         },
 
         updatePos: function(event) {
@@ -461,14 +470,20 @@ namespace.module('bot.views', function (exports, require) {
             this.$el.removeClass('yellow');
         },
 
-        onDrop: function(dropPos, model) {
+        dropSuccess: function(dropPos) {
             var off = this.$el.offset();
             var pos = new Point(off.left, off.top);
             var diff = dropPos.sub(pos);
 
-            if (diff.x >= 0 && diff.x <= 73 && diff.y >= 0 && diff.y <= 73) {
+            return diff.x >= 0 && diff.x <= 73 && diff.y >= 0 && diff.y <= 73;
+        },
+
+        onDrop: function(dropPos, model) {
+            if (this.dropSuccess(dropPos)) {
                 this.equipper.equip(model, this.slot);
             }
+            // TODO is this here only so that the model that is being dragged (and hidden) can be shown again?
+            //   if so, is a full tab re-render necessary?
             gl.DirtyQueue.mark('itemTab');
         },
 
@@ -505,6 +520,7 @@ namespace.module('bot.views', function (exports, require) {
             this.hovering = undefined;
             this.renderedOnce = false;
 
+            this.allViews = [];
             this.dragHandler = new DragHandler();  // passed to itemSlots, used to detect unequip drops
             this.listenTo(this.dragHandler, 'drop', this.onDrop);
 
@@ -1426,8 +1442,8 @@ namespace.module('bot.views', function (exports, require) {
             this.$holder.html(this.template);
             $('#enableBuildHotkeys').prop('checked', gl.game.settings.enableBuildHotkeys)
             /*this.$('#namebutton').on('click', this.nameButton.bind(this));
-            this.$('#devbutton').on('click', this.devButton.bind(this));
-            this.$('#donateButton').on('click', this.donate.bind(this));*/
+              this.$('#devbutton').on('click', this.devButton.bind(this));
+              this.$('#donateButton').on('click', this.donate.bind(this));*/
             return this;
         },
 
@@ -1524,6 +1540,204 @@ namespace.module('bot.views', function (exports, require) {
             return this;
         }
     });
+
+
+
+    var DraggableCardTabItemSlot = DraggableItemSlot.extend({
+        onMousedown: function(event) {
+            if (this.model) {
+                if (this.model.itemType === 'card') {
+                    this.dragHandler.onViewMousedown(event, this.model);
+                    this.render();
+                } else {
+                    this.trigger('gearMousedown', this);
+                }
+            }
+        },
+
+        render: function() {
+            DraggableItemSlot.prototype.render.call(this);
+            if (this.selected) {
+                this.$el.addClass('selected');
+            }
+        },
+
+        select: function() { this.selected = true; this.$el.addClass('selected');  },
+        unselect: function() { this.selected = false; this.$el.removeClass('selected'); },
+
+        onDrop: function(dropPos, model) {
+            if (this.dropSuccess(dropPos) && this.equipper) {
+                this.equipper.equipCard(model, this.slot);
+            }
+            // TODO is this here only so that the model that is being dragged (and hidden) can be shown again?
+            //   if so, is a full tab re-render necessary?
+            gl.DirtyQueue.mark('cardTab');
+        },
+    });
+
+    var DraggableCardTab = Backbone.View.extend({
+        tagName: 'div',
+        className: 'itemTab',
+        template: _.template($('#card-tab-template').html()),
+
+        events: {
+            'mouseleave': 'onMouseleave'
+        },
+
+        onMouseleave: function() {
+            gl.UIEvents.trigger('itemSlotMouseleave');
+        },
+
+        initialize: function(options, game) {
+            // this.name = 'Card';
+            this.equipped = game.hero.equipped;
+            this.skillchain = game.hero.skillchain;
+            this.cardInv = game.cardInv;
+
+            // should we do a rendered once?
+            this.renderedOnce = false;
+
+            this.hovering = undefined;
+            this.selected = undefined;
+
+            this.allViews = [];
+            this.dragHandler = new DragHandler(this.onBodyMousedown.bind(this));
+
+            // Map dirty queue events to itemTab update
+            gl.DirtyQueue.mapMark(['cards:new', 'hero:xp', 'computeAttrs', 'skillComputeAttrs'], 'cardTab');
+            gl.DirtyQueue.mapMark(['equipChange'], 'hardRenderCardTab');
+
+            this.listenTo(gl.DirtyListener, 'cardTab', this.render);
+            this.listenTo(gl.DirtyListener, 'hardRenderCardTab', this.hardRender);
+
+            this.tvm = new TabVisibilityManager('cards', this.$el, this.render.bind(this), 'footer:buttons:cards',
+                                                'footer:buttons:inv');
+
+            this.resize();
+            $(window).on('resize', this.resize.bind(this));
+        },
+
+        onBodyMousedown: function(event) {
+            // if the mousedown is in the body and not on the card tab, deselect the selected gear piece
+            if (event.pageX <= this.$el.offset().left) {
+                this.hardRender();
+            }
+        },
+
+        resize: function() {
+            var size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
+            this.$el.css({
+                left: size.x - 405,
+                height: size.y
+            });
+        },
+
+        onGearMousedown: function(view) {
+            if (this.selected) {
+                this.selected.unselect();
+            }
+            this.selected = view;
+            this.selected.select();
+            gl.DirtyQueue.mark('cardTab');
+        },
+
+        /*onUnequip: function(clickedView) {
+          clickedView.equippedModel.equipCard(undefined, clickedView.slot);
+          },*/
+
+        onHover: function(hoveredView) {
+            this.hovering = hoveredView;
+        },
+
+        newItemSlot: function(model, slot, equipper) {
+            // TODO: fix the args:
+            var view = new DraggableCardTabItemSlot({model: model}, this.dragHandler, slot, equipper);
+
+            this.listenTo(view, 'gearMousedown', this.onGearMousedown);
+            this.listenTo(view, 'hovering', this.onHover);
+
+            this.allViews.push(view);
+            return view;
+        },
+
+        hardRender: function() {
+            this.selected = undefined;
+            return this.render();
+        },
+
+        render: function() {
+            if (!this.tvm.visible) {
+                return this;
+            }
+
+            //  TODO: should we do a rendered once?
+
+            this.$el.html(this.template({selected: this.selected}));
+
+            // call remove() on all views, and stopListening on all views
+            _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);
+            this.allViews = [];
+
+            var frag = document.createDocumentFragment();
+            _.each(this.equipped.slots, function(slot) {
+                // if model, can select, cannot unequip, is not card
+                var view = this.newItemSlot(this.equipped[slot], slot);
+                frag.appendChild(view.el);
+            }, this);
+            this.$('.equipped').append(frag);
+
+            frag = document.createDocumentFragment();
+            _.each(this.skillchain.skills, function(skill, i) {
+                // if model, can select, cannot unequip, is not card
+                var view = this.newItemSlot(skill, i);
+                frag.appendChild(view.el);
+            }, this);
+            this.$('.skillchain').append(frag);
+
+            // If item selected, show item's cards
+            if (this.selected) {
+                frag = document.createDocumentFragment();
+                _.each(this.selected.model.cards, function(card, slot) {
+                    // cannot select, if model can unequip, is card
+                    var view = this.newItemSlot(card, slot, this.selected.model);
+                    frag.appendChild(view.el);
+                }, this);
+                this.$('.equipped-cards').append(frag);
+
+                var cards = this.cardInv.getSlotCards(this.selected.slot);  // get filtered cards
+            } else {
+                var cards = this.cardInv.models;  // get all cards
+            }
+            cards = _.filter(cards, function(card) { return !card.equipped; });
+
+            frag = document.createDocumentFragment();
+            _.each(cards, function(card) {
+                // no slot, no parent, can select, cannot unequip, is card
+                var view = this.newItemSlot(card, card.slot);
+                frag.appendChild(view.el);
+            }, this);
+            this.$('.unequipped').append(frag);
+
+            // selected slot is an ItemSlot holding a equippedGear or skill model
+            if (this.selected) {
+                var selectedView = _.find(this.allViews, function(view) { return view.model && this.selected.model.id === view.model.id; }, this);
+                if (selectedView && selectedView.model.equipped) {
+                    selectedView.select();
+                    this.selected = selectedView;
+                } else {
+                    this.selected = undefined;
+                }
+            }
+            if (this.hovering && this.hovering.model) {
+                this.hovering = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
+                this.hovering.onMouseenter();
+            }
+
+            return this;
+        },
+    });
+
+
 
     exports.extend({
         GameView: GameView,

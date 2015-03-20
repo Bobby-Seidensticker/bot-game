@@ -54,8 +54,8 @@
 
     <div class="container equipped-cards">
       <div class="header">
-        <% if (selectedItem !== undefined) { %>
-        Equipped <%= namespace.bot.utils.presentableSlot(selectedItem.model.slot) %> Cards
+        <% if (selected !== undefined) { %>
+        Equipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
         <% } else { %>
         Click an item to equip cards
         <% } %>
@@ -64,8 +64,8 @@
 
     <div class="container unequipped">
       <div class="header">
-        <% if (selectedItem !== undefined) { %>
-        Unequipped <%= namespace.bot.utils.presentableSlot(selectedItem.model.slot) %> Cards
+        <% if (selected !== undefined) { %>
+        Unequipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
         <% } else { %>
         All Unequipped Cards
         <% } %>

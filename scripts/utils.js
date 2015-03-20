@@ -263,7 +263,11 @@ namespace.module('bot.utils', function (exports, require) {
         var s = mod.def.split(' ');
         if (s.length === 4 && s[3] === 'perLevel') {
             if (s[1] === 'more') {
-                s[2] = Math.pow(1 + parseFloat(s[2]) / 100, level) * 100 - 100;
+                if (s[2] > 0) {
+                    s[2] = s[2] * level;
+                } else {
+                    s[2] = Math.pow(1 + parseFloat(s[2]) / 100, level) * 100 - 100;
+                }
             } else {
                 s[2] = parseFloat(s[2]) * level;
             }

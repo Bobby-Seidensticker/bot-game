@@ -537,12 +537,9 @@ namespace.module('bot.views', function (exports, require) {
             var off = this.$('.unequipped').offset();
             if (model.equipped && dropPos.x >= off.left && dropPos.y >= off.top) {
                 if (model.itemType === 'skill') {
-                    for (var i = 0; i < this.skillchain.skills.length; i++) {
-                        if (this.skillchain.skills[i] && this.skillchain.skills[i].name === model.name) {
-                            break;
-                        }
-                    }
-                    this.skillchain.equip(undefined, i);
+                    // unequip a skill, must find out what slot it was in
+                    var slot = this.skillchain.getSkillSlot(model);
+                    this.skillchain.equip(undefined, slot);
                 } else {
                     this.equipped.equip(undefined, model.slot);
                 }

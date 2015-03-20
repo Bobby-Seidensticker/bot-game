@@ -302,17 +302,15 @@ namespace.module('bot.inv', function (exports, require) {
             if (skill === undefined) {
                 change = this.unequip(slot);
             } else if (skill.itemType === 'skill') {
-                if (skill.equipped) {
-                    for (var otherSlot = 0; otherSlot < this.skills.length; otherSlot++) {
-                        if (this.skills[otherSlot] && this.skills[otherSlot].name === skill.name) { break; }
-                    }
-                    if (otherSlot !== slot) {
-                        if (this.skills[slot]) {
-                            this.skills[otherSlot] = this.skills[slot];
+                if (skill.equipped) {                         // if skill we are trying to equip is already equipped
+                    var curSlot = this.getSkillSlot(skill);   // get the slot it's equipped in
+                    if (curSlot !== slot) {                   // if it was dropped in a different slot
+                        if (this.skills[slot]) {              // if something is already in that slot
+                            this.skills[curSlot] = this.skills[slot];
                             this.skills[slot] = skill;
-                        } else {
-                            this.skills[slot] = this.skills[otherSlot];
-                            this.skills[otherSlot] = undefined;
+                        } else {                              // slot dropping into is currently empty
+                            this.skills[slot] = this.skills[curSlot];
+                            this.skills[curSlot] = undefined;
                         }
                         change = true;
                     }
@@ -325,9 +323,7 @@ namespace.module('bot.inv', function (exports, require) {
                         log.warning('Skillchain equipped %s into slot %d', skill, slot);
                     }
                 }
-
             }
-
             if (change) {
                 this.trigger('change');
             }
@@ -339,12 +335,22 @@ namespace.module('bot.inv', function (exports, require) {
             if (skill !== undefined) {
                 skill.equipped = false;
                 skill.disabled = false;
-                skill.unequipCards();  // TODO save equipped cards
+                skill.unequipCards();   // TODO save equipped cards
                 log.warning('Skillchain unequipping %s from slot %d', skill.name, slot);
                 this.skills[slot] = undefined;
                 return true;
             }
             return false;
+        },
+
+        getSkillSlot: function(skill) {
+            if (!skill) { return undefined; }
+            for (var i = this.skills.length; i--;) {
+                if (this.skills[i] && this.skills[i].name === skill.name) {
+                    return i;
+                }
+            }
+            return undefined;
         },
 
         ranges: function() {

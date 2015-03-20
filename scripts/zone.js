@@ -63,10 +63,10 @@ namespace.module('bot.zone', function (exports, require) {
 
             
             this.name = this.zoneOrder[zoneI] + nameStr;
-            this.level = Math.max(1, zoneNum * 5);
-            //console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
-            _.extend(this, this.allZones[this.name]);
-            
+
+            console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
+            _.extend(this, this.allZones[this.zoneOrder[zoneI]]);
+            this.level = Math.max(1, zoneNum * 5);            
             
             
             this.rooms = this.generator();

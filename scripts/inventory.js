@@ -70,14 +70,13 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         equipCard: function(card, slot) {
-            if (slot >= this.cards.length || card.itemType !== 'card') {
+            if (slot >= this.cards.length || (card && card.itemType !== 'card')) {
                 return false;
             }
 
             if (card === undefined) {
                 if (this.cards[slot]) {
-                    this.cards[slot].equipped = false;
-                    this.cards[slot] = undefined;
+                    this.actuallyUnequipCard(slot);
                 }
                 return false;
             }
@@ -88,24 +87,34 @@ namespace.module('bot.inv', function (exports, require) {
                     return false;
                 }
                 if (this.cards[slot]) {
-                    this.cards[curSlot] = this.cards[slot];
-                    this.cards[slot] = card;
+                    this.actuallyEquipCard(this.cards[slot], curSlot);
                 } else {
-                    this.cards[curSlot] = undefined;
-                    this.cards[slot] = card;
+                    this.actuallyUnequipCard(curSlot);
                 }
+                this.actuallyEquipCard(card, slot);
             } else {
                 if (this.cards[slot]) {
-                    this.cards[slot].equipped = false;
+                    this.actuallyUnequipCard(slot);
                 }
-                card.equipped = true;
-                this.cards[slot] = card;
+                this.actuallyEquipCard(card, slot);
             }
 
             // this trigger is exclusively for communication between gear and
             // equipped gear model so egm doesn't have to listenTo and stopListening on every single gear change
             gl.EquipEvents.trigger('change');  
             return true;
+        },
+
+        actuallyEquipCard: function(card, slot) {
+            card.equipped = true;
+            card.gearModel = this;
+            this.cards[slot] = card;
+        },
+
+        actuallyUnequipCard: function(slot) {
+            this.cards[slot].equipped = false;
+            this.cards[slot].gearModel = this;
+            this.cards[slot] = undefined;
         },
 
         getCardSlot: function(card) {

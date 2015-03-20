@@ -338,7 +338,6 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMousedown: function(event) {
-            log.error('dh md');
             if (this.extraMDF !== undefined) {
                 this.extraMDF(event);
             }
@@ -349,7 +348,6 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMousemove: function(event) {
-            log.error('dh mm');
             if (this.state === this.DISABLED_WAIT) {
                 if (this.dragStart.dist2(PointFromEvent(event)) > 25) {
                     log.info('disabled wait to down drag');
@@ -362,7 +360,6 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseup: function(event) {
-            log.error('dh mu');
             if (this.state === this.DISABLED_WAIT) {
                 log.info('Disabled wait to up drag');
                 this.state = this.UP_DRAG;
@@ -1602,6 +1599,7 @@ namespace.module('bot.views', function (exports, require) {
 
             this.allViews = [];
             this.dragHandler = new DragHandler(this.onBodyMousedown.bind(this));
+            this.listenTo(this.dragHandler, 'drop', this.onDrop);
 
             // Map dirty queue events to itemTab update
             gl.DirtyQueue.mapMark(['cards:new', 'hero:xp', 'computeAttrs', 'skillComputeAttrs'], 'cardTab');
@@ -1613,8 +1611,23 @@ namespace.module('bot.views', function (exports, require) {
             this.tvm = new TabVisibilityManager('cards', this.$el, this.render.bind(this), 'footer:buttons:cards',
                                                 'footer:buttons:inv');
 
+            this.listenTo(gl.UIEvents, 'footer:buttons:cards', function() {
+                this.selected = undefined;
+            }.bind(this));
+
             this.resize();
             $(window).on('resize', this.resize.bind(this));
+        },
+
+        onDrop: function(dropPos, cardModel) {
+            if (cardModel.equipped) {
+                var off = this.$('.unequipped').offset();
+                if (dropPos.x >= off.left && dropPos.y >= off.top) {
+                    var gear = cardModel.gearModel;
+                    var slot = gear.getCardSlot(cardModel);
+                    gear.equipCard(undefined, slot);
+                }
+            }
         },
 
         onBodyMousedown: function(event) {
@@ -1635,15 +1648,17 @@ namespace.module('bot.views', function (exports, require) {
         onGearMousedown: function(view) {
             if (this.selected) {
                 this.selected.unselect();
+
+                if (this.selected.model.id === view.model.id) {
+                    this.selected = undefined;
+                    gl.DirtyQueue.mark('cardTab');
+                    return;
+                }
             }
             this.selected = view;
             this.selected.select();
             gl.DirtyQueue.mark('cardTab');
         },
-
-        /*onUnequip: function(clickedView) {
-          clickedView.equippedModel.equipCard(undefined, clickedView.slot);
-          },*/
 
         onHover: function(hoveredView) {
             this.hovering = hoveredView;

@@ -180,7 +180,7 @@ namespace.module('bot.views', function (exports, require) {
                     var level = gl.game.zone.level;
                     var attAcc = (9 + level) * 2;
                     var chance = 1 -(3 * 0.5 * (attAcc/(attAcc + dodge)));
-                    data.spec.push([statname, chance.toFixed(2)]);
+                    data.spec.push([statname, Math.min(0.99, chance.toFixed(2))]);
                 }
                 if (key === "armor") {
                     var fakeDmg = 10 * Math.pow(1.06, gl.game.zone.level);

@@ -107,6 +107,7 @@ namespace.module('bot.main', function (exports, require) {
                 return;
             }
             gl.FBL.child('name').set(this.hero.name);
+            gl.FBL.child('lastReport').set("" + new Date());
             gl.FBL.child('level').set(this.hero.level);
             var data = this.toJSON();
             gl.FBL.child('equipped').set(data.equipped);

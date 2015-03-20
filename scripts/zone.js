@@ -64,7 +64,7 @@ namespace.module('bot.zone', function (exports, require) {
             
             this.name = this.zoneOrder[zoneI] + nameStr;
 
-            console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
+            //console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
             _.extend(this, this.allZones[this.zoneOrder[zoneI]]);
             this.level = Math.max(1, zoneNum * 5);            
             

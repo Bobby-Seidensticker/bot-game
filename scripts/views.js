@@ -553,7 +553,6 @@ namespace.module('bot.views', function (exports, require) {
         newItemSlot: function(model, slot, parent) {
             var view = new DraggableItemSlot({model: model}, this.dragHandler, slot, parent);
             this.listenTo(view, 'hovering', this.onHover);
-            this.listenTo(view, 'change', this.render);
             this.allViews.push(view);
             return view;
         },
@@ -567,6 +566,9 @@ namespace.module('bot.views', function (exports, require) {
                 this.$el.html(this.template());
                 this.$('.filters').append(this.fb1.el);
                 this.$('.filters').append(this.fb2.el);
+                this.$equipped = this.$('.equipped');
+                this.$skillchain = this.$('.skillchain');
+                this.$unequipped = this.$('.unequipped');
                 this.renderedOnce = true;
             }
 
@@ -574,25 +576,22 @@ namespace.module('bot.views', function (exports, require) {
             _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);
             this.allViews = [];
 
-            var $equipped = this.$('.equipped');
             _.each(this.equipped.slots, function(slot) {
                 var view = this.newItemSlot(this.equipped[slot], slot, this.equipped);
-                $equipped.append(view.el);
+                this.$equipped.append(view.el);
             }, this);
 
-            var $skillchain = this.$('.skillchain');
             _.each(this.skillchain.skills, function(skill, i) {
                 var view = this.newItemSlot(skill, i, this.skillchain);
-                $skillchain.append(view.el);
+                this.$skillchain.append(view.el);
             }, this);
 
-            var $unequipped = this.$('.unequipped');
             var items = _.where(this.inventory.models, {equipped: false});
             items = this.fb1.filter(items);
             items = this.fb2.filter(items);
             _.each(items, function(model) {
                 var view = this.newItemSlot(model);
-                $unequipped.append(view.el);
+                this.$unequipped.append(view.el);
             }, this);
 
             if (this.hovering && this.hovering.model) {

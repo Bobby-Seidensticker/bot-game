@@ -210,7 +210,6 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "crusader helm": {
                 "mods": [
-                    {def: 'armor added 15', type: 'def'},
                     {def: 'armor added 2 perLevel', type: 'def'}
                 ],
                 "slot": "head",
@@ -218,7 +217,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "gladiator helm": {
                 "mods": [
                     {def: 'armor added 22', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "head",
             },
@@ -399,7 +398,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "elf boots": {
                 "mods": [
                     {def: 'dodge added 5', type: 'def'},
-                    {def: 'dodge added 2 perLevel', type: 'def'}
+                    {def: 'dodge more 1 perLevel', type: 'def'}
                 ],
                 "slot": "legs",
             },
@@ -420,7 +419,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "buckaneer boots": {
                 "mods": [
                     {def: 'armor added 25', type: 'def'},
-                    {def: 'armor added 5 perLevel', type: 'def'}
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "legs",
             },
@@ -472,7 +471,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "fancy gauntlets": {
                 "mods": [
                     {def: 'armor added 25', type: 'def'},
-                    {def: 'armor added 4 perLevel', type: 'def'}
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
@@ -1625,7 +1624,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "hateful blade": {
                 "mods": [
                     {"def": "physDmg gainedas -3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
             },
@@ -2323,7 +2322,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["putrefied", 1],
                     ["cosmic channeling", 1],
                     ["increased radius", 1],
-                    ["hazmat suit", 1]
+                    ["hazmat suit", 1],
+                    ["hazmat gloves", 1],
+                    ["hazmat mask", 1],
+                    ["semi automatic", 1],
+                    ["healing charm", 1],
+                    ["blood pact", 1]
                 ],
             },
             "gnome" : {

@@ -269,7 +269,6 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         modelTick: function() {
-            log.info('modelTick, %d', (new Date().getTime() - globalStart) / 1000);
             var thisTime = new Date().getTime();
             var dt = (thisTime - this.lastTime) * this.timeCoefficient;
             this.lastTime = thisTime;
@@ -288,6 +287,8 @@ namespace.module('bot.main', function (exports, require) {
 
         visTick: function() {
             gl.DirtyQueue.mark('tick');
+            gl.DirtyQueue.triggerAll(gl.DirtyListener);
+            gl.DirtyQueue.triggerAll(gl.DirtyListener);
             gl.DirtyQueue.triggerAll(gl.DirtyListener);
         },
 

@@ -70,31 +70,61 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         equipCard: function(card, slot) {
-            if (slot >= this.cards.length) {
-                log.error('Cannot equip card in slot %d when item only has %d slots', slot, this.cards.length);
+            if (slot >= this.cards.length || (card && card.itemType !== 'card')) {
                 return false;
-            }
-            if (card && card.equipped) {
-                log.error('Cannot equip already equipped card, %s', card.name);
-                return false;
-            }
-            if (this.cards[slot]) {
-                log.warning("Unequipping card %s at slot %d of item: %s", this.cards[slot].name, slot, this.name);
-                this.cards[slot].equipped = false;
-                this.cards[slot] = undefined;
-            }
-            if (card) {
-                card.equipped = true;
-                this.cards[slot] = card;
-                log.warning("Equipped card %s into slot %d of item: %s", card.name, slot, this.name);
             }
 
-            log.info('equipCard, now have %d cards equipped', _.compact(this.cards).length);
+            if (card === undefined) {
+                if (this.cards[slot]) {
+                    this.actuallyUnequipCard(slot);
+                }
+                return false;
+            }
+
+            if (card.equipped) {  // card already equipped
+                var curSlot = this.getCardSlot(card);
+                if (slot === curSlot) {
+                    return false;
+                }
+                if (this.cards[slot]) {
+                    this.actuallyEquipCard(this.cards[slot], curSlot);
+                } else {
+                    this.actuallyUnequipCard(curSlot);
+                }
+                this.actuallyEquipCard(card, slot);
+            } else {
+                if (this.cards[slot]) {
+                    this.actuallyUnequipCard(slot);
+                }
+                this.actuallyEquipCard(card, slot);
+            }
 
             // this trigger is exclusively for communication between gear and
             // equipped gear model so egm doesn't have to listenTo and stopListening on every single gear change
             gl.EquipEvents.trigger('change');  
             return true;
+        },
+
+        actuallyEquipCard: function(card, slot) {
+            card.equipped = true;
+            card.gearModel = this;
+            this.cards[slot] = card;
+        },
+
+        actuallyUnequipCard: function(slot) {
+            this.cards[slot].equipped = false;
+            this.cards[slot].gearModel = this;
+            this.cards[slot] = undefined;
+        },
+
+        getCardSlot: function(card) {
+            if (!card) { return undefined; }
+            for (var i = this.cards.length; i--;) {
+                if (this.cards[i] && this.cards[i].name === card.name) {
+                    return i;
+                }
+            }
+            return undefined;
         },
 
         unequipCards: function() {
@@ -302,15 +332,28 @@ namespace.module('bot.inv', function (exports, require) {
             if (skill === undefined) {
                 change = this.unequip(slot);
             } else if (skill.itemType === 'skill') {
-                this.unequip(slot);
-                skill.equipped = true;
-                this.skills[slot] = skill;
-                if (!isMonster) {
-                    log.warning('Skillchain equipped %s into slot %d', skill, slot);
+                if (skill.equipped) {                         // if skill we are trying to equip is already equipped
+                    var curSlot = this.getSkillSlot(skill);   // get the slot it's equipped in
+                    if (curSlot !== slot) {                   // if it was dropped in a different slot
+                        if (this.skills[slot]) {              // if something is already in that slot
+                            this.skills[curSlot] = this.skills[slot];
+                            this.skills[slot] = skill;
+                        } else {                              // slot dropping into is currently empty
+                            this.skills[slot] = this.skills[curSlot];
+                            this.skills[curSlot] = undefined;
+                        }
+                        change = true;
+                    }
+                } else {
+                    this.unequip(slot);
+                    skill.equipped = true;
+                    this.skills[slot] = skill;
+                    change = true;
+                    if (!isMonster) {
+                        log.warning('Skillchain equipped %s into slot %d', skill, slot);
+                    }
                 }
-                change = true;
             }
-
             if (change) {
                 this.trigger('change');
             }
@@ -322,12 +365,22 @@ namespace.module('bot.inv', function (exports, require) {
             if (skill !== undefined) {
                 skill.equipped = false;
                 skill.disabled = false;
-                skill.unequipCards();  // TODO save equipped cards
+                skill.unequipCards();   // TODO save equipped cards
                 log.warning('Skillchain unequipping %s from slot %d', skill.name, slot);
                 this.skills[slot] = undefined;
                 return true;
             }
             return false;
+        },
+
+        getSkillSlot: function(skill) {
+            if (!skill) { return undefined; }
+            for (var i = this.skills.length; i--;) {
+                if (this.skills[i] && this.skills[i].name === skill.name) {
+                    return i;
+                }
+            }
+            return undefined;
         },
 
         ranges: function() {

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <head>
   <title></title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <link href="styles/main.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
 </head>
@@ -9,61 +11,70 @@
 
   <script id="item-slot-template" type="text/template">
     <% if (model) { %>
-      <img src="assets/<%= utils.spaceToUnderscore(model.name) %>.png" />
-      <div class="newflag"><%= showNew ? "New!": "" %></div>
+      <img draggable=false src="assets/<%= utils.spaceToUnderscore(model.name) %>.png" />
+      <div class="newflag"><%= model.isNew ? "New!": "" %></div>
       <div class="corner corner-level"><%= model.level %></div>
       <div class="xpbar" style="width: <%= 63 * model.pctLeveled() %>px;"></div>
       <div class="overlay"></div>
-      <div class="corner corner-x">X</div>
     <% } else { %>
       <div class="overlay"></div>
     <% } %>
   </script>
 
+  <script id="draggable-template" type="text/template">
+    <img draggable=false src="assets/<%= namespace.bot.utils.spaceToUnderscore(name) %>.png" />
+    <div class="corner corner-level"><%= level %></div>
+    <div class="xpbar" style="width: <%= 63 * pctLeveled() %>px;"></div>
+  </script>
+
   <script id="item-tab-template" type="text/template">
-    <div class="container equipped">
-      <div class="header">Equipped Gear</div>
-      <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>
-    </div>
+    <div class="holder">
+      <div class="container equipped">
+        <div class="header">Equipped Gear</div>
+        <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>
+      </div>
 
-    <div class="container skillchain">
-      <div class="header">Equipped Skills</div>
-      <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->      
-    </div>
+      <div class="container skillchain">
+        <div class="header">Equipped Skills</div>
+        <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->      
+      </div>
 
-    <div class="container unequipped">
-      <div class="filters"></div>
+      <div class="container unequipped">
+        <div class="filters"></div>
+      </div>
     </div>
   </script>
 
   <script id="card-tab-template" type="text/template">
-    <div class="container equipped">
-      <div class="header">Equipped Gear</div>
-      <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>      
-    </div>
-
-    <div class="container skillchain">
-      <div class="header">Equipped Skills</div>
-      <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->            
-    </div>
-
-    <div class="container equipped-cards">
-      <div class="header">
-        <% if (selectedItem !== undefined) { %>
-        Equipped <%= namespace.bot.utils.presentableSlot(selectedItem.model.slot) %> Cards
-        <% } else { %>
-        Click an item to equip cards
-        <% } %>
+    <div class="holder">
+      <div class="container equipped">
+        <div class="header">Equipped Gear</div>
+        <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>      
       </div>
-    </div>
 
-    <div class="container unequipped">
-      <div class="header">
-        <% if (selectedItem !== undefined) { %>
-        Unequipped <%= namespace.bot.utils.presentableSlot(selectedItem.model.slot) %> Cards
-        <% } else { %>
-        All Unequipped Cards
-        <% } %>
+      <div class="container skillchain">
+        <div class="header">Equipped Skills</div>
+        <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->            
+      </div>
+
+      <div class="container equipped-cards">
+        <div class="header">
+          <% if (selected !== undefined) { %>
+          Equipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
+          <% } else { %>
+          Click an item to equip cards
+          <% } %>
+        </div>
+      </div>
+
+      <div class="container unequipped">
+        <div class="header">
+          <% if (selected !== undefined) { %>
+          Unequipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
+          <% } else { %>
+          All Unequipped Cards
+          <% } %>
+        </div>
       </div>
     </div>
   </script>
@@ -463,6 +474,7 @@
   <!-- Libs -->
   <script type="text/javascript" src="scripts/sugar.js"></script>
 
+  <script type="text/javascript" src="scripts/libs/interact.js"></script>
   <script type="text/javascript" src="scripts/libs/raf-shim.js"></script>
   <script type="text/javascript" src="scripts/libs/jquery.min.js"></script>
   <script type="text/javascript" src="scripts/libs/namespace-plus.js"></script>
@@ -478,7 +490,7 @@
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    })(window,document,'script','http://google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-60405705-1', 'auto');
     ga('send', 'pageview');

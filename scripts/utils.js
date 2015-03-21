@@ -2,6 +2,10 @@ namespace.module('bot.vectorutils', function (exports, require) {
     var PI = Math.PI;
     var TAU = Math.PI * 2;
 
+    function PointFromEvent(event) {
+        return new Point(event.pageX, event.pageY);
+    }
+
     function Point(x, y) {
         this.x = x;
         this.y = y;
@@ -16,6 +20,10 @@ namespace.module('bot.vectorutils', function (exports, require) {
 
     Point.prototype.add = function(p) {
         return new Point(this.x + p.x, this.y + p.y);
+    }
+
+    Point.prototype.abs = function() {
+        return new Point(Math.abs(this.x), Math.abs(this.y));
     }
 
     Point.prototype.dadd = function(p) {
@@ -210,6 +218,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
 
     exports.extend({
         Point: Point,
+        PointFromEvent: PointFromEvent,
         hit: hit,
         coneHit: coneHit,
         getDistances: getDistances

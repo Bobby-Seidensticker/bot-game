@@ -4,6 +4,7 @@ namespace.module('bot.events', function (exports, require) {
 
     function DirtyQueueClass() {
         this.obj = {};
+        this.eventMap = {};
     }
 
     DirtyQueueClass.prototype.mark = function(name) {
@@ -19,19 +20,36 @@ namespace.module('bot.events', function (exports, require) {
         }
     }
 
+    DirtyQueueClass.prototype.mapMark = function(from, to) {
+        if (typeof(from) === 'string') {
+            from = [from];
+        }
+        var map = this.eventMap;
+        _.each(from, function(f) {
+            if (map[f] === undefined) {
+                map[f] = [];
+            }
+            map[f].push(to);
+        });
+    }
+
     DirtyQueueClass.prototype.triggerAll = function(eventObject) {
         log.debug('Triggering All Events');
 
-        _.each(
-            this.obj,
-            function(value, key, list) {
-                if (value) {
-                    eventObject.trigger(key);
-                    list[key] = false;
+        _.each(this.eventMap, function(events, key) {
+            if (this.obj[key]) {
+                for (var i = 0; i < events.length; i++) {
+                    this.obj[events[i]] = true;
                 }
-            },
-            this
-        );
+            }
+        }, this);
+
+        _.each(this.obj, function(value, key, list) {
+            if (value) {
+                eventObject.trigger(key);
+                this.obj[key] = false;
+            }
+        }, this);
     }
 
     gl.DirtyQueue = new DirtyQueueClass();

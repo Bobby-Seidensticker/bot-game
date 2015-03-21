@@ -117,6 +117,17 @@ namespace.module('bot.inv', function (exports, require) {
             this.cards[slot] = undefined;
         },
 
+        swapCards: function(other) {
+            var card;
+            for (var i = 0; i < this.cards.length; i++) {
+                if (other.cards[i]) {
+                    card = other.cards[i];
+                    other.actuallyUnequipCard(i);
+                    this.actuallyEquipCard(card, i);
+                }
+            }
+        },
+
         getCardSlot: function(card) {
             if (!card) { return undefined; }
             for (var i = this.cards.length; i--;) {

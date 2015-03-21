@@ -118,6 +118,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         swapCards: function(other) {
+            if (other === undefined) { return; }
             var card;
             for (var i = 0; i < this.cards.length; i++) {
                 if (other.cards[i]) {
@@ -356,6 +357,7 @@ namespace.module('bot.inv', function (exports, require) {
                         change = true;
                     }
                 } else {
+                    skill.swapCards(this.skills[slot]);
                     this.unequip(slot);
                     skill.equipped = true;
                     this.skills[slot] = skill;
@@ -475,6 +477,7 @@ namespace.module('bot.inv', function (exports, require) {
             if (item === undefined) {
                 change = this.unequip(slot);
             } else if (item.slot === slot) {
+                item.swapCards(this[slot]);
                 this.unequip(slot);
                 this[slot] = item;
                 item.equipped = true;

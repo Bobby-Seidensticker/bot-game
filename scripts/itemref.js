@@ -2260,7 +2260,9 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["balanced", 1],
                     ["accurate", 1],
                     ["steady hands", 1],
-                    ["pinpoint precision", 1]
+                    ["pinpoint precision", 1],
+                    ["sharpened", 1],
+                    ["stinging", 1]
                 ]
             },
             "elf king" : {

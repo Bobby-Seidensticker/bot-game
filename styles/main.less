@@ -25,6 +25,7 @@
 @error-text: rgba(190, 10, 0, 1);
 @skill-dmg: rgba(50, 255, 90, 1);
 
+
 body {
     height: 100%;
     width: 100%;
@@ -119,7 +120,7 @@ body .stats {
     position: absolute;
     z-index: 0;
     top: 0;
-    width: 425px;
+    width: 405px;
 
     background-image: url("../assets/bg.png");
     background-repeat: repeat;
@@ -128,6 +129,11 @@ body .stats {
 
     font-size: 11px;
     color: @menu-text;
+
+    .holder {
+        width: 425px;
+        overflow: auto;
+    }
 
     .container {
         width: 405px;

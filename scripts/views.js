@@ -7,7 +7,7 @@ namespace.module('bot.views', function (exports, require) {
     var Point = vu.Point;
     var PointFromEvent = vu.PointFromEvent;
 
-    var FOOTER_HEIGHT = 113;
+    var FOOTER_HEIGHT = 114;
 
     var GameView = Backbone.View.extend({
         el: $('body'),
@@ -322,6 +322,9 @@ namespace.module('bot.views', function (exports, require) {
             $('body').on('mousedown ' + this.uid, this.onMousedown.bind(this));
             $('body').on('mousemove ' + this.uid, this.onMousemove.bind(this));
             $('body').on('mouseup ' + this.uid, this.onMouseup.bind(this));
+
+            $(window).on('resize', this.updateBodySize.bind(this));
+            this.updateBodySize();
         },
 
         onViewMousedown: function(event, model) {
@@ -390,8 +393,28 @@ namespace.module('bot.views', function (exports, require) {
             this.trigger('drop', PointFromEvent(event), model);
         },
 
+        updateBodySize: function() {
+            this.bodySize = new Point(window.innerWidth, window.innerHeight);
+        },
+
         updatePos: function(event) {
-            this.$el.css({ top: event.pageY - 36, left: event.pageX - 36 });
+            var left = event.pageX - 37;
+            var top = event.pageY - 37;
+
+            if (left < 0) {
+                left = 0;
+            }
+            if (left + 77 > this.bodySize.x) {
+                left = this.bodySize.x - 77;
+            }
+            if (top < 0) {
+                top = 0;
+            }
+            if (top + 77 > this.bodySize.y) {
+                top = this.bodySize.y - 77;
+            }
+
+            this.$el.css({ top: top, left: left });
         },
 
         remove: function() {
@@ -541,6 +564,8 @@ namespace.module('bot.views', function (exports, require) {
                 left: size.x - 405,
                 height: size.y
             });
+            this.holderHeight = size.y;
+            this.$('.holder').css('height', size.y);
         },
 
         onDrop: function(dropPos, model) {
@@ -580,6 +605,7 @@ namespace.module('bot.views', function (exports, require) {
                 this.$skillchain = this.$('.skillchain');
                 this.$unequipped = this.$('.unequipped');
                 this.renderedOnce = true;
+                this.resize();
             }
 
             // properly remove all views
@@ -707,313 +733,6 @@ namespace.module('bot.views', function (exports, require) {
         },
     });
     
-    var ItemSlot = Backbone.View.extend({
-        tagName: 'div',
-        className: 'itemSlot',
-
-        events: {
-            'mousedown': 'onClick',
-            'mouseenter': 'onMouseenter',
-            'mouseleave': 'onMouseleave',
-        },
-
-        onClick: function(event) {
-            log.UI("Clicked on ItemSlot in slot: %s, containing: %s", this.slot ? this.slot : "unequipped", this.model ? this.model.name : "empty");
-            var cls = event.target.classList[0];
-            if (cls === 'corner' && this.canUnequip) {
-                this.trigger('unequip', this);
-            } else {
-                this.trigger('click', this);
-            }
-        },
-
-        onMouseenter: function() {
-            if (this.canUnequip) {
-                log.warning('adding hovering class on item slot');
-                this.$el.addClass('hovering');
-            }
-            this.trigger('hovering', this);
-            gl.UIEvents.trigger('mouseenter', this);
-        },
-
-        onMouseleave: function() {
-            if (this.model) {
-                if (this.tabName === "Items" || this.equippedModel === undefined ||
-                    this.equippedModel.name !== "Equipped" &&
-                    this.equippedModel.name !== "Skillchain") {
-                    this.model.isNew = false;
-                    gl.ItemEvents.trigger('newchange');
-                }
-                this.render();
-            }
-            this.$el.removeClass('hovering');
-            this.trigger('hovering');
-            gl.UIEvents.trigger('mouseleave');
-        },
-
-        initialize: function(options, slot, equippedModel, canSelect, canUnequip, tabName, isCard) {
-            this.slot = slot;
-            this.showNew = false;
-            this.tabName = tabName;
-            this.isCard = isCard;
-            this.equippedModel = equippedModel;
-            this.template = _.template($('#item-slot-template').html());
-            this.canSelect = canSelect;
-            this.canUnequip = canUnequip;
-
-            this.listenTo(gl.UIEvents, 'mouseenter', this.onGlobalMouseenter);
-            this.listenTo(gl.UIEvents, 'mouseleave', this.onGlobalMouseleave);
-            this.listenTo(gl.DirtyListener, 'cards:newchange', this.render);
-            this.render();
-        },
-
-        canSelect: function() {
-            // is NOT an equipped gear or skillchain slot
-            return this.slot === undefined;
-        },
-
-        canUnequip: function() {
-            return this.slot !== undefined && this.model;
-        },
-
-        select: function() { this.selected = true; this.$el.addClass('selected');  },
-        unselect: function() { this.selected = false; this.$el.removeClass('selected'); },
-
-        onGlobalMouseenter: function(hoveredSlot) {
-            if (hoveredSlot.slot === undefined && this.slot !== undefined) {
-                if (this.slot === hoveredSlot.model.slot ||
-                    (typeof(this.slot) === 'number' && hoveredSlot.model.itemType === 'skill')) {
-                    this.yellow = true;
-                    this.$el.addClass('yellow');
-                }
-            }
-        },
-
-        onGlobalMouseleave: function() {
-            this.yellow = false;
-            this.$el.removeClass('yellow');
-        },
-        
-        render: function() {
-            if (this.model && this.model.isNew) {
-                this.showNew = true;
-            } else {
-                this.showNew = false;
-            }
-            if (this.model && this.tabName === "Cards" && !this.isCard) {
-                var loc = this.equippedModel.name;
-                if (loc === "Skillchain" && this.equippedModel.newCards) {
-                    this.showNew = true;
-                } else if (loc === "Equipped" && this.equippedModel.newCards[this.slot]) {
-                    this.showNew = true;
-                } else {
-                    this.showNew = false;
-                }
-            }
-            this.$el.html(this.template(this));
-            if (this.model && this.model.disabled) {
-                this.$el.addClass('red');
-            }
-            return this;
-        }
-    });
-
-    var CardTab = Backbone.View.extend({
-        tagName: 'div',
-        className: 'itemTab',
-        template: _.template($('#card-tab-template').html()),
-
-        events: {
-            'mouseleave': 'onMouseleave'
-        },
-        onMouseleave: function() {
-            gl.UIEvents.trigger('mouseleave');
-        },
-
-        initialize: function(options, game) {
-            this.name = 'Card';
-            this.equipped = game.hero.equipped;      // equippedGearModel;
-            this.skillchain = game.hero.skillchain;  // skillchain;
-            this.cardInv = game.cardInv;             // cardTypeCollection;
-
-            this.allViews = [];
-            this.listenTo(gl.DirtyListener, 'cards:new', this.render);
-
-            this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
-            this.listenTo(gl.DirtyListener, 'skillComputeAttrs', this.render);
-            this.listenTo(gl.DirtyListener, 'equipChange', this.hardRender);
-
-            this.tvm = new TabVisibilityManager('cards', this.$el, this.render.bind(this), 'footer:buttons:cards',
-                                                'footer:buttons:inv');
-
-            this.resize();
-            $(window).on('resize', this.resize.bind(this));
-        },
-
-        resize: function() {
-            var size = new Point(window.innerWidth, window.innerHeight - FOOTER_HEIGHT);
-            this.$el.css({
-                left: size.x - 405,
-                height: size.y
-            });
-        },
-
-        onClick: function(clickedView) {
-            if (clickedView.isUnequipped) {
-                log.info('clicking unequipped card %s', clickedView.model.name);
-                // unequipped card selecting logic
-
-                if (this.selectedCard && clickedView.model.id === this.selectedCard.model.id) {
-                    this.selectedCard.unselect();
-                    this.selectedCard = undefined;
-                } else if (this.selectedCard && clickedView.model.id !== this.selectedCard.model.id) {
-                    this.selectedCard.unselect();
-                    this.selectedCard = undefined;
-                    clickedView.select();
-                    this.selectedCard = clickedView;
-                } else {
-                    clickedView.select();
-                    this.selectedCard = clickedView;
-                }
-                return;
-            }
-            log.info('Was not unequipped');
-            if (clickedView.canSelect) {
-                log.info('clicked selectable card');
-                // equipped item selecting logic
-                if (this.selectedItem && clickedView.model.id === this.selectedItem.model.id) {
-                    this.selectedItem.unselect();
-                    this.selectedItem = undefined;
-                } else {
-                    clickedView.select();
-                    this.selectedItem = clickedView;
-                }
-                this.render();
-                return;
-            }
-            log.warning('Was not selectable or unequipped');
-            if (clickedView.isCard) {  // if it's a card and we can't select it, it's a card slot, try to equip
-                // Implied: we have a selectedItem
-                if (this.selectedCard) {
-                    this.selectedItem.model.equipCard(this.selectedCard.model, clickedView.slot);
-                    this.selectedCard.unselect();
-                    this.selectedCard = undefined;
-                }
-                this.render();
-                return;
-            }
-            log.warning('Was not selectable, unequipped, or card');
-        },
-
-        onUnequip: function(clickedView) {
-            clickedView.equippedModel.equipCard(undefined, clickedView.slot);
-        },
-
-        onHover: function(hoveredView) {
-            this.hovering = hoveredView;
-        },
-
-        newItemSlot: function(model, slot, parent, canSelect, canUnequip, isCard) {
-            var view = new ItemSlot({model: model}, slot, parent, canSelect, canUnequip, "Cards", isCard);
-
-            view.isUnequipped = slot === undefined;
-
-            this.listenTo(view, 'click', this.onClick);
-            this.listenTo(view, 'unequip', this.onUnequip);
-            this.listenTo(view, 'hovering', this.onHover);
-            this.allViews.push(view);
-            return view;
-        },
-
-        hardRender: function() {
-            this.selectedCard = undefined;
-            this.selectedItem = undefined;
-            return this.render();
-        },
-
-        render: function() {
-            if (!this.tvm.visible) {
-                return this;
-            }
-
-            this.$el.html(this.template({selectedItem: this.selectedItem}));
-
-            // call remove() on all views, and stopListening on all views
-            _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);
-            this.allViews = [];
-
-            var frag = document.createDocumentFragment();
-            _.each(this.equipped.slots, function(slot) {
-                // if model, can select, cannot unequip, is not card
-                var view = this.newItemSlot(this.equipped[slot], slot, this.equipped, !!this.equipped[slot], false, false);
-                this.allViews.push(view);
-                frag.appendChild(view.el);
-            }, this);
-            this.$('.equipped').append(frag);
-
-            frag = document.createDocumentFragment();
-            _.each(this.skillchain.skills, function(skill, i) {
-                // if model, can select, cannot unequip, is not card
-                var view = this.newItemSlot(skill, i, this.skillchain, !!skill, false, false);
-                this.allViews.push(view);
-                frag.appendChild(view.el);
-            }, this);
-            this.$('.skillchain').append(frag);
-
-            // If item selected, show item's cards
-            if (this.selectedItem) {
-                frag = document.createDocumentFragment();
-                _.each(this.selectedItem.model.cards, function(card, slot) {
-                    // cannot select, if model can unequip, is card
-                    var view = this.newItemSlot(card, slot, this.selectedItem.model, false, !!card, true);
-                    this.allViews.push(view);
-                    frag.appendChild(view.el);
-                }, this);
-                this.$('.equipped-cards').append(frag);
-
-                var cards = this.cardInv.getSlotCards(this.selectedItem.slot);  // get filtered cards
-            } else {
-                var cards = this.cardInv.models;  // get all cards
-            }
-            cards = _.filter(cards, function(card) { return !card.equipped; });
-
-            frag = document.createDocumentFragment();
-            _.each(cards, function(card) {
-                // no slot, no parent, can select, cannot unequip, is card
-                var view = this.newItemSlot(card, undefined, undefined, true, false, true);
-                this.allViews.push(view);
-                frag.appendChild(view.el);
-            }, this);
-            this.$('.unequipped').append(frag);
-
-            // selected slot is an ItemSlot holding a equippedGear or skill model
-            if (this.selectedItem) {
-                var selectedView = _.find(this.allViews, function(view) { return view.model && this.selectedItem.model.id === view.model.id; }, this);
-                if (selectedView && selectedView.canSelect) {
-                    selectedView.select();
-                    this.selectedItem = selectedView;
-                } else {
-                    this.selectedItem = undefined;
-                }
-            }
-            if (this.selectedCard) {
-                var selectedView = _.find(this.allViews, function(view) { return view.model && this.selectedCard.model.id === view.model.id; }, this);
-                if (selectedView && selectedView.canSelect) {
-                    selectedView.select();
-                    this.selectedCard = selectedView;
-                } else {
-                    this.selectedCard = undefined;
-                }
-            }
-            if (this.hovering && this.hovering.model) {
-                this.hovering = _.find(this.allViews, function(view) { return view.model && this.hovering.model.id === view.model.id; }, this);
-                this.hovering.onMouseenter();
-            }
-
-            return this;
-        },
-    });
-
     var HeroFooterView = Backbone.View.extend({
         tagName: 'div',
         className: 'hero',
@@ -1641,6 +1360,8 @@ namespace.module('bot.views', function (exports, require) {
                 left: size.x - 405,
                 height: size.y
             });
+            this.holderHeight = size.y;
+            this.$('.holder').css('height', size.y);
         },
 
         onGearMousedown: function(view) {
@@ -1686,6 +1407,7 @@ namespace.module('bot.views', function (exports, require) {
             //  TODO: should we do a rendered once?
 
             this.$el.html(this.template({selected: this.selected}));
+            this.$('.holder').css('height', this.holderHeight);
 
             // call remove() on all views, and stopListening on all views
             _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);

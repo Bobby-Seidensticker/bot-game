@@ -28,49 +28,53 @@
   </script>
 
   <script id="item-tab-template" type="text/template">
-    <div class="container equipped">
-      <div class="header">Equipped Gear</div>
-      <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>
-    </div>
+    <div class="holder">
+      <div class="container equipped">
+        <div class="header">Equipped Gear</div>
+        <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>
+      </div>
 
-    <div class="container skillchain">
-      <div class="header">Equipped Skills</div>
-      <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->      
-    </div>
+      <div class="container skillchain">
+        <div class="header">Equipped Skills</div>
+        <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->      
+      </div>
 
-    <div class="container unequipped">
-      <div class="filters"></div>
+      <div class="container unequipped">
+        <div class="filters"></div>
+      </div>
     </div>
   </script>
 
   <script id="card-tab-template" type="text/template">
-    <div class="container equipped">
-      <div class="header">Equipped Gear</div>
-      <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>      
-    </div>
-
-    <div class="container skillchain">
-      <div class="header">Equipped Skills</div>
-      <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->            
-    </div>
-
-    <div class="container equipped-cards">
-      <div class="header">
-        <% if (selected !== undefined) { %>
-        Equipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
-        <% } else { %>
-        Click an item to equip cards
-        <% } %>
+    <div class="holder">
+      <div class="container equipped">
+        <div class="header">Equipped Gear</div>
+        <img src="assets/gearslots.svg" style="display:block; opacity:0.4;"/>      
       </div>
-    </div>
 
-    <div class="container unequipped">
-      <div class="header">
-        <% if (selected !== undefined) { %>
-        Unequipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
-        <% } else { %>
-        All Unequipped Cards
-        <% } %>
+      <div class="container skillchain">
+        <div class="header">Equipped Skills</div>
+        <!--img src="assets/skillslots.svg" style="display:block; opacity:0.4;"/ -->            
+      </div>
+
+      <div class="container equipped-cards">
+        <div class="header">
+          <% if (selected !== undefined) { %>
+          Equipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
+          <% } else { %>
+          Click an item to equip cards
+          <% } %>
+        </div>
+      </div>
+
+      <div class="container unequipped">
+        <div class="header">
+          <% if (selected !== undefined) { %>
+          Unequipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
+          <% } else { %>
+          All Unequipped Cards
+          <% } %>
+        </div>
       </div>
     </div>
   </script>

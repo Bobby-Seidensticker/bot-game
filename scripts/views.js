@@ -9,9 +9,6 @@ namespace.module('bot.views', function (exports, require) {
 
     var FOOTER_HEIGHT = 113;
 
-    // highlight open tab
-    // show unequip X on hover
-
     var GameView = Backbone.View.extend({
         el: $('body'),
 
@@ -1611,9 +1608,10 @@ namespace.module('bot.views', function (exports, require) {
             this.tvm = new TabVisibilityManager('cards', this.$el, this.render.bind(this), 'footer:buttons:cards',
                                                 'footer:buttons:inv');
 
-            this.listenTo(gl.UIEvents, 'footer:buttons:cards', function() {
-                this.selected = undefined;
-            }.bind(this));
+            var unselect = (function() { this.selected = undefined; }).bind(this);
+
+            this.listenTo(gl.UIEvents, 'footer:buttons:cards', unselect);
+            this.listenTo(gl.UIEvents, 'footer:buttons:inv', unselect);
 
             this.resize();
             $(window).on('resize', this.resize.bind(this));

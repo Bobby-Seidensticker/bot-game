@@ -476,6 +476,8 @@ namespace.module('bot.inv', function (exports, require) {
 
             if (item === undefined) {
                 change = this.unequip(slot);
+            } else if (this[slot] && this[slot].name === item.name) {
+                change = false;
             } else if (item.slot === slot) {
                 item.swapCards(this[slot]);
                 this.unequip(slot);

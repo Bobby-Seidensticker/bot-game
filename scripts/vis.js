@@ -30,7 +30,7 @@ namespace.module('bot.vis', function (exports, require) {
         events: {
             'mouseenter': 'onMouseenter'
         },
-        onMouseenter: function() { gl.UIEvents.trigger('mouseleave'); },  // this is because chrome's mouse leave doesn't work
+        onMouseenter: function() { gl.UIEvents.trigger('itemSlotMouseleave'); },  // this is because chrome's mouse leave doesn't work
 
         // this needs to get all zones, when game model changes, probably should get all of gameModel
         initialize: function(options, game, gameView) {
@@ -237,6 +237,10 @@ namespace.module('bot.vis', function (exports, require) {
             this.resize();
             this.listenTo(gl.DirtyListener, 'tick', this.render);
             this.tempCanvas = document.createElement('canvas');
+            $(this.tempCanvas).attr({
+                width: 2000,
+                height: 400
+            });
             this.tctx = this.tempCanvas.getContext('2d');
         },
 

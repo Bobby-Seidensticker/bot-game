@@ -60,23 +60,11 @@
       </div>
 
       <div class="container equipped-cards">
-        <div class="header">
-          <% if (selected !== undefined) { %>
-          Equipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
-          <% } else { %>
-          Click an item to equip cards
-          <% } %>
-        </div>
+        <div class="header"></div>
       </div>
 
       <div class="container unequipped">
-        <div class="header">
-          <% if (selected !== undefined) { %>
-          Unequipped <%= namespace.bot.utils.presentableSlot(selected.model.slot) %> Cards
-          <% } else { %>
-          All Unequipped Cards
-          <% } %>
-        </div>
+        <div class="header"></div>
       </div>
     </div>
   </script>

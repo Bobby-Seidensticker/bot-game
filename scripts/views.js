@@ -7,6 +7,8 @@ namespace.module('bot.views', function (exports, require) {
     var Point = vu.Point;
     var PointFromEvent = vu.PointFromEvent;
 
+    var presentableSlot = namespace.bot.utils.presentableSlot;
+
     var FOOTER_HEIGHT = 114;
 
     var GameView = Backbone.View.extend({
@@ -1406,8 +1408,23 @@ namespace.module('bot.views', function (exports, require) {
 
             //  TODO: should we do a rendered once?
 
-            this.$el.html(this.template({selected: this.selected}));
-            this.$('.holder').css('height', this.holderHeight);
+            if (!this.renderedOnce) {
+                this.$el.html(this.template({selected: this.selected}));
+                this.$('.holder').css('height', this.holderHeight);
+                this.renderedOnce = true;
+            }
+
+            if (this.selected) {
+                this.$('.equipped-cards').find('.header').html('Equipped ' +
+                                                 presentableSlot(this.selected.model.slot) +
+                                                 ' Cards');
+                this.$('.unequipped').find('.header').html('Unequipped ' +
+                                                   presentableSlot(this.selected.model.slot) +
+                                                   ' Cards');
+            } else {
+                this.$('.equipped-cards').find('.header').html('Click an item to equip cards');
+                this.$('.unequipped').find('.header').html('All Unequipped Cards');
+            }
 
             // call remove() on all views, and stopListening on all views
             _.each(this.allViews, function(view) { this.stopListening(view); view.remove(); }, this);

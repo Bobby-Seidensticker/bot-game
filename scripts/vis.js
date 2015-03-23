@@ -237,6 +237,10 @@ namespace.module('bot.vis', function (exports, require) {
             this.resize();
             this.listenTo(gl.DirtyListener, 'tick', this.render);
             this.tempCanvas = document.createElement('canvas');
+            $(this.tempCanvas).attr({
+                width: 2000,
+                height: 400
+            });
             this.tctx = this.tempCanvas.getContext('2d');
         },
 

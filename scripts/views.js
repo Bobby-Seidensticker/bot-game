@@ -367,7 +367,7 @@ namespace.module('bot.views', function (exports, require) {
             } else if (this.state === this.DOWN_DRAG) {
                 log.info('down drag to disabled');
                 this.state = this.DISABLED;
-                this.stopDragging();
+                this.stopDragging(event);
             }
         },
 
@@ -383,7 +383,7 @@ namespace.module('bot.views', function (exports, require) {
             this.trigger('dragstart');
         },
 
-        stopDragging: function() {
+        stopDragging: function(event) {
             log.info('DROP');
 
             this.state = this.DISABLED

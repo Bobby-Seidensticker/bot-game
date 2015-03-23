@@ -781,11 +781,11 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         onMouseenter: function() {
-            gl.UIEvents.trigger('mouseenter', {model: this.model.spec});
+            gl.UIEvents.trigger('itemSlotMouseenter', {model: this.model.spec});
         },
 
         onMouseleave: function() {
-            gl.UIEvents.trigger('mouseleave');
+            gl.UIEvents.trigger('itemSlotMouseleave');
         },
 
         initialize: function(options, hero) {
@@ -968,7 +968,7 @@ namespace.module('bot.views', function (exports, require) {
         events: {
             'mouseenter': 'onMouseenter'
         },
-        onMouseenter: function() { gl.UIEvents.trigger('mouseleave'); },
+        onMouseenter: function() { gl.UIEvents.trigger('itemSlotMouseleave'); },
 
         initialize: function(options, game, visibleTabsInterface) {
             this.resize();

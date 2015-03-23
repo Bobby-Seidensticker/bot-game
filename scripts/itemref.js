@@ -224,7 +224,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "apollo helmet": {
                 "mods": [
                     {def: 'armor added 30', type: 'def'},
-                    {def: 'armor more 1.5  perLevel', type: 'def'}
+                    {def: 'armor more 1.5 perLevel', type: 'def'}
                 ],
                 "slot": "head",
             },

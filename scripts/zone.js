@@ -66,7 +66,7 @@ namespace.module('bot.zone', function (exports, require) {
 
             //console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
             _.extend(this, this.allZones[this.zoneOrder[zoneI]]);
-            this.level = Math.max(1, zoneNum * 5);            
+            this.level = Math.max(1, zoneNum * gl.ZONE_LEVEL_SPACING);            
             
             
             this.rooms = this.generator();

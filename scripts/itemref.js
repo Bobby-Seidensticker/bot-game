@@ -1490,7 +1490,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "spellDmg more -30", "type": "dmg"},
                     {"def": "strength more 2 perLevel", "type": "def"},
-                    {"def": "meleeDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "meleeDmg more 2 perLevel", "type": "dmg"},
                 ],
                 "slot": "head",
             },

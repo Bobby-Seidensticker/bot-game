@@ -2123,7 +2123,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "hazmat mask": {
                 "mods":[
-                    {"def": "eleResistAll more -15 perLevel", "type": "def"},
+                    {"def": "eleResistAll more -15", "type": "def"},
                     {"def": "eleResistAll more -0.5 perLevel", "type": "def"},                    
                 ],
                 "slot": "head"

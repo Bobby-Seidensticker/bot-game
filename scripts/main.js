@@ -17,7 +17,7 @@ namespace.module('bot.main', function (exports, require) {
         gl.VERSION_NUMBER_ORDER = ['v0-1-1b', '0-1-2', '0-1-3', '0-1-4', '0-1-5', '0-1-6', '0-1-7'];
         gl.VERSION_NUMBER = '0-1-8';
 
-        gl.ZONE_LEVEL_SPACING = 3;
+        gl.ZONE_LEVEL_SPACING = 5;
         $('title').html('Dungeons of Derp v' + gl.VERSION_NUMBER.replace(/\-/g, '.') + ' ALPHA');
         
         log.info('onReady');

@@ -1090,7 +1090,7 @@ namespace.module('bot.views', function (exports, require) {
                 var zoneCount = this.zone.zoneOrder.length;
                 var upgradeCount = Math.floor(i / zoneCount);
                 var zoneI = i % zoneCount;
-                var level = Math.max(1, i * 5);
+                var level = Math.max(1, i * gl.ZONE_LEVEL_SPACING);
                 
                 var name = this.zone.zoneOrder[zoneI];
                 var zoneRef = this.zone.allZones[name];

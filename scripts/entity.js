@@ -159,7 +159,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         getNextLevelXp: function() {
-            return Math.floor(100 * Math.pow(1.3, (this.level - 1) / 2));
+            return Math.floor(100 * Math.pow(1.3, (this.level - 1)));
         }
     });
 
@@ -298,7 +298,7 @@ namespace.module('bot.entity', function (exports, require) {
         // TODO: memoize this
         xpOnKill: function(playerLevel) {
             var pen = this.xpPenalty(playerLevel, this.level);
-            return Math.ceil(pen * 20 * Math.pow(1.1, (this.level - 1) / 2));
+            return Math.ceil(pen * 20 * Math.pow(1.1, (this.level - 1)));
         },
 
         xpPenalty: function(pl, ml) {

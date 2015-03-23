@@ -2,9 +2,9 @@ namespace.module('bot.itemref', function (exports, require) {
     var log = namespace.bot.log;
     var prob = namespace.bot.prob;
 
-    var BASE_MELEE_RANGE = 40000
-    var BASE_RANGE_RANGE = 500000
-    var BASE_SPELL_RANGE = 400000
+    var BASE_MELEE_RANGE = 40000;
+    var BASE_RANGE_RANGE = 500000;
+    var BASE_SPELL_RANGE = 400000;
 
     var PHYS_COLOR = "#777";    
     var FIRE_COLOR = 'rgba(255, 130, 0, 0.6)';
@@ -20,14 +20,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "cardboard sword": {
                 "mods": [
                     {def: 'physDmg added 6', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "melee",
             },
             "hand axe": {
                 "mods": [
-                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
-                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 10', type: 'dmg'},
+                    {def: 'physDmg more 1.1 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "melee",
             },
@@ -35,21 +35,21 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'speed more 20', type: 'dmg'},
                     {def: 'physDmg added 10', type: 'dmg'},
-                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1.2 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "melee",
             },
             "falchion": {
                 "mods": [
                     {def: 'speed more -20', type: 'dmg'},
-                    {def: 'physDmg added 8', type: 'dmg'},
-                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 12', type: 'dmg'},
+                    {def: 'physDmg more 1.3 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "melee",
             },
             "morning star": {
                 "mods": [
-                    {def: 'speed more 20', type: 'dmg'},
+                    {def: 'speed more 50', type: 'dmg'},
                     {def: 'physDmg added 14', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'}
                 ],
@@ -59,7 +59,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'speed more -0.5 perLevel', type: 'dmg'},                    
                     {def: 'physDmg added 16', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1.2 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "melee",
             },
@@ -67,24 +67,24 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'speed more 40', type: 'dmg'},
                     {def: 'physDmg added 16', type: 'dmg'},                    
-                    {def: 'physDmg added 4 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1.7 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "melee",
             },
             "spiked battle axe": {
                 "mods": [
-                    {def: 'speed more -1 perLevel', type: 'dmg'},                    
+                    {def: 'speed more -20', type: 'dmg'},                    
                     {def: 'physDmg added 20', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1.5 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "melee",
             },
             "winged axe": {
                 "mods": [
-                    {def: 'range more 2 perLevel', type: 'dmg'},
+                    {def: 'range more 0.5 perLevel', type: 'dmg'},
                     {def: 'speed more 20', type: 'dmg'},                    
-                    {def: 'physDmg added 19', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 25', type: 'dmg'},
+                    {def: 'physDmg more 1.5 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "melee",
             },
@@ -94,7 +94,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "wooden bow": {
                 "mods": [
                     {def: 'physDmg added 5', type: 'dmg'},
-                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "range",
             },
@@ -102,23 +102,23 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {def: 'physDmg added 7', type: 'dmg'},
                     {def: 'speed more -30', type: 'dmg'},                    
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1.2 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "range",
             },
             "crossbow": {
                 "mods": [
-                    {def: 'speed more 20', type: 'dmg'},                    
+                    {def: 'speed more 30', type: 'dmg'},                    
                     {def: 'physDmg added 9', type: 'dmg'},
-                    {def: 'physDmg added 2 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 1,7 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "range",
             },
             "composite bow": {
                 "mods": [
                     {def: 'range more 20', type: 'dmg'},                    
-                    {def: 'physDmg added 10', type: 'dmg'},
-                    {def: 'physDmg added 3 perLevel', type: 'dmg'}
+                    {def: 'physDmg added 20', type: 'dmg'},
+                    {def: 'physDmg more 1.5 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "range",
             },
@@ -128,21 +128,21 @@ namespace.module('bot.itemref', function (exports, require) {
             "simple wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 1 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },
             "knobby wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 3 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 1.2 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },
             "pewter wand": {
                 "mods": [
                     {def: 'spellDmg more 15', type: 'dmg'},
-                    {def: 'spellDmg more 4 perLevel', type: 'dmg'},
+                    {def: 'spellDmg more 1.7 perLevel', type: 'dmg'},
                     {def: 'eleResistAll more 20', type: 'def'}
                 ],
                 "weaponType": "spell",
@@ -150,35 +150,35 @@ namespace.module('bot.itemref', function (exports, require) {
             "delicate wand": {
                 "mods": [
                     {def: 'spellDmg more 25', type: 'dmg'},
-                    {def: 'spellDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 1.5 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },
             "dragonstone wand": {
                 "mods": [
                     {def: 'fireDmg more 15', type: 'dmg'},
-                    {def: 'fireDmg more 3 perLevel', type: 'dmg'}
+                    {def: 'fireDmg more 2 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },
             "fairy wand": {
                 "mods": [
                     {def: 'spellDmg more 25', type: 'dmg'},
-                    {def: 'spellDmg more 4 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 1.6 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },
             "star wand": {
                 "mods": [
                     {def: 'spellDmg more 25', type: 'dmg'},
-                    {def: 'spellDmg more 3 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 1.7 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },
             "demon wand": {
                 "mods": [
                     {def: 'spellDmg more 50', type: 'dmg'},
-                    {def: 'spellDmg more 2.5 perLevel', type: 'dmg'}
+                    {def: 'spellDmg more 1.5 perLevel', type: 'dmg'}
                 ],
                 "weaponType": "spell",
             },
@@ -190,41 +190,41 @@ namespace.module('bot.itemref', function (exports, require) {
             "balsa helmet": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "head",
             },
             "collander": {
                 "mods": [
                     {def: 'armor added 7', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1.2 perLevel', type: 'def'}
                 ],
                 "slot": "head",
             },
             "conquistador helm": {
                 "mods": [
                     {def: 'armor added 9', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1.4 perLevel', type: 'def'}
                 ],
                 "slot": "head",
             },
             "crusader helm": {
                 "mods": [
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1.6 perLevel', type: 'def'}
                 ],
                 "slot": "head",
             },
             "gladiator helm": {
                 "mods": [
                     {def: 'armor added 22', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'}
+                    {def: 'armor more 1.3 perLevel', type: 'def'}
                 ],
                 "slot": "head",
             },
             "apollo helmet": {
                 "mods": [
                     {def: 'armor added 30', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1.5  perLevel', type: 'def'}
                 ],
                 "slot": "head",
             },
@@ -236,138 +236,151 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
                 "slot": "head",
             },
+            "mage hat": {
+                "mods": [
+                    {def: 'manaRegen added 10', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
+                ],
+                "slot": "head",
+            },
             ////////////////////
             ///// CHEST ////////
             ////////////////////
             "t-shirt": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "leather armor": {
                 "mods": [
                     {def: 'armor added 8', type: 'def'},
-                    {def: 'armor added 3 perLevel', type: 'def'}
+                    {def: 'armor more 1.2 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "goblin leather": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 4 perLevel', type: 'def'}
+                    {def: 'armor more 1.3 perLevel', type: 'def'},
+                    {def: 'fireResist more -0.5 perLevel', type: 'eleResist'}                    
                 ],
                 "slot": "chest",
             },
             "leatherscale armor": {
                 "mods": [
-                    {def: 'armor more 20', type: 'def'},
-                    {def: 'armor added 5 perLevel', type: 'def'}
+                    {def: 'dodge more 1 perLevel', type: 'def'},
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "leatherplate armor": {
                 "mods": [
                     {def: 'armor added 20', type: 'def'},
-                    {def: 'armor added 3 perLevel', type: 'def'}
+                    {def: 'armor more 1.5 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "hammered chestplate": {
                 "mods": [
-                    {def: 'armor added 50', type: 'def'},
-                    {def: 'armor added 5 perLevel', type: 'def'}
+                    {def: 'armor more 50', type: 'def'},
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "iron chestplate": {
                 "mods": [
-                    {def: 'armor added 50', type: 'def'},
-                    {def: 'armor more 2 perLevel', type: 'def'}
+                    {def: 'armor added 40', type: 'def'},
+                    {def: 'armor more 1.5 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "copper chestplate": {
                 "mods": [
-                    {def: 'armor added 50', type: 'def'},
-                    {def: 'armor more 3 perLevel', type: 'def'}
+                    {def: 'armor added 100', type: 'def'},
+                    {def: 'armor more 1.4 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "muscle plate": {
                 "mods": [
-                    {def: 'armor added 50', type: 'def'},
-                    {def: 'armor more 3.5 perLevel', type: 'def'}
+                    {def: 'armor added 100', type: 'def'},
+                    {def: 'armor more 1.6 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "elegant plate": {
                 "mods": [
-                    {def: 'armor added 55', type: 'def'},
-                    {def: 'armor more 3.7 perLevel', type: 'def'}
+                    {def: 'armor added 200', type: 'def'},                    
+                    {def: 'dodge more -50', type: 'def'},
+                    {def: 'armor more 1.9 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "raider armor": {
                 "mods": [
-                    {def: 'physDmg more 2 perLevel', type: 'dmg'}
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
                 ],
                 "slot": "chest",
             },
             "shadow armor": {
                 "mods": [
                     {def: 'dodge added 50', type: 'def'},
-                    {def: 'dodge added 5 perLevel', type: 'def'}
+                    {def: 'dodge more 1.5 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "scout leather": {
                 "mods": [
                     {def: 'dodge added 20', type: 'def'},
-                    {def: 'dodge more 2 perLevel', type: 'def'}
+                    {def: 'dodge more 1 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "studded leather": {
                 "mods": [
                     {def: 'dodge added 50', type: 'def'},
-                    {def: 'dodge more 3 perLevel', type: 'def'}
+                    {def: 'dodge more 1.4 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "velvet tunic": {
                 "mods": [
                     {def: 'manaRegen added 5', type: 'def'},
-                    {def: 'manaRegen more 2 perLevel', type: 'def'}
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },
             "war robe": {
                 "mods": [
                     {def: 'manaRegen added 10', type: 'def'},
-                    {def: 'armor added 5 perLevel', type: 'def'}
+                    {def: 'armor more 0.8 perLevel', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}                    
                 ],
                 "slot": "chest",
             },
             "winged leather": {
                 "mods": [
                     {def: 'armor added 100', type: 'def'},
-                    {def: 'armor added 10 perLevel', type: 'def'}
+                    {def: 'armor more 1.2 perLevel', type: 'def'},
+                    {def: 'eleResistAll more -0.6 perLevel', type: 'def'}                    
                 ],
                 "slot": "chest",
             },
             "cultist robe": {
                 "mods": [
                     {def: 'spellDmg more 20', type: 'dmg'},
-                    {def: 'manaRegen more 3 perLevel', type: 'def'}
+                    {def: 'manaRegen more 3 perLevel', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}                    
                 ],
                 "slot": "chest",
             },
             "embroidered silks": {
                 "mods": [
                     {def: 'manaRegen added 20', type: 'def'},
-                    {def: 'manaRegen more 3 perLevel', type: 'def'}
+                    {def: 'manaRegen more 3 perLevel', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'},
                 ],
                 "slot": "chest",
             },
@@ -384,14 +397,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "jeans": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 1 perLevel', type: 'def'}
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "legs",
             },
             "leather boots": {
                 "mods": [
                     {def: 'armor added 10', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1.2 perLevel', type: 'def'}
                 ],
                 "slot": "legs",
             },
@@ -405,21 +418,24 @@ namespace.module('bot.itemref', function (exports, require) {
             "mage boots": {
                 "mods": [
                     {def: 'manaRegen added 5', type: 'def'},
-                    {def: 'manaRegen more 2 perLevel', type: 'def'}
+                    {def: 'manaRegen more 2 perLevel', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'},                    
                 ],
                 "slot": "legs",
             },
             "arcane boots": {
                 "mods": [
                     {def: 'spellDmg more 20', type: 'dmg'},
-                    {def: 'manaRegen more 2 perLevel', type: 'def'}
+                    {def: 'manaRegen more 2 perLevel', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}                    
                 ],
                 "slot": "legs",
             },
             "buckaneer boots": {
                 "mods": [
                     {def: 'armor added 25', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'}
+                    {def: 'armor more 1 perLevel', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}                    
                 ],
                 "slot": "legs",
             },
@@ -436,56 +452,65 @@ namespace.module('bot.itemref', function (exports, require) {
             "latex gloves": {
                 "mods": [
                     {def: 'armor added 5', type: 'def'},
-                    {def: 'armor added 1 perLevel', type: 'def'}
+                    {def: 'armor more 1 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
             "gardening gloves": {
                 "mods": [
                     {def: 'armor added 7', type: 'def'},
-                    {def: 'armor added 2 perLevel', type: 'def'}
+                    {def: 'armor more 1.2 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
             "leather gloves": {
                 "mods": [
-                    {def: 'armor added 10', type: 'def'},
-                    {def: 'armor added 3 perLevel', type: 'def'}
+                    {def: 'dodge added 10', type: 'def'},
+                    {def: 'dodge more 1.2 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
             "velvet gloves": {
                 "mods": [
                     {def: 'manaRegen added 2', type: 'def'},
-                    {def: 'manaRegen more 2 perLevel', type: 'def'}
+                    {def: 'manaRegen more 2 perLevel', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'},                    
                 ],
                 "slot": "hands",
             },
             "handmail": {
                 "mods": [
                     {def: 'armor added 15', type: 'def'},
-                    {def: 'armor added 3 perLevel', type: 'def'}
+                    {def: 'armor more 1.3 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
             "fancy gauntlets": {
                 "mods": [
                     {def: 'armor added 25', type: 'def'},
-                    {def: 'armor more 1 perLevel', type: 'def'}
+                    {def: 'armor more 1.5 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
             "polished gauntlets": {
                 "mods": [
                     {def: 'armor added 30', type: 'def'},
-                    {def: 'armor added 4 perLevel', type: 'def'}
+                    {def: 'dodge more -30', type: 'def'},                    
+                    {def: 'armor more 1.8 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
             "goldenscale gauntlets": {
                 "mods": [
-                    {def: 'armor added 50', type: 'def'},
-                    {def: 'armor added 5 perLevel', type: 'def'}
+                    {def: 'dodge added 50', type: 'def'},
+                    {def: 'dodge more 1.3 perLevel', type: 'def'}
+                ],
+                "slot": "hands",
+            },
+            "mage gloves": {
+                "mods": [
+                    {def: 'manaRegen added 10', type: 'def'},
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
                 "slot": "hands",
             },
@@ -2145,7 +2170,7 @@ namespace.module('bot.itemref', function (exports, require) {
         },
         "monster": {
             "skeleton" : {
-                "items": [["weapon", "cardboard sword"], ["armor", "balsa helmet"], ["armor", "t-shirt"], ["armor", "jeans"]],
+                "items": [["weapon", "cardboard sword"], ["armor", "balsa helmet"], ["armor", "t-shirt"], ["armor", "jeans"], ["armor", "latex gloves"]],
                 "skills": ["basic melee"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
@@ -2157,7 +2182,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "fire skeleton": {
-                "items": [["weapon", "cardboard sword"], ["armor", "balsa helmet"], ["armor", "t-shirt"], ["armor", "jeans"]],
+                "items": [["weapon", "cardboard sword"], ["armor", "balsa helmet"], ["armor", "t-shirt"], ["armor", "jeans"], ["armor", "latex gloves"]],
                 "skills": ["lethal strike", "fire slash", "super smash", "basic melee"],
                 "sourceCards": [
                     ["hot sword", 1],
@@ -2169,7 +2194,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "skeleton archer" : {
-                "items": [["weapon", "wooden bow"], ["armor", "t-shirt"], ["armor", "latex gloves"]],
+                "items": [["weapon", "wooden bow"], ["armor", "t-shirt"], ["armor", "latex gloves"], ["armor", "balsa helmet"], ["armor", "jeans"]],
                 "skills": ["speed shot", "basic range"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
@@ -2182,7 +2207,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "skeleton mage" : {
-                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"]],
+                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"], ["armor", "balsa helmet"], ["armor", "mage boots"], ["armor", "latex gloves"]],
                 "skills": ["fire ball", "basic spell"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
@@ -2192,7 +2217,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "skeleton embermage" : {
-                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"]],
+                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"], ["armor", "balsa helmet"], ["armor", "mage boots"], ["armor", "latex gloves"]],
                 "skills": ["incinerate", "fire ball", "basic spell"],
                 "sourceCards": [
                     ["proto-skeleton", 0],
@@ -2202,7 +2227,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "skeleton king" : {
-                "items": [["weapon", "hand axe"], ["armor", "collander"], ["armor", "leather armor"], ["armor", "gardening gloves"], ["armor", "leather boots"]],
+                "items": [["weapon", "hand axe"], ["armor", "collander"], ["armor", "leatherscale armor"], ["armor", "gardening gloves"], ["armor", "leather boots"]],
                 "skills": ["lethal strike", "super smash", "basic melee"],
                 "sourceCards": [
                     ["proto-skeleton", 1],
@@ -2216,7 +2241,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "wood nymph" : {
-                "items": [["weapon", "cardboard sword"]],
+                "items": [["weapon", "cardboard sword"], ["armor", "scout leather"], ["armor", "balsa helmet"], ["armor", "latex gloves"], ["armor", "leather boots"]],
                 "skills": ["basic melee"],
                 "sourceCards": [
                     ["small stature", 1],
@@ -2228,7 +2253,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "bat" : {
-                "items": [["weapon", "cardboard sword"], ["armor", "batsuit"]],
+                "items": [["weapon", "cardboard sword"], ["armor", "batsuit"], ["armor", "latex gloves"], ["armor", "leather boots"], ["armor", "balsa helmet"]],
                 "skills": ["quick hit", "basic melee"],
                 "sourceCards": [
                     ["proto-bat", 1],
@@ -2240,7 +2265,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "ent" : {
-                "items": [["weapon", "cardboard sword"], ["armor", "conquistador helm"], ["armor", "leatherplate armor"], ["armor", "arcane boots"]],
+                "items": [["weapon", "cardboard sword"], ["armor", "conquistador helm"], ["armor", "leatherplate armor"], ["armor", "arcane boots"], ["armor", "gardening gloves"]],
                 "skills": ["super smash", "basic melee"],
                 "sourceCards": [
                     ["strong back", 2],
@@ -2250,7 +2275,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "elf" : {
-                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"], ["armor", "gardening gloves"]],
+                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"], ["armor", "leather gloves"], ["armor", "balsa helmet"]],
                 "skills": ["poison arrow", "speed shot", "basic range"],
                 "sourceCards": [
                     ["dexterous hands", 1],
@@ -2266,7 +2291,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "elf king" : {
-                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"]],
+                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"], ["armor", "balsa helmet"], ["armor", "leather gloves"]],
                 "skills": ["deadly volley", "speed shot", "poison arrow", "basic range"],
                 "sourceCards": [
                     ["proto-boss", 0],
@@ -2289,8 +2314,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 ]
             },
             "fire golem" : {
-                "items": [["weapon", "long sword"]],
-                "skills": ["ground smash", "exploding strike", "super smash", "basic melee"],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
+                "skills": ["ground smash", "exploding strike", "fire slash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
                     ["ignited", 1],
@@ -2298,8 +2323,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "ice golem" : {
-                "items": [["weapon", "long sword"]],
-                "skills": ["super smash", "basic melee"],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
+                "skills": ["ice slash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
                     ["frosted", 1],
@@ -2307,8 +2332,8 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "shock golem" : {
-                "items": [["weapon", "long sword"]],
-                "skills": ["super smash", "basic melee"],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
+                "skills": ["lightning slash", "basic melee"],
                 "sourceCards": [
                     ["heart of granite", 1],
                     ["charged", 1],
@@ -2316,7 +2341,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "toxic golem" : {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"] , ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["poison spray", "poison nova"],
                 "sourceCards": [
                     ["heart of granite", 1],
@@ -2333,7 +2358,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "gnome" : {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["lightning slash", "quick hit", "chain lightning", "basic melee"],
                 "sourceCards": [
                     ["small stature", 1],
@@ -2343,7 +2368,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "gnome electrician" : {
-                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"]],
+                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"], ["armor", "gladiator helm"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["lightning ball", "nova", "basic spell"],
                 "sourceCards": [
                     ["small stature", 1],
@@ -2359,7 +2384,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "roflcopter" : {
-                "items": [["weapon", "hand axe"]],
+                "items": [["weapon", "hand axe"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["pressure wave", "quick hit", "basic melee"],
                 "sourceCards": [
                     ["flying", 1],
@@ -2370,7 +2395,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "harpy" : {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["pressure wave", "quick hit", "basic melee"],
                 "sourceCards": [
                     ["flying", 1],
@@ -2379,7 +2404,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "mechcinerator" : {
-                "items": [["weapon", "pewter wand"]],
+                "items": [["weapon", "pewter wand"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["incinerate", "fire nova", "basic spell"],
                 "sourceCards": [
                     ["riveted", 1],
@@ -2395,7 +2420,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "mechfridgerator": {
-                "items": [["weapon", "pewter wand"]],
+                "items": [["weapon", "pewter wand"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["ice blast", "ice nova", "basic spell"],
                 "sourceCards": [
                     ["riveted", 1],
@@ -2410,7 +2435,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "mecha watt" : {
-                "items": [["weapon", "pewter wand"]],
+                "items": [["weapon", "pewter wand"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["lightning ball", "nova", "basic spell"],
                 "sourceCards": [
                     ["riveted", 1],
@@ -2426,7 +2451,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "sir mechs-a-lot" : {
-                "items": [["weapon", "long sword"]],
+                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
                 "skills": ["ground smash", "lightning ball", "ice nova", "basic melee"],
                 "sourceCards": [
                     ["proto-boss", 1],
@@ -2444,7 +2469,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "goblin" : {
-                "items": [["weapon", "spikey mace"], ["armor", "goblin leather"]],
+                "items": [["weapon", "spikey mace"], ["armor", "goblin leather"], ["armor", "handmail"], ["armor", "gladiator helm"], ["armor", "buckaneer boots"]],
                 "skills": ["ground smash", "flaming debris", "basic melee"],
                 "sourceCards": [
                     ["goblin toe", 1],
@@ -2455,7 +2480,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 ],
             },
             "goblin priest" : {
-                "items": [["weapon", "knobby wand"], ["armor", "goblin leather"]],
+                "items": [["weapon", "knobby wand"], ["armor", "goblin leather"], ["armor", "mage gloves"], ["armor", "mage hat"], ["armor", "mage boots"]],
                 "skills": ["fire ball", "incinerate", "basic spell"],
                 "sourceCards": [
                     ["goblin toe", 1],

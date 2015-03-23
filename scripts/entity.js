@@ -302,8 +302,11 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         xpPenalty: function(pl, ml) {
+            if (pl > ml) {
+                return 1;
+            }
             var sb = 3 + Math.floor(pl / 16);
-            var diff = Math.abs(pl - ml);
+            var diff = ml - pl;
             if (diff <= sb) {
                 return 1;
             }

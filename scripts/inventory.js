@@ -56,7 +56,7 @@ namespace.module('bot.inv', function (exports, require) {
         },
 
         getNextLevelXp: function() {
-            return Math.floor(100 * Math.exp((this.level - 1) / Math.PI));
+            return Math.floor(100 * Math.pow(1.3, (this.level - 1) / 2));
         },
 
         pctLeveled: function() {

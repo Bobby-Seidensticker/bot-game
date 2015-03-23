@@ -162,6 +162,9 @@ namespace.module('bot.entity', function (exports, require) {
             return Math.floor(100 * Math.exp((this.level - 1) / Math.PI));
         },
 
+        var f1 = function(x) { return Math.floor(100 * Math.exp((x - 1) / Math.PI)); }
+        var f2 = function(x) { return Math.ceil(10 * Math.pow(1.15, x - 1)); }
+
         // TODO: memoize this
         xpOnKill: function() {
             return Math.ceil(10 * Math.pow(1.15, this.level - 1));

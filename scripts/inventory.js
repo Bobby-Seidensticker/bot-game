@@ -523,14 +523,7 @@ namespace.module('bot.inv', function (exports, require) {
 
     var ItemCollection = gl.Model.extend({
         initialize: function() {
-            this.models = [
-                /*new WeaponModel('cardboard sword'),
-                new SkillModel('basic melee'),
-                new SkillModel('basic range'),
-                new SkillModel('basic spell'),
-                new ArmorModel('balsa helmet'),*/
-            ];
-            this.sort();
+            this.models = []; this.sort();
             this.listenTo(gl.ItemEvents, 'newchange', this.checkForNews);
         },
 
@@ -542,6 +535,7 @@ namespace.module('bot.inv', function (exports, require) {
                            new SkillModel('basic range'),
                            new SkillModel('basic spell'),
                            new ArmorModel('balsa helmet')];
+            this.sort();
         },
 
         toJSON: function() {
@@ -597,7 +591,7 @@ namespace.module('bot.inv', function (exports, require) {
         checkForNews: function() {
             var any = false;
             _.each(this.models, function(item) {
-                if(item.isNew) {
+                if (item.isNew) {
                     any = true;
                 }
             }, this);

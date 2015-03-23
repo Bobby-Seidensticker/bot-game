@@ -320,7 +320,7 @@ namespace.module('bot.bodies', function(exports, require) {
         },
 
         onKill: function(target) {
-            var xpGained = target.spec.xpOnKill();
+            var xpGained = target.spec.xpOnKill(this.spec.level);
             var levels = this.spec.applyXp(xpGained);
             if (levels > 0) {
                 this.revive();

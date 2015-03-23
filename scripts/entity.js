@@ -159,15 +159,7 @@ namespace.module('bot.entity', function (exports, require) {
         },
 
         getNextLevelXp: function() {
-            return Math.floor(100 * Math.exp((this.level - 1) / Math.PI));
-        },
-
-        var f1 = function(x) { return Math.floor(100 * Math.exp((x - 1) / Math.PI)); }
-        var f2 = function(x) { return Math.ceil(10 * Math.pow(1.15, x - 1)); }
-
-        // TODO: memoize this
-        xpOnKill: function() {
-            return Math.ceil(10 * Math.pow(1.15, this.level - 1));
+            return Math.floor(100 * Math.pow(1.3, (this.level - 1) / 2));
         }
     });
 
@@ -301,6 +293,24 @@ namespace.module('bot.entity', function (exports, require) {
                 }
             }
             return {cardDrops: cardDrops, gearDrops: gearDrops, any: any};
+        },
+
+        // TODO: memoize this
+        xpOnKill: function(playerLevel) {
+            var pen = this.xpPenalty(playerLevel, this.level);
+            return Math.ceil(pen * 20 * Math.pow(1.1, (this.level - 1) / 2));
+        },
+
+        xpPenalty: function(pl, ml) {
+            var sb = 3 + Math.floor(pl / 16);
+            var diff = Math.abs(pl - ml);
+            if (diff <= sb) {
+                return 1;
+            }
+            var ed = diff - sb;
+            return Math.pow(
+                (pl + 5) / (pl + 5 + Math.pow(ed, 2.5)),
+                1.5);
         }
     });
 

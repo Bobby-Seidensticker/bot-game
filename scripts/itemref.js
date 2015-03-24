@@ -322,6 +322,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "raider armor": {
                 "mods": [
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},
+                    {def: 'armor more -20', type: 'def'},                    
                 ],
                 "slot": "chest",
             },
@@ -388,7 +389,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "batsuit": {
                 "mods": [
                     {def: 'speed more -20', type: 'dmg'},
-                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 1 perLevel', type: 'dmg'},
                 ],
                 "slot": "chest",
             },

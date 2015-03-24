@@ -16,6 +16,7 @@ namespace.module('bot.inv', function (exports, require) {
             this.cards = [undefined, undefined, undefined, undefined, undefined];
             this.equipped = false;
             this.isNew = false;
+            this.hasNewCards = false;
         },
 
         toJSON: function() {
@@ -39,7 +40,7 @@ namespace.module('bot.inv', function (exports, require) {
                 this.equipCard(_.findWhere(cardInv.models, {name: name}), i);
             }, this);
         },
-        
+
         applyXp: function(xp) {
             var levels = 0;
             this.xp += xp;
@@ -323,7 +324,6 @@ namespace.module('bot.inv', function (exports, require) {
     var Skillchain = gl.Model.extend({
         initialize: function() {
             this.skills = [undefined, undefined, undefined, undefined, undefined];
-            this.name = "Skillchain";
         },
 
         toJSON: function() {
@@ -444,9 +444,6 @@ namespace.module('bot.inv', function (exports, require) {
             // this line and event object is used exclusively for equipment card changes to propogate through here
             // and up to the hero so the egm doesn't have to listen and stop listening every equip
             this.listenTo(gl.EquipEvents, 'change', this.propChange);
-            this.name = "Equipped";
-            this.newCards = {'weapon': false, 'head': false, 'hands': false, 'chest': false, 'legs': false};
-            this.listenTo(gl.ItemEvents, 'newchange', this.findNews);
         },
 
         toJSON: function() {
@@ -525,8 +522,9 @@ namespace.module('bot.inv', function (exports, require) {
 
     var ItemCollection = gl.Model.extend({
         initialize: function() {
-            this.models = []; this.sort();
-            this.listenTo(gl.ItemEvents, 'newchange', this.checkForNews);
+            this.models = [];
+            this.sort();
+            this.hasNew = false;
         },
 
         noobGear: function() {
@@ -538,6 +536,7 @@ namespace.module('bot.inv', function (exports, require) {
                            new SkillModel('basic spell'),
                            new ArmorModel('balsa helmet')];
             this.sort();
+            _.each(this.models, function(m) { m.isNew = true; });
         },
 
         toJSON: function() {
@@ -574,9 +573,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         addDrops: function(drops) {
             var messages = [];
-            //log.warning('adding %d inv drops', drops.length);
             _.each(drops, function(drop) {
-                //console.log(drop);
                 if (_.findWhere(this.models, {name: drop.name})) {
                     return;
                 }
@@ -584,24 +581,10 @@ namespace.module('bot.inv', function (exports, require) {
                 this.sort();
                 messages.push(drop.message());
                 log.warning('Item dropped: %s', drop.name);
-                gl.DirtyQueue.mark('inventory:new');
-                this.checkForNews();
+
+                gl.DirtyQueue.mark('item:new');
             }, this);
             return messages;
-        },
-
-        checkForNews: function() {
-            var any = false;
-            _.each(this.models, function(item) {
-                if (item.isNew) {
-                    any = true;
-                }
-            }, this);
-            if (any) {
-                gl.DirtyQueue.mark('footer:invshownew');
-            } else {
-                gl.DirtyQueue.mark('footer:invhidenew');
-            }
         }
     });
 
@@ -658,26 +641,12 @@ namespace.module('bot.inv', function (exports, require) {
         pctLeveled: function() {
             return this.qp / this.getNextLevelQp();
         },
-
-        addCard: function(level) {
-            this.amts[level]++;
-            this.upgrade(level);
-        },
-
-        upgrade: function(level) {
-            while (this.amts[level] > 10 && (level + 1) <= this.levels) {
-                this.amts[level] -= 10;
-                this.amts[level + 1] += 1;
-                log.info('Upgrading 10 level %d %s\'s to level %d', level, this.name, level + 1);
-                level++;
-            }
-        },
     });
 
     var CardCollection = gl.Model.extend({
         initialize: function() {
             this.models = [];
-            this.listenTo(gl.ItemEvents, 'newchange', this.updateNews);
+            this.hasNew = false;
         },
 
         toJSON: function() {
@@ -690,31 +659,6 @@ namespace.module('bot.inv', function (exports, require) {
                 c.fromJSON(cardData);
                 return c;
             });
-            this.updateNews();
-        },
-
-        updateNews: function() {
-            var any = false;
-            this.skillchain.newCards = false;
-            _.each(this.equipped.slots, function(slot) {
-                this.equipped.newCards[slot] = false;
-            }, this);
-            _.each(this.models, function(card) {
-                if (card.isNew) {
-                    any = true;
-                    if (card.slot === 'skill') {
-                        this.skillchain.newCards = true;
-                    } else {
-                        this.equipped.newCards[card.slot] = true;
-                    }
-                }
-            }, this);
-            if (any) {
-                gl.DirtyQueue.mark('footer:cardshownew')
-            } else {
-                gl.DirtyQueue.mark('footer:cardhidenew')
-            }
-            gl.DirtyQueue.mark('cards:newchange');
         },
 
         addDrops: function(drops) {
@@ -726,11 +670,10 @@ namespace.module('bot.inv', function (exports, require) {
                     drop.update(existingCard);
                 } else {
                     this.models.push(drop.make());
-                    log.warning('New Card dropped: %s', drop.name);
-                    this.updateNews();
+                    this.hasNew = true;
                 }
+                gl.DirtyQueue.mark('card:new');
                 messages.push(drop.message());
-                gl.DirtyQueue.mark('cards:new');
             }, this);
             return messages;
         },
@@ -743,9 +686,48 @@ namespace.module('bot.inv', function (exports, require) {
         },
     });
 
+    // Responds to events, updates state on items
+    var NewStateManager = gl.Model.extend({
+        initialize: function(inv, cardInv) {
+            this.inv = inv;
+            this.cardInv = cardInv;
+            this.newCardSlots = {weapon: false, head: false, hands: false, chest: false, legs: false, skill: false};
+
+            this.listenTo(gl.DirtyListener, 'item:new', this.update);
+            this.listenTo(gl.DirtyListener, 'card:new', this.update);
+            this.listenTo(gl.DirtyListener, 'removeNew', this.update);
+            gl.DirtyQueue.mark('item:new');
+        },
+
+        update: function() {
+            gl.DirtyQueue.mark('newChange');  // Note: Async
+            this.inv.hasNew = false;
+            for (var i = this.inv.models.length; i--;) {
+                if (this.inv.models[i].isNew) { this.inv.hasNew = true; break; }
+            }
+            this.cardInv.hasNew = false;
+            for (var i = this.cardInv.models.length; i--;) {
+                if (this.cardInv.models[i].isNew) { this.cardInv.hasNew = true; break; }
+            }
+            _.each(this.newCardSlots, function(value, key) { this.newCardSlots[key] = false; }, this);
+            var m;
+            for (var i = this.cardInv.models.length; i--;) {
+                m = this.cardInv.models[i];
+                this.newCardSlots[m.slot] = this.newCardSlots[m.slot] || m.isNew;
+            }
+            _.each(this.inv.models, function(m) {
+                m.hasNewCards = this.newCardSlots[m.slot];
+            }, this);
+
+            log.error('update inv: %s, card: %s, state: %s', this.inv.hasNew, this.cardInv.hasNew,
+                      JSON.stringify(this.newCardSlots));
+        }
+    });
+
     exports.extend({
         ItemCollection: ItemCollection,
         CardCollection: CardCollection,
+        NewStateManager: NewStateManager,
         CardModel: CardModel,
         WeaponModel: WeaponModel,
         ArmorModel: ArmorModel,

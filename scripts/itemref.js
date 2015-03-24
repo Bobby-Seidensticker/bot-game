@@ -2176,8 +2176,8 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'grabby arm': {
                 'mods': [
-                    {'def': 'range more 0.5 perLevel', 'type': 'def'},
-                    {'def': 'range more 30', 'type': 'def'},
+                    {'def': 'range more 0.5 perLevel', 'type': 'dmg'},
+                    {'def': 'range more 30', 'type': 'dmg'},
                 ],
                 'slot': 'hands',
             },

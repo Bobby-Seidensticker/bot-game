@@ -1785,9 +1785,9 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'fatal blow': {
                 'mods': [
-                    {'def': 'physDmg more 25 perLevel', 'type': 'dmg'},
-                    {'def': 'physDmg more 25', 'type': 'dmg'},
-                    {'def': 'cooldownTime added 100', 'type': 'dmg'},
+                    {'def': 'meleeDmg more 1 perLevel', 'type': 'dmg'},
+                    {'def': 'meleeDmg more 100', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 1000', 'type': 'dmg'},
                     {'def': 'cooldownTime more 100', 'type': 'dmg'},
                 ],
                 'slot': 'skill',
@@ -1801,10 +1801,10 @@ namespace.module('bot.itemref', function(exports, require) {
                 ],
                 'slot': 'skill',
             },
-            'reach': {
+            'long reach': {
                 'mods': [
                     {'def': 'range more 40', 'type': 'dmg'},
-                    {'def': 'range more 10 perLevel', 'type': 'dmg'},
+                    {'def': 'range more 0.5 perLevel', 'type': 'dmg'},
                 ],
                 'slot': 'skill',
             },
@@ -1833,13 +1833,13 @@ namespace.module('bot.itemref', function(exports, require) {
                     {'def': 'manaCost more -100', 'type': 'dmg'},
                     {'def': 'speed more 100', 'type': 'dmg'},
                     {'def': 'cooldownTime added 1000', 'type': 'dmg'},
-                    {'def': 'cooldownTime added -100 perLevel', 'type': 'dmg'}
+                    {'def': 'speed more -1 perLevel', 'type': 'dmg'}
                 ],
                 'slot': 'skill',
             },
             'micronaps': {
                 'mods': [
-                    {'def': 'cooldownTime more -5 perLevel', 'type': 'dmg'},
+                    {'def': 'cooldownTime more -1 perLevel', 'type': 'dmg'},
                     ],
                 'slot': 'skill',
             },
@@ -2840,6 +2840,9 @@ namespace.module('bot.itemref', function(exports, require) {
                     ['stinging', 1],
                     ['precise', 1],
                     ['faster attacks', 1],
+                    ['long reach', 1],
+                    ['grabby arm', 1],
+                    ['frugal', 1]
                 ],
                 'minLevel': 50,
             },
@@ -2861,7 +2864,10 @@ namespace.module('bot.itemref', function(exports, require) {
                     ['shock ritual', 1],
                     ['planet buster', 1],
                     ['semi automatic', 1],
-                    ['faster attacks', 1]
+                    ['faster attacks', 1],
+                    ['long reach', 1],
+                    ['grabby arm', 1],
+                    ['frugal', 1]
                 ],
                 'minLevel': 50,
             },
@@ -2882,7 +2888,10 @@ namespace.module('bot.itemref', function(exports, require) {
                     ['flame ritual', 1],
                     ['planet buster', 1],
                     ['semi automatic', 1],
-                    ['faster attacks', 1]
+                    ['faster attacks', 1],
+                    ['long reach', 1],
+                    ['grabby arm', 1],
+                    ['frugal', 1]
                 ],
                 'minLevel': 50,
             },
@@ -2905,6 +2914,9 @@ namespace.module('bot.itemref', function(exports, require) {
                     ['planet buster', 1],
                     ['semi automatic', 1],
                     ['faster attacks', 1],
+                    ['long reach', 1],
+                    ['grabby arm', 1],
+                    ['frugal', 1]
                 ],
                 'minLevel': 50,
             },
@@ -2926,6 +2938,9 @@ namespace.module('bot.itemref', function(exports, require) {
                     ['planet buster', 1],
                     ['semi automatic', 1],
                     ['faster attacks', 1],
+                    ['long reach', 1],
+                    ['grabby arm', 1],
+                    ['frugal', 1]
                 ],
                 'minLevel': 50,
             },
@@ -2943,35 +2958,35 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'dark forest': {
                 'choices': ['wood nymph', 'bat', 'elf', 'ent', 'dahd djinn'],
-                'weights': [20, 15, 15, 5, 1],
+                'weights': [200, 150, 150, 50, 1],
                 'boss': 'elf king',
                 'roomCount': 20,
                 'quantity': [2, 2, 3],
             },
             'clockwork ruins': {
                 'choices': ['gnome', 'gnome electrician', 'roflcopter', 'harpy', 'mechcinerator', 'mechfridgerator', 'mecha watt', 'ser djinn'],
-                'weights': [20, 10, 10, 10, 5, 5, 5, 1],
+                'weights': [200, 100, 100, 100, 50, 50, 50, 1],
                 'boss': 'sir mechs-a-lot',
                 'roomCount': 20,
                 'quantity': [2, 2, 3],
             },
             'aggro crag': {
                 'choices': ['goblin', 'goblin priest', 'goblin artillery', 'fire skeleton', 'fire golem', 'kei djinn'],
-                'weights': [20, 10, 10, 10, 10, 1],
+                'weights': [200, 100, 100, 100, 100, 1],
                 'boss': 'the inhuman torch',
                 'roomCount': 20,
                 'quantity': [2, 2, 3],
             },
             'hostile marsh': {
                 'choices': ['zombie', 'angry imp', 'dart imp', 'imp shaman', 'marshwalker', 'mad ape', 'al-err djinn', 'scalp collector', 'toxic golem'],
-                'weights': [20, 10, 10, 10, 10, 10, 1, 10 , 10],
+                'weights': [200, 100, 100, 100, 80, 80, 1, 50 , 20],
                 'boss': 'scalp collector',
                 'roomCount': 20,
                 'quantity': [4, 2, 4],
             },
             'icy tunnel': {
                 'choices': ['frost skeleton', 'ice golem', 'frost mage', 'frozen warrior', 'yeti', 'wight', 'frow djinn', 'shiver spirit'],
-                'weights': [20, 10, 10, 10 , 10, 10, 1, 5],
+                'weights': [200, 100, 50, 80 , 70, 100, 1, 20],
                 'boss': 'walter wight',
                 'roomCount': 20,
                 'quantity': [2, 3, 4],
@@ -2984,36 +2999,39 @@ namespace.module('bot.itemref', function(exports, require) {
                 'quantity': [3, 3, 6],
             },
             'anthropomorphic savanah': {
-                'choices': ['buzzard', 'hyena', 'lion', 'hippo', 'honey badger', 'cheetah', 'bees'],
+                'choices': ['buzzard', 'hyena', 'lion', 'hippo', 'honey badger', 'cheetah', 'bee'],
                 'weights': [1, 1],
                 'boss': 'bat',
                 'roomCount': 20,
                 'quantity': [20, 500, 5000],
-                'level': 99
             },
-            'hordecave': {
-                'choices': ['vampire', 'shadow knight'],
+            'hidden temple': {
+                'choices': ['monk', 'ninja', 'samurai', 'dragon', 'buddha'],
                 'weights': [1, 1],
                 'boss': 'bat',
                 'roomCount': 20,
                 'quantity': [20, 500, 5000],
-                'level': 99
             },
-            'halls of pain': {
-                'choices': ['vampire', 'shadow knight', 'skeleton king', 'elf king', 'sir mechs-a-lot', 'flame dragon', 'scalp collector', 'walter wight'],
-                'weights': [1, 1, 1, 1, 1, 1, 1, 1],
-                'boss': 'vampire',
+            'forgotten tomb': {
+                'choices': ['mummy', 'scarab', 'pharaoh', 'anubis', 'snake'],
+                'weights': [1, 1],
+                'boss': 'bat',
                 'roomCount': 20,
                 'quantity': [20, 500, 5000],
-                'level': 113
+            },
+            'shipwreck cove': {
+                'choices': ['swashbucker', 'cannoneer', 'drowned corpse', 'parrot', 'monkey', 'mermaid', 'first mate'],
+                'weights': [1, 1],
+                'boss': 'bat',
+                'roomCount': 20,
+                'quantity': [20, 500, 5000],
             },
             'demonic laboroatory': {
-                'choices': ['stitchling', 'mad scientist', 'minotaur', 'blood golem'],
+                'choices': ['stitchling', 'mad scientist', 'evil grad student', 'blood golem'],
                 'weights': [20, 10, 10],
                 'boss': 'pigbearman',
                 'roomCount': 20,
                 'quantity': [2, 3, 4],
-                'level': 35,
             },
             'scarred plains': {
                 'choices': ['troll', 'cyclops', 'harpy', 'bandit', 'giant', 'frost giant'],
@@ -3021,16 +3039,27 @@ namespace.module('bot.itemref', function(exports, require) {
                 'boss': 'pigbearman',
                 'roomCount': 20,
                 'quantity': [3, 3, 6],
-                'level': 40,
             },
-
+            'hordecave': {
+                'choices': ['vampire', 'shadow knight'],
+                'weights': [1, 1],
+                'boss': 'bat',
+                'roomCount': 20,
+                'quantity': [20, 500, 5000],
+            },
+            'halls of pain': {
+                'choices': ['vampire', 'shadow knight', 'skeleton king', 'elf king', 'sir mechs-a-lot', 'flame dragon', 'scalp collector', 'walter wight'],
+                'weights': [1, 1, 1, 1, 1, 1, 1, 1],
+                'boss': 'vampire',
+                'roomCount': 20,
+                'quantity': [20, 500, 5000],
+            },
             'dojo': {
                 'choices': ['skeleton king'],
                 'weights': [1],
                 'boss': 'dummy',
                 'roomCount': 10,
                 'quantity': [10, 0, 0],
-                'level': 113,
             },
             'empty dojo': {
                 'choices': [],
@@ -3038,7 +3067,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'boss': 'dummy',
                 'roomCount': 10,
                 'quantity': [0, 0, 0],
-                'level': 1,
             },
         },
         'test': {

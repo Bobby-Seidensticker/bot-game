@@ -1,4 +1,4 @@
-namespace.module('bot.drops', function (exports, require) {
+namespace.module('bot.drops', function(exports, require) {
 
     var inventory;
     var log;
@@ -27,7 +27,7 @@ namespace.module('bot.drops', function (exports, require) {
         if (type === 'skill') {
             return new SkillDrop(refData);
         }
-        throw('shoot, drop factory called with invalid type argument: ' + type);
+        throw ('shoot, drop factory called with invalid type argument: ' + type);
     }
 
     function CardDrop(refData) {
@@ -42,7 +42,7 @@ namespace.module('bot.drops', function (exports, require) {
         card.applyQp(qp);
         card.isNew = true;
         return card;
-    }
+    };
 
     // Extra function for cards.  What is called if there already exists that card but it needs xp
     CardDrop.prototype.update = function(existingCard) {
@@ -52,15 +52,15 @@ namespace.module('bot.drops', function (exports, require) {
         } else {
             this.storedMessage = '+' + qp + ' ' + utils.firstCap(this.name) + ' QP';
         }
-    }
+    };
 
     CardDrop.prototype.message = function() {
         if (this.storedMessage) {
             return this.storedMessage;
         } else {
-            return "New Card: " + utils.firstCap(this.name);
+            return 'New Card: ' + utils.firstCap(this.name);
         }
-    }
+    };
 
     function ItemDrop(refData) {
         this.itemType = refData[0];
@@ -77,11 +77,11 @@ namespace.module('bot.drops', function (exports, require) {
         }
         item.isNew = true;
         return item;
-    }
+    };
 
     ItemDrop.prototype.message = function() {
-        return "New Item: " + utils.firstCap(this.name);
-    }
+        return 'New Item: ' + utils.firstCap(this.name);
+    };
 
     function SkillDrop(refData) {
         // 'skillname'
@@ -92,11 +92,11 @@ namespace.module('bot.drops', function (exports, require) {
         var skill = new inventory.SkillModel(this.name);
         skill.isNew = true;
         return skill;
-    }
+    };
 
     SkillDrop.prototype.message = function() {
-        return "New Skill: " + utils.firstCap(this.name);
-    }
+        return 'New Skill: ' + utils.firstCap(this.name);
+    };
 
     exports.extend({
         dropFactory: dropFactory

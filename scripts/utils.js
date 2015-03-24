@@ -1,4 +1,4 @@
-namespace.module('bot.vectorutils', function (exports, require) {
+namespace.module('bot.vectorutils', function(exports, require) {
     var PI = Math.PI;
     var TAU = Math.PI * 2;
 
@@ -10,85 +10,85 @@ namespace.module('bot.vectorutils', function (exports, require) {
         this.x = x;
         this.y = y;
         if (isNaN(this.x)) {
-            throw('shoot');
+            throw ('shoot');
         }
     }
 
     Point.prototype.clone = function() {
         return new Point(this.x, this.y);
-    }
+    };
 
     Point.prototype.add = function(p) {
         return new Point(this.x + p.x, this.y + p.y);
-    }
+    };
 
     Point.prototype.abs = function() {
         return new Point(Math.abs(this.x), Math.abs(this.y));
-    }
+    };
 
     Point.prototype.dadd = function(p) {
         this.x += p.x;
         this.y += p.y;
         return this;
-    }
+    };
 
     Point.prototype.sub = function(p) {
         return new Point(this.x - p.x, this.y - p.y);
-    }
+    };
 
     Point.prototype.dsub = function(p) {
         this.x -= p.x;
         this.y -= p.y;
         return this;
-    }
+    };
 
     Point.prototype.flip = function() {
         return new Point(this.y, this.x);
-    }
+    };
 
     Point.prototype.mult = function(scalar) {
         return new Point(this.x * scalar, this.y * scalar);
-    }
+    };
 
     Point.prototype.dmult = function(scalar) {
         this.x = this.x * scalar;
         this.y = this.y * scalar;
         return this;
-    }
+    };
 
     Point.prototype.dist = function(p) {
         return Math.sqrt(this.dist2(p));
-    }
+    };
 
     Point.prototype.dist2 = function(p) {
         var x = this.x - p.x;
         var y = this.y - p.y;
         return x * x + y * y;
-    }
+    };
 
     Point.prototype.len = function() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
-    }
+    };
 
     Point.prototype.len2 = function() {
         return this.x * this.x + this.y * this.y;
-    }
+    };
 
     Point.prototype.within = function(p, radius) {
         return this.sub(p).len2() < (radius * radius);
-    }
+    };
 
     Point.prototype.rawDist = function(p) {
         return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
-    }
+    };
 
     Point.prototype.equal = function(p) {
         return this.x === p.x && this.y === p.y;
-    }
+    };
 
     Point.prototype.angle = function() {
         return Math.atan2(this.y, this.x);
-    }
+    };
 
     Point.prototype.closer = function(dest, speed, stop) {
         var diff = dest.sub(this);
@@ -99,23 +99,23 @@ namespace.module('bot.vectorutils', function (exports, require) {
         var ratio = 1 - (distance - speed) / distance;
         diff.dmult(ratio);
         return this.add(diff);
-    }
+    };
 
     Point.prototype.pctCloser = function(dest, pct) {
         return this.add(dest.sub(this).mult(pct));
-    }
+    };
 
     Point.prototype.toIso = function() {
         return new Point(this.x - this.y, (this.x + this.y) / 2);
-    }
+    };
 
     Point.prototype.toString = function() {
         return '(' + this.x + ', ' + this.y + ')';
-    }
+    };
 
     Point.prototype.dot = function(v) {
         return this.x * v.x + this.y * v.y;
-    }
+    };
 
     Point.prototype.unitVector = function() {
         var len = this.len();
@@ -124,7 +124,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
         } else {
             return this.mult(1 / len);
         }
-    }
+    };
 
     Point.prototype.rotate = function(degrees) {
         var angle = degrees / 180 * Math.PI;
@@ -132,7 +132,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
         var cs = Math.cos(angle);
 
         return new Point(this.x * cs - this.y * sn, this.x * sn + this.y * cs);
-    }
+    };
 
     Point.prototype.inBounds = function(size) {
         var p = this.clone();
@@ -149,7 +149,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
             p.y = size.y;
         }
         return p;
-    }
+    };
 
     function hit(s, e, t, r1, r2) {
         var r = r1 + r2;
@@ -226,7 +226,7 @@ namespace.module('bot.vectorutils', function (exports, require) {
 });
 
 
-namespace.module('bot.utils', function (exports, require) {
+namespace.module('bot.utils', function(exports, require) {
 
     var log = namespace.bot.log;
     var itemref = namespace.bot.itemref;
@@ -264,7 +264,7 @@ namespace.module('bot.utils', function (exports, require) {
             }
         } else {
             console.log('addMod about to barf with state ', dict, def);
-            throw('shoot');
+            throw ('shoot');
         }
     }
 
@@ -300,14 +300,14 @@ namespace.module('bot.utils', function (exports, require) {
         _.each(mods, function(mod, i) {
             res[i] = applyPerLevel(mod, level);
         });
-        
+
         var flatModDefs = flattenSameMods(res);
         res = [];
 
         _.each(flatModDefs, function(flatmod) {
             var finalmod = '';
             var spl = flatmod.split(' ');
-            var val = parseFloat(spl[2]);                
+            var val = parseFloat(spl[2]);
             if (spl.length === 3) {
                 if (spl[1] === 'added') {
                     if (spl[2] >= 0) {
@@ -366,7 +366,7 @@ namespace.module('bot.utils', function (exports, require) {
                 }
                 lookup[type][stat].push(parseFloat(spl[2]));
             } else {
-                throw('weird mods in utils.flattenSameMods');
+                throw ('weird mods in utils.flattenSameMods');
             }
         });
         _.each(['added', 'more', 'converted', 'gainedas'], function(typeKey) {
@@ -391,7 +391,7 @@ namespace.module('bot.utils', function (exports, require) {
         });
         return fin;
     }
-    
+
     function computeStat(section, stat) {
         var stat, obj, res;
 
@@ -409,7 +409,7 @@ namespace.module('bot.utils', function (exports, require) {
         });
 
         res *= (convPct / 100);
-        
+
         _.each(obj.gainedas, function(value, key) {
             gainedAmt = obj.gainedas[key];
             section[key].added += gainedAmt / 100 * res;
@@ -437,7 +437,7 @@ namespace.module('bot.utils', function (exports, require) {
         'hands': 'Hand',
         'legs': 'Leg',
         'skill': 'Skill'
-    }
+    };
 
     function presentableSlot(slotStr) {
         var res = presentableSlotDict[slotStr];
@@ -449,12 +449,12 @@ namespace.module('bot.utils', function (exports, require) {
         var arr = str.split(' ');
         return arr.join('_');
     }
-    
+
     function addAllMods(all, mods) {
         for (var i = 0; i < mods.length; i++) {
             if (mods[i].def === undefined) {
                 log.error('wtf', mods[i].def);
-            }               
+            }
             addMod(all[mods[i].type], mods[i].def);
         }
     }
@@ -464,7 +464,7 @@ namespace.module('bot.utils', function (exports, require) {
     function expandSourceCards(sourceCards, level) {
         return _.flatten(_.map(sourceCards, function(card) {
             if (card[0] === undefined) {
-                throw('crap! did you forget a comma after card line in itemref?');
+                throw ('crap! did you forget a comma after card line in itemref?');
             }
             return applyPerLevels(itemref.ref.card[card[0]].mods, card[1] + level);
         }, this));
@@ -476,7 +476,7 @@ namespace.module('bot.utils', function (exports, require) {
         expandSourceCards: expandSourceCards,
         newBaseStatsDict: newBaseStatsDict,
         prettifyMods: prettifyMods,
-        prettifyPerLvlMods: prettifyPerLvlMods,        
+        prettifyPerLvlMods: prettifyPerLvlMods,
         addAllMods: addAllMods,
         addMod: addMod,
         computeStat: computeStat,
@@ -487,7 +487,7 @@ namespace.module('bot.utils', function (exports, require) {
 
 });
 
-namespace.module('bot.messages', function (exports, require) {
+namespace.module('bot.messages', function(exports, require) {
 
     var log = namespace.bot.log;
 

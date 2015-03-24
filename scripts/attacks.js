@@ -1,4 +1,4 @@
-namespace.module('bot.attacks', function (exports, require) {
+namespace.module('bot.attacks', function(exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
     var log = namespace.bot.log;
@@ -14,7 +14,7 @@ namespace.module('bot.attacks', function (exports, require) {
             _.each(this.attacks, function(attack, i) {
                 var enemies = livingBodies[attack.targetTeam];
                 if (enemies === undefined) {
-                    log.error("Attackmanager tick: no enemies %d", attack.targetTeam);
+                    log.error('Attackmanager tick: no enemies %d', attack.targetTeam);
                 }
                 attack.tick(enemies);
             }, this);
@@ -162,7 +162,7 @@ namespace.module('bot.attacks', function (exports, require) {
             this.vector = vector.unitVector().mult(this.projSpeed);
             this.z = attacker.spec.height / 2;
             if (!this.color) { this.color = '#fff'; }
-            if (!this.projRadius) { this.projRadius = Math.pow(2,16); }
+            if (!this.projRadius) { this.projRadius = Math.pow(2, 16); }
 
             log.debug('projectile created, pos: %s, vector: %s', this.pos, this.vector);
         },

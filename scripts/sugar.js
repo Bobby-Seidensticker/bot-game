@@ -6,7 +6,7 @@ Array.prototype.sum = function() {
         s += this[i];
     }
     return s;
-}
+};
 
 Array.prototype.min = function() {
     var len = this.length;
@@ -20,7 +20,7 @@ Array.prototype.min = function() {
         }
     }
     return min;
-}
+};
 
 Array.prototype.minIndex = function() {
     var len = this.length;
@@ -36,7 +36,7 @@ Array.prototype.minIndex = function() {
         }
     }
     return index;
-}
+};
 
 Array.prototype.max = function() {
     var len = this.length;
@@ -50,7 +50,7 @@ Array.prototype.max = function() {
         }
     }
     return max;
-}
+};
 
 Array.prototype.maxIndex = function() {
     var len = this.length;
@@ -66,13 +66,13 @@ Array.prototype.maxIndex = function() {
         }
     }
     return index;
-}
+};
 
 Array.prototype.avg = function() {
     return this.sum() / this.length;
-}
+};
 
-var a = [4,2,6,73,3,2,3,5,2,5,6,23,67,1,2,4,1,5,64,7,9];
+var a = [4, 2, 6, 73, 3, 2, 3, 5, 2, 5, 6, 23, 67, 1, 2, 4, 1, 5, 64, 7, 9];
 var b;
 console.time('min');
 for (var i = 0; i < 10000; i++) {

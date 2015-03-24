@@ -1,4 +1,4 @@
-namespace.module('bot.itemref', function (exports, require) {
+namespace.module('bot.itemref', function(exports, require) {
     var log = namespace.bot.log;
     var prob = namespace.bot.prob;
 
@@ -6,515 +6,515 @@ namespace.module('bot.itemref', function (exports, require) {
     var BASE_RANGE_RANGE = 500000;
     var BASE_SPELL_RANGE = 400000;
 
-    var PHYS_COLOR = "#777";    
+    var PHYS_COLOR = '#777';
     var FIRE_COLOR = 'rgba(255, 130, 0, 0.6)';
     var COLD_COLOR = 'rgba(0, 255, 255, 0.6)';
     var LIGHT_COLOR = 'rgba(173, 7, 194, 0.6)';
-    var POIS_COLOR = 'rgba(85, 255, 139, 0.6)';    
+    var POIS_COLOR = 'rgba(85, 255, 139, 0.6)';
 
     var ref = {
-        "weapon": {
+        'weapon': {
             ////////////////////
             /// MELEE //////////
             ////////////////////
-            "cardboard sword": {
-                "mods": [
+            'cardboard sword': {
+                'mods': [
                     {def: 'physDmg added 6', type: 'dmg'},
                     {def: 'physDmg more 0.5 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
-            "hand axe": {
-                "mods": [
+            'hand axe': {
+                'mods': [
                     {def: 'physDmg added 10', type: 'dmg'},
                     {def: 'physDmg more 0.55 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
-            "stone hammer": {
-                "mods": [
+            'stone hammer': {
+                'mods': [
                     {def: 'speed more 20', type: 'dmg'},
                     {def: 'physDmg added 10', type: 'dmg'},
                     {def: 'physDmg more 0.6 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
-            "falchion": {
-                "mods": [
+            'falchion': {
+                'mods': [
                     {def: 'speed more -20', type: 'dmg'},
                     {def: 'physDmg added 12', type: 'dmg'},
                     {def: 'physDmg more 0.65 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
-            "morning star": {
-                "mods": [
+            'morning star': {
+                'mods': [
                     {def: 'speed more 50', type: 'dmg'},
                     {def: 'physDmg added 14', type: 'dmg'},
                     {def: 'physDmg more 1 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
-            "long sword": {
-                "mods": [
+            'long sword': {
+                'mods': [
                     {def: 'speed more -20', type: 'dmg'},
-                    {def: 'speed more -0.1 perLevel', type: 'dmg'},                  
+                    {def: 'speed more -0.1 perLevel', type: 'dmg'},
                     {def: 'physDmg added 16', type: 'dmg'},
                     {def: 'physDmg more 0.6 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
-            "spikey mace": {
-                "mods": [
+            'spikey mace': {
+                'mods': [
                     {def: 'speed more 40', type: 'dmg'},
-                    {def: 'physDmg added 16', type: 'dmg'},                    
+                    {def: 'physDmg added 16', type: 'dmg'},
                     {def: 'physDmg more 0.85 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
-            "spiked battle axe": {
-                "mods": [
-                    {def: 'speed more -20', type: 'dmg'},                    
+            'spiked battle axe': {
+                'mods': [
+                    {def: 'speed more -20', type: 'dmg'},
                     {def: 'physDmg added 20', type: 'dmg'},
                     {def: 'physDmg more 0.75 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
-            "winged axe": {
-                "mods": [
+            'winged axe': {
+                'mods': [
                     {def: 'range more 0.5 perLevel', type: 'dmg'},
-                    {def: 'speed more 20', type: 'dmg'},                    
+                    {def: 'speed more 20', type: 'dmg'},
                     {def: 'physDmg added 25', type: 'dmg'},
                     {def: 'physDmg more 0.75 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "melee",
+                'weaponType': 'melee',
             },
             ////////////////////
             ///// RANGED ///////
             ////////////////////
-            "wooden bow": {
-                "mods": [
+            'wooden bow': {
+                'mods': [
                     {def: 'physDmg added 5', type: 'dmg'},
                     {def: 'physDmg more 0.5 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "range",
+                'weaponType': 'range',
             },
-            "hand crossbow": {
-                "mods": [
+            'hand crossbow': {
+                'mods': [
                     {def: 'physDmg added 7', type: 'dmg'},
-                    {def: 'speed more -30', type: 'dmg'},                    
+                    {def: 'speed more -30', type: 'dmg'},
                     {def: 'physDmg more 0.6 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "range",
+                'weaponType': 'range',
             },
-            "crossbow": {
-                "mods": [
-                    {def: 'speed more 30', type: 'dmg'},                    
+            'crossbow': {
+                'mods': [
+                    {def: 'speed more 30', type: 'dmg'},
                     {def: 'physDmg added 9', type: 'dmg'},
                     {def: 'physDmg more 0.85 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "range",
+                'weaponType': 'range',
             },
-            "composite bow": {
-                "mods": [
-                    {def: 'range more 20', type: 'dmg'},                    
+            'composite bow': {
+                'mods': [
+                    {def: 'range more 20', type: 'dmg'},
                     {def: 'physDmg added 20', type: 'dmg'},
                     {def: 'physDmg more 0.75 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "range",
+                'weaponType': 'range',
             },
             ////////////////////
             ////// SPELL ///////
             ////////////////////
-            "simple wand": {
-                "mods": [
+            'simple wand': {
+                'mods': [
                     {def: 'spellDmg more 15', type: 'dmg'},
                     {def: 'spellDmg more 0.5 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "spell",
+                'weaponType': 'spell',
             },
-            "knobby wand": {
-                "mods": [
+            'knobby wand': {
+                'mods': [
                     {def: 'spellDmg more 15', type: 'dmg'},
                     {def: 'spellDmg more 0.6 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "spell",
+                'weaponType': 'spell',
             },
-            "pewter wand": {
-                "mods": [
+            'pewter wand': {
+                'mods': [
                     {def: 'spellDmg more 15', type: 'dmg'},
                     {def: 'spellDmg more 0.85 perLevel', type: 'dmg'},
                     {def: 'eleResistAll more 20', type: 'def'}
                 ],
-                "weaponType": "spell",
+                'weaponType': 'spell',
             },
-            "delicate wand": {
-                "mods": [
+            'delicate wand': {
+                'mods': [
                     {def: 'spellDmg more 25', type: 'dmg'},
                     {def: 'spellDmg more 0.75 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "spell",
+                'weaponType': 'spell',
             },
-            "dragonstone wand": {
-                "mods": [
+            'dragonstone wand': {
+                'mods': [
                     {def: 'fireDmg more 15', type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "spell",
+                'weaponType': 'spell',
             },
-            "fairy wand": {
-                "mods": [
+            'fairy wand': {
+                'mods': [
                     {def: 'spellDmg more 25', type: 'dmg'},
                     {def: 'spellDmg more 0.8 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "spell",
+                'weaponType': 'spell',
             },
-            "star wand": {
-                "mods": [
+            'star wand': {
+                'mods': [
                     {def: 'spellDmg more 25', type: 'dmg'},
                     {def: 'spellDmg more 0.85 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "spell",
+                'weaponType': 'spell',
             },
-            "demon wand": {
-                "mods": [
+            'demon wand': {
+                'mods': [
                     {def: 'spellDmg more 50', type: 'dmg'},
                     {def: 'spellDmg more 0.75 perLevel', type: 'dmg'}
                 ],
-                "weaponType": "spell",
+                'weaponType': 'spell',
             },
         },
-        "armor": {
+        'armor': {
             ////////////////////
             ///// HEAD /////////
             ////////////////////
-            "balsa helmet": {
-                "mods": [
+            'balsa helmet': {
+                'mods': [
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor more 1 perLevel', type: 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "collander": {
-                "mods": [
+            'collander': {
+                'mods': [
                     {def: 'armor added 7', type: 'def'},
                     {def: 'armor more 1.2 perLevel', type: 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "conquistador helm": {
-                "mods": [
+            'conquistador helm': {
+                'mods': [
                     {def: 'armor added 9', type: 'def'},
                     {def: 'armor more 1.4 perLevel', type: 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "crusader helm": {
-                "mods": [
+            'crusader helm': {
+                'mods': [
                     {def: 'armor more 1.6 perLevel', type: 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "gladiator helm": {
-                "mods": [
+            'gladiator helm': {
+                'mods': [
                     {def: 'armor added 22', type: 'def'},
                     {def: 'armor more 1.3 perLevel', type: 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "apollo helmet": {
-                "mods": [
+            'apollo helmet': {
+                'mods': [
                     {def: 'armor added 30', type: 'def'},
                     {def: 'armor more 1.5 perLevel', type: 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "plague doctor": {
-                "mods": [
+            'plague doctor': {
+                'mods': [
                     {def: 'poisResist more -10', type: 'eleResist'},
                     {def: 'poisDmg gainedas 1 hpLeech', type: 'dmg'},
                     {def: 'poisResist more -0.5 perLevel', type: 'eleResist'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "mage hat": {
-                "mods": [
+            'mage hat': {
+                'mods': [
                     {def: 'manaRegen added 10', type: 'def'},
                     {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
             ////////////////////
             ///// CHEST ////////
             ////////////////////
-            "t-shirt": {
-                "mods": [
+            't-shirt': {
+                'mods': [
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor more 1 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "leather armor": {
-                "mods": [
+            'leather armor': {
+                'mods': [
                     {def: 'armor added 8', type: 'def'},
                     {def: 'armor more 1.2 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "goblin leather": {
-                "mods": [
+            'goblin leather': {
+                'mods': [
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor more 1.3 perLevel', type: 'def'},
-                    {def: 'fireResist more -0.5 perLevel', type: 'eleResist'}                    
+                    {def: 'fireResist more -0.5 perLevel', type: 'eleResist'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "leatherscale armor": {
-                "mods": [
+            'leatherscale armor': {
+                'mods': [
                     {def: 'dodge more 1 perLevel', type: 'def'},
                     {def: 'armor more 1 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "leatherplate armor": {
-                "mods": [
+            'leatherplate armor': {
+                'mods': [
                     {def: 'armor added 20', type: 'def'},
                     {def: 'armor more 1.5 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "hammered chestplate": {
-                "mods": [
+            'hammered chestplate': {
+                'mods': [
                     {def: 'armor more 50', type: 'def'},
                     {def: 'armor more 1 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "iron chestplate": {
-                "mods": [
+            'iron chestplate': {
+                'mods': [
                     {def: 'armor added 40', type: 'def'},
                     {def: 'armor more 1.5 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "copper chestplate": {
-                "mods": [
+            'copper chestplate': {
+                'mods': [
                     {def: 'armor added 100', type: 'def'},
                     {def: 'armor more 1.4 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "muscle plate": {
-                "mods": [
+            'muscle plate': {
+                'mods': [
                     {def: 'armor added 100', type: 'def'},
                     {def: 'armor more 1.6 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "elegant plate": {
-                "mods": [
-                    {def: 'armor added 200', type: 'def'},                    
+            'elegant plate': {
+                'mods': [
+                    {def: 'armor added 200', type: 'def'},
                     {def: 'dodge more -50', type: 'def'},
                     {def: 'armor more 1.9 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "raider armor": {
-                "mods": [
+            'raider armor': {
+                'mods': [
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},
-                    {def: 'armor more -20', type: 'def'},                    
+                    {def: 'armor more -20', type: 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "shadow armor": {
-                "mods": [
+            'shadow armor': {
+                'mods': [
                     {def: 'dodge added 50', type: 'def'},
                     {def: 'dodge more 1.5 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "scout leather": {
-                "mods": [
+            'scout leather': {
+                'mods': [
                     {def: 'dodge added 20', type: 'def'},
                     {def: 'dodge more 1 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "studded leather": {
-                "mods": [
+            'studded leather': {
+                'mods': [
                     {def: 'dodge added 50', type: 'def'},
                     {def: 'dodge more 1.4 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "velvet tunic": {
-                "mods": [
+            'velvet tunic': {
+                'mods': [
                     {def: 'manaRegen added 5', type: 'def'},
                     {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "war robe": {
-                "mods": [
+            'war robe': {
+                'mods': [
                     {def: 'manaRegen added 10', type: 'def'},
                     {def: 'armor more 0.8 perLevel', type: 'def'},
-                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}                    
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "winged leather": {
-                "mods": [
+            'winged leather': {
+                'mods': [
                     {def: 'armor added 100', type: 'def'},
                     {def: 'armor more 1.2 perLevel', type: 'def'},
-                    {def: 'eleResistAll more -0.6 perLevel', type: 'def'}                    
+                    {def: 'eleResistAll more -0.6 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "cultist robe": {
-                "mods": [
+            'cultist robe': {
+                'mods': [
                     {def: 'spellDmg more 20', type: 'dmg'},
                     {def: 'manaRegen more 3 perLevel', type: 'def'},
-                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}                    
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "embroidered silks": {
-                "mods": [
+            'embroidered silks': {
+                'mods': [
                     {def: 'manaRegen added 20', type: 'def'},
                     {def: 'manaRegen more 3 perLevel', type: 'def'},
                     {def: 'eleResistAll more -0.5 perLevel', type: 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "batsuit": {
-                "mods": [
+            'batsuit': {
+                'mods': [
                     {def: 'speed more -20', type: 'dmg'},
                     {def: 'physDmg more 1 perLevel', type: 'dmg'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
             ////////////////////
             ///// LEGS /////////
             ////////////////////
-            "jeans": {
-                "mods": [
+            'jeans': {
+                'mods': [
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor more 1 perLevel', type: 'def'}
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "leather boots": {
-                "mods": [
+            'leather boots': {
+                'mods': [
                     {def: 'armor added 10', type: 'def'},
                     {def: 'armor more 1.2 perLevel', type: 'def'}
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "elf boots": {
-                "mods": [
+            'elf boots': {
+                'mods': [
                     {def: 'dodge added 5', type: 'def'},
                     {def: 'dodge more 1 perLevel', type: 'def'}
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "mage boots": {
-                "mods": [
+            'mage boots': {
+                'mods': [
                     {def: 'manaRegen added 5', type: 'def'},
                     {def: 'manaRegen more 2 perLevel', type: 'def'},
-                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'},                    
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'},
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "arcane boots": {
-                "mods": [
+            'arcane boots': {
+                'mods': [
                     {def: 'spellDmg more 20', type: 'dmg'},
                     {def: 'manaRegen more 2 perLevel', type: 'def'},
-                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}                    
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "buckaneer boots": {
-                "mods": [
+            'buckaneer boots': {
+                'mods': [
                     {def: 'armor added 25', type: 'def'},
                     {def: 'armor more 1 perLevel', type: 'def'},
-                    {def: 'eleResistAll more -0.3 perLevel', type: 'def'}                    
+                    {def: 'eleResistAll more -0.3 perLevel', type: 'def'}
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "suess boots": {
-                "mods": [
+            'suess boots': {
+                'mods': [
                     {def: 'armor added 500', type: 'def'},
                     {def: 'armor added 20 perLevel', type: 'def'}
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
             ////////////////////
             ///// GLOVES ///////
             ////////////////////
-            "latex gloves": {
-                "mods": [
+            'latex gloves': {
+                'mods': [
                     {def: 'armor added 5', type: 'def'},
                     {def: 'armor more 1 perLevel', type: 'def'}
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "gardening gloves": {
-                "mods": [
+            'gardening gloves': {
+                'mods': [
                     {def: 'armor added 7', type: 'def'},
                     {def: 'armor more 1.2 perLevel', type: 'def'}
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "leather gloves": {
-                "mods": [
+            'leather gloves': {
+                'mods': [
                     {def: 'dodge added 10', type: 'def'},
                     {def: 'dodge more 1.2 perLevel', type: 'def'}
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "velvet gloves": {
-                "mods": [
+            'velvet gloves': {
+                'mods': [
                     {def: 'manaRegen added 2', type: 'def'},
                     {def: 'manaRegen more 2 perLevel', type: 'def'},
-                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'},                    
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'},
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "handmail": {
-                "mods": [
+            'handmail': {
+                'mods': [
                     {def: 'armor added 15', type: 'def'},
                     {def: 'armor more 1.3 perLevel', type: 'def'}
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "fancy gauntlets": {
-                "mods": [
+            'fancy gauntlets': {
+                'mods': [
                     {def: 'armor added 25', type: 'def'},
                     {def: 'armor more 1.5 perLevel', type: 'def'}
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "polished gauntlets": {
-                "mods": [
+            'polished gauntlets': {
+                'mods': [
                     {def: 'armor added 30', type: 'def'},
-                    {def: 'dodge more -30', type: 'def'},                    
+                    {def: 'dodge more -30', type: 'def'},
                     {def: 'armor more 1.8 perLevel', type: 'def'}
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "goldenscale gauntlets": {
-                "mods": [
+            'goldenscale gauntlets': {
+                'mods': [
                     {def: 'dodge added 50', type: 'def'},
                     {def: 'dodge more 1.3 perLevel', type: 'def'}
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "mage gloves": {
-                "mods": [
+            'mage gloves': {
+                'mods': [
                     {def: 'manaRegen added 10', type: 'def'},
                     {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
         },
         /*
@@ -589,66 +589,66 @@ namespace.module('bot.itemref', function (exports, require) {
 
           primary verb amt special(perLevel / element inc ase of converted and gainedas)
 
-          
+
 
           hatred:
 
           {base: ['physDmg gainedas coldDmg 50'], perLevel: 'physDmg gainedas 2 coldDmg'}
-          
+
          */
 
-        "skill": {
-            "basic": {
+        'skill': {
+            'basic': {
             },
-            "basic melee": {
-                "prototype": ["basic"],
-                "skillType": "melee",
-                "types": ["melee"],
-                "specs": [{ type: 'melee', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
-                "baseMods": [
+            'basic melee': {
+                'prototype': ['basic'],
+                'skillType': 'melee',
+                'types': ['melee'],
+                'specs': [{ type: 'melee', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
-            "basic range": {
-                "prototype": ["basic"],
-                "skillType": "range",
-                "types": ["proj"],
-                "specs": [{ type: 'proj', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
-                "baseMods": [
+            'basic range': {
+                'prototype': ['basic'],
+                'skillType': 'range',
+                'types': ['proj'],
+                'specs': [{ type: 'proj', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
-            "basic spell": {
-                "prototype": ["basic"],
-                "skillType": "spell",
-                "types": ["proj"],
-                "specs": [{ type: 'proj', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
-                "baseMods": [
+            'basic spell': {
+                'prototype': ['basic'],
+                'skillType': 'spell',
+                'types': ['proj'],
+                'specs': [{ type: 'proj', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'physDmg added 9', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
-            "super smash": {
-                "prototype": ["basic melee"],
-                "baseMods": [
+            'super smash': {
+                'prototype': ['basic melee'],
+                'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'physDmg more 10', type: 'dmg'},
                     {def: 'physDmg more 1 perLevel', type: 'dmg'},
                     {def: 'physDmg added 2 perLevel', type: 'dmg'}
                 ]
             },
-            "masterful strike": {
-                "prototype": ["basic melee"],
-                "baseMods": [
+            'masterful strike': {
+                'prototype': ['basic melee'],
+                'baseMods': [
                     {def: 'manaCost added 12', type: 'dmg'},
                     {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
@@ -657,42 +657,42 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 5 perLevel', type: 'dmg'}
                 ]
             },
-            "quick hit": {
-                "prototype": ["basic melee"],
-                "baseMods": [
+            'quick hit': {
+                'prototype': ['basic melee'],
+                'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'speed added 250', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                 ]
             },
-            "fire slash": {
-                "prototype": ["basic melee"],
-                "types": ["melee", "fire"],
-                "anim": ["#f00"],
-                "specs": [{ type: 'melee', color: FIRE_COLOR}],
-                "baseMods": [
+            'fire slash': {
+                'prototype': ['basic melee'],
+                'types': ['melee', 'fire'],
+                'anim': ['#f00'],
+                'specs': [{ type: 'melee', color: FIRE_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'fireDmg more 2 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },
-            "flaming debris": {
-                "prototype": ["basic melee"],
-                "types": ["melee", "fire"],
-                "specs": [{ type: 'melee', quals: [],
+            'flaming debris': {
+                'prototype': ['basic melee'],
+                'types': ['melee', 'fire'],
+                'specs': [{ type: 'melee', quals: [],
                             onHit: [{ type: 'proj', color: FIRE_COLOR,
                                       quals: ['projCount added 2', 'dmg more -20'],
                                       onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []
                           }],
-                "baseMods": [
+                'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
@@ -700,20 +700,20 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'projRange added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},      
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'},
                     {def: 'projSpeed more -80', type: 'dmg'},
                 ]
             },
-            "exploding strike": {
-                "prototype": ["basic melee"],
-                "types": ["melee", "fire"],
-                "specs": [{ type: 'melee', quals: [], color: FIRE_COLOR,
+            'exploding strike': {
+                'prototype': ['basic melee'],
+                'types': ['melee', 'fire'],
+                'specs': [{ type: 'melee', quals: [], color: FIRE_COLOR,
                             onHit: [],
                             onKill: [{ type: 'circle', color: FIRE_COLOR, quals: ['dmg more 100'], onHit: [], onKill: [], onRemove: []}],
                             onRemove: []
                           }],
-                "baseMods": [
+                'baseMods': [
                     {def: 'manaCost added 4', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
@@ -722,17 +722,17 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'},
                     {def: 'aoeRadius more -40', type: 'dmg'},
                 ],
-                "flavor": "Creates fiery AoE explosions on kill dealing double damage",
+                'flavor': 'Creates fiery AoE explosions on kill dealing double damage',
             },
-            "chain lightning": {
-                "prototype": ["basic melee"],
-                "types": ["melee", "lightning"],
-                "specs": [{ type: 'melee', quals: [], color: LIGHT_COLOR,
+            'chain lightning': {
+                'prototype': ['basic melee'],
+                'types': ['melee', 'lightning'],
+                'specs': [{ type: 'melee', quals: [], color: LIGHT_COLOR,
                             onHit: [],
                             onKill: [{ type: 'circle', color: LIGHT_COLOR, quals: ['dmg more 100'], onHit: [], onKill: [], onRemove: []}],
                             onRemove: []
                           }],
-                "baseMods": [
+                'baseMods': [
                     {def: 'manaCost added 4', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
@@ -741,17 +741,17 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 60 lightDmg', type: 'dmg'},
                     {def: 'aoeRadius more -40', type: 'dmg'},
                 ],
-                "flavor": "Creates electical AoE explosions on kill dealing double damage",
+                'flavor': 'Creates electical AoE explosions on kill dealing double damage',
             },
-            "splashing hit": {
-                "prototype": ["basic melee"],
-                "types": ["melee"],
-                "specs": [{ type: 'melee', quals: [], color: PHYS_COLOR,
+            'splashing hit': {
+                'prototype': ['basic melee'],
+                'types': ['melee'],
+                'specs': [{ type: 'melee', quals: [], color: PHYS_COLOR,
                             onHit: [{ type: 'circle', color: PHYS_COLOR, quals: ['dmg more -20'], onHit: [], onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []
                           }],
-                "baseMods": [
+                'baseMods': [
                     {def: 'manaCost added 10', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
@@ -760,17 +760,17 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg more -40', type: 'dmg'},
                     {def: 'aoeRadius more -60', type: 'dmg'},
                 ],
-                "flavor": "Creates small AoE explosions on hit",
+                'flavor': 'Creates small AoE explosions on hit',
             },
-            "blast arrow": {
-                "prototype": ["basic range"],
-                "types": ["range"],
-                "specs": [{ type: 'proj', quals: [], color: PHYS_COLOR,
+            'blast arrow': {
+                'prototype': ['basic range'],
+                'types': ['range'],
+                'specs': [{ type: 'proj', quals: [], color: PHYS_COLOR,
                             onHit: [{ type: 'circle', color: PHYS_COLOR, quals: ['dmg more -20'], onHit: [], onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []
                           }],
-                "baseMods": [
+                'baseMods': [
                     {def: 'manaCost added 12', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 1.5, type: 'dmg'},
@@ -779,94 +779,94 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg more -40', type: 'dmg'},
                     {def: 'aoeRadius more -60', type: 'dmg'},
                 ],
-                "flavor": "Creates small AoE explosions on hit",
+                'flavor': 'Creates small AoE explosions on hit',
             },
-            "ground smash": {
-                "prototype": ["basic melee"],
-                "types": ["melee", "fire"],
-                "specs": [{ type: 'melee', quals: [],
+            'ground smash': {
+                'prototype': ['basic melee'],
+                'types': ['melee', 'fire'],
+                'specs': [{ type: 'melee', quals: [],
                             onHit: [{ type: 'cone', color: FIRE_COLOR, quals: ['dmg more -20'], onHit: [], onKill: [], onRemove: []}],
                             onKill: [],
                             onRemove: []
                           }],
-                "baseMods": [
+                'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                    
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 fireDmg', type: 'dmg'}
                 ]
             },
-            "ice slash": {
-                "prototype": ["basic melee"],
-                "types": ["melee", "cold"],
-                "anim": ["#00f"],
-                "specs": [{ type: 'melee', color: COLD_COLOR}],
-                "baseMods": [
+            'ice slash': {
+                'prototype': ['basic melee'],
+                'types': ['melee', 'cold'],
+                'anim': ['#00f'],
+                'specs': [{ type: 'melee', color: COLD_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'coldDmg more 1 perLevel', type: 'dmg'},
                     {def: 'coldDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                                        
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 coldDmg', type: 'dmg'}
                 ]
             },
-            "lightning slash": {
-                "prototype": ["basic melee"],
-                "types": ["melee", "lightning"],
-                "anim": ["#ff0"],
-                "specs": [{ type: 'melee', color: LIGHT_COLOR}],
-                "baseMods": [
+            'lightning slash': {
+                'prototype': ['basic melee'],
+                'types': ['melee', 'lightning'],
+                'anim': ['#ff0'],
+                'specs': [{ type: 'melee', color: LIGHT_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'lightDmg more 1 perLevel', type: 'dmg'},
                     {def: 'lightDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                                        
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 lightDmg', type: 'dmg'}
                 ]
             },
-            "poison slash": {
-                "prototype": ["basic melee"],
-                "types": ["melee", "poison"],
-                "anim": ["#0f0"],
-                "specs": [{ type: 'melee', color: POIS_COLOR}],
-                "baseMods": [
+            'poison slash': {
+                'prototype': ['basic melee'],
+                'types': ['melee', 'poison'],
+                'anim': ['#0f0'],
+                'specs': [{ type: 'melee', color: POIS_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
-                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},                    
+                    {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'poisDmg more 1 perLevel', type: 'dmg'},
                     {def: 'poisDmg added 1 perLevel', type: 'dmg'},
-                    {def: 'physDmg added 1 perLevel', type: 'dmg'},                                        
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 60 poisDmg', type: 'dmg'}
                 ]
             },
-            "speed shot": {
-                "prototype": ["basic range"],
-                "skillType": "range",
-                "types": ["proj"],
-                "baseMods": [
+            'speed shot': {
+                'prototype': ['basic range'],
+                'skillType': 'range',
+                'types': ['proj'],
+                'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
                     {def: 'physDmg more -30', type: 'dmg'},
-                    {def: 'physDmg more 2 perLevel', type: 'dmg'},                    
+                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                 ]
             },
-            "fire arrow": {
-                "prototype": ["basic range"],
-                "skillType": "range",
-                "types": ["proj", "fire"],
-                "anim": ["#f00"],
-                "specs": [{ type: 'proj', color: FIRE_COLOR}],
-                "baseMods": [
+            'fire arrow': {
+                'prototype': ['basic range'],
+                'skillType': 'range',
+                'types': ['proj', 'fire'],
+                'anim': ['#f00'],
+                'specs': [{ type: 'proj', color: FIRE_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
@@ -875,13 +875,13 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 50 fireDmg', type: 'dmg'}
                 ]
             },
-            "cold arrow": {
-                "prototype": ["basic range"],
-                "skillType": "range",
-                "types": ["proj", "cold"],
-                "anim": ["#00f"],
-                "specs": [{ type: 'proj', color: COLD_COLOR}],
-                "baseMods": [
+            'cold arrow': {
+                'prototype': ['basic range'],
+                'skillType': 'range',
+                'types': ['proj', 'cold'],
+                'anim': ['#00f'],
+                'specs': [{ type: 'proj', color: COLD_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
@@ -890,13 +890,13 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 50 coldDmg', type: 'dmg'}
                 ]
             },
-            "lightning arrow": {
-                "prototype": ["basic range"],
-                "skillType": "range",
-                "types": ["proj", "lightning"],
-                "anim": ["#ff0"],
-                "specs": [{ type: 'proj', color: LIGHT_COLOR}],
-                "baseMods": [
+            'lightning arrow': {
+                'prototype': ['basic range'],
+                'skillType': 'range',
+                'types': ['proj', 'lightning'],
+                'anim': ['#ff0'],
+                'specs': [{ type: 'proj', color: LIGHT_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
@@ -905,13 +905,13 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 50 lightDmg', type: 'dmg'}
                 ]
             },
-            "poison arrow": {
-                "prototype": ["basic range"],
-                "skillType": "range",
-                "types": ["proj", "poison"],
-                "anim": ["#0f0"],
-                "specs": [{ type: 'proj', color: POIS_COLOR}],
-                "baseMods": [
+            'poison arrow': {
+                'prototype': ['basic range'],
+                'skillType': 'range',
+                'types': ['proj', 'poison'],
+                'anim': ['#0f0'],
+                'specs': [{ type: 'proj', color: POIS_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
                     {def: 'cooldownTime added 600', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
@@ -920,12 +920,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 50 poisDmg', type: 'dmg'}
                 ]
             },
-            "headshot": {
-                "prototype": ["basic"],
-                "skillType": "range",
-                "types": ["proj"],
-                "specs": [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],                
-                "baseMods": [
+            'headshot': {
+                'prototype': ['basic'],
+                'skillType': 'range',
+                'types': ['proj'],
+                'specs': [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'manaCost added 13', type: 'dmg'},
                     {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
@@ -934,13 +934,13 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'cooldownTime added 2000', type: 'dmg'},
                 ]
             },
-            "incinerate": {                
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "fire", "spell"],
-                "anim": ["#f00"],
-                "specs": [{ type: 'cone', color: FIRE_COLOR}],
-                "baseMods": [
+            'incinerate': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'fire', 'spell'],
+                'anim': ['#f00'],
+                'specs': [{ type: 'cone', color: FIRE_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 7', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE / 4, type: 'dmg'},
@@ -949,12 +949,12 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 100 fireDmg', type: 'dmg'}
                 ]
             },
-            "poison spray": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["cone", "pois", "spell"],
-                "specs": [{type: "cone", color: POIS_COLOR}],
-                "baseMods": [
+            'poison spray': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['cone', 'pois', 'spell'],
+                'specs': [{type: 'cone', color: POIS_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 9', type: 'dmg'},
                     {def: 'speed added 350', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE * 0.2, type: 'dmg'},
@@ -964,13 +964,13 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg converted 100 poisDmg', type: 'dmg'}
                 ]
             },
-            "fire ball": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "fire", "spell"],
-                "anim": ["#f00"],
-                "specs": [{ type: "proj", color: FIRE_COLOR}],
-                "baseMods": [
+            'fire ball': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'fire', 'spell'],
+                'anim': ['#f00'],
+                'specs': [{ type: 'proj', color: FIRE_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 9', type: 'dmg'},
                     {def: 'speed added 600', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
@@ -978,59 +978,59 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'fireDmg added 3', type: 'dmg'},
                     {def: 'projRadius more 200', type: 'dmg'},
                 ],
-                "flavor": "Goodness gracious, these balls are great!"
+                'flavor': 'Goodness gracious, these balls are great!'
             },
-            "ice ball": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "cold", "spell"],
-                "anim": ["#00f"],
-                "specs": [{type: "proj", color: COLD_COLOR}],
-                "baseMods": [
+            'ice ball': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'cold', 'spell'],
+                'anim': ['#00f'],
+                'specs': [{type: 'proj', color: COLD_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 9', type: 'dmg'},
                     {def: 'speed added 600', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
                     {def: 'coldDmg added 3', type: 'dmg'},
-                    {def: 'projRadius more 200', type: 'dmg'},                    
+                    {def: 'projRadius more 200', type: 'dmg'},
                 ]
             },
-            "lightning ball": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "lightning", "spell"],
-                "anim": ["#ff0"],
-                "specs": [{type: "proj", color: LIGHT_COLOR}],
-                "baseMods": [
+            'lightning ball': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'lightning', 'spell'],
+                'anim': ['#ff0'],
+                'specs': [{type: 'proj', color: LIGHT_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 9', type: 'dmg'},
                     {def: 'speed added 600', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'lightDmg added 3 perLevel', type: 'dmg'},
                     {def: 'lightDmg added 3', type: 'dmg'},
-                    {def: 'projRadius more 200', type: 'dmg'},                    
+                    {def: 'projRadius more 200', type: 'dmg'},
                 ]
             },
-            "poison ball": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "poison", "spell"],
-                "anim": ["#0f0"],
-                "specs": [{ type: 'proj', color: POIS_COLOR }],
-                "baseMods": [
+            'poison ball': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'poison', 'spell'],
+                'anim': ['#0f0'],
+                'specs': [{ type: 'proj', color: POIS_COLOR }],
+                'baseMods': [
                     {def: 'manaCost added 16', type: 'dmg'},
                     {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE * 0.7, type: 'dmg'},
                     {def: 'poisDmg added 5 perLevel', type: 'dmg'},
                     {def: 'poisDmg added 5', type: 'dmg'},
-                    {def: 'projRadius more 200', type: 'dmg'},                    
+                    {def: 'projRadius more 200', type: 'dmg'},
                 ]
             },
-            "ice blast": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["cone", "cold", "spell"],
-                "specs": [{ type: 'cone', color: COLD_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
-                "baseMods": [
+            'ice blast': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['cone', 'cold', 'spell'],
+                'specs': [{ type: 'cone', color: COLD_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'manaCost added 4', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE / 4, type: 'dmg'},
@@ -1038,27 +1038,27 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
-            "pressure wave": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["cone", "spell"],
-                "specs": [{ type: 'cone', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
-                "baseMods": [
+            'pressure wave': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['cone', 'spell'],
+                'specs': [{ type: 'cone', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'manaCost added 10', type: 'dmg'},
                     {def: 'cooldownTime added 500', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
-                    {def: 'range added ' + BASE_SPELL_RANGE/3, type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 3, type: 'dmg'},
                     {def: 'physDmg added 5 perLevel', type: 'dmg'},
-                    {def: 'aoeSpeed more 300', type:'dmg'},
+                    {def: 'aoeSpeed more 300', type: 'dmg'},
                     {def: 'angle more 300', type: 'dmg'},
                 ]
             },
-            "shadow dagger": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "spell"],
-                "specs": [{type: "proj", color: '#000'}],
-                "baseMods": [
+            'shadow dagger': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'spell'],
+                'specs': [{type: 'proj', color: '#000'}],
+                'baseMods': [
                     {def: 'manaCost added 10', type: 'dmg'},
                     {def: 'cooldownTime added 2000', type: 'dmg'},
                     {def: 'speed added 100', type: 'dmg'},
@@ -1066,25 +1066,25 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'physDmg added 10 perLevel', type: 'dmg'},
                 ]
             },
-            "health suck": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "spell"],
-                "baseMods": [
+            'health suck': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'spell'],
+                'baseMods': [
                     {def: 'manaCost added 25', type: 'dmg'},
                     {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE, type: 'dmg'},
-                    {def: 'physDmg added 9', type:'dmg'},
+                    {def: 'physDmg added 9', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg gainedas 50 hpLeech', type: 'dmg'}
                 ]
             },
-            "nova": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "circle" , "spell"],
-                "specs": [{ type: 'circle', color: LIGHT_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
-                "baseMods": [
+            'nova': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'circle' , 'spell'],
+                'specs': [{ type: 'circle', color: LIGHT_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'manaCost added 12', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'cooldownTime added 200', type: 'dmg'},
@@ -1093,54 +1093,54 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'lightDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
-            "fire nova": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "aoecircle" , "spell"],
-                "specs": [{ type: 'circle', color: FIRE_COLOR}],
-                "baseMods": [
+            'fire nova': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'aoecircle' , 'spell'],
+                'specs': [{ type: 'circle', color: FIRE_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 12', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
-                    {def: 'cooldownTime added 200', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/5, type: 'dmg'},
+                    {def: 'cooldownTime added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 5, type: 'dmg'},
                     {def: 'fireDmg added 3 perLevel', type: 'dmg'},
-                    {def: 'aoeRadius more -50', type: 'dmg'},                    
+                    {def: 'aoeRadius more -50', type: 'dmg'},
                 ]
             },
-            "ice nova": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "aoecircle" , "spell"],
-                "specs": [{ type: 'circle', color: COLD_COLOR}],
-                "baseMods": [
+            'ice nova': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'aoecircle' , 'spell'],
+                'specs': [{ type: 'circle', color: COLD_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 12', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
-                    {def: 'cooldownTime added 200', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/5, type: 'dmg'},
+                    {def: 'cooldownTime added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 5, type: 'dmg'},
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
-                    {def: 'aoeRadius more -50', type: 'dmg'},                    
+                    {def: 'aoeRadius more -50', type: 'dmg'},
                 ]
             },
-            "poison nova": {
-                "prototype": ["basic spell"],
-                "skillType": "spell",
-                "types": ["proj", "aoecircle" , "spell"],
-                "specs": [{ type: 'circle', color: POIS_COLOR}],
-                "baseMods": [
+            'poison nova': {
+                'prototype': ['basic spell'],
+                'skillType': 'spell',
+                'types': ['proj', 'aoecircle' , 'spell'],
+                'specs': [{ type: 'circle', color: POIS_COLOR}],
+                'baseMods': [
                     {def: 'manaCost added 12', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
-                    {def: 'cooldownTime added 200', type: 'dmg'},                    
-                    {def: 'range added ' + BASE_SPELL_RANGE/5, type: 'dmg'},
+                    {def: 'cooldownTime added 200', type: 'dmg'},
+                    {def: 'range added ' + BASE_SPELL_RANGE / 5, type: 'dmg'},
                     {def: 'poisDmg added 3 perLevel', type: 'dmg'},
-                    {def: 'aoeRadius more -50', type: 'dmg'},                    
+                    {def: 'aoeRadius more -50', type: 'dmg'},
                 ]
             },
-            "flame cone": {
-                "prototype": ["basic"],
-                "skillType": "melee",
-                "types": ["cone" , "melee"],
-                "specs": [{ type: 'cone', color: FIRE_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
-                "baseMods": [
+            'flame cone': {
+                'prototype': ['basic'],
+                'skillType': 'melee',
+                'types': ['cone' , 'melee'],
+                'specs': [{ type: 'cone', color: FIRE_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
                     {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
@@ -1148,1961 +1148,1961 @@ namespace.module('bot.itemref', function (exports, require) {
                     {def: 'fireDmg added 3 perLevel', type: 'dmg'},
                 ]
             },
-            "lethal strike": {
-                "prototype": ["basic melee"],
-                "skillType": "melee",
-                "types": ["melee"],
-                "baseMods": [
+            'lethal strike': {
+                'prototype': ['basic melee'],
+                'skillType': 'melee',
+                'types': ['melee'],
+                'baseMods': [
                     {def: 'manaCost added 20', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},
                     {def: 'physDmg more 100', type: 'dmg'},
-                    {def: 'cooldownTime added 5000', type: 'dmg'},                                        
+                    {def: 'cooldownTime added 5000', type: 'dmg'},
                 ]
             },
-            "deadly volley": {
-                "prototype": ["basic"],
-                "skillType": "range",
-                "types": ["proj"],
-                "specs": [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],
-                "baseMods": [
+            'deadly volley': {
+                'prototype': ['basic'],
+                'skillType': 'range',
+                'types': ['proj'],
+                'specs': [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],
+                'baseMods': [
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'manaCost added 20', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'projCount added 16', type: 'dmg'},
-                    {def: 'physDmg more -50', type:'dmg'},
-                    {def: 'angle more -70', type: 'dmg'},                    
+                    {def: 'physDmg more -50', type: 'dmg'},
+                    {def: 'angle more -70', type: 'dmg'},
                     {def: 'cooldownTime added 5000', type: 'dmg'}
                 ]
             },
         },
-        "card": {
-            "proto-skeleton": {
-                "mods": [
-                    {"def": "fireResist more -20", "type": "eleResist"},
-                    {"def": "physDmg more -30", "type": "dmg"},
+        'card': {
+            'proto-skeleton': {
+                'mods': [
+                    {'def': 'fireResist more -20', 'type': 'eleResist'},
+                    {'def': 'physDmg more -30', 'type': 'dmg'},
                 ],
             },
-            "proto-grunt": {
-                "mods": [
-                    {"def": "maxHp more -50", "type": "def"},
-                    {"def": "physDmg more -30", "type": "dmg"},                    
-                ],
-            }, 
-            "proto-boss": {
-                "mods": [
-                    {"def": "lineWidth added 1", "type": "vis"},
-                    {"def": "width more 100", "type": "vis"},
-                    {"def": "height more 100", "type": "vis"},                                        
-                    {"def": "physDmg more 100", "type": "dmg"},
-                    {"def": "maxHp more 1000", "type": "def"}
+            'proto-grunt': {
+                'mods': [
+                    {'def': 'maxHp more -50', 'type': 'def'},
+                    {'def': 'physDmg more -30', 'type': 'dmg'},
                 ],
             },
-            "proto-bat": {
-                "mods": [
-                    {"def": "height more -80", "type": "vis"},
+            'proto-boss': {
+                'mods': [
+                    {'def': 'lineWidth added 1', 'type': 'vis'},
+                    {'def': 'width more 100', 'type': 'vis'},
+                    {'def': 'height more 100', 'type': 'vis'},
+                    {'def': 'physDmg more 100', 'type': 'dmg'},
+                    {'def': 'maxHp more 1000', 'type': 'def'}
+                ],
+            },
+            'proto-bat': {
+                'mods': [
+                    {'def': 'height more -80', 'type': 'vis'},
                 ]
             },
-            "proto-rofl": {
-                "mods": [
-                    {"def": "height more -50", "type": "vis"},                    
-                    {"def": "width more 300", "type": "vis"},
+            'proto-rofl': {
+                'mods': [
+                    {'def': 'height more -50', 'type': 'vis'},
+                    {'def': 'width more 300', 'type': 'vis'},
                 ]
             },
-            "proto-elf": {
-                "mods": [
-                    {"def": "speed more -20", "type": "dmg"},
-                    {"def": "dexterity added 10 perLevel", "type": "def"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+            'proto-elf': {
+                'mods': [
+                    {'def': 'speed more -20', 'type': 'dmg'},
+                    {'def': 'dexterity added 10 perLevel', 'type': 'def'},
+                    {'def': 'physDmg more 2 perLevel', 'type': 'dmg'},
                 ],
             },
-            "sharpened": {
-                "mods": [
-                    {"def": "physDmg added 1 perLevel", "type": "dmg"}
+            'sharpened': {
+                'mods': [
+                    {'def': 'physDmg added 1 perLevel', 'type': 'dmg'}
                 ],
-                "slot": "weapon",
+                'slot': 'weapon',
             },
-            "hot sword": {
-                "mods": [
-                    {"def": "fireDmg added 2 perLevel", "type": "dmg"}
+            'hot sword': {
+                'mods': [
+                    {'def': 'fireDmg added 2 perLevel', 'type': 'dmg'}
                 ],
-                "slot": "weapon",
+                'slot': 'weapon',
             },
-            "cold sword": {
-                "mods": [
-                    {"def": "coldDmg added 2 perLevel", "type": "dmg"}
+            'cold sword': {
+                'mods': [
+                    {'def': 'coldDmg added 2 perLevel', 'type': 'dmg'}
                 ],
-                "slot": "weapon",
+                'slot': 'weapon',
             },
-            "honed blade": {
-                "mods": [
-                    {"def": "physDmg added 2 perLevel", "type": "dmg"}
+            'honed blade': {
+                'mods': [
+                    {'def': 'physDmg added 2 perLevel', 'type': 'dmg'}
                 ],
-                "slot": "weapon",
+                'slot': 'weapon',
             },
-            "breadhat": {
-                "mods": [
-                    {"def": "armor added 10 perLevel", "type": "def"}
+            'breadhat': {
+                'mods': [
+                    {'def': 'armor added 10 perLevel', 'type': 'def'}
                 ],
-                "slot": "head",
-            },            
-            "six pack": {
-                "mods": [
-                    {"def": "lineWidth added 1", "type": "vis"},                                        
-                    {"def": "armor added 10 perLevel", "type": "def"}
-                ],
-                "slot": "chest",
+                'slot': 'head',
             },
-            "steel toed": {
-                "mods": [
-                    {"def": "armor added 4 perLevel", "type": "def"}
+            'six pack': {
+                'mods': [
+                    {'def': 'lineWidth added 1', 'type': 'vis'},
+                    {'def': 'armor added 10 perLevel', 'type': 'def'}
                 ],
-                "slot": "legs",
+                'slot': 'chest',
             },
-            "quenching blade": {
-                "mods": [
-                    {"def": "fireResist more -5 perLevel", "type": "eleResist"}
+            'steel toed': {
+                'mods': [
+                    {'def': 'armor added 4 perLevel', 'type': 'def'}
                 ],
-                "slot": "weapon",
+                'slot': 'legs',
             },
-            "cool shoes": {
-                "mods": [
-                    {"def": "fireResist more -5 perLevel", "type": "eleResist"}
+            'quenching blade': {
+                'mods': [
+                    {'def': 'fireResist more -5 perLevel', 'type': 'eleResist'}
                 ],
-                "slot": "legs",
+                'slot': 'weapon',
             },
-            "compression shorts": {
-                "mods": [
-                    {"def": "moveSpeed more 20", "type": "def"},
-                    {"def": "moveSpeed more 3 perLevel", "type": "def"},
+            'cool shoes': {
+                'mods': [
+                    {'def': 'fireResist more -5 perLevel', 'type': 'eleResist'}
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "asbestos lining": {
-                "mods": [
-                    {"def": "fireResist more -5 perLevel", "type": "eleResist"}
+            'compression shorts': {
+                'mods': [
+                    {'def': 'moveSpeed more 20', 'type': 'def'},
+                    {'def': 'moveSpeed more 3 perLevel', 'type': 'def'},
                 ],
-                "slot": "hands",
+                'slot': 'legs',
             },
-            "sopping underclothes": {
-                "mods": [
-                    {"def": "fireResist more -5 perLevel", "type": "eleResist"}
+            'asbestos lining': {
+                'mods': [
+                    {'def': 'fireResist more -5 perLevel', 'type': 'eleResist'}
                 ],
-                "slot": "chest",
+                'slot': 'hands',
+            },
+            'sopping underclothes': {
+                'mods': [
+                    {'def': 'fireResist more -5 perLevel', 'type': 'eleResist'}
+                ],
+                'slot': 'chest',
             },
 
-            "brain juice": {
-                "mods": [
-                    {"def": "manaRegen added 2 perLevel", "type": "def"}
+            'brain juice': {
+                'mods': [
+                    {'def': 'manaRegen added 2 perLevel', 'type': 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "heart juice": {
-                "mods": [
-                    {"def": "hpRegen added 1 perLevel", "type": "def"}
+            'heart juice': {
+                'mods': [
+                    {'def': 'hpRegen added 1 perLevel', 'type': 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "head of vigor": {
-                "mods": [
-                    {"def": "maxHp added 5 perLevel", "type": "def"}
+            'head of vigor': {
+                'mods': [
+                    {'def': 'maxHp added 5 perLevel', 'type': 'def'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "nimble": {
-                "mods": [
-                    {"def": "dodge added 5 perLevel", "type": "def"},
-                    {"def": "dodge added 20", "type": "def"}
+            'nimble': {
+                'mods': [
+                    {'def': 'dodge added 5 perLevel', 'type': 'def'},
+                    {'def': 'dodge added 20', 'type': 'def'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "bloodsucker": {
-                "mods": [
-                    {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg added 1 perLevel", "type": "dmg"}
+            'bloodsucker': {
+                'mods': [
+                    {'def': 'physDmg gainedas 3 hpLeech', 'type': 'dmg'},
+                    {'def': 'physDmg added 1 perLevel', 'type': 'dmg'}
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "strong back": {
-                "mods": [
-                    {"def": "strength added 5 perLevel", "type": "def"},
+            'strong back': {
+                'mods': [
+                    {'def': 'strength added 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "thwomping": {
-                "mods": [
-                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "physDmg more 25", "type": "dmg"},
-                    {"def": "moveSpeed more -50", "type": "def"},
+            'thwomping': {
+                'mods': [
+                    {'def': 'physDmg more 5 perLevel', 'type': 'dmg'},
+                    {'def': 'physDmg more 25', 'type': 'dmg'},
+                    {'def': 'moveSpeed more -50', 'type': 'def'},
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "dexterous hands": {
-                "mods": [
-                    {"def": "dexterity added 5 perLevel", "type": "def"},
+            'dexterous hands': {
+                'mods': [
+                    {'def': 'dexterity added 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "dummy" : {
-                "mods": [
-                    {"def": "moveSpeed added -300", "type": "def"},
+            'dummy' : {
+                'mods': [
+                    {'def': 'moveSpeed added -300', 'type': 'def'},
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "fear" : {
-                "mods": [
-                    {"def": "moveSpeed added -400", "type": "def"},
+            'fear' : {
+                'mods': [
+                    {'def': 'moveSpeed added -400', 'type': 'def'},
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "more projectiles": {
-                "mods": [
-                    {"def": "projCount added 2", "type": "dmg"},
-                    {"def": "angle more 20", "type": "dmg"},
-                    {"def": "speed more -0.2 perLevel", "type": "dmg"},
-                    {"def": "manaCost added 2", "type": "dmg"}
+            'more projectiles': {
+                'mods': [
+                    {'def': 'projCount added 2', 'type': 'dmg'},
+                    {'def': 'angle more 20', 'type': 'dmg'},
+                    {'def': 'speed more -0.2 perLevel', 'type': 'dmg'},
+                    {'def': 'manaCost added 2', 'type': 'dmg'}
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "stinging": {
-                "mods": [
-                    {"def": "physDmg added 1 perLevel", "type": "dmg"},
+            'stinging': {
+                'mods': [
+                    {'def': 'physDmg added 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "ignited": {
-                "mods": [
-                    {"def": "physDmg converted 20 fireDmg", "type": "dmg"},
-                    {"def": "fireDmg more 2 perLevel", "type": "dmg"},                    
+            'ignited': {
+                'mods': [
+                    {'def': 'physDmg converted 20 fireDmg', 'type': 'dmg'},
+                    {'def': 'fireDmg more 2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "frosted": {
-                "mods": [
-                    {"def": "physDmg converted 20 coldDmg", "type": "dmg"},
-                    {"def": "coldDmg more 2 perLevel", "type": "dmg"},                    
+            'frosted': {
+                'mods': [
+                    {'def': 'physDmg converted 20 coldDmg', 'type': 'dmg'},
+                    {'def': 'coldDmg more 2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "charged": {
-                "mods": [
-                    {"def": "physDmg converted 20 lightDmg", "type": "dmg"},
-                    {"def": "lightDmg more 2 perLevel", "type": "dmg"},                    
+            'charged': {
+                'mods': [
+                    {'def': 'physDmg converted 20 lightDmg', 'type': 'dmg'},
+                    {'def': 'lightDmg more 2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "putrefied": {
-                "mods": [
-                    {"def": "physDmg converted 20 poisDmg", "type": "dmg"},
-                    {"def": "poisDmg more 2 perLevel", "type": "dmg"},
+            'putrefied': {
+                'mods': [
+                    {'def': 'physDmg converted 20 poisDmg', 'type': 'dmg'},
+                    {'def': 'poisDmg more 2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "heart of granite": {
-                "mods": [
-                    {"def": "armor added 5 perLevel", "type": "def"},
-                    {"def": "armor more 3 perLevel", "type": "def"},
+            'heart of granite': {
+                'mods': [
+                    {'def': 'armor added 5 perLevel', 'type': 'def'},
+                    {'def': 'armor more 3 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "small stature": {
-                "mods": [
-                    {"def": "height more -30", "type": "vis"},
-                    {"def": "width more -30", "type": "vis"},
-                    {"def": "moveSpeed more 3 perLevel", "type": "def"},
-                    {"def": "dodge more 3 perLevel", "type": "def"},                    
+            'small stature': {
+                'mods': [
+                    {'def': 'height more -30', 'type': 'vis'},
+                    {'def': 'width more -30', 'type': 'vis'},
+                    {'def': 'moveSpeed more 3 perLevel', 'type': 'def'},
+                    {'def': 'dodge more 3 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "keen wit": {
-                "mods": [
-                    {"def": "wisdom added 5 perLevel", "type": "def"},
+            'keen wit': {
+                'mods': [
+                    {'def': 'wisdom added 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "electrified": {
-                "mods": [
-                    {"def": "lightDmg more 3 perLevel", "type": "dmg"},
+            'electrified': {
+                'mods': [
+                    {'def': 'lightDmg more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "weapon",
+                'slot': 'weapon',
             },
-            "flying": {
-                "mods": [
-                    {"def": "armor more -20", "type": "def"},
-                    {"def": "dodge added 95", "type": "def"},
-                    {"def": "dodge added 5 perLevel", "type": "def"},
+            'flying': {
+                'mods': [
+                    {'def': 'armor more -20', 'type': 'def'},
+                    {'def': 'dodge added 95', 'type': 'def'},
+                    {'def': 'dodge added 5 perLevel', 'type': 'def'},
                     //TODO - flying vis stuff
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "clawed": {
-                "mods": [
-                    {"def": "physDmg added 5 perLevel", "type": "dmg"},
-                    {"def": "physDmg more 10", "type": "dmg"},
+            'clawed': {
+                'mods': [
+                    {'def': 'physDmg added 5 perLevel', 'type': 'dmg'},
+                    {'def': 'physDmg more 10', 'type': 'dmg'},
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "riveted": {               
-                "mods": [
-                    {"def": "lineWidth added 1", "type": "vis"},                    
-                    {"def": "armor more 5 perLevel", "type": "def"},
+            'riveted': {
+                'mods': [
+                    {'def': 'lineWidth added 1', 'type': 'vis'},
+                    {'def': 'armor more 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "clockwork": {
-                "mods": [
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
-                    {"def": "speed more -15", "type": "dmg"},
+            'clockwork': {
+                'mods': [
+                    {'def': 'physDmg more 2 perLevel', 'type': 'dmg'},
+                    {'def': 'speed more -15', 'type': 'dmg'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "mecha heart": {
-                "mods": [
-                    {"def": "lineWidth added 1", "type": "vis"},                    
-                    {"def": "maxHp added 5 perLevel", "type": "def"},
-                    {"def": "hpRegen added 2 perLevel", "type": "def"},
+            'mecha heart': {
+                'mods': [
+                    {'def': 'lineWidth added 1', 'type': 'vis'},
+                    {'def': 'maxHp added 5 perLevel', 'type': 'def'},
+                    {'def': 'hpRegen added 2 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "steam powered": {
-                "mods": [
-                    {"def": "manaRegen added 5 perLevel", "type": "def"},
+            'steam powered': {
+                'mods': [
+                    {'def': 'manaRegen added 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "goblin toe": {
-                "mods": [
-                    {"def": "armor added 10 perLevel", "type": "def"},
-                    {"def": "physDmg more 25", "type":"dmg"},
+            'goblin toe': {
+                'mods': [
+                    {'def': 'armor added 10 perLevel', 'type': 'def'},
+                    {'def': 'physDmg more 25', 'type': 'dmg'},
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "berserking": {
-                "mods": [
-                    {"def": "physDmg more 25", "type": "dmg"},
-                    {"def": "speed more -0.3 perLevel", "type": "dmg"},                     
-                    {"def": "maxHp more -50", "type": "def"},
+            'berserking': {
+                'mods': [
+                    {'def': 'physDmg more 25', 'type': 'dmg'},
+                    {'def': 'speed more -0.3 perLevel', 'type': 'dmg'},
+                    {'def': 'maxHp more -50', 'type': 'def'},
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "simple minded": {
-                "mods": [
-                    {"def": "spellDmg more -30", "type": "dmg"},
-                    {"def": "strength more 2 perLevel", "type": "def"},
-                    {"def": "meleeDmg more 2 perLevel", "type": "dmg"},
+            'simple minded': {
+                'mods': [
+                    {'def': 'spellDmg more -30', 'type': 'dmg'},
+                    {'def': 'strength more 2 perLevel', 'type': 'def'},
+                    {'def': 'meleeDmg more 2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "explosive bolts": {
-                "mods": [
-                    {"def": "fireDmg more 3 perLevel", "type": "dmg"},
-                    {"def": "physDmg converted 25 fireDmg", "type": "dmg"},
+            'explosive bolts': {
+                'mods': [
+                    {'def': 'fireDmg more 3 perLevel', 'type': 'dmg'},
+                    {'def': 'physDmg converted 25 fireDmg', 'type': 'dmg'},
                 ],
-                "slot": "skill",
-                "types": ["range"],
+                'slot': 'skill',
+                'types': ['range'],
             },
-            "shambling": {
-                "mods": [
-                    {"def": "moveSpeed more -20", "type": "def"},
-                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
+            'shambling': {
+                'mods': [
+                    {'def': 'moveSpeed more -20', 'type': 'def'},
+                    {'def': 'physDmg more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "unwashed hands": {
-                "mods": [
-                    {"def": "physDmg converted 25 poisDmg", "type": "dmg"},
-                    {"def": "poisDmg more 3 perLevel", "type": "dmg"},
+            'unwashed hands': {
+                'mods': [
+                    {'def': 'physDmg converted 25 poisDmg', 'type': 'dmg'},
+                    {'def': 'poisDmg more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "indigenous toxins": {
-                "mods": [
-                    {"def": "poisDmg added 3 perLevel", "type": "dmg"},
-                    {"def": "poisDmg more 1 perLevel", "type": "dmg"},
+            'indigenous toxins': {
+                'mods': [
+                    {'def': 'poisDmg added 3 perLevel', 'type': 'dmg'},
+                    {'def': 'poisDmg more 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "swamp armor": {
-                "mods": [
-                    {"def": "poisResist more -4 perLevel", "type": "eleResist"},
-                    {"def": "poisResist more -10", "type": "eleResist"},                    
+            'swamp armor': {
+                'mods': [
+                    {'def': 'poisResist more -4 perLevel', 'type': 'eleResist'},
+                    {'def': 'poisResist more -10', 'type': 'eleResist'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "big": {
-                "mods": [
-                    {"def": "height more 30", "type": "vis"},
-                    {"def": "width more 30", "type": "vis"},                    
-                    {"def": "maxHp added 10 perLevel", "type": "def"},
-                    {"def": "maxHp more 2 perLevel", "type": "def"},
+            'big': {
+                'mods': [
+                    {'def': 'height more 30', 'type': 'vis'},
+                    {'def': 'width more 30', 'type': 'vis'},
+                    {'def': 'maxHp added 10 perLevel', 'type': 'def'},
+                    {'def': 'maxHp more 2 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "buff": {
-                "mods": [
-                    {"def": "width more 30", "type": "vis"},
-                    {"def": "lineWidth added 3", "type": "vis"},
-                    {"def": "strength added 5 perLevel", "type": "def"},
-                    {"def": "meleeDmg more 3 perLevel", "type": "dmg"},
-                    {"def": "rangeDmg more 3 perLevel", "type": "dmg"},                    
+            'buff': {
+                'mods': [
+                    {'def': 'width more 30', 'type': 'vis'},
+                    {'def': 'lineWidth added 3', 'type': 'vis'},
+                    {'def': 'strength added 5 perLevel', 'type': 'def'},
+                    {'def': 'meleeDmg more 3 perLevel', 'type': 'dmg'},
+                    {'def': 'rangeDmg more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "vampyric touch": {
-                "mods": [
-                    {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
+            'vampyric touch': {
+                'mods': [
+                    {'def': 'physDmg gainedas 3 hpLeech', 'type': 'dmg'},
+                    {'def': 'physDmg more 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "vampyric embrace": {
-                "mods": [
-                    {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 1.5 perLevel", "type": "dmg"},
+            'vampyric embrace': {
+                'mods': [
+                    {'def': 'physDmg gainedas 3 hpLeech', 'type': 'dmg'},
+                    {'def': 'physDmg more 1.5 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "soulsucker": {
-                "mods": [
-                    {"def": "physDmg gainedas 5 manaLeech", "type": "dmg"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+            'soulsucker': {
+                'mods': [
+                    {'def': 'physDmg gainedas 5 manaLeech', 'type': 'dmg'},
+                    {'def': 'physDmg more 2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "alabaster": {
-                "mods": [
-                    {"def": "armor more 5 perLevel", "type": "def"},
-                    {"def": "armor added 100", "type": "def"},
+            'alabaster': {
+                'mods': [
+                    {'def': 'armor more 5 perLevel', 'type': 'def'},
+                    {'def': 'armor added 100', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "vest pockets": {
-                "mods": [
-                    {"def": "speed more -15", "type": "dmg"},
-                    {"def": "speed more -0.2 perLevel", "type": "dmg"},                    
+            'vest pockets': {
+                'mods': [
+                    {'def': 'speed more -15', 'type': 'dmg'},
+                    {'def': 'speed more -0.2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "precise": {
-                "mods": [
-                    {"def": "speed more 20", "type": "dmg"},
-                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
+            'precise': {
+                'mods': [
+                    {'def': 'speed more 20', 'type': 'dmg'},
+                    {'def': 'physDmg more 5 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "fleece lining": {
-                "mods": [
-                    {"def": "coldResist more -10", "type": "eleResist"},
-                    {"def": "coldResist more -1 perLevel", "type": "eleResist"},
+            'fleece lining': {
+                'mods': [
+                    {'def': 'coldResist more -10', 'type': 'eleResist'},
+                    {'def': 'coldResist more -1 perLevel', 'type': 'eleResist'},
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "fur hat": {
-                "mods": [
-                    {"def": "coldResist more -10", "type": "eleResist"},
-                    {"def": "coldResist more -1 perLevel", "type": "eleResist"},
+            'fur hat': {
+                'mods': [
+                    {'def': 'coldResist more -10', 'type': 'eleResist'},
+                    {'def': 'coldResist more -1 perLevel', 'type': 'eleResist'},
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "chinchilla lining": {
-                "mods": [
-                    {"def": "coldResist more -10", "type": "eleResist"},
-                    {"def": "coldResist more -1 perLevel", "type": "eleResist"},
+            'chinchilla lining': {
+                'mods': [
+                    {'def': 'coldResist more -10', 'type': 'eleResist'},
+                    {'def': 'coldResist more -1 perLevel', 'type': 'eleResist'},
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "yeti fur": {
-                "mods": [
-                    {"def": "coldResist more -20", "type": "eleResist"},
-                    {"def": "coldResist more -1 perLevel", "type": "eleResist"},
+            'yeti fur': {
+                'mods': [
+                    {'def': 'coldResist more -20', 'type': 'eleResist'},
+                    {'def': 'coldResist more -1 perLevel', 'type': 'eleResist'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "ice plating": {
-                "mods": [
-                    {"def": "armor more 3 perLevel", "type": "def"},
-                    {"def": "fireResist more -1 perLevel", "type": "eleResist"},
+            'ice plating': {
+                'mods': [
+                    {'def': 'armor more 3 perLevel', 'type': 'def'},
+                    {'def': 'fireResist more -1 perLevel', 'type': 'eleResist'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "blue ice": {
-                "mods": [
-                    {"def": "coldDmg gainedas 30 poisDmg", "type": "dmg"},
-                    {"def": "coldDmg more 3 perLevel", "type": "dmg"}
+            'blue ice': {
+                'mods': [
+                    {'def': 'coldDmg gainedas 30 poisDmg', 'type': 'dmg'},
+                    {'def': 'coldDmg more 3 perLevel', 'type': 'dmg'}
                 ],
-                "slot": "hands",
-                "rarity": "rare",
-                "flavor": "I am not in danger, I am the danger.",
+                'slot': 'hands',
+                'rarity': 'rare',
+                'flavor': 'I am not in danger, I am the danger.',
             },
-            "shadow walker": {
-                "mods": [
-                    {"def": "dodge added 20 perLevel", "type": "def"},
+            'shadow walker': {
+                'mods': [
+                    {'def': 'dodge added 20 perLevel', 'type': 'def'},
                 ],
-                "slot": "legs",
+                'slot': 'legs',
             },
-            "full plating": {
-                "mods": [
-                    {"def": "armor added 20 perLevel", "type": "def"},
+            'full plating': {
+                'mods': [
+                    {'def': 'armor added 20 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "hateful blade": {
-                "mods": [
-                    {"def": "physDmg gainedas -3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 30", "type": "dmg"},                    
-                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
+            'hateful blade': {
+                'mods': [
+                    {'def': 'physDmg gainedas -3 hpLeech', 'type': 'dmg'},
+                    {'def': 'physDmg more 30', 'type': 'dmg'},
+                    {'def': 'physDmg more 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "weapon",
+                'slot': 'weapon',
             },
-            "ethereal": {
-                "mods": [
-                    {"def": "dodge more 2 perLevel", "type": "def"},
-                    {"def": "dodge added 100", "type": "def"},
+            'ethereal': {
+                'mods': [
+                    {'def': 'dodge more 2 perLevel', 'type': 'def'},
+                    {'def': 'dodge added 100', 'type': 'def'},
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "pyromania": {
-                "mods": [
-                    {"def": "fireDmg more 8", "type": "dmg"},
-                    {"def": "fireDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "fireDmg gainedas 3 hpLeech", "type": "dmg"},
-                    {"def": "fireResist more 50", "type": "eleResist"},
+            'pyromania': {
+                'mods': [
+                    {'def': 'fireDmg more 8', 'type': 'dmg'},
+                    {'def': 'fireDmg more 5 perLevel', 'type': 'dmg'},
+                    {'def': 'fireDmg gainedas 3 hpLeech', 'type': 'dmg'},
+                    {'def': 'fireResist more 50', 'type': 'eleResist'},
                 ],
-                "slot": "head",
-                "rarity": "rare"
+                'slot': 'head',
+                'rarity': 'rare'
             },
-            "life on hit": {
-                "mods": [
-                    {"def": "hpOnHit added 1 perLevel", "type": "dmg"},
-                    {"def": "manaCost added 1", "type": "dmg"},
-                    {"def": "aoeRadius more -30", "type":"dmg"},
+            'life on hit': {
+                'mods': [
+                    {'def': 'hpOnHit added 1 perLevel', 'type': 'dmg'},
+                    {'def': 'manaCost added 1', 'type': 'dmg'},
+                    {'def': 'aoeRadius more -30', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "gratifying blow": {
-                "mods": [
-                    {"def": "hpOnHit added 5 perLevel", "type": "dmg"},
-                    {"def": "manaCost more 10", "type": "dmg"},
+            'gratifying blow': {
+                'mods': [
+                    {'def': 'hpOnHit added 5 perLevel', 'type': 'dmg'},
+                    {'def': 'manaCost more 10', 'type': 'dmg'},
                 ],
-                "slot": "skill",
-                "rarity": "rare",
+                'slot': 'skill',
+                'rarity': 'rare',
             },
-            "mana on hit": {
-                "mods":[
-                    {"def": "manaOnHit added 1 perLevel", "type": "dmg"},
+            'mana on hit': {
+                'mods': [
+                    {'def': 'manaOnHit added 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "mana drinker": {
-                "mods":[
-                    {"def": "manaOnHit added 3 perLevel", "type": "dmg"},
+            'mana drinker': {
+                'mods': [
+                    {'def': 'manaOnHit added 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
-                "rarity": "rare"
+                'slot': 'skill',
+                'rarity': 'rare'
             },
-            "faster attacks": {
-                "mods":[
-                    {"def": "speed more -25", "type": "dmg"},
-                    {"def": "speed more -0.3 perLevel", "type": "dmg"}
+            'faster attacks': {
+                'mods': [
+                    {'def': 'speed more -25', 'type': 'dmg'},
+                    {'def': 'speed more -0.3 perLevel', 'type': 'dmg'}
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "more physical damage": {
-                "mods":[
-                    {"def": "physDmg more 17", "type": "dmg"},
-                    {"def": "physDmg more 3 perLevel", "type": "dmg"},                    
+            'more physical damage': {
+                'mods': [
+                    {'def': 'physDmg more 17', 'type': 'dmg'},
+                    {'def': 'physDmg more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "longer cooldown": {
-                "mods":[
-                    {"def": "cooldownTime more 5 perLevel", "type": "dmg"},
+            'longer cooldown': {
+                'mods': [
+                    {'def': 'cooldownTime more 5 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "shorter cooldown": {
-                "mods":[
-                    {"def": "cooldownTime more -5 perLevel", "type": "dmg"},
+            'shorter cooldown': {
+                'mods': [
+                    {'def': 'cooldownTime more -5 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "telescoping handle": {
-                "mods":[
-                    {"def": "range more 1 perLevel", "type": "dmg"},
-                    {"def": "range more 50", "type": "dmg"},                    
+            'telescoping handle': {
+                'mods': [
+                    {'def': 'range more 1 perLevel', 'type': 'dmg'},
+                    {'def': 'range more 50', 'type': 'dmg'},
                 ],
-                "slot": "weapon",
+                'slot': 'weapon',
             },
-            "shorter range": {
-                "mods":[
-                    {"def": "range more -5 perLevel", "type": "dmg"},
+            'shorter range': {
+                'mods': [
+                    {'def': 'range more -5 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill",
+                'slot': 'skill',
             },
-            "ab shocker belt": {
-                "mods": [
-                    {"def": "maxHp added 20 perLevel", "type": "def"},
-                    {"def": "lightResist more 20", "type": "eleResist"}
+            'ab shocker belt': {
+                'mods': [
+                    {'def': 'maxHp added 20 perLevel', 'type': 'def'},
+                    {'def': 'lightResist more 20', 'type': 'eleResist'}
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "bloodfingers": {
-                "mods":[
-                    {"def": "maxHp added 10 perLevel", "type": "def"},
+            'bloodfingers': {
+                'mods': [
+                    {'def': 'maxHp added 10 perLevel', 'type': 'def'},
                 ],
-                "slot":"hands",
+                'slot': 'hands',
             },
-            "bloodbath": {
-                "mods": [
-                    {"def": "maxHp more 3 perLevel", "type": "def"},
+            'bloodbath': {
+                'mods': [
+                    {'def': 'maxHp more 3 perLevel', 'type': 'def'},
                 ],
-                "slot":"chest",
+                'slot': 'chest',
             },
-            "side arm": {
-                "mods": [
-                    {"def": "cooldownTime added 250", "type": "dmg"},
-                    {"def": "speed more -50", "type": "dmg"}
+            'side arm': {
+                'mods': [
+                    {'def': 'cooldownTime added 250', 'type': 'dmg'},
+                    {'def': 'speed more -50', 'type': 'dmg'}
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "practiced": {
-                "mods": [
-                    {"def": "physDmg more 15", "type": "dmg"},
-                    {"def": "speed more -20", "type": "dmg"},
-                    {"def": "speed more -0.1 perLevel", "type": "dmg"}                    
+            'practiced': {
+                'mods': [
+                    {'def': 'physDmg more 15', 'type': 'dmg'},
+                    {'def': 'speed more -20', 'type': 'dmg'},
+                    {'def': 'speed more -0.1 perLevel', 'type': 'dmg'}
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "honed": {
-                "mods": [
-                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
-                    {"def": "speed more -0.2 perLevel", "type": "dmg"},                   
+            'honed': {
+                'mods': [
+                    {'def': 'physDmg more 1 perLevel', 'type': 'dmg'},
+                    {'def': 'speed more -0.2 perLevel', 'type': 'dmg'},
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "fatal blow": {
-                "mods": [
-                    {"def": "physDmg more 25 perLevel", "type": "dmg"},
-                    {"def": "physDmg more 25", "type": "dmg"},   
-                    {"def": "cooldownTime added 100", "type": "dmg"},
-                    {"def": "cooldownTime more 100", "type": "dmg"},
+            'fatal blow': {
+                'mods': [
+                    {'def': 'physDmg more 25 perLevel', 'type': 'dmg'},
+                    {'def': 'physDmg more 25', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 100', 'type': 'dmg'},
+                    {'def': 'cooldownTime more 100', 'type': 'dmg'},
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "finishing move": {
-                "mods": [
-                    {"def": "physDmg more 200", "type": "dmg"},
-                    {"def": "cooldownTime added 500", "type": "dmg"},
-                    {"def": "speed more 100", "type": "dmg"},
-                    {"def": "speed more -10 perLevel", "type": "dmg"},                    
+            'finishing move': {
+                'mods': [
+                    {'def': 'physDmg more 200', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 500', 'type': 'dmg'},
+                    {'def': 'speed more 100', 'type': 'dmg'},
+                    {'def': 'speed more -10 perLevel', 'type': 'dmg'},
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "reach": {
-                "mods": [
-                    {"def": "range more 40", "type": "dmg"},
-                    {"def": "range more 10 perLevel", "type": "dmg"},
+            'reach': {
+                'mods': [
+                    {'def': 'range more 40', 'type': 'dmg'},
+                    {'def': 'range more 10 perLevel', 'type': 'dmg'},
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "frugal": {
-                "mods": [
-                    {"def": "manaCost added -1 perLevel", "type": "dmg"},
+            'frugal': {
+                'mods': [
+                    {'def': 'manaCost added -1 perLevel', 'type': 'dmg'},
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "stingy": {
-                "mods": [
-                    {"def": "manaCost added -3 perLevel", "type": "dmg"},
-                    {"def": "speed more 50", "type": "dmg"}
+            'stingy': {
+                'mods': [
+                    {'def': 'manaCost added -3 perLevel', 'type': 'dmg'},
+                    {'def': 'speed more 50', 'type': 'dmg'}
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "short sighted": {
-                "mods": [
-                    {"def": "manaCost more -5 perLevel", "type": "dmg"},
-                    {"def": "range more -60", "type": "dmg"}
+            'short sighted': {
+                'mods': [
+                    {'def': 'manaCost more -5 perLevel', 'type': 'dmg'},
+                    {'def': 'range more -60', 'type': 'dmg'}
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "divine assistance": {
-                "mods": [
-                    {"def": "manaCost more -100", "type": "dmg"},
-                    {"def": "speed more 100", "type": "dmg"},
-                    {"def": "cooldownTime added 1000", "type": "dmg"},
-                    {"def": "cooldownTime added -100 perLevel", "type": "dmg"}
+            'divine assistance': {
+                'mods': [
+                    {'def': 'manaCost more -100', 'type': 'dmg'},
+                    {'def': 'speed more 100', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 1000', 'type': 'dmg'},
+                    {'def': 'cooldownTime added -100 perLevel', 'type': 'dmg'}
                 ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "micronaps": {
-                "mods": [
-                    {"def": "cooldownTime more -5 perLevel", "type": "dmg"},
+            'micronaps': {
+                'mods': [
+                    {'def': 'cooldownTime more -5 perLevel', 'type': 'dmg'},
                     ],
-                "slot":"skill",
+                'slot': 'skill',
             },
-            "healing charm": {
-                "mods": [
-                    {"def": "manaRegen added -5 perLevel", "type": "def"},
-                    {"def": "hpRegen added 10 perLevel", "type": "def"},
+            'healing charm': {
+                'mods': [
+                    {'def': 'manaRegen added -5 perLevel', 'type': 'def'},
+                    {'def': 'hpRegen added 10 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest",
+                'slot': 'chest',
             },
-            "blood pact": {
-                "mods": [
-                    {"def": "manaRegen added 10 perLevel", "type": "def"},
-                    {"def": "hpRegen added -5 perLevel", "type": "def"},                    
+            'blood pact': {
+                'mods': [
+                    {'def': 'manaRegen added 10 perLevel', 'type': 'def'},
+                    {'def': 'hpRegen added -5 perLevel', 'type': 'def'},
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            "jet pack": {
-                "mods": [
-                    {"def": "moveSpeed more 50", "type": "def"},
-                    {"def": "moveSpeed more 10 perLevel", "type": "def"},                    
-                    {"def": "dodge more -50", "type": "def"},
-                    {"def": "armor more -50", "type": "def"},                    
+            'jet pack': {
+                'mods': [
+                    {'def': 'moveSpeed more 50', 'type': 'def'},
+                    {'def': 'moveSpeed more 10 perLevel', 'type': 'def'},
+                    {'def': 'dodge more -50', 'type': 'def'},
+                    {'def': 'armor more -50', 'type': 'def'},
                 ],
-                "slot": "chest",
-                "flavor": "Burning out his fuse up here alone",
+                'slot': 'chest',
+                'flavor': 'Burning out his fuse up here alone',
             },
-            "cold blooded": {
-                "mods": [
-                    {"def": "coldDmg more 30", "type": "dmg"},
-                    {"def": "fireDmg more -30", "type": "dmg"},
-                    {"def": "coldResist more -20", "type": "eleResist"},
-                    {"def": "fireResist more 20", "type": "eleResist"},                    
-                    {"def": "coldResist more -2 perLevel", "type": "eleResist"},
-                    {"def": "coldDmg more 3 perLevel", "type": "dmg"},                    
+            'cold blooded': {
+                'mods': [
+                    {'def': 'coldDmg more 30', 'type': 'dmg'},
+                    {'def': 'fireDmg more -30', 'type': 'dmg'},
+                    {'def': 'coldResist more -20', 'type': 'eleResist'},
+                    {'def': 'fireResist more 20', 'type': 'eleResist'},
+                    {'def': 'coldResist more -2 perLevel', 'type': 'eleResist'},
+                    {'def': 'coldDmg more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "chest",
-                "flavor": "Ice-water in his veins...",
+                'slot': 'chest',
+                'flavor': 'Ice-water in his veins...',
             },
-            "hot blooded": {
-                "mods": [
-                    {"def": "coldDmg more -30", "type": "dmg"},
-                    {"def": "fireDmg more 30", "type": "dmg"},
-                    {"def": "coldResist more 20", "type": "eleResist"},
-                    {"def": "fireResist more -20", "type": "eleResist"},
-                    {"def": "fireResist more -2 perLevel", "type": "eleResist"},
-                    {"def": "fireDmg more 3 perLevel", "type": "dmg"},
+            'hot blooded': {
+                'mods': [
+                    {'def': 'coldDmg more -30', 'type': 'dmg'},
+                    {'def': 'fireDmg more 30', 'type': 'dmg'},
+                    {'def': 'coldResist more 20', 'type': 'eleResist'},
+                    {'def': 'fireResist more -20', 'type': 'eleResist'},
+                    {'def': 'fireResist more -2 perLevel', 'type': 'eleResist'},
+                    {'def': 'fireDmg more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "chest",
-                "flavor": "Magma in his veins...",
+                'slot': 'chest',
+                'flavor': 'Magma in his veins...',
             },
-            "semi automatic": {
-                "mods": [
-                    {"def": "cooldownTime more -20", "type": "dmg"},
-                    {"def": "cooldownTime more -2 perLevel", "type": "dmg"},                    
+            'semi automatic': {
+                'mods': [
+                    {'def': 'cooldownTime more -20', 'type': 'dmg'},
+                    {'def': 'cooldownTime more -2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "weapon",
-                "flavor": "NOW I HAVE A MACHINE GUN HO-HO-HO",
+                'slot': 'weapon',
+                'flavor': 'NOW I HAVE A MACHINE GUN HO-HO-HO',
             },
-            "careful aim": {
-                "mods": [
-                    {"def": "physDmg more 50", "type": "dmg"},
-                    {"def": "cooldownTime added 5000", "type": "dmg"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
-                    {"def": "accuracy more 100", "type": "dmg"},
-                    {"def": "manaCost more 100", "type": "dmg"},
+            'careful aim': {
+                'mods': [
+                    {'def': 'physDmg more 50', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 5000', 'type': 'dmg'},
+                    {'def': 'physDmg more 2 perLevel', 'type': 'dmg'},
+                    {'def': 'accuracy more 100', 'type': 'dmg'},
+                    {'def': 'manaCost more 100', 'type': 'dmg'},
                 ],
-                "slot": "skill",
-                "flavor": "Ready... Aim... FIRE!",
+                'slot': 'skill',
+                'flavor': 'Ready... Aim... FIRE!',
             },
-            "conductive suit": {
-                "mods": [
-                    {"def": "lightDmg more 20", "type": "dmg"},
-                    {"def": "lightResist more -20", "type": "eleResist"},
-                    {"def": "lightResist more -2 perLevel", "type": "eleResist"},
-                    {"def": "lightDmg more 2 perLevel", "type": "dmg"},
+            'conductive suit': {
+                'mods': [
+                    {'def': 'lightDmg more 20', 'type': 'dmg'},
+                    {'def': 'lightResist more -20', 'type': 'eleResist'},
+                    {'def': 'lightResist more -2 perLevel', 'type': 'eleResist'},
+                    {'def': 'lightDmg more 2 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "chest",
-                "flavor": "Fortunately the path of least resistance is no longer through your heart.",
+                'slot': 'chest',
+                'flavor': 'Fortunately the path of least resistance is no longer through your heart.',
             },
-            "antibiotics": {
-                "mods": [
-                    {"def": "poisResist more -20", "type": "eleResist"},
-                    {"def": "poisResist more -2 perLevel", "type": "eleResist"},
+            'antibiotics': {
+                'mods': [
+                    {'def': 'poisResist more -20', 'type': 'eleResist'},
+                    {'def': 'poisResist more -2 perLevel', 'type': 'eleResist'},
                 ],
-                "slot": "hands",
+                'slot': 'hands',
             },
-            "forest spirit": {
-                "mods": [
-                    {"def": "maxHp gainedas 2 hpRegen", "type": "def"},
-                    {"def": "maxHp more 1 perLevel", "type": "def"}
+            'forest spirit': {
+                'mods': [
+                    {'def': 'maxHp gainedas 2 hpRegen', 'type': 'def'},
+                    {'def': 'maxHp more 1 perLevel', 'type': 'def'}
                 ],
-                "slot": "head"
+                'slot': 'head'
             },
-            "armor plating": {
-                "mods": [
-                    {"def": "armor added 10 perLevel", "type": "def"},
-                    {"def": "armor more 2 perLevel", "type": "def"}
+            'armor plating': {
+                'mods': [
+                    {'def': 'armor added 10 perLevel', 'type': 'def'},
+                    {'def': 'armor more 2 perLevel', 'type': 'def'}
                 ],
-                "slot": "hands"
+                'slot': 'hands'
             },
-            "mind expansion": {
-                "mods": [
-                    {"def": "wisdom more 1 perLevel", "type": "def"},
-                    {"def": "wisdom gainedas 100 maxMana", "type": "def"}
+            'mind expansion': {
+                'mods': [
+                    {'def': 'wisdom more 1 perLevel', 'type': 'def'},
+                    {'def': 'wisdom gainedas 100 maxMana', 'type': 'def'}
                 ],
-                "slot": "head"
+                'slot': 'head'
             },
-            "roller skates": {
-                "mods": [
-                    {"def": "moveSpeed more 5 perLevel", "type": "def"},
+            'roller skates': {
+                'mods': [
+                    {'def': 'moveSpeed more 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "prismatic toe ring": {
-                "mods": [
-                    {"def": "eleResistAll more -10", "type": "def"},
-                    {"def": "eleResistAll more -0.5 perLevel", "type": "def"}
+            'prismatic toe ring': {
+                'mods': [
+                    {'def': 'eleResistAll more -10', 'type': 'def'},
+                    {'def': 'eleResistAll more -0.5 perLevel', 'type': 'def'}
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "hobbit foot": {
-                "mods": [
-                    {"def": "maxHp more 10", "type": "def"},
-                    {"def": "maxHp more 1 perLevel", "type": "def"}
+            'hobbit foot': {
+                'mods': [
+                    {'def': 'maxHp more 10', 'type': 'def'},
+                    {'def': 'maxHp more 1 perLevel', 'type': 'def'}
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "clown shoes": {
-                "mods": [
-                    {"def": "maxHp added 20 perLevel", "type": "def"},
-                    {"def": "moveSpeed more -30", "type": "def"}
+            'clown shoes': {
+                'mods': [
+                    {'def': 'maxHp added 20 perLevel', 'type': 'def'},
+                    {'def': 'moveSpeed more -30', 'type': 'def'}
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "happy feet": {
-                "mods": [
-                    {"def": "maxHp added 10 perLevel", "type": "def"},
-                    {"def": "maxHp more 20", "type": "def"},                    
+            'happy feet': {
+                'mods': [
+                    {'def': 'maxHp added 10 perLevel', 'type': 'def'},
+                    {'def': 'maxHp more 20', 'type': 'def'},
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "ice spikes": {
-                "mods": [
-                    {"def": "physDmg added 5", "type": "dmg"},
-                    {"def": "coldResist more -10", "type": "eleResist"},                    
-                    {"def": "coldResist more -0.5 perLevel", "type": "eleResist"}
+            'ice spikes': {
+                'mods': [
+                    {'def': 'physDmg added 5', 'type': 'dmg'},
+                    {'def': 'coldResist more -10', 'type': 'eleResist'},
+                    {'def': 'coldResist more -0.5 perLevel', 'type': 'eleResist'}
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "knee pads": {
-                "mods": [
-                    {"def": "armor more 10", "type": "def"},
-                    {"def": "armor more 0.5 perLevel", "type": "def"},
+            'knee pads': {
+                'mods': [
+                    {'def': 'armor more 10', 'type': 'def'},
+                    {'def': 'armor more 0.5 perLevel', 'type': 'def'},
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "hazmat boots": {
-                "mods": [
-                    {"def": "eleResistAll more -15", "type": "def"},
-                    {"def": "eleResistAll more -0.5 perLevel", "type": "def"}
+            'hazmat boots': {
+                'mods': [
+                    {'def': 'eleResistAll more -15', 'type': 'def'},
+                    {'def': 'eleResistAll more -0.5 perLevel', 'type': 'def'}
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "rubber boots": {
-                "mods": [
-                    {"def": "lightResist more -10", "type": "eleResist"},
-                    {"def": "lightResist more -0.5 perLevel", "type": "eleResist"}
+            'rubber boots': {
+                'mods': [
+                    {'def': 'lightResist more -10', 'type': 'eleResist'},
+                    {'def': 'lightResist more -0.5 perLevel', 'type': 'eleResist'}
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "good circulation": {
-                "mods": [
-                    {"def": "maxHp more 20", "type": "def"},
-                    {"def": "maxHp added 5 perLevel", "type": "def"}
+            'good circulation': {
+                'mods': [
+                    {'def': 'maxHp more 20', 'type': 'def'},
+                    {'def': 'maxHp added 5 perLevel', 'type': 'def'}
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "reduced radius": {
-                "mods": [
-                    {"def": "aoeRadius more -50", "type": "dmg"},
-                    {"def": "speed more -10", "type": "dmg"},                                        
-                    {"def": "speed more -0.1 perLevel", "type": "dmg"},                    
+            'reduced radius': {
+                'mods': [
+                    {'def': 'aoeRadius more -50', 'type': 'dmg'},
+                    {'def': 'speed more -10', 'type': 'dmg'},
+                    {'def': 'speed more -0.1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "increased radius": {
-                "mods": [
-                    {"def": "aoeRadius more 50", "type": "dmg"},
-                    {"def": "aoeRadius more 1 perLevel", "type": "dmg"},
-                    {"def": "manaCost more 100", "type": "dmg"},
+            'increased radius': {
+                'mods': [
+                    {'def': 'aoeRadius more 50', 'type': 'dmg'},
+                    {'def': 'aoeRadius more 1 perLevel', 'type': 'dmg'},
+                    {'def': 'manaCost more 100', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "potion holster": {
-                "mods": [
-                    {"def": "vitality added 5 perLevel", "type": "def"},
-                    {"def": "vitality more 20", "type": "def"},
+            'potion holster': {
+                'mods': [
+                    {'def': 'vitality added 5 perLevel', 'type': 'def'},
+                    {'def': 'vitality more 20', 'type': 'def'},
                 ],
-                "slot": "hands"
+                'slot': 'hands'
             },
-            "flame ritual": {
-                "mods": [
-                    {"def": "fireDmg gainedas 1 hpLeech", "type": "dmg"},
-                    {"def": "fireDmg more 1 perLevel", "type": "dmg"},
+            'flame ritual': {
+                'mods': [
+                    {'def': 'fireDmg gainedas 1 hpLeech', 'type': 'dmg'},
+                    {'def': 'fireDmg more 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "frost ritual": {
-                "mods": [
-                    {"def": "coldDmg gainedas 1 hpLeech", "type": "dmg"},
-                    {"def": "coldDmg more 1 perLevel", "type": "dmg"},
+            'frost ritual': {
+                'mods': [
+                    {'def': 'coldDmg gainedas 1 hpLeech', 'type': 'dmg'},
+                    {'def': 'coldDmg more 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "shock ritual": {
-                "mods": [
-                    {"def": "lightDmg gainedas 1 hpLeech", "type": "dmg"},
-                    {"def": "lightDmg more 1 perLevel", "type": "dmg"},
+            'shock ritual': {
+                'mods': [
+                    {'def': 'lightDmg gainedas 1 hpLeech', 'type': 'dmg'},
+                    {'def': 'lightDmg more 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "plague ritual": {
-                "mods": [
-                    {"def": "poisDmg gainedas 1 hpLeech", "type": "dmg"},
-                    {"def": "poisDmg more 1 perLevel", "type": "dmg"},
+            'plague ritual': {
+                'mods': [
+                    {'def': 'poisDmg gainedas 1 hpLeech', 'type': 'dmg'},
+                    {'def': 'poisDmg more 1 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "sure footing": {
-                "mods": [
-                    {"def": "accuracy more 3 perLevel", "type": "dmg"},
+            'sure footing': {
+                'mods': [
+                    {'def': 'accuracy more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "legs"
+                'slot': 'legs'
             },
-            "steady hands": {
-                "mods":[
-                    {"def": "accuracy more 3 perLevel", "type": "dmg"},
+            'steady hands': {
+                'mods': [
+                    {'def': 'accuracy more 3 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "hands"
+                'slot': 'hands'
             },
-            "planet buster": {
-                "mods":[
-                    {"def": "projRadius more 200", "type": "dmg"},
-                    {"def": "spellDmg more 100", "type": "dmg"},
-                    {"def": "spellDmg more 5 perLevel", "type": "dmg"},
-                    {"def": "cooldownTime added 5000", "type": "dmg"},
-                    {"def": "manaCost more 100", "type": "dmg"},                    
+            'planet buster': {
+                'mods': [
+                    {'def': 'projRadius more 200', 'type': 'dmg'},
+                    {'def': 'spellDmg more 100', 'type': 'dmg'},
+                    {'def': 'spellDmg more 5 perLevel', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 5000', 'type': 'dmg'},
+                    {'def': 'manaCost more 100', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "nanotube reinforcement": {
-                "mods":[
-                    {"def": "armor more 5 perLevel", "type": "def"},
+            'nanotube reinforcement': {
+                'mods': [
+                    {'def': 'armor more 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "weapon"
+                'slot': 'weapon'
             },
-            "pinpoint precision": {
-                "mods":[
-                    {"def": "accuracy more 2 perLevel", "type": "dmg"},
-                    {"def": "rangeDmg more 20", "type": "dmg"},                    
+            'pinpoint precision': {
+                'mods': [
+                    {'def': 'accuracy more 2 perLevel', 'type': 'dmg'},
+                    {'def': 'rangeDmg more 20', 'type': 'dmg'},
                 ],
-                "slot": "weapon"
+                'slot': 'weapon'
             },
-            "minimum tolerances": {
-                "mods":[
-                    {"def": "accuracy more 1 perLevel", "type": "dmg"},
-                    {"def": "accuracy more 30", "type": "dmg"},                    
+            'minimum tolerances': {
+                'mods': [
+                    {'def': 'accuracy more 1 perLevel', 'type': 'dmg'},
+                    {'def': 'accuracy more 30', 'type': 'dmg'},
                 ],
-                "slot": "weapon"
+                'slot': 'weapon'
             },
-            "hazmat suit": {
-                "mods":[
-                    {"def": "eleResistAll more -20", "type": "def"},
-                    {"def": "eleResistAll more -0.5 perLevel", "type": "def"},                    
+            'hazmat suit': {
+                'mods': [
+                    {'def': 'eleResistAll more -20', 'type': 'def'},
+                    {'def': 'eleResistAll more -0.5 perLevel', 'type': 'def'},
                 ],
-                "slot": "chest"
+                'slot': 'chest'
             },
-            "hazmat gloves": {
-                "mods":[
-                    {"def": "eleResistAll more -15", "type": "def"},                    
-                    {"def": "eleResistAll more -0.5 perLevel", "type": "def"},
+            'hazmat gloves': {
+                'mods': [
+                    {'def': 'eleResistAll more -15', 'type': 'def'},
+                    {'def': 'eleResistAll more -0.5 perLevel', 'type': 'def'},
                 ],
-                "slot": "hands"
+                'slot': 'hands'
             },
-            "hazmat mask": {
-                "mods":[
-                    {"def": "eleResistAll more -15", "type": "def"},
-                    {"def": "eleResistAll more -0.5 perLevel", "type": "def"},                    
+            'hazmat mask': {
+                'mods': [
+                    {'def': 'eleResistAll more -15', 'type': 'def'},
+                    {'def': 'eleResistAll more -0.5 perLevel', 'type': 'def'},
                 ],
-                "slot": "head"
+                'slot': 'head'
             },
-            "face training": {
-                "mods":[
-                    {"def": "strength more 5 perLevel", "type": "def"},
+            'face training': {
+                'mods': [
+                    {'def': 'strength more 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "head"
+                'slot': 'head'
             },
-            "cosmic channeling": {
-                "mods":[
-                    {"def": "spellDmg more 50", "type": "dmg"},
-                    {"def": "rangeDmg more 50", "type": "dmg"},
-                    {"def": "meleeDmg more 50", "type": "dmg"},
-                    {"def": "cooldownTime added 2000", "type": "dmg"},
-                    {"def": "aoeSpeed more -50", "type": "dmg"},
-                    {"def": "aoeRadius more 5 perLevel", "type": "dmg"},
+            'cosmic channeling': {
+                'mods': [
+                    {'def': 'spellDmg more 50', 'type': 'dmg'},
+                    {'def': 'rangeDmg more 50', 'type': 'dmg'},
+                    {'def': 'meleeDmg more 50', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 2000', 'type': 'dmg'},
+                    {'def': 'aoeSpeed more -50', 'type': 'dmg'},
+                    {'def': 'aoeRadius more 5 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "electricians gloves": {
-                "mods":[
-                    {"def": "lightResist more -5 perLevel", "type": "eleResist"},
+            'electricians gloves': {
+                'mods': [
+                    {'def': 'lightResist more -5 perLevel', 'type': 'eleResist'},
                 ],
-                "slot": "hands"
+                'slot': 'hands'
             },
-            "basket hilt": {
-                "mods":[
-                    {"def": "armor more 5 perLevel", "type": "def"},
+            'basket hilt': {
+                'mods': [
+                    {'def': 'armor more 5 perLevel', 'type': 'def'},
                 ],
-                "slot": "weapon"
+                'slot': 'weapon'
             },
-            "accurate": {
-                "mods":[
-                    {"def": "accuracy more 50", "type": "dmg"},
-                    {"def": "accuracy added 10 perLevel", "type": "dmg"},                    
+            'accurate': {
+                'mods': [
+                    {'def': 'accuracy more 50', 'type': 'dmg'},
+                    {'def': 'accuracy added 10 perLevel', 'type': 'dmg'},
                 ],
-                "slot": "skill"
+                'slot': 'skill'
             },
-            "balanced": {
-                "mods":[
-                    {"def": "dexterity more 3 perLevel", "type": "def"},
+            'balanced': {
+                'mods': [
+                    {'def': 'dexterity more 3 perLevel', 'type': 'def'},
                 ],
-                "slot": "head",
+                'slot': 'head',
             },
-            
+
         },
-        "monster": {
-            "skeleton" : {
-                "items": [["weapon", "cardboard sword"], ["armor", "balsa helmet"], ["armor", "t-shirt"], ["armor", "jeans"], ["armor", "latex gloves"]],
-                "skills": ["basic melee"],
-                "sourceCards": [
-                    ["proto-skeleton", 0],
+        'monster': {
+            'skeleton' : {
+                'items': [['weapon', 'cardboard sword'], ['armor', 'balsa helmet'], ['armor', 't-shirt'], ['armor', 'jeans'], ['armor', 'latex gloves']],
+                'skills': ['basic melee'],
+                'sourceCards': [
+                    ['proto-skeleton', 0],
                     //["proto-grunt", 0],
-                    ["sharpened", 1],
-                    ["breadhat", 1],
-                    ["stinging", 1],
-                    ["bloodbath", 1]
+                    ['sharpened', 1],
+                    ['breadhat', 1],
+                    ['stinging', 1],
+                    ['bloodbath', 1]
                 ],
             },
-            "fire skeleton": {
-                "items": [["weapon", "cardboard sword"], ["armor", "balsa helmet"], ["armor", "t-shirt"], ["armor", "jeans"], ["armor", "latex gloves"]],
-                "skills": ["lethal strike", "fire slash", "super smash", "basic melee"],
-                "sourceCards": [
-                    ["hot sword", 1],
-                    ["proto-skeleton", 0],
-                    ["six pack", 1],
-                    ["compression shorts", 1],
-                    ["asbestos lining", 1],
-                    ["basket hilt", 1]
+            'fire skeleton': {
+                'items': [['weapon', 'cardboard sword'], ['armor', 'balsa helmet'], ['armor', 't-shirt'], ['armor', 'jeans'], ['armor', 'latex gloves']],
+                'skills': ['lethal strike', 'fire slash', 'super smash', 'basic melee'],
+                'sourceCards': [
+                    ['hot sword', 1],
+                    ['proto-skeleton', 0],
+                    ['six pack', 1],
+                    ['compression shorts', 1],
+                    ['asbestos lining', 1],
+                    ['basket hilt', 1]
                 ]
             },
-            "skeleton archer" : {
-                "items": [["weapon", "wooden bow"], ["armor", "t-shirt"], ["armor", "latex gloves"], ["armor", "balsa helmet"], ["armor", "jeans"]],
-                "skills": ["speed shot", "basic range"],
-                "sourceCards": [
-                    ["proto-skeleton", 0],
-                    ["head of vigor", 1],
-                    ["bloodfingers", 1],
-                    ["mana on hit", 1],
-                    ["telescoping handle", 1],
-                    ["sharpened", 1],
-                    ["stinging", 1]
+            'skeleton archer' : {
+                'items': [['weapon', 'wooden bow'], ['armor', 't-shirt'], ['armor', 'latex gloves'], ['armor', 'balsa helmet'], ['armor', 'jeans']],
+                'skills': ['speed shot', 'basic range'],
+                'sourceCards': [
+                    ['proto-skeleton', 0],
+                    ['head of vigor', 1],
+                    ['bloodfingers', 1],
+                    ['mana on hit', 1],
+                    ['telescoping handle', 1],
+                    ['sharpened', 1],
+                    ['stinging', 1]
                 ]
             },
-            "skeleton mage" : {
-                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"], ["armor", "mage hat"], ["armor", "mage boots"], ["armor", "mage gloves"]],
-                "skills": ["fire ball", "basic spell"],
-                "sourceCards": [
-                    ["proto-skeleton", 0],
-                    ["brain juice", 1],
-                    ["heart juice", 1],
-                    ["life on hit", 1]
+            'skeleton mage' : {
+                'items': [['weapon', 'simple wand'], ['armor', 'velvet tunic'], ['armor', 'mage hat'], ['armor', 'mage boots'], ['armor', 'mage gloves']],
+                'skills': ['fire ball', 'basic spell'],
+                'sourceCards': [
+                    ['proto-skeleton', 0],
+                    ['brain juice', 1],
+                    ['heart juice', 1],
+                    ['life on hit', 1]
                 ]
             },
-            "skeleton embermage" : {
-                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"], ["armor", "mage hat"], ["armor", "mage boots"], ["armor", "mage gloves"]],
-                "skills": ["incinerate", "fire ball", "basic spell"],
-                "sourceCards": [
-                    ["proto-skeleton", 0],
-                    ["life on hit", 2],
-                    ["mana on hit", 2],
-                    ["pyromania", 1]
+            'skeleton embermage' : {
+                'items': [['weapon', 'simple wand'], ['armor', 'velvet tunic'], ['armor', 'mage hat'], ['armor', 'mage boots'], ['armor', 'mage gloves']],
+                'skills': ['incinerate', 'fire ball', 'basic spell'],
+                'sourceCards': [
+                    ['proto-skeleton', 0],
+                    ['life on hit', 2],
+                    ['mana on hit', 2],
+                    ['pyromania', 1]
                 ]
             },
-            "skeleton king" : {
-                "items": [["weapon", "hand axe"], ["armor", "collander"], ["armor", "leatherscale armor"], ["armor", "gardening gloves"], ["armor", "leather boots"]],
-                "skills": ["lethal strike", "super smash", "basic melee"],
-                "sourceCards": [
-                    ["proto-skeleton", 1],
-                    ["proto-boss", 1],
-                    ["hot sword", 3],
-                    ["sharpened", 1],
-                    ["precise", 1],
-                    ["life on hit", 4],
-                    ["telescoping handle", 2],
-                    ["stinging", 4]
+            'skeleton king' : {
+                'items': [['weapon', 'hand axe'], ['armor', 'collander'], ['armor', 'leatherscale armor'], ['armor', 'gardening gloves'], ['armor', 'leather boots']],
+                'skills': ['lethal strike', 'super smash', 'basic melee'],
+                'sourceCards': [
+                    ['proto-skeleton', 1],
+                    ['proto-boss', 1],
+                    ['hot sword', 3],
+                    ['sharpened', 1],
+                    ['precise', 1],
+                    ['life on hit', 4],
+                    ['telescoping handle', 2],
+                    ['stinging', 4]
                 ]
             },
-            "wood nymph" : {
-                "items": [["weapon", "cardboard sword"], ["armor", "scout leather"], ["armor", "balsa helmet"], ["armor", "latex gloves"], ["armor", "leather boots"]],
-                "skills": ["basic melee"],
-                "sourceCards": [
-                    ["small stature", 1],
-                    ["nimble", 1],
-                    ["compression shorts", 3],
-                    ["life on hit", 2],
-                    ["hobbit foot", 1],
-                    ["accurate", 1]
+            'wood nymph' : {
+                'items': [['weapon', 'cardboard sword'], ['armor', 'scout leather'], ['armor', 'balsa helmet'], ['armor', 'latex gloves'], ['armor', 'leather boots']],
+                'skills': ['basic melee'],
+                'sourceCards': [
+                    ['small stature', 1],
+                    ['nimble', 1],
+                    ['compression shorts', 3],
+                    ['life on hit', 2],
+                    ['hobbit foot', 1],
+                    ['accurate', 1]
                 ]
             },
-            "bat" : {
-                "items": [["weapon", "cardboard sword"], ["armor", "batsuit"], ["armor", "latex gloves"], ["armor", "leather boots"], ["armor", "balsa helmet"]],
-                "skills": ["quick hit", "basic melee"],
-                "sourceCards": [
-                    ["proto-bat", 1],
-                    ["nimble", 1],
-                    ["bloodsucker", 1],
-                    ["life on hit", 1],
-                    ["clawed", 1],
-                    ["good circulation", 1],
+            'bat' : {
+                'items': [['weapon', 'cardboard sword'], ['armor', 'batsuit'], ['armor', 'latex gloves'], ['armor', 'leather boots'], ['armor', 'balsa helmet']],
+                'skills': ['quick hit', 'basic melee'],
+                'sourceCards': [
+                    ['proto-bat', 1],
+                    ['nimble', 1],
+                    ['bloodsucker', 1],
+                    ['life on hit', 1],
+                    ['clawed', 1],
+                    ['good circulation', 1],
                 ]
             },
-            "ent" : {
-                "items": [["weapon", "cardboard sword"], ["armor", "conquistador helm"], ["armor", "leatherplate armor"], ["armor", "arcane boots"], ["armor", "gardening gloves"]],
-                "skills": ["super smash", "basic melee"],
-                "sourceCards": [
-                    ["strong back", 2],
-                    ["thwomping", 2],
-                    ["forest spirit", 1],
-                    ["hobbit foot", 1],
+            'ent' : {
+                'items': [['weapon', 'cardboard sword'], ['armor', 'conquistador helm'], ['armor', 'leatherplate armor'], ['armor', 'arcane boots'], ['armor', 'gardening gloves']],
+                'skills': ['super smash', 'basic melee'],
+                'sourceCards': [
+                    ['strong back', 2],
+                    ['thwomping', 2],
+                    ['forest spirit', 1],
+                    ['hobbit foot', 1],
                 ]
             },
-            "elf" : {
-                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"], ["armor", "leather gloves"], ["armor", "balsa helmet"]],
-                "skills": ["poison arrow", "speed shot", "basic range"],
-                "sourceCards": [
-                    ["dexterous hands", 1],
-                    ["proto-elf", 0],
-                    ["practiced", 1],
-                    ["clown shoes", 1],
-                    ["balanced", 1],
-                    ["accurate", 1],
-                    ["steady hands", 1],
-                    ["pinpoint precision", 1],
-                    ["sharpened", 1],
-                    ["stinging", 1]
+            'elf' : {
+                'items': [['weapon', 'composite bow'], ['armor', 'scout leather'], ['armor', 'elf boots'], ['armor', 'leather gloves'], ['armor', 'balsa helmet']],
+                'skills': ['poison arrow', 'speed shot', 'basic range'],
+                'sourceCards': [
+                    ['dexterous hands', 1],
+                    ['proto-elf', 0],
+                    ['practiced', 1],
+                    ['clown shoes', 1],
+                    ['balanced', 1],
+                    ['accurate', 1],
+                    ['steady hands', 1],
+                    ['pinpoint precision', 1],
+                    ['sharpened', 1],
+                    ['stinging', 1]
                 ]
             },
-            "elf king" : {
-                "items": [["weapon", "composite bow"], ["armor", "scout leather"], ["armor", "elf boots"], ["armor", "balsa helmet"], ["armor", "leather gloves"]],
-                "skills": ["deadly volley", "speed shot", "poison arrow", "basic range"],
-                "sourceCards": [
-                    ["proto-boss", 0],
-                    ["proto-elf", 0],
-                    ["dexterous hands", 2],
-                    ["forest spirit", 1],
-                    ["balanced", 1],
-                    ["accurate", 1],
-                    ["sure footing", 1],
-                    ["steady hands", 1],
-                    ["pinpoint precision", 1],
-                    ["steam powered", 1]
+            'elf king' : {
+                'items': [['weapon', 'composite bow'], ['armor', 'scout leather'], ['armor', 'elf boots'], ['armor', 'balsa helmet'], ['armor', 'leather gloves']],
+                'skills': ['deadly volley', 'speed shot', 'poison arrow', 'basic range'],
+                'sourceCards': [
+                    ['proto-boss', 0],
+                    ['proto-elf', 0],
+                    ['dexterous hands', 2],
+                    ['forest spirit', 1],
+                    ['balanced', 1],
+                    ['accurate', 1],
+                    ['sure footing', 1],
+                    ['steady hands', 1],
+                    ['pinpoint precision', 1],
+                    ['steam powered', 1]
                 ],
-                "flavor": "He knows you've been naughty"
+                'flavor': "He knows you've been naughty"
             },
-            "dummy": {
-                "items": [],
-                "skills": [],
-                "sourceCards": [
-                    ["dummy", 0]
+            'dummy': {
+                'items': [],
+                'skills': [],
+                'sourceCards': [
+                    ['dummy', 0]
                 ]
             },
-            "fire golem" : {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["ground smash", "exploding strike", "fire slash", "basic melee"],
-                "sourceCards": [
-                    ["heart of granite", 1],
-                    ["ignited", 1],
-                    ["flame ritual", 1],
+            'fire golem' : {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['ground smash', 'exploding strike', 'fire slash', 'basic melee'],
+                'sourceCards': [
+                    ['heart of granite', 1],
+                    ['ignited', 1],
+                    ['flame ritual', 1],
                 ],
             },
-            "ice golem" : {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["ice slash", "basic melee"],
-                "sourceCards": [
-                    ["heart of granite", 1],
-                    ["frosted", 1],
-                    ["frost ritual", 1],
+            'ice golem' : {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['ice slash', 'basic melee'],
+                'sourceCards': [
+                    ['heart of granite', 1],
+                    ['frosted', 1],
+                    ['frost ritual', 1],
                 ],
             },
-            "shock golem" : {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["lightning slash", "basic melee"],
-                "sourceCards": [
-                    ["heart of granite", 1],
-                    ["charged", 1],
-                    ["shock ritual", 1]
+            'shock golem' : {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['lightning slash', 'basic melee'],
+                'sourceCards': [
+                    ['heart of granite', 1],
+                    ['charged', 1],
+                    ['shock ritual', 1]
                 ],
             },
-            "toxic golem" : {
-                "items": [["weapon", "long sword"] , ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["poison spray", "poison nova"],
-                "sourceCards": [
-                    ["heart of granite", 1],
-                    ["plague ritual", 1],
-                    ["putrefied", 1],
-                    ["cosmic channeling", 1],
-                    ["increased radius", 1],
-                    ["hazmat suit", 1],
-                    ["hazmat gloves", 1],
-                    ["hazmat mask", 1],
-                    ["semi automatic", 1],
-                    ["healing charm", 1],
-                    ["blood pact", 1]
+            'toxic golem' : {
+                'items': [['weapon', 'long sword'] , ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['poison spray', 'poison nova'],
+                'sourceCards': [
+                    ['heart of granite', 1],
+                    ['plague ritual', 1],
+                    ['putrefied', 1],
+                    ['cosmic channeling', 1],
+                    ['increased radius', 1],
+                    ['hazmat suit', 1],
+                    ['hazmat gloves', 1],
+                    ['hazmat mask', 1],
+                    ['semi automatic', 1],
+                    ['healing charm', 1],
+                    ['blood pact', 1]
                 ],
             },
-            "gnome" : {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["lightning slash", "quick hit", "chain lightning", "basic melee"],
-                "sourceCards": [
-                    ["small stature", 1],
-                    ["keen wit", 1],
-                    ["conductive suit", 1],
-                    ["shock ritual", 1],
+            'gnome' : {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['lightning slash', 'quick hit', 'chain lightning', 'basic melee'],
+                'sourceCards': [
+                    ['small stature', 1],
+                    ['keen wit', 1],
+                    ['conductive suit', 1],
+                    ['shock ritual', 1],
                 ],
             },
-            "gnome electrician" : {
-                "items": [["weapon", "simple wand"], ["armor", "velvet tunic"], ["armor", "gladiator helm"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["lightning ball", "nova", "basic spell"],
-                "sourceCards": [
-                    ["small stature", 1],
-                    ["keen wit", 1],
-                    ["electrified", 1],
-                    ["healing charm", 3],
-                    ["blood pact", 3],
-                    ["conductive suit", 1],
-                    ["shock ritual", 1],
-                    ["rubber boots", 1],
-                    ["electricians gloves", 1]
-                
+            'gnome electrician' : {
+                'items': [['weapon', 'simple wand'], ['armor', 'velvet tunic'], ['armor', 'gladiator helm'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['lightning ball', 'nova', 'basic spell'],
+                'sourceCards': [
+                    ['small stature', 1],
+                    ['keen wit', 1],
+                    ['electrified', 1],
+                    ['healing charm', 3],
+                    ['blood pact', 3],
+                    ['conductive suit', 1],
+                    ['shock ritual', 1],
+                    ['rubber boots', 1],
+                    ['electricians gloves', 1]
+
                 ],
             },
-            "roflcopter" : {
-                "items": [["weapon", "hand axe"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["pressure wave", "quick hit", "basic melee"],
-                "sourceCards": [
-                    ["flying", 1],
-                    ["nimble", 1],
-                    ["proto-rofl", 1],
-                    ["clown shoes", 1],
-                    ["happy feet", 1],
+            'roflcopter' : {
+                'items': [['weapon', 'hand axe'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['pressure wave', 'quick hit', 'basic melee'],
+                'sourceCards': [
+                    ['flying', 1],
+                    ['nimble', 1],
+                    ['proto-rofl', 1],
+                    ['clown shoes', 1],
+                    ['happy feet', 1],
                 ],
             },
-            "harpy" : {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["pressure wave", "quick hit", "basic melee"],
-                "sourceCards": [
-                    ["flying", 1],
-                    ["nimble", 1],
-                    ["clawed", 1],
+            'harpy' : {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['pressure wave', 'quick hit', 'basic melee'],
+                'sourceCards': [
+                    ['flying', 1],
+                    ['nimble', 1],
+                    ['clawed', 1],
                 ],
             },
-            "mechcinerator" : {
-                "items": [["weapon", "pewter wand"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["incinerate", "fire nova", "basic spell"],
-                "sourceCards": [
-                    ["riveted", 1],
-                    ["clockwork", 1],
-                    ["mecha heart", 1],
-                    ["ignited", 1],
-                    ["steam powered", 1],
-                    ["jet pack", 1],
-                    ["flame ritual", 1],
-                    ["roller skates", 1],
-                    ["nanotube reinforcement", 1],
-                    ["minimum tolerances", 1],
+            'mechcinerator' : {
+                'items': [['weapon', 'pewter wand'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['incinerate', 'fire nova', 'basic spell'],
+                'sourceCards': [
+                    ['riveted', 1],
+                    ['clockwork', 1],
+                    ['mecha heart', 1],
+                    ['ignited', 1],
+                    ['steam powered', 1],
+                    ['jet pack', 1],
+                    ['flame ritual', 1],
+                    ['roller skates', 1],
+                    ['nanotube reinforcement', 1],
+                    ['minimum tolerances', 1],
                 ],
             },
-            "mechfridgerator": {
-                "items": [["weapon", "pewter wand"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["ice blast", "ice nova", "basic spell"],
-                "sourceCards": [
-                    ["riveted", 1],
-                    ["clockwork", 1],
-                    ["mecha heart", 1],
-                    ["frosted", 1],
-                    ["steam powered", 1],
-                    ["frost ritual", 1],
-                    ["roller skates", 1],
-                    ["nanotube reinforcement", 1],
-                    ["minimum tolerances", 1],                    
+            'mechfridgerator': {
+                'items': [['weapon', 'pewter wand'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['ice blast', 'ice nova', 'basic spell'],
+                'sourceCards': [
+                    ['riveted', 1],
+                    ['clockwork', 1],
+                    ['mecha heart', 1],
+                    ['frosted', 1],
+                    ['steam powered', 1],
+                    ['frost ritual', 1],
+                    ['roller skates', 1],
+                    ['nanotube reinforcement', 1],
+                    ['minimum tolerances', 1],
                 ],
             },
-            "mecha watt" : {
-                "items": [["weapon", "pewter wand"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["lightning ball", "nova", "basic spell"],
-                "sourceCards": [
-                    ["riveted", 1],
-                    ["clockwork", 1],
-                    ["mecha heart", 1],
-                    ["charged", 1],
-                    ["steam powered", 1],
-                    ["conductive suit", 1],
-                    ["shock ritual", 1],
-                    ["roller skates", 1],
-                    ["nanotube reinforcement", 1],
-                    ["minimum tolerances", 1],                    
+            'mecha watt' : {
+                'items': [['weapon', 'pewter wand'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['lightning ball', 'nova', 'basic spell'],
+                'sourceCards': [
+                    ['riveted', 1],
+                    ['clockwork', 1],
+                    ['mecha heart', 1],
+                    ['charged', 1],
+                    ['steam powered', 1],
+                    ['conductive suit', 1],
+                    ['shock ritual', 1],
+                    ['roller skates', 1],
+                    ['nanotube reinforcement', 1],
+                    ['minimum tolerances', 1],
                 ],
             },
-            "sir mechs-a-lot" : {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "leatherscale armor"], ["armor", "handmail"], ["armor", "arcane boots"]],
-                "skills": ["ground smash", "lightning ball", "ice nova", "basic melee"],
-                "sourceCards": [
-                    ["proto-boss", 1],
-                    ["riveted", 1],
-                    ["clockwork", 1],
-                    ["mecha heart", 1],
-                    ["charged", 1],
-                    ["steam powered", 4],
-                    ["frosted", 1],
-                    ["ignited", 1],
-                    ["shock ritual", 1],
-                    ["roller skates", 1],
-                    ["nanotube reinforcement", 1],
-                    ["minimum tolerances", 1],                    
+            'sir mechs-a-lot' : {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'leatherscale armor'], ['armor', 'handmail'], ['armor', 'arcane boots']],
+                'skills': ['ground smash', 'lightning ball', 'ice nova', 'basic melee'],
+                'sourceCards': [
+                    ['proto-boss', 1],
+                    ['riveted', 1],
+                    ['clockwork', 1],
+                    ['mecha heart', 1],
+                    ['charged', 1],
+                    ['steam powered', 4],
+                    ['frosted', 1],
+                    ['ignited', 1],
+                    ['shock ritual', 1],
+                    ['roller skates', 1],
+                    ['nanotube reinforcement', 1],
+                    ['minimum tolerances', 1],
                 ],
             },
-            "goblin" : {
-                "items": [["weapon", "spikey mace"], ["armor", "goblin leather"], ["armor", "handmail"], ["armor", "gladiator helm"], ["armor", "buckaneer boots"]],
-                "skills": ["ground smash", "flaming debris", "basic melee"],
-                "sourceCards": [
-                    ["goblin toe", 1],
-                    ["berserking", 1],
-                    ["simple minded", 1],
-                    ["armor plating", 1],
-                    ["knee pads", 1]                    
+            'goblin' : {
+                'items': [['weapon', 'spikey mace'], ['armor', 'goblin leather'], ['armor', 'handmail'], ['armor', 'gladiator helm'], ['armor', 'buckaneer boots']],
+                'skills': ['ground smash', 'flaming debris', 'basic melee'],
+                'sourceCards': [
+                    ['goblin toe', 1],
+                    ['berserking', 1],
+                    ['simple minded', 1],
+                    ['armor plating', 1],
+                    ['knee pads', 1]
                 ],
             },
-            "goblin priest" : {
-                "items": [["weapon", "knobby wand"], ["armor", "goblin leather"], ["armor", "mage gloves"], ["armor", "mage hat"], ["armor", "mage boots"]],
-                "skills": ["fire ball", "incinerate", "basic spell"],
-                "sourceCards": [
-                    ["goblin toe", 1],
-                    ["berserking", 1],
-                    ["simple minded", 1],
-                    ["pyromania", 1],
-                    ["hot blooded", 1],
-                    ["flame ritual", 1]
+            'goblin priest' : {
+                'items': [['weapon', 'knobby wand'], ['armor', 'goblin leather'], ['armor', 'mage gloves'], ['armor', 'mage hat'], ['armor', 'mage boots']],
+                'skills': ['fire ball', 'incinerate', 'basic spell'],
+                'sourceCards': [
+                    ['goblin toe', 1],
+                    ['berserking', 1],
+                    ['simple minded', 1],
+                    ['pyromania', 1],
+                    ['hot blooded', 1],
+                    ['flame ritual', 1]
                 ],
             },
-            "goblin artillery" : {
-                "items": [["weapon", "crossbow"], ["armor", "goblin leather"], ["armor", "conquistador helm"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["blast arrow", "fire arrow", "basic range"],
-                "sourceCards": [
-                    ["goblin toe", 1],
-                    ["berserking", 1],
-                    ["simple minded", 1],
-                    ["ignited", 2],
-                    ["hot blooded", 1]
+            'goblin artillery' : {
+                'items': [['weapon', 'crossbow'], ['armor', 'goblin leather'], ['armor', 'conquistador helm'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['blast arrow', 'fire arrow', 'basic range'],
+                'sourceCards': [
+                    ['goblin toe', 1],
+                    ['berserking', 1],
+                    ['simple minded', 1],
+                    ['ignited', 2],
+                    ['hot blooded', 1]
                 ],
             },
-            "the inhuman torch" : {
-                "items": [["weapon", "dragonstone wand"], ["armor", "fancy gauntlets"], ["armor", "velvet tunic"], ["armor", "arcane boots"], ["armor", "mage hat"]],
-                "skills": ["fire ball", "incinerate", "basic spell"],
-                "sourceCards": [
-                    ["ignited", 3],
-                    ["proto-boss", 1],
-                    ["pyromania", 2],
-                    ["keen wit", 3],
-                    ["brain juice", 3],
-                    ["mana on hit", 3],
-                    ["telescoping handle", 3],
-                    ["hot blooded", 1],
-                    ["flame ritual", 1],
-                    ["increased radius", 1],
+            'the inhuman torch' : {
+                'items': [['weapon', 'dragonstone wand'], ['armor', 'fancy gauntlets'], ['armor', 'velvet tunic'], ['armor', 'arcane boots'], ['armor', 'mage hat']],
+                'skills': ['fire ball', 'incinerate', 'basic spell'],
+                'sourceCards': [
+                    ['ignited', 3],
+                    ['proto-boss', 1],
+                    ['pyromania', 2],
+                    ['keen wit', 3],
+                    ['brain juice', 3],
+                    ['mana on hit', 3],
+                    ['telescoping handle', 3],
+                    ['hot blooded', 1],
+                    ['flame ritual', 1],
+                    ['increased radius', 1],
                 ],
             },
-            "zombie" : {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["poison slash", "basic melee"],
-                "sourceCards": [
-                    ["unwashed hands", 1],
-                    ["shambling", 1],
-                    ["simple minded", 1],
-                    ["knee pads", 1],
-                    ["hazmat boots", 1],
+            'zombie' : {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['poison slash', 'basic melee'],
+                'sourceCards': [
+                    ['unwashed hands', 1],
+                    ['shambling', 1],
+                    ['simple minded', 1],
+                    ['knee pads', 1],
+                    ['hazmat boots', 1],
                 ],
             },
-            "angry imp" : {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["poison slash", "quick hit", "basic melee"],
-                "sourceCards": [
-                    ["berserking", 1],
-                    ["small stature", 1],
-                    ["simple minded", 1],
-                    ["indigenous toxins", 1],
-                    ["antibiotics", 1],
-                    ["happy feet", 1]
+            'angry imp' : {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['poison slash', 'quick hit', 'basic melee'],
+                'sourceCards': [
+                    ['berserking', 1],
+                    ['small stature', 1],
+                    ['simple minded', 1],
+                    ['indigenous toxins', 1],
+                    ['antibiotics', 1],
+                    ['happy feet', 1]
                 ],
             },
-            "dart imp" : {
-                "items": [["weapon", "hand crossbow"], ["armor", "plague doctor"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["poison arrow", "speed shot", "basic range"],
-                "sourceCards": [
-                    ["berserking", 1],
-                    ["small stature", 1],
-                    ["simple minded", 1],
-                    ["indigenous toxins", 1],
-                    ["putrefied", 1],
-                    ["more projectiles", 1],
-                    ["antibiotics", 1],
-                    ["plague ritual", 1],
+            'dart imp' : {
+                'items': [['weapon', 'hand crossbow'], ['armor', 'plague doctor'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['poison arrow', 'speed shot', 'basic range'],
+                'sourceCards': [
+                    ['berserking', 1],
+                    ['small stature', 1],
+                    ['simple minded', 1],
+                    ['indigenous toxins', 1],
+                    ['putrefied', 1],
+                    ['more projectiles', 1],
+                    ['antibiotics', 1],
+                    ['plague ritual', 1],
                 ],
             },
-            "imp shaman": {
-                "items": [["weapon", "star wand"], ["armor", "plague doctor"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["poison ball", "poison spray", "poison nova", "basic spell"],
-                "sourceCards": [
-                    ["berserking", 1],
-                    ["small stature", 1],
-                    ["simple minded", 1],
-                    ["indigenous toxins", 1],
-                    ["antibiotics", 1],
-                    ["plague ritual", 1],
-                    ["potion holster", 1],
-                    ["increased radius", 1],
-                    ["pinpoint precision", 1],
+            'imp shaman': {
+                'items': [['weapon', 'star wand'], ['armor', 'plague doctor'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['poison ball', 'poison spray', 'poison nova', 'basic spell'],
+                'sourceCards': [
+                    ['berserking', 1],
+                    ['small stature', 1],
+                    ['simple minded', 1],
+                    ['indigenous toxins', 1],
+                    ['antibiotics', 1],
+                    ['plague ritual', 1],
+                    ['potion holster', 1],
+                    ['increased radius', 1],
+                    ['pinpoint precision', 1],
                 ],
             },
-            "marshwalker": {
-                "items": [["weapon", "long sword"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"], ["armor", "gladiator helm"]],
-                "skills": ["poison slash", "poison nova", "basic melee"],
-                "sourceCards": [
-                    ["indigenous toxins", 1],
-                    ["swamp armor", 1],
-                    ["good circulation", 1],
-                    ["happy feet", 1],
-                    ["plague ritual", 1],
-                    ["hazmat boots", 1],
-                    ["potion holster", 1],
-                    ["hobbit foot", 1],
-                    ["reduced radius", 1],
-                    ["putrefied", 1],
+            'marshwalker': {
+                'items': [['weapon', 'long sword'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail'], ['armor', 'gladiator helm']],
+                'skills': ['poison slash', 'poison nova', 'basic melee'],
+                'sourceCards': [
+                    ['indigenous toxins', 1],
+                    ['swamp armor', 1],
+                    ['good circulation', 1],
+                    ['happy feet', 1],
+                    ['plague ritual', 1],
+                    ['hazmat boots', 1],
+                    ['potion holster', 1],
+                    ['hobbit foot', 1],
+                    ['reduced radius', 1],
+                    ['putrefied', 1],
                 ],
             },
-            "mad ape": {
-                "items": [["weapon", "long sword"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"], ["armor", "gladiator helm"]],
-                "skills": ["super smash", "basic melee"],
-                "sourceCards": [
-                    ["big", 1],
-                    ["berserking", 1],
-                    ["buff", 1],
-                    ["clown shoes", 1],
-                    ["happy feet", 1],
-                    ["good circulation", 1],
-                    ["potion holster", 1],
+            'mad ape': {
+                'items': [['weapon', 'long sword'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail'], ['armor', 'gladiator helm']],
+                'skills': ['super smash', 'basic melee'],
+                'sourceCards': [
+                    ['big', 1],
+                    ['berserking', 1],
+                    ['buff', 1],
+                    ['clown shoes', 1],
+                    ['happy feet', 1],
+                    ['good circulation', 1],
+                    ['potion holster', 1],
                 ],
             },
-            "scalp collector": {
-                "items": [["weapon", "composite bow"], ["armor", "plague doctor"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["headshot", "basic range"],
-                "sourceCards": [
-                    ["indigenous toxins", 1],
-                    ["putrefied", 1],
-                    ["precise", 1],
-                    ["vest pockets", 1],
-                    ["semi automatic", 1],
-                    ["antibiotics", 1],
-                    ["bloodsucker", 1],
-                    ["plague ritual", 1],
-                    ["sharpened", 1],
-                    ["telescoping handle", 1],
-                    ["soulsucker", 1],
-                    ["potion holster", 1],
-                    
+            'scalp collector': {
+                'items': [['weapon', 'composite bow'], ['armor', 'plague doctor'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['headshot', 'basic range'],
+                'sourceCards': [
+                    ['indigenous toxins', 1],
+                    ['putrefied', 1],
+                    ['precise', 1],
+                    ['vest pockets', 1],
+                    ['semi automatic', 1],
+                    ['antibiotics', 1],
+                    ['bloodsucker', 1],
+                    ['plague ritual', 1],
+                    ['sharpened', 1],
+                    ['telescoping handle', 1],
+                    ['soulsucker', 1],
+                    ['potion holster', 1],
+
                 ],
             },
-            "frost skeleton": {
-                "items": [["weapon", "long sword"], ["armor", "balsa helmet"], ["armor", "iron chestplate"], ["armor", "buckaneer boots"], ["armor", "handmail"]],
-                "skills": ["ice slash", "basic melee"],
-                "sourceCards": [
-                    ["cold sword", 1],
-                    ["proto-skeleton", 0],
-                    ["six pack", 1],
-                    ["compression shorts", 1],
-                    ["fleece lining", 1],
-                    ["ice spikes", 1]
+            'frost skeleton': {
+                'items': [['weapon', 'long sword'], ['armor', 'balsa helmet'], ['armor', 'iron chestplate'], ['armor', 'buckaneer boots'], ['armor', 'handmail']],
+                'skills': ['ice slash', 'basic melee'],
+                'sourceCards': [
+                    ['cold sword', 1],
+                    ['proto-skeleton', 0],
+                    ['six pack', 1],
+                    ['compression shorts', 1],
+                    ['fleece lining', 1],
+                    ['ice spikes', 1]
                 ]
             },
-            "frost mage": {
-                "items": [["weapon", "knobby wand"], ["armor", "mage hat"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"]],
-                "skills": ["ice blast", "ice nova", "ice ball", "basic spell"],
-                "sourceCards": [
-                    ["fleece lining", 1],
-                    ["frosted", 1],
-                    ["keen wit", 1],
-                    ["fur hat", 1],
-                    ["cold blooded", 1],
-                    ["frost ritual", 1]
+            'frost mage': {
+                'items': [['weapon', 'knobby wand'], ['armor', 'mage hat'], ['armor', 'embroidered silks'], ['armor', 'mage boots'], ['armor', 'mage gloves']],
+                'skills': ['ice blast', 'ice nova', 'ice ball', 'basic spell'],
+                'sourceCards': [
+                    ['fleece lining', 1],
+                    ['frosted', 1],
+                    ['keen wit', 1],
+                    ['fur hat', 1],
+                    ['cold blooded', 1],
+                    ['frost ritual', 1]
                 ],
             },
-            "shiver spirit": {
-                "items": [["weapon", "knobby wand"], ["armor", "mage hat"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"]],
-                "skills": ["ice ball", "basic spell"],
-                "sourceCards": [
-                    ["fleece lining", 1],
-                    ["frosted", 1],
-                    ["keen wit", 1],
-                    ["fur hat", 1],
-                    ["cold blooded", 1],
-                    ["frost ritual", 1],
-                    ["planet buster", 1],
-                    ["minimum tolerances", 1],
+            'shiver spirit': {
+                'items': [['weapon', 'knobby wand'], ['armor', 'mage hat'], ['armor', 'embroidered silks'], ['armor', 'mage boots'], ['armor', 'mage gloves']],
+                'skills': ['ice ball', 'basic spell'],
+                'sourceCards': [
+                    ['fleece lining', 1],
+                    ['frosted', 1],
+                    ['keen wit', 1],
+                    ['fur hat', 1],
+                    ['cold blooded', 1],
+                    ['frost ritual', 1],
+                    ['planet buster', 1],
+                    ['minimum tolerances', 1],
                 ],
             },
-            "frozen warrior": {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["ice slash", "basic melee"],
-                "sourceCards": [
-                    ["fleece lining", 1],
-                    ["frosted", 1],
-                    ["chinchilla lining", 1],
-                    ["ice plating", 1],
-                    ["good circulation", 1],
-                    ["frost ritual", 1],
-                    ["sure footing", 1]
+            'frozen warrior': {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['ice slash', 'basic melee'],
+                'sourceCards': [
+                    ['fleece lining', 1],
+                    ['frosted', 1],
+                    ['chinchilla lining', 1],
+                    ['ice plating', 1],
+                    ['good circulation', 1],
+                    ['frost ritual', 1],
+                    ['sure footing', 1]
                 ],
             },
-            "yeti": {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["super smash", "basic melee"],
-                "sourceCards": [
-                    ["big", 1],
-                    ["fleece lining", 1],
-                    ["frosted", 1],
-                    ["chinchilla lining", 1],
-                    ["clawed", 1],
-                    ["yeti fur", 1],
-                    ["cold blooded", 1],
-                    ["happy feet", 1],
-                    ["good circulation", 1],
-                    ["hobbit foot", 1],
-                    ["prismatic toe ring", 1]
+            'yeti': {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['super smash', 'basic melee'],
+                'sourceCards': [
+                    ['big', 1],
+                    ['fleece lining', 1],
+                    ['frosted', 1],
+                    ['chinchilla lining', 1],
+                    ['clawed', 1],
+                    ['yeti fur', 1],
+                    ['cold blooded', 1],
+                    ['happy feet', 1],
+                    ['good circulation', 1],
+                    ['hobbit foot', 1],
+                    ['prismatic toe ring', 1]
                 ],
             },
-            "wight": {
-                "items": [["weapon", "long sword"], ["armor", "gladiator helm"], ["armor", "iron chestplate"], ["armor", "leather boots"], ["armor", "handmail"]],
-                "skills": ["ice blast", "ice nova", "ice ball", "basic melee"],
-                "sourceCards": [
-                    ["fleece lining", 1],
-                    ["frosted", 1],
-                    ["fur hat", 1],
-                    ["ethereal", 1],
-                    ["shadow walker", 1],
-                    ["mind expansion", 1],
-                    ["frost ritual", 1]
+            'wight': {
+                'items': [['weapon', 'long sword'], ['armor', 'gladiator helm'], ['armor', 'iron chestplate'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['ice blast', 'ice nova', 'ice ball', 'basic melee'],
+                'sourceCards': [
+                    ['fleece lining', 1],
+                    ['frosted', 1],
+                    ['fur hat', 1],
+                    ['ethereal', 1],
+                    ['shadow walker', 1],
+                    ['mind expansion', 1],
+                    ['frost ritual', 1]
                 ],
             },
-            "walter wight": {
-                "items": [["weapon", "star wand"], ["armor", "mage hat"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"]],
-                "skills": ["ice blast", "ice nova", "ice ball", "basic spell"],
-                "sourceCards": [
-                    ["proto-boss", 0],
-                    ["fleece lining", 1],
-                    ["frosted", 1],
-                    ["blue ice", 3],
-                    ["fur hat", 1],
-                    ["ethereal", 1],
-                    ["shadow walker", 1],
-                    ["keen wit", 4],
-                    ["mana on hit", 3],
-                    ["frost ritual", 1],
-                    ["prismatic toe ring", 1],
-                    ["increased radius", 1],
-                    ["hazmat boots", 1],
-                    ["hazmat gloves", 1],
-                    ["hazmat suit", 1],
-                    ["hazmat mask", 1]
+            'walter wight': {
+                'items': [['weapon', 'star wand'], ['armor', 'mage hat'], ['armor', 'embroidered silks'], ['armor', 'mage boots'], ['armor', 'mage gloves']],
+                'skills': ['ice blast', 'ice nova', 'ice ball', 'basic spell'],
+                'sourceCards': [
+                    ['proto-boss', 0],
+                    ['fleece lining', 1],
+                    ['frosted', 1],
+                    ['blue ice', 3],
+                    ['fur hat', 1],
+                    ['ethereal', 1],
+                    ['shadow walker', 1],
+                    ['keen wit', 4],
+                    ['mana on hit', 3],
+                    ['frost ritual', 1],
+                    ['prismatic toe ring', 1],
+                    ['increased radius', 1],
+                    ['hazmat boots', 1],
+                    ['hazmat gloves', 1],
+                    ['hazmat suit', 1],
+                    ['hazmat mask', 1]
                 ],
             },
-            "shadow knight": {
-                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor", "buckaneer boots"]],
-                "skills": ["masterful strike", "basic melee", "shadow dagger"],
-                "sourceCards": [
-                    ["shadow walker", 1],
-                    ["full plating", 1],
-                    ["sharpened", 1],
-                    ["hateful blade", 1],
-                    ["ethereal", 1],
-                    ["armor plating", 1],
-                    ["steel toed", 1],
-                    ["good circulation", 1],
-                    ["prismatic toe ring", 1],
-                    ["basket hilt", 1],
-                    ["sure footing", 1],
-                    ["steady hands", 1],
+            'shadow knight': {
+                'items': [['weapon', 'long sword'], ['armor', 'apollo helmet'], ['armor', 'polished gauntlets'], ['armor', 'shadow armor'], ['armor', 'buckaneer boots']],
+                'skills': ['masterful strike', 'basic melee', 'shadow dagger'],
+                'sourceCards': [
+                    ['shadow walker', 1],
+                    ['full plating', 1],
+                    ['sharpened', 1],
+                    ['hateful blade', 1],
+                    ['ethereal', 1],
+                    ['armor plating', 1],
+                    ['steel toed', 1],
+                    ['good circulation', 1],
+                    ['prismatic toe ring', 1],
+                    ['basket hilt', 1],
+                    ['sure footing', 1],
+                    ['steady hands', 1],
                 ],
             },
-            "ghoul": {
-                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor",  "buckaneer boots"]],
-                "skills": ["super smash", "basic melee"],
-                "sourceCards": [
-                    ["shambling", 1],
-                    ["simple minded", 1],
-                    ["bloodsucker", 1],
-                    ["careful aim", 1]
+            'ghoul': {
+                'items': [['weapon', 'long sword'], ['armor', 'apollo helmet'], ['armor', 'polished gauntlets'], ['armor', 'shadow armor'], ['armor', 'buckaneer boots']],
+                'skills': ['super smash', 'basic melee'],
+                'sourceCards': [
+                    ['shambling', 1],
+                    ['simple minded', 1],
+                    ['bloodsucker', 1],
+                    ['careful aim', 1]
                 ],
             },
-            "vampire": {
-                "items": [["weapon", "demon wand"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor",  "buckaneer boots"]],
-                "skills": ["health suck", "basic spell"],
-                "sourceCards": [
-                    ["vampyric touch", 1],
-                    ["vampyric embrace", 1],
-                    ["bloodsucker", 1],
-                    ["soulsucker", 1],
-                    ["shadow walker", 1],
-                    ["flying", 1],
-                    ["mind expansion", 1],
-                    ["practiced", 1],
-                    ["bloodfingers", 1]
+            'vampire': {
+                'items': [['weapon', 'demon wand'], ['armor', 'apollo helmet'], ['armor', 'polished gauntlets'], ['armor', 'shadow armor'], ['armor', 'buckaneer boots']],
+                'skills': ['health suck', 'basic spell'],
+                'sourceCards': [
+                    ['vampyric touch', 1],
+                    ['vampyric embrace', 1],
+                    ['bloodsucker', 1],
+                    ['soulsucker', 1],
+                    ['shadow walker', 1],
+                    ['flying', 1],
+                    ['mind expansion', 1],
+                    ['practiced', 1],
+                    ['bloodfingers', 1]
                 ],
             },
-            "living statue": {
-                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "shadow armor"], ["armor",  "buckaneer boots"]],
-                "skills": ["super smash", "basic melee"],
-                "sourceCards": [
-                    ["heart of granite", 1],
-                    ["simple minded", 1],
-                    ["alabaster", 1],
-                    ["accurate", 1],
-                    ["clown shoes", 1],
-                    ["happy feet", 1],
-                    ["bloodfingers", 1],
-                    ["face training", 1]
-                   
+            'living statue': {
+                'items': [['weapon', 'long sword'], ['armor', 'apollo helmet'], ['armor', 'polished gauntlets'], ['armor', 'shadow armor'], ['armor', 'buckaneer boots']],
+                'skills': ['super smash', 'basic melee'],
+                'sourceCards': [
+                    ['heart of granite', 1],
+                    ['simple minded', 1],
+                    ['alabaster', 1],
+                    ['accurate', 1],
+                    ['clown shoes', 1],
+                    ['happy feet', 1],
+                    ['bloodfingers', 1],
+                    ['face training', 1]
+
                 ],
             },
-            "gargoyle": {
-                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "raider armor"], ["armor",  "buckaneer boots"]],
-                "skills": ["super smash", "basic melee"],
-                "sourceCards": [
-                    ["heart of granite", 1],
-                    ["simple minded", 1],
-                    ["alabaster", 1],
-                    ["clawed", 1],
-                    ["flying", 1]                    
+            'gargoyle': {
+                'items': [['weapon', 'long sword'], ['armor', 'apollo helmet'], ['armor', 'polished gauntlets'], ['armor', 'raider armor'], ['armor', 'buckaneer boots']],
+                'skills': ['super smash', 'basic melee'],
+                'sourceCards': [
+                    ['heart of granite', 1],
+                    ['simple minded', 1],
+                    ['alabaster', 1],
+                    ['clawed', 1],
+                    ['flying', 1]
                 ],
             },
-            "minotaur": {
-                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "muscle plate"], ["armor",  "buckaneer boots"]],
-                "skills": ["splashing hit", "super smash", "basic melee"],
-                "sourceCards": [
-                    ["simple minded", 1],
-                    ["big", 1],
-                    ["buff", 1],
-                    ["hobbit foot", 1],
-                    ["good circulation", 1],
-                    ["potion holster", 1],
-                    ["happy feet", 1],
-                    ["basket hilt", 1],
+            'minotaur': {
+                'items': [['weapon', 'long sword'], ['armor', 'apollo helmet'], ['armor', 'polished gauntlets'], ['armor', 'muscle plate'], ['armor', 'buckaneer boots']],
+                'skills': ['splashing hit', 'super smash', 'basic melee'],
+                'sourceCards': [
+                    ['simple minded', 1],
+                    ['big', 1],
+                    ['buff', 1],
+                    ['hobbit foot', 1],
+                    ['good circulation', 1],
+                    ['potion holster', 1],
+                    ['happy feet', 1],
+                    ['basket hilt', 1],
                 ],
             },
-            "wraith": {
-                "items": [["weapon", "long sword"], ["armor", "apollo helmet"], ["armor", "polished gauntlets"], ["armor", "elegant plate"], ["armor",  "buckaneer boots"]],
-                "skills": ["ice slash", "basic melee"],
-                "sourceCards": [
-                    ["berserking", 1],
-                    ["flying", 1],
-                    ["ethereal", 1],
+            'wraith': {
+                'items': [['weapon', 'long sword'], ['armor', 'apollo helmet'], ['armor', 'polished gauntlets'], ['armor', 'elegant plate'], ['armor', 'buckaneer boots']],
+                'skills': ['ice slash', 'basic melee'],
+                'sourceCards': [
+                    ['berserking', 1],
+                    ['flying', 1],
+                    ['ethereal', 1],
                 ],
             },
-            "dahd djinn" : {
-                "items": [["weapon", "fairy wand"], ["armor", "scout leather"], ["armor", "elf boots"], ["armor", "leather gloves"], ["armor", "balsa helmet"]],
-                "skills": ["pressure wave"],
-                "sourceCards": [
-                    ["dexterous hands", 1],
-                    ["practiced", 1],
-                    ["clown shoes", 1],
-                    ["telescoping handle", 1],
-                    ["accurate", 1],
-                    ["steady hands", 1],
-                    ["increased radius", 1],
-                    ["flying", 1],
-                    ["ethereal", 1],
-                    ["shadow walker", 1],
-                    ["balanced", 1],
-                    ["stinging", 1],
-                    ["precise", 1],
-                    ["faster attacks", 1],
+            'dahd djinn' : {
+                'items': [['weapon', 'fairy wand'], ['armor', 'scout leather'], ['armor', 'elf boots'], ['armor', 'leather gloves'], ['armor', 'balsa helmet']],
+                'skills': ['pressure wave'],
+                'sourceCards': [
+                    ['dexterous hands', 1],
+                    ['practiced', 1],
+                    ['clown shoes', 1],
+                    ['telescoping handle', 1],
+                    ['accurate', 1],
+                    ['steady hands', 1],
+                    ['increased radius', 1],
+                    ['flying', 1],
+                    ['ethereal', 1],
+                    ['shadow walker', 1],
+                    ['balanced', 1],
+                    ['stinging', 1],
+                    ['precise', 1],
+                    ['faster attacks', 1],
                 ],
-                "minLevel": 50,
+                'minLevel': 50,
             },
-            "ser djinn" : {
-                "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "mage hat"]],
-                "skills": ["lightning ball"],
-                "sourceCards": [
-                    ["dexterous hands", 1],
-                    ["clown shoes", 1],
-                    ["telescoping handle", 1],
-                    ["accurate", 1],
-                    ["steady hands", 1],
-                    ["flying", 1],
-                    ["ethereal", 1],
-                    ["shadow walker", 1],
-                    ["charged", 1],
-                    ["conductive suit", 1],
-                    ["electrified", 1],
-                    ["shock ritual", 1],
-                    ["planet buster", 1],
-                    ["semi automatic", 1],
-                    ["faster attacks", 1]
+            'ser djinn' : {
+                'items': [['weapon', 'fairy wand'], ['armor', 'embroidered silks'], ['armor', 'mage boots'], ['armor', 'mage gloves'], ['armor', 'mage hat']],
+                'skills': ['lightning ball'],
+                'sourceCards': [
+                    ['dexterous hands', 1],
+                    ['clown shoes', 1],
+                    ['telescoping handle', 1],
+                    ['accurate', 1],
+                    ['steady hands', 1],
+                    ['flying', 1],
+                    ['ethereal', 1],
+                    ['shadow walker', 1],
+                    ['charged', 1],
+                    ['conductive suit', 1],
+                    ['electrified', 1],
+                    ['shock ritual', 1],
+                    ['planet buster', 1],
+                    ['semi automatic', 1],
+                    ['faster attacks', 1]
                 ],
-                "minLevel": 50,
+                'minLevel': 50,
             },
-            "kei djinn" : {
-                "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "mage hat"]],
-                "skills": ["fire ball"],
-                "sourceCards": [
-                    ["dexterous hands", 1],
-                    ["clown shoes", 1],
-                    ["telescoping handle", 1],
-                    ["accurate", 1],
-                    ["steady hands", 1],
-                    ["flying", 1],
-                    ["ethereal", 1],
-                    ["shadow walker", 1],
-                    ["ignited", 1],
-                    ["pyromania", 1],
-                    ["flame ritual", 1],
-                    ["planet buster", 1],
-                    ["semi automatic", 1],
-                    ["faster attacks", 1]
+            'kei djinn' : {
+                'items': [['weapon', 'fairy wand'], ['armor', 'embroidered silks'], ['armor', 'mage boots'], ['armor', 'mage gloves'], ['armor', 'mage hat']],
+                'skills': ['fire ball'],
+                'sourceCards': [
+                    ['dexterous hands', 1],
+                    ['clown shoes', 1],
+                    ['telescoping handle', 1],
+                    ['accurate', 1],
+                    ['steady hands', 1],
+                    ['flying', 1],
+                    ['ethereal', 1],
+                    ['shadow walker', 1],
+                    ['ignited', 1],
+                    ['pyromania', 1],
+                    ['flame ritual', 1],
+                    ['planet buster', 1],
+                    ['semi automatic', 1],
+                    ['faster attacks', 1]
                 ],
-                "minLevel": 50,
+                'minLevel': 50,
             },
-            "al-err djinn" : {
-                "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "plague doctor"]],
-                "skills": ["poison ball"],
-                "sourceCards": [
-                    ["dexterous hands", 1],
-                    ["clown shoes", 1],
-                    ["telescoping handle", 1],
-                    ["accurate", 1],
-                    ["steady hands", 1],
-                    ["flying", 1],
-                    ["ethereal", 1],
-                    ["shadow walker", 1],
-                    ["putrefied", 1],
-                    ["unwashed hands", 1],
-                    ["plague ritual", 1],
-                    ["indigenous toxins", 1],
-                    ["planet buster", 1],
-                    ["semi automatic", 1],
-                    ["faster attacks", 1],
+            'al-err djinn' : {
+                'items': [['weapon', 'fairy wand'], ['armor', 'embroidered silks'], ['armor', 'mage boots'], ['armor', 'mage gloves'], ['armor', 'plague doctor']],
+                'skills': ['poison ball'],
+                'sourceCards': [
+                    ['dexterous hands', 1],
+                    ['clown shoes', 1],
+                    ['telescoping handle', 1],
+                    ['accurate', 1],
+                    ['steady hands', 1],
+                    ['flying', 1],
+                    ['ethereal', 1],
+                    ['shadow walker', 1],
+                    ['putrefied', 1],
+                    ['unwashed hands', 1],
+                    ['plague ritual', 1],
+                    ['indigenous toxins', 1],
+                    ['planet buster', 1],
+                    ['semi automatic', 1],
+                    ['faster attacks', 1],
                 ],
-                "minLevel": 50,
+                'minLevel': 50,
             },
-            "frow djinn" : {
-                "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "mage hat"]],
-                "skills": ["ice ball"],
-                "sourceCards": [
-                    ["dexterous hands", 1],
-                    ["clown shoes", 1],
-                    ["telescoping handle", 1],
-                    ["accurate", 1],
-                    ["steady hands", 1],
-                    ["flying", 1],
-                    ["ethereal", 1],
-                    ["shadow walker", 1],
-                    ["frosted", 1],
-                    ["frost ritual", 1],
-                    ["blue ice", 1],
-                    ["planet buster", 1],
-                    ["semi automatic", 1],
-                    ["faster attacks", 1],
+            'frow djinn' : {
+                'items': [['weapon', 'fairy wand'], ['armor', 'embroidered silks'], ['armor', 'mage boots'], ['armor', 'mage gloves'], ['armor', 'mage hat']],
+                'skills': ['ice ball'],
+                'sourceCards': [
+                    ['dexterous hands', 1],
+                    ['clown shoes', 1],
+                    ['telescoping handle', 1],
+                    ['accurate', 1],
+                    ['steady hands', 1],
+                    ['flying', 1],
+                    ['ethereal', 1],
+                    ['shadow walker', 1],
+                    ['frosted', 1],
+                    ['frost ritual', 1],
+                    ['blue ice', 1],
+                    ['planet buster', 1],
+                    ['semi automatic', 1],
+                    ['faster attacks', 1],
                 ],
-                "minLevel": 50,
+                'minLevel': 50,
             },
         },
-        "zoneOrder": {
-            "order": ["spooky dungeon", "dark forest", "aggro crag", "icy tunnel", "hostile marsh", "clockwork ruins", "gothic castle"],
+        'zoneOrder': {
+            'order': ['spooky dungeon', 'dark forest', 'aggro crag', 'icy tunnel', 'hostile marsh', 'clockwork ruins', 'gothic castle'],
         },
-        "zone": {
-            "spooky dungeon": {
-                "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],
-                "weights": [20, 10, 5, 5, 3],
-                "boss": "skeleton king",
-                "roomCount": 20,
-                "quantity": [1, 1, 3],
+        'zone': {
+            'spooky dungeon': {
+                'choices': ['skeleton', 'skeleton archer', 'skeleton mage', 'fire skeleton', 'skeleton embermage'],
+                'weights': [20, 10, 5, 5, 3],
+                'boss': 'skeleton king',
+                'roomCount': 20,
+                'quantity': [1, 1, 3],
             },
-            "dark forest": {
-                "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
-                "weights": [20, 15, 15, 5, 1],
-                "boss": "elf king",
-                "roomCount": 20,
-                "quantity": [2, 2, 3],
+            'dark forest': {
+                'choices': ['wood nymph', 'bat', 'elf', 'ent', 'dahd djinn'],
+                'weights': [20, 15, 15, 5, 1],
+                'boss': 'elf king',
+                'roomCount': 20,
+                'quantity': [2, 2, 3],
             },
-            "clockwork ruins": {
-                "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
-                "weights": [20, 10, 10, 10, 5, 5, 5, 1],
-                "boss": "sir mechs-a-lot",
-                "roomCount": 20,
-                "quantity": [2,2,3],
+            'clockwork ruins': {
+                'choices': ['gnome', 'gnome electrician', 'roflcopter', 'harpy', 'mechcinerator', 'mechfridgerator', 'mecha watt', 'ser djinn'],
+                'weights': [20, 10, 10, 10, 5, 5, 5, 1],
+                'boss': 'sir mechs-a-lot',
+                'roomCount': 20,
+                'quantity': [2, 2, 3],
             },
-            "aggro crag": {
-                "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
-                "weights": [20, 10, 10, 10, 10, 1],
-                "boss":"the inhuman torch",
-                "roomCount": 20,
-                "quantity": [2,2,3],
+            'aggro crag': {
+                'choices': ['goblin', 'goblin priest', 'goblin artillery', 'fire skeleton', 'fire golem', 'kei djinn'],
+                'weights': [20, 10, 10, 10, 10, 1],
+                'boss': 'the inhuman torch',
+                'roomCount': 20,
+                'quantity': [2, 2, 3],
             },
-            "hostile marsh": {
-                "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
-                "weights": [20, 10, 10, 10, 10, 10, 1, 10 ,10],
-                "boss":"scalp collector",
-                "roomCount": 20,
-                "quantity": [4,2,4],
+            'hostile marsh': {
+                'choices': ['zombie', 'angry imp', 'dart imp', 'imp shaman', 'marshwalker', 'mad ape', 'al-err djinn', 'scalp collector', 'toxic golem'],
+                'weights': [20, 10, 10, 10, 10, 10, 1, 10 , 10],
+                'boss': 'scalp collector',
+                'roomCount': 20,
+                'quantity': [4, 2, 4],
             },
-            "icy tunnel": {
-                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn", "shiver spirit"],
-                "weights": [20, 10, 10, 10 ,10, 10, 1, 5],
-                "boss": "walter wight",
-                "roomCount": 20,
-                "quantity": [2,3,4],
+            'icy tunnel': {
+                'choices': ['frost skeleton', 'ice golem', 'frost mage', 'frozen warrior', 'yeti', 'wight', 'frow djinn', 'shiver spirit'],
+                'weights': [20, 10, 10, 10 , 10, 10, 1, 5],
+                'boss': 'walter wight',
+                'roomCount': 20,
+                'quantity': [2, 3, 4],
             },
-            "gothic castle": {
-                "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
-                "weights": [20, 10, 10, 10, 10, 10, 10],
-                "boss": "shadow knight",
-                "roomCount": 20,
-                "quantity": [3,3,6],
+            'gothic castle': {
+                'choices': ['shadow knight', 'ghoul', 'vampire', 'living statue', 'gargoyle', 'minotaur', 'wraith'],
+                'weights': [20, 10, 10, 10, 10, 10, 10],
+                'boss': 'shadow knight',
+                'roomCount': 20,
+                'quantity': [3, 3, 6],
             },
-            "anthropomorphic savanah": {
-                "choices": ["buzzard", "hyena", "lion", "hippo", "honey badger", "cheetah", "bees"],
-                "weights": [1,1],
-                "boss": "bat",
-                "roomCount": 20,
-                "quantity": [20, 500, 5000],
-                "level": 99                
+            'anthropomorphic savanah': {
+                'choices': ['buzzard', 'hyena', 'lion', 'hippo', 'honey badger', 'cheetah', 'bees'],
+                'weights': [1, 1],
+                'boss': 'bat',
+                'roomCount': 20,
+                'quantity': [20, 500, 5000],
+                'level': 99
             },
-            "hordecave": {
-                "choices": ["vampire", "shadow knight"],
-                "weights": [1,1],
-                "boss": "bat",
-                "roomCount": 20,
-                "quantity": [20, 500, 5000],
-                "level": 99
+            'hordecave': {
+                'choices': ['vampire', 'shadow knight'],
+                'weights': [1, 1],
+                'boss': 'bat',
+                'roomCount': 20,
+                'quantity': [20, 500, 5000],
+                'level': 99
             },
-            "halls of pain": {
-                "choices": ["vampire", "shadow knight", "skeleton king", "elf king", "sir mechs-a-lot", "flame dragon", "scalp collector", "walter wight"],
-                "weights": [1,1,1,1,1,1,1,1],
-                "boss": "vampire",
-                "roomCount": 20,
-                "quantity": [20, 500, 5000],
-                "level": 113
+            'halls of pain': {
+                'choices': ['vampire', 'shadow knight', 'skeleton king', 'elf king', 'sir mechs-a-lot', 'flame dragon', 'scalp collector', 'walter wight'],
+                'weights': [1, 1, 1, 1, 1, 1, 1, 1],
+                'boss': 'vampire',
+                'roomCount': 20,
+                'quantity': [20, 500, 5000],
+                'level': 113
             },
-            "demonic laboroatory": {
-                "choices": ["stitchling", "mad scientist", "minotaur", "blood golem"],
-                "weights": [20, 10, 10],
-                "boss": "pigbearman",
-                "roomCount": 20,
-                "quantity": [2,3,4],
-                "level": 35,
+            'demonic laboroatory': {
+                'choices': ['stitchling', 'mad scientist', 'minotaur', 'blood golem'],
+                'weights': [20, 10, 10],
+                'boss': 'pigbearman',
+                'roomCount': 20,
+                'quantity': [2, 3, 4],
+                'level': 35,
             },
-            "scarred plains": {
-                "choices": ["troll", "cyclops", "harpy", "bandit", "giant", "frost giant"],
-                "weights": [20, 10, 10],
-                "boss": "pigbearman",
-                "roomCount": 20,
-                "quantity": [3,3,6],
-                "level": 40,
+            'scarred plains': {
+                'choices': ['troll', 'cyclops', 'harpy', 'bandit', 'giant', 'frost giant'],
+                'weights': [20, 10, 10],
+                'boss': 'pigbearman',
+                'roomCount': 20,
+                'quantity': [3, 3, 6],
+                'level': 40,
             },
-            
-            "dojo": {
-                "choices": ["skeleton king"],
-                "weights": [1],
-                "boss": "dummy",
-                "roomCount": 10,
-                "quantity": [10, 0, 0],
-                "level": 113,
+
+            'dojo': {
+                'choices': ['skeleton king'],
+                'weights': [1],
+                'boss': 'dummy',
+                'roomCount': 10,
+                'quantity': [10, 0, 0],
+                'level': 113,
             },
-            "empty dojo": {
-                "choices": [],
-                "weights": [],
-                "boss": "dummy",
-                "roomCount": 10,
-                "quantity": [0, 0, 0],
-                "level": 1,
+            'empty dojo': {
+                'choices': [],
+                'weights': [],
+                'boss': 'dummy',
+                'roomCount': 10,
+                'quantity': [0, 0, 0],
+                'level': 1,
             },
         },
-        "test": {
-            "hngg": {"a": 10},
-            "fwah": {"b": 10},
-            "buh": {"a": 12},
-            "hi": {
-                "prototype": ["hngg", "fwah"],
-                "b": 12
+        'test': {
+            'hngg': {'a': 10},
+            'fwah': {'b': 10},
+            'buh': {'a': 12},
+            'hi': {
+                'prototype': ['hngg', 'fwah'],
+                'b': 12
             },
-            "foo": {
-                "prototype": ["hngg", "buh"],
-                "a": 15
+            'foo': {
+                'prototype': ['hngg', 'buh'],
+                'a': 15
             },
-            "harf": {
-                "prototype": ["hi", "foo"],
-                "c": 10
+            'harf': {
+                'prototype': ['hi', 'foo'],
+                'c': 10
             }
         },
         // it goes: [hngg, fwah, hi, hngg, buh, foo, harf]: c: 10, b: 12, a: 15
-        "statnames": {
-            "strength": "Strength",
-            "dexterity": "Dexterity",
-            "wisdom": "Wisdom",
-            "vitality": "Vitality",
-            "maxHp": "Maximum Health",
-            "maxMana": "Maximum Mana",
-            "armor": "Armor",
-            "dodge": "Dodge",
-            "accuracy": "Accuracy",
-            "eleResistAll": "Elemental Damage Taken",
-            "hpRegen": "Health Regenerated per Second",
-            "manaRegen": "Mana Regenerated per Second",
-            "moveSpeed": "Movement Speed",
-            "fireResist": "Fire Damage Taken",
-            "coldResist": "Cold Damage Taken",
-            "lightResist": "Lightning Damage Taken",
-            "poisResist": "Poison Damage Taken",
-            "meleeDmg": "Melee Damage",
-            "rangeDmg": "Ranged Damage",
-            "spellDmg": "Spell Damage",
-            "physDmg": "Physical Damage",
-            "fireDmg": "Fire Damage",
-            "coldDmg": "Cold Damage",
-            "lightDmg": "Lightning Damage",
-            "poisDmg": "Poison Damage",
-            "hpOnHit": "Health Gained on Hit",
-            "manaOnHit": "Mana Gained on Hit",
-            "cooldownTime": "Cooldown Length",
-            "range": "Skill Range",
-            "speed": "Skill Duration",
-            "manaCost": "Mana Cost",
-            "hpLeech": "Leeched Health",
-            "manaLeech": "Leeched Mana",
-            "lineWidth": "Line Width",
-            "height": "Character Height",
-            "width": "Character Width",
-            "aoeRadius": "AOE Radius",
-            "aoeSpeed": "AOE Speed",
-            "angle": "Angle",
-            "projRange": "Projectile Range",
-            "projRadius": "Projectile Radius",
-            "projSpeed": "Projectile Speed",
-            "projCount": "Additional Projectiles"
+        'statnames': {
+            'strength': 'Strength',
+            'dexterity': 'Dexterity',
+            'wisdom': 'Wisdom',
+            'vitality': 'Vitality',
+            'maxHp': 'Maximum Health',
+            'maxMana': 'Maximum Mana',
+            'armor': 'Armor',
+            'dodge': 'Dodge',
+            'accuracy': 'Accuracy',
+            'eleResistAll': 'Elemental Damage Taken',
+            'hpRegen': 'Health Regenerated per Second',
+            'manaRegen': 'Mana Regenerated per Second',
+            'moveSpeed': 'Movement Speed',
+            'fireResist': 'Fire Damage Taken',
+            'coldResist': 'Cold Damage Taken',
+            'lightResist': 'Lightning Damage Taken',
+            'poisResist': 'Poison Damage Taken',
+            'meleeDmg': 'Melee Damage',
+            'rangeDmg': 'Ranged Damage',
+            'spellDmg': 'Spell Damage',
+            'physDmg': 'Physical Damage',
+            'fireDmg': 'Fire Damage',
+            'coldDmg': 'Cold Damage',
+            'lightDmg': 'Lightning Damage',
+            'poisDmg': 'Poison Damage',
+            'hpOnHit': 'Health Gained on Hit',
+            'manaOnHit': 'Mana Gained on Hit',
+            'cooldownTime': 'Cooldown Length',
+            'range': 'Skill Range',
+            'speed': 'Skill Duration',
+            'manaCost': 'Mana Cost',
+            'hpLeech': 'Leeched Health',
+            'manaLeech': 'Leeched Mana',
+            'lineWidth': 'Line Width',
+            'height': 'Character Height',
+            'width': 'Character Width',
+            'aoeRadius': 'AOE Radius',
+            'aoeSpeed': 'AOE Speed',
+            'angle': 'Angle',
+            'projRange': 'Projectile Range',
+            'projRadius': 'Projectile Radius',
+            'projSpeed': 'Projectile Speed',
+            'projCount': 'Additional Projectiles'
         }
 
     };
@@ -3135,7 +3135,7 @@ namespace.module('bot.itemref', function (exports, require) {
     function expand(type, name) {
         if (!(type in ref) || !(name in ref[type])) {
             log.error('Could not find reference for a %s named %s', type, name);
-            throw('fudge');
+            throw ('fudge');
             return;
         }
 
@@ -3145,15 +3145,15 @@ namespace.module('bot.itemref', function (exports, require) {
             item = $.extend(true, item, ref[type][names[i]]);
         }
         if ('itemType' in item) {
-            throw(sprintf('Found a "itemType" key in item %s. No item is allowed to have "itemType" as it it set in expand', JSON.stringify(item)))
+            throw (sprintf('Found a "itemType" key in item %s. No item is allowed to have "itemType" as it it set in expand', JSON.stringify(item)));
         }
         item['itemType'] = type;
         if ('name' in item) {
-            throw(sprintf('Found a "name" key in item %s. No item is allowed to have "name" as it it set in expand', JSON.stringify(item)))
+            throw (sprintf('Found a "name" key in item %s. No item is allowed to have "name" as it it set in expand', JSON.stringify(item)));
         }
         item['name'] = name;
 
-        log.debug("itemref.expand(%s, %s), Final item: %s", type, name, JSON.stringify(item));
+        log.debug('itemref.expand(%s, %s), Final item: %s', type, name, JSON.stringify(item));
 
         return item;
     }

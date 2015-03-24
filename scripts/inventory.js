@@ -1,4 +1,4 @@
-namespace.module('bot.inv', function (exports, require) {
+namespace.module('bot.inv', function(exports, require) {
 
     var funcs = require('org.startpad.funcs').patch();
 
@@ -102,7 +102,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             // this trigger is exclusively for communication between gear and
             // equipped gear model so egm doesn't have to listenTo and stopListening on every single gear change
-            gl.EquipEvents.trigger('change');  
+            gl.EquipEvents.trigger('change');
             return true;
         },
 
@@ -179,7 +179,7 @@ namespace.module('bot.inv', function (exports, require) {
 
     var WeaponModel = GearModel.extend({
         initialize: function(name) {
-            GearModel.prototype.initialize.call(this)
+            GearModel.prototype.initialize.call(this);
             _.extend(this, itemref.expand('weapon', name));
 
             this.name = name;
@@ -210,7 +210,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             // remove added baseDmg amounts from spells (they can only be modified by cards on skill or by more increases)
             if (this.skillType === 'spell') {
-                _.each(actualDmgKeys, function(dmgType) {        
+                _.each(actualDmgKeys, function(dmgType) {
                     this.dmgStats[dmgType].added = 0;
                 }, this);
             }
@@ -229,7 +229,7 @@ namespace.module('bot.inv', function (exports, require) {
 
             _.each(arr, function(stat) {
                 this[stat] = utils.computeStat(this.dmgStats, stat);
-                if (this.skillType + "Dmg" === stat) {
+                if (this.skillType + 'Dmg' === stat) {
                     typeMoreMod *= this[stat];  // attackType modifiers are percentage based
                 }
             }, this);
@@ -278,7 +278,7 @@ namespace.module('bot.inv', function (exports, require) {
                             });
                         } else {
                             log.error('Trying to apply an invalid damage qualifier %s', qual);
-                        } 
+                        }
                     } else if (split[0].indexOf('Dmg') > -1) {
                         log.error('Trying to apply an invalid damage qualifier %s', qual);
                     } else if (split[0] === 'projCount') {
@@ -311,11 +311,11 @@ namespace.module('bot.inv', function (exports, require) {
             this.specs = $.extend({}, this.specs);
             _.each(this.specs, this.calcAttack, this);
         },
-        
+
         getTotalDmg: function() {
             return (this.physDmg + this.fireDmg + this.coldDmg + this.lightDmg + this.poisDmg).toFixed(2);
         },
-        
+
         getDps: function() {
             return (this.getTotalDmg() / this.speed * 1000).toFixed(2);
         }
@@ -426,7 +426,7 @@ namespace.module('bot.inv', function (exports, require) {
 
         applyXp: function(xp) {
             var levels = 0;
-            _.each(_.compact(this.skills), function (skill) {
+            _.each(_.compact(this.skills), function(skill) {
                 levels += skill.applyXp(xp);
             });
             return levels;

@@ -1,4 +1,4 @@
-namespace.module('bot.entity', function (exports, require) {
+namespace.module('bot.entity', function(exports, require) {
 
     var TEAM_HERO = 0;
     var TEAM_MONSTER = 1;
@@ -50,7 +50,7 @@ namespace.module('bot.entity', function (exports, require) {
             all.eleResist = utils.newBaseStatsDict(eleResistKeys);
             all.dmg = utils.newBaseStatsDict(dmgKeys); // utils.newDmgStatsDict();
             all.vis = utils.newBaseStatsDict(visKeys);
-            
+
             utils.addAllMods(all, this.getMods());
             // Now 'all' has the expanded trie structured mod data
             // Do final multiplication and put on the entity
@@ -69,8 +69,8 @@ namespace.module('bot.entity', function (exports, require) {
             all.dmg.accuracy.added += this.dexterity * 2;
             all.dmg.meleeDmg.more *= 1 + (this.strength * 0.001);
             all.dmg.rangeDmg.more *= 1 + (this.dexterity * 0.001);
-            all.dmg.spellDmg.more *= 1 + (this.wisdom * 0.001);            
-            
+            all.dmg.spellDmg.more *= 1 + (this.wisdom * 0.001);
+
             this.eleResistAll *= Math.pow(0.997, this.wisdom);
 
             // note that eleResistAll is on the def keys because of the ordering
@@ -92,7 +92,7 @@ namespace.module('bot.entity', function (exports, require) {
             _.each(visKeys, function(stat) {
                 this[stat] = utils.computeStat(all.vis, stat);
             }, this);
-            
+
             // Damage is left uncombined, handled in skills
 
             this.baseDmg = all.dmg;
@@ -120,7 +120,7 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'vitality added 1 perLevel', type: 'def'},
 
                 {def: 'vitality gainedas 100 maxHp', type: 'def'},
-                {def: 'vitality gainedas 25 maxMana', type: 'def'},                
+                {def: 'vitality gainedas 25 maxMana', type: 'def'},
                 {def: 'wisdom gainedas 100 maxMana', type: 'def'},
 
                 {def: 'strength gainedas 200 armor', type: 'def'},
@@ -132,22 +132,22 @@ namespace.module('bot.entity', function (exports, require) {
                 {def: 'height added 100000', type: 'vis'},
                 {def: 'width added 30000', type: 'vis'},
                 {def: 'lineWidth added 3000', type: 'vis'},
-                
+
                 //TODO - add str/dex/wis attacktype bonuses here once impemented
                 //{def: 'strength gainedas 1 meleeDmg', type: 'dmg'},
                 //{def: 'dexterity gainedas 1 rangeDmg', type: 'dmg'},
-                //{def: 'wisdom gainedas 1 spellDmg', type: 'dmg'},                
+                //{def: 'wisdom gainedas 1 spellDmg', type: 'dmg'},
 
                 {def: 'meleeDmg added 1', type: 'dmg'},
                 {def: 'rangeDmg added 1', type: 'dmg'},
-                {def: 'spellDmg added 1', type: 'dmg'},                
+                {def: 'spellDmg added 1', type: 'dmg'},
 
-                
+
                 {def: 'eleResistAll added 1', type: 'def'},
 
                 {def: 'maxHp added 20 perLevel', type: 'def'},
                 {def: 'maxMana added 5 perLevel', type: 'def'},
-                {def: 'maxHp more 2 perLevel', type:'def'},
+                {def: 'maxHp more 2 perLevel', type: 'def'},
 
                 {def: 'maxMana gainedas 2 manaRegen', type: 'def'},
 
@@ -238,10 +238,10 @@ namespace.module('bot.entity', function (exports, require) {
             _.extend(this, itemref.expand('monster', this.name));
 
             this.weaponType = 'melee';
-            
+
             this.mods = _.map(this.items, function(item) {
                 var expanded = itemref.expand(item[0], item[1]);
-                if (item[0] === "weapon") {
+                if (item[0] === 'weapon') {
                     this.weaponType = expanded.weaponType;
                 }
                 return expanded.mods;
@@ -249,12 +249,12 @@ namespace.module('bot.entity', function (exports, require) {
             this.mods = _.flatten(this.mods);
             try {
                 this.mods = this.mods.concat(utils.expandSourceCards(this.sourceCards, Math.floor(this.level / 10)));
-            } catch(e) {
+            } catch (e) {
                 console.log('asdf');
             }
 
             this.droppableCards = _.filter(this.sourceCards, function(card) { return card[0].slice(0, 5) !== 'proto'; }, this);
-            
+
             this.skillchain = new inventory.Skillchain();
             _.each(this.skills, function(skill, i) {
                 var skill = new inventory.SkillModel(skill);
@@ -334,7 +334,7 @@ namespace.module('bot.entity', function (exports, require) {
         //equipped.equip(_.findWhere(inv.models, {name: 'cardboard sword'}), 'weapon');
         //equipped.equip(_.findWhere(inv.models, {name: 'balsa helmet'}), 'head');
 
-        var skillchain = new inventory.Skillchain()
+        var skillchain = new inventory.Skillchain();
         //skillchain.equip(_.findWhere(inv.models, {name: 'basic melee'}), 0);
 
         var hero = new HeroSpec(heroName, skillchain, inv, equipped, cardInv);

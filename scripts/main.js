@@ -1,4 +1,4 @@
-namespace.module('bot.main', function (exports, require) {
+namespace.module('bot.main', function(exports, require) {
 
     var log = namespace.bot.log;
     var inv = namespace.bot.inv;
@@ -6,7 +6,7 @@ namespace.module('bot.main', function (exports, require) {
     var entity = namespace.bot.entity;
     var zone = namespace.bot.zone;
     var views = namespace.bot.views;
-    var dropsLib = namespace.bot.drops
+    var dropsLib = namespace.bot.drops;
 
     var STEP_SIZE = 10;
 
@@ -19,7 +19,7 @@ namespace.module('bot.main', function (exports, require) {
 
         gl.ZONE_LEVEL_SPACING = 5;
         $('title').html('Dungeons of Derp v' + gl.VERSION_NUMBER.replace(/\-/g, '.') + ' ALPHA');
-        
+
         log.info('onReady');
 
         var gameModel = new GameModel();
@@ -51,7 +51,7 @@ namespace.module('bot.main', function (exports, require) {
             this.cardInv.skillchain = this.hero.skillchain;
             this.settings = this.defaultSettings();
             this.zone = new zone.ZoneManager(this.hero, this.settings);
-            
+
             var loadSuccess = this.load();
             if (!loadSuccess) {
                 this.noobGear();
@@ -77,9 +77,9 @@ namespace.module('bot.main', function (exports, require) {
 
         defaultSettings: function() {
             return {
-                "enableBuildHotkeys": false,
-                "autoAdvance": false
-            }
+                'enableBuildHotkeys': false,
+                'autoAdvance': false
+            };
         },
 
         trySave: function() {
@@ -107,25 +107,25 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         reportData: function() {
-            if(gl.FBL === undefined) {
+            if (gl.FBL === undefined) {
                 return;
             }
             gl.FBL.child('name').set(this.hero.name);
-            gl.FBL.child('lastReport').set("" + new Date());
+            gl.FBL.child('lastReport').set('' + new Date());
             gl.FBL.child('level').set(this.hero.level);
             var data = this.toJSON();
             gl.FBL.child('equipped').set(data.equipped);
             _.each(data.equipped, function(name, slot) {
-                var cards = _.findWhere(data.inv, {"name": name});
-                gl.FBL.child('cards').child(slot+"cards").set(cards.cardNames.join(', '));
+                var cards = _.findWhere(data.inv, {'name': name});
+                gl.FBL.child('cards').child(slot + 'cards').set(cards.cardNames.join(', '));
             }, this);
             gl.FBL.child('skillchain').set(data.skillchain);
             _.each(data.skillchain, function(name, slot) {
-                var cards = _.findWhere(data.inv, {"name": name});
-                gl.FBL.child('cards').child("s"+slot+"cards").set(cards.cardNames.join(', '));
-            }, this); 
+                var cards = _.findWhere(data.inv, {'name': name});
+                gl.FBL.child('cards').child('s' + slot + 'cards').set(cards.cardNames.join(', '));
+            }, this);
             gl.FBL.child('zone').set(data.zone.nextZone);
-            gl.FBL.child('unlockedZones').set(data.zone.unlockedZones);            
+            gl.FBL.child('unlockedZones').set(data.zone.unlockedZones);
             //gl.FBL.child('strdata').set(JSON.stringify(data)); - this is how you save gamedata to server, for once we have accounts
         },
 
@@ -135,15 +135,15 @@ namespace.module('bot.main', function (exports, require) {
             build.equipped = data.equipped;
             build.skillchain = data.skillchain;
             build.inv = _.filter(data.inv, function(m) {return m.cardNames.length});
-            if(buildSlot) {
+            if (buildSlot) {
                 gl.builds[buildSlot] = build;
-                log.warning('Build saved to slot %d', buildSlot);                
+                log.warning('Build saved to slot %d', buildSlot);
             }
             return build;
         },
 
-        loadBuild: function(buildSlot) {            
-            var items, invItem
+        loadBuild: function(buildSlot) {
+            var items, invItem;
             var build = gl.builds[buildSlot];
             if (build !== undefined) {
                 _.each(this.hero.equipped.slots, function(slot) {
@@ -152,7 +152,7 @@ namespace.module('bot.main', function (exports, require) {
                 _.each(_.range(5), function(i) {
                     this.hero.skillchain.equip(undefined, i);
                 }, this);
-                       
+
                 this.hero.skillchain.fromJSON(build.skillchain, this.inv);
                 this.hero.equipped.fromJSON(build.equipped, this.inv);
                 _.each(build.inv, function(loadItem) {
@@ -169,7 +169,7 @@ namespace.module('bot.main', function (exports, require) {
             var tempdate = new Date();
             gl.FB.child(gl.VERSION_NUMBER).child('winners').child(version).child(uid).set(this.zone.nextZone);
         },
-        
+
         load: function() {
             log.warning('loading');
             var data = JSON.parse(localStorage.getItem('data'));
@@ -214,9 +214,9 @@ namespace.module('bot.main', function (exports, require) {
             case '0-1-7':
             case '0-1-8':
             case '0-1-9':
-                this.hero.version = "legacy";
+                this.hero.version = 'legacy';
                 break;
-                
+
             default:
                 log.error('No upgrade required');
                 break;
@@ -292,7 +292,7 @@ namespace.module('bot.main', function (exports, require) {
                     dt -= incBy;
                     this.zone.zoneTick();
                 }
-            }            
+            }
         },
 
         visTick: function() {
@@ -340,13 +340,13 @@ namespace.module('bot.main', function (exports, require) {
             gl.GameEvents.trigger('togglePause');
         } else if (key === UP) {
             this.gameModel.timeCoefficient *= 2;
-            if(!godmode) {
+            if (!godmode) {
                 this.gameModel.timeCoefficient = Math.min(1, this.gameModel.timeCoefficient);
             }
             log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
         } else if (key === DN) {
             this.gameModel.timeCoefficient /= 2;
-            if(!godmode) {
+            if (!godmode) {
                 this.gameModel.timeCoefficient = Math.max(0.25, this.gameModel.timeCoefficient);
             }
             log.error('Time coefficient now %.2f', this.gameModel.timeCoefficient);
@@ -359,35 +359,33 @@ namespace.module('bot.main', function (exports, require) {
                 this.gameModel.loadBuild(buildSlot);
             }
         }
-        
-            
-    }
+    };
 
     KeyHandler.prototype.onKeydown = function(event) {
-        var godmode = isNaN(parseInt(localStorage.getItem('uid')))
+        var godmode = isNaN(parseInt(localStorage.getItem('uid')));
         this.liveKeys(event, godmode);
-        
+
         if (!godmode) {
             return;
         }
-        
+
         var gameModel = this.gameModel;
-        
+
         var SPACE = 32, EKEY = 69, TKEY = 84, UP = 38, DN = 40, CKEY = 67, PKEY = 80, HKEY = 72, XKEY = 88, VKEY = 86;
         var key = event.keyCode;
 
         log.info('keydown, key: %d', event.keyCode);
 
-        
+
         if (key == EKEY) {
             //Cheat for adding 1000xp (for easier testing)
-            log.warning("XP Cheat!");                
+            log.warning('XP Cheat!');
             this.gameModel.hero.applyXp(this.gameModel.hero.getNextLevelXp());
         } else if (key == HKEY) {
-            log.warning("Health Potion");
+            log.warning('Health Potion');
             this.gameModel.zone.hero.tryUsePotion();
         } else if (key == TKEY) {
-            log.warning("Time Cheat!");
+            log.warning('Time Cheat!');
             this.gameModel.lastTime -= 1000 * 60 * 5;
         } else if (key === CKEY || key === XKEY || key === VKEY) {
             log.error('Melee Equipment cheat');
@@ -397,7 +395,7 @@ namespace.module('bot.main', function (exports, require) {
 
             if (key === CKEY) {
                 this.gameModel.inv.addDrops([
-                    dropsLib.dropFactory('item', ['weapon', 'spikey mace']),                
+                    dropsLib.dropFactory('item', ['weapon', 'spikey mace']),
                     dropsLib.dropFactory('skill', 'lethal strike'),
                     dropsLib.dropFactory('skill', 'flaming debris'),
                     dropsLib.dropFactory('skill', 'ground smash'),
@@ -465,7 +463,7 @@ namespace.module('bot.main', function (exports, require) {
                 console.log((1000 * 60 * 20 / elapsed).toFixed(3), 'x speed');
             }, 100);
         }
-    }
+    };
 
     exports.extend({
         onReady: onReady,

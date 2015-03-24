@@ -1,4 +1,4 @@
-namespace.module('bot.vis', function (exports, require) {
+namespace.module('bot.vis', function(exports, require) {
 
     /*
       TODO:
@@ -320,7 +320,7 @@ namespace.module('bot.vis', function (exports, require) {
                 base.y -= dmg.getY() * vvs.ratio;
                 ctx.fillText(msg.text, base.x, base.y);
             } else {
-                var pos = transpose(msg.pos)
+                var pos = transpose(msg.pos);
                 if (msg.verticalOffset) {
                     pos.y -= msg.verticalOffset * vvs.ratio;
                 }
@@ -333,7 +333,7 @@ namespace.module('bot.vis', function (exports, require) {
         for (var i = drawables.length; i--;) {
             drawables[i].updateZ();
         }
-        drawables.sort(function (a, b) { return a.z - b.z; });
+        drawables.sort(function(a, b) { return a.z - b.z; });
     }
 
     function AttackView(atk) {
@@ -347,7 +347,7 @@ namespace.module('bot.vis', function (exports, require) {
         } else {
             this.z = (this.atk.pos.x + this.atk.pos.y) / 2;
         }
-    }
+    };
 
     AttackView.prototype.draw = function(ctx, tempCanvas) {
         if (this.atk.type === 'proj' && gl.time < this.atk.fireTime) {
@@ -360,7 +360,7 @@ namespace.module('bot.vis', function (exports, require) {
             return;
         }
 
-        var pos = transpose(this.atk.pos)
+        var pos = transpose(this.atk.pos);
         pos.y -= this.atk.z * vvs.ratio;
         if (this.atk.type === 'circle') {
             flatCircle(ctx, this.atk);
@@ -369,7 +369,7 @@ namespace.module('bot.vis', function (exports, require) {
         } else {
             circle(ctx, pos, this.atk.color, this.atk.projRadius * vvs.ratio, true);
         }
-    }
+    };
 
     // Implements drawable interface
     function BodyView(body) {
@@ -380,7 +380,7 @@ namespace.module('bot.vis', function (exports, require) {
 
     BodyView.prototype.updateZ = function() {
         this.z = (this.body.pos.x + this.body.pos.y) / 2;
-    }
+    };
 
     BodyView.prototype.draw = function(ctx, tempCanvas) {
         var coords = transpose(this.body.pos);
@@ -398,7 +398,7 @@ namespace.module('bot.vis', function (exports, require) {
         var legSize = height * 23 / 72;
         var armPos = new Point(0, height * 45 / 72);
         var armSize = height * 28 / 72;
-        var bodyPos = [headPos, new Point(0, legSize)]; 
+        var bodyPos = [headPos, new Point(0, legSize)];
 
         // head
         circle(ctx, coords.sub(headPos), this.color, headSize, true);
@@ -407,7 +407,7 @@ namespace.module('bot.vis', function (exports, require) {
         // draw body, legs
         var legFrame = 0;
         if (this.body.moveStart > -1) {
-            // range 0 to 2.  
+            // range 0 to 2.
             var secPerWidth = this.body.spec.width / this.body.spec.moveSpeed * 8;  // the * 8 makes it 8x slower than real
             legFrame = ((gl.time - this.body.moveStart) % secPerWidth) / secPerWidth * 2;
         }
@@ -459,10 +459,10 @@ namespace.module('bot.vis', function (exports, require) {
               armBase.add(lArm)
              );
 
-        ctx.stroke();        
+        ctx.stroke();
 
         drawNameHealth(ctx, tempCanvas, this.body.spec.name, coords.sub(new Point(0, height)), this.body.hp / this.body.spec.maxHp);
-    }
+    };
 
     function lines(ctx, p) {
         if (p) {
@@ -526,7 +526,7 @@ namespace.module('bot.vis', function (exports, require) {
     }
 
     function drawEllipseByCenter(ctx, cx, cy, w, h) {
-        drawEllipse(ctx, cx - w/2.0, cy - h/2.0, w, h);
+        drawEllipse(ctx, cx - w / 2.0, cy - h / 2.0, w, h);
     }
 
     function drawEllipse(ctx, x, y, w, h) {
@@ -565,7 +565,7 @@ namespace.module('bot.vis', function (exports, require) {
         var properAngle = function(a) {
             if (a < 0) { a += Math.PI * 2; }
             return a;
-        }
+        };
 
         a1 = properAngle(a1);
         a2 = properAngle(a2);
@@ -613,5 +613,5 @@ namespace.module('bot.vis', function (exports, require) {
 
     exports.extend({
         VisView: VisView
-    });    
+    });
 });

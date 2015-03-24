@@ -239,7 +239,7 @@ namespace.module('bot.bodies', function(exports, require) {
                 attack.poisDmg * this.spec.poisResist;
 
             if (isNaN(totalDmg)) {
-                throw('In body.takeDamage, totalDmg has NaN value.  Monster missing card level in itemref?');
+                throw ('In body.takeDamage, totalDmg has NaN value.  Monster missing card level in itemref?');
             }
 
             var allowedPct = totalDmg / attack.totalDmg;
@@ -299,7 +299,7 @@ namespace.module('bot.bodies', function(exports, require) {
                 lookup[this.skills[i].spec.name] = this.skills[i];
             }
 
-            var skills = _.filter(s.skills, function (skill) { return skill && !skill.disabled; });
+            var skills = _.filter(s.skills, function(skill) { return skill && !skill.disabled; });
 
             this.skills = _.map(
                 skills,
@@ -327,7 +327,7 @@ namespace.module('bot.bodies', function(exports, require) {
                 var messages = invMessages.concat(cardMessages);
 
                 _.each(messages, function(message, index) {
-                    var color = (message.slice(0,3) == "New" || message.slice(0,7) == "Leveled") ? 'rgba(255, 140, 0, 0.8)' : 'rgba(255, 100, 0, 0.6)';
+                    var color = (message.slice(0, 3) == 'New' || message.slice(0, 7) == 'Leveled') ? 'rgba(255, 140, 0, 0.8)' : 'rgba(255, 100, 0, 0.6)';
                     gl.MessageEvents.trigger(
                         'message',
                         // TODO: Fix the offset here
@@ -366,7 +366,7 @@ namespace.module('bot.bodies', function(exports, require) {
             if (this.potionCoolAt <= gl.time) {
                 this.potionCoolAt = gl.time + 10000;  // 10 second cooldown
                 var addAmount = 10 + this.spec.level * 20;
-                this.modifyHp(addAmount)
+                this.modifyHp(addAmount);
                 gl.MessageEvents.trigger('message', newZoneMessage('potion worked!', 'potion', this.pos, 'rgba(230, 230, 230, 0.7)', 1000));
             } else {
                 gl.MessageEvents.trigger('message', newZoneMessage('potion still cooling down!', 'potion', this.pos, 'rgba(230, 230, 230, 0.4)', 500));
@@ -381,7 +381,7 @@ namespace.module('bot.bodies', function(exports, require) {
             var uid = name + '_' + level;
             var spec;
             if (uid in gl.monsterSpecs) {
-                spec = gl.monsterSpecs[uid]
+                spec = gl.monsterSpecs[uid];
             } else {
                 spec = new MonsterSpec(name, level);
                 gl.monsterSpecs[uid] = spec;

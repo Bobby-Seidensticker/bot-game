@@ -1,4 +1,4 @@
-namespace.module('bot.views', function (exports, require) {
+namespace.module('bot.views', function(exports, require) {
 
     var FOOTER_HEIGHT = 114;
     var log, entity, VisView, vu, Point, PointFromEvent, presentableSlot;
@@ -140,13 +140,13 @@ namespace.module('bot.views', function (exports, require) {
                 var arr = [];
                 skill = this.model.skills[i];
                 _.each(entity.dmgKeys, function(key) {
-                    if (key === "projCount" && skill.spec.projCount <= 1) {
+                    if (key === 'projCount' && skill.spec.projCount <= 1) {
                         return;
                     }
-                    if (key === "decayRange") {
+                    if (key === 'decayRange') {
                         return;
                     }
-                    if (key === "radius" || key === "rate" || key === "angle") {  // todo only if not aoe
+                    if (key === 'radius' || key === 'rate' || key === 'angle') {  // todo only if not aoe
                         return;
                     }
                     statname = namespace.bot.itemref.ref.statnames[key];
@@ -170,7 +170,7 @@ namespace.module('bot.views', function (exports, require) {
                     var dodge = this.model.spec.dodge;
                     var level = this.zone.level;
                     var attAcc = (9 + level) * 2;
-                    var chance = 1 -(3 * 0.5 * (attAcc/(attAcc + dodge)));
+                    var chance = 1 - (3 * 0.5 * (attAcc / (attAcc + dodge)));
                     data.spec.push([statname, Math.min(0.99, chance.toFixed(2))]);
                 }
                 if (key === 'armor') {
@@ -348,7 +348,7 @@ namespace.module('bot.views', function (exports, require) {
             gl.DirtyQueue.mark('filterChange');
         },
 
-        filter: function() { throw('This is an abstract class'); },
+        filter: function() { throw ('This is an abstract class'); },
     });
 
     var WeaponTypeFilterBarView = AbstractFilterBarView.extend({
@@ -463,7 +463,7 @@ namespace.module('bot.views', function (exports, require) {
         stopDragging: function(event) {
             log.info('DROP');
 
-            this.state = this.DISABLED
+            this.state = this.DISABLED;
             this.$el.css('display', 'none');
             var model = this.model;
             this.model = undefined;
@@ -619,7 +619,7 @@ namespace.module('bot.views', function (exports, require) {
             }
         },
 
-        select: function() { this.selected = true; this.$el.addClass('selected');  },
+        select: function() { this.selected = true; this.$el.addClass('selected'); },
         unselect: function() { this.selected = false; this.$el.removeClass('selected'); },
 
         onDrop: function(dropPos, model) {
@@ -778,7 +778,7 @@ namespace.module('bot.views', function (exports, require) {
             }
 
             return this;
-        },        
+        },
     });
 
     var CardTab = Backbone.View.extend({
@@ -1066,7 +1066,7 @@ namespace.module('bot.views', function (exports, require) {
 
             if (this.model.oom) { this.$el.addClass('oom') } else { this.$el.removeClass('oom'); }
             if (this.model.oor) { this.$el.addClass('oor') } else { this.$el.removeClass('oor'); }
-            
+
             this.$cd.css('height', cdHeight);
             this.$use.css('width', useWidth);
         },
@@ -1312,9 +1312,9 @@ namespace.module('bot.views', function (exports, require) {
         toggleAutoAdvance: function() {
             this.settings['autoAdvance'] = this.$('#autoAdvance').prop('checked');
         },
-        
+
         zoneClick: function(zoneName) {
-            log.UI("MapTab: Clicked on zone: %s", zoneName);
+            log.UI('MapTab: Clicked on zone: %s', zoneName);
             this.zone.nextZone = zoneName;
             this.zone.newZone(zoneName);
             this.render();
@@ -1342,11 +1342,11 @@ namespace.module('bot.views', function (exports, require) {
                 var upgradeCount = Math.floor(i / zoneCount);
                 var zoneI = i % zoneCount;
                 var level = Math.max(1, i * gl.ZONE_LEVEL_SPACING);
-                
+
                 var name = this.zone.zoneOrder[zoneI];
                 var zoneRef = this.zone.allZones[name];
-                var nameStr = upgradeCount >= 1 ? " " + (upgradeCount + 1) : ""
-                data = _.extend({name: name + nameStr, level: level, running: i === this.zone.nextZone, zoneNum: i}, zoneRef);                
+                var nameStr = upgradeCount >= 1 ? ' ' + (upgradeCount + 1) : '';
+                data = _.extend({name: name + nameStr, level: level, running: i === this.zone.nextZone, zoneNum: i}, zoneRef);
                 sub = new ZoneMapTab({model: data});
                 this.listenTo(sub, 'click', this.zoneClick);
                 this.subs.push(sub);
@@ -1355,7 +1355,7 @@ namespace.module('bot.views', function (exports, require) {
 
 
             this.$holder.html(frag);
-            $('#autoAdvance').prop('checked', this.settings.autoAdvance)            
+            $('#autoAdvance').prop('checked', this.settings.autoAdvance);
             return this;
         }
     });
@@ -1408,7 +1408,7 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
             this.$holder.html(this.template);
-            $('#enableBuildHotkeys').prop('checked', this.settings.enableBuildHotkeys)
+            $('#enableBuildHotkeys').prop('checked', this.settings.enableBuildHotkeys);
             /*this.$('#namebutton').on('click', this.nameButton.bind(this));
               this.$('#devbutton').on('click', this.devButton.bind(this));
               this.$('#donateButton').on('click', this.donate.bind(this));*/
@@ -1423,7 +1423,7 @@ namespace.module('bot.views', function (exports, require) {
                 bitcoin: true,
                 token: function(token) {
                     var uid = localStorage.getItem('uid');
-                    var donId = new Date() + "-" + uid;
+                    var donId = new Date() + '-' + uid;
                     var savedDonation = {
                         amount: amount,
                         uid: gl.FBuid,
@@ -1431,10 +1431,10 @@ namespace.module('bot.views', function (exports, require) {
                         email: token.email,
                         type: token.type,
                         version: gl.VERSION_NUMBER
-                    }
+                    };
                     gl.FB.child('payments').child(uid).set(savedDonation);
                     token.amount = amount;
-                    console.log("TOKEN:", token, savedDonation);
+                    console.log('TOKEN:', token, savedDonation);
                     // Use the token to create the charge with a server-side script.
                     // You can access the token ID with `token.id`
                 }
@@ -1451,7 +1451,7 @@ namespace.module('bot.views', function (exports, require) {
             this.settings['enableBuildHotkeys'] = this.$('#enableBuildHotkeys').prop('checked');
             console.log(this.settings);
         },
-        
+
 
         wipe: function() {
             localStorage.removeItem('data');
@@ -1462,7 +1462,7 @@ namespace.module('bot.views', function (exports, require) {
             var userInput = $('#charname').val();
             this.heroSpec.name = userInput.length < 64 ? userInput : 'SMARTASS';
         },
-        
+
         devButton: function() {
             var msg = $('#devmsg').val();
             if (msg && msg.length) {
@@ -1470,7 +1470,7 @@ namespace.module('bot.views', function (exports, require) {
             }
             $('#devmsg').val('');
         },
-        
+
     });
 
     var HelpTab = Backbone.View.extend({

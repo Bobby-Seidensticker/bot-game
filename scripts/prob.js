@@ -1,4 +1,4 @@
-namespace.module('bot.prob', function (exports, require) {
+namespace.module('bot.prob', function(exports, require) {
     exports.extend({
         rand: rand,
         pyRand: pyRand,
@@ -17,14 +17,14 @@ namespace.module('bot.prob', function (exports, require) {
     // returns a random integer >= min and <= max
     function rand(min, max) {  // INCLUSIVE ON BOTH SIDES
         if (typeof(min) !== 'number' || typeof(max) !== 'number') {
-            throw "rand() must be called with 2 numbers"
+            throw 'rand() must be called with 2 numbers';
         }
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     function pyRand(min, max) {  // inclusive of min, exclusive of max
         if (typeof(min) !== 'number' || typeof(max) !== 'number') {
-            throw "pyRand() must be called with 2 numbers"
+            throw 'pyRand() must be called with 2 numbers';
         }
         return Math.floor(Math.random() * (max - min) + min);
     }
@@ -33,11 +33,11 @@ namespace.module('bot.prob', function (exports, require) {
         //var root = 5;
         //var range = Math.pow(max, root);
         //var result = Math.max(min, Math.floor(Math.pow(pyRand(0, range), 1/root)));
-        var result = pProb(min*2, max);
+        var result = pProb(min * 2, max);
 
         return Math.max(min, result);
     }
-    
+
     // Binary probability, returns true or false based off a p
     // p >= 1 always returns 1
     // p = 0.01 returns 1 on average once per 100 tries, 0 other times
@@ -121,9 +121,9 @@ namespace.module('bot.prob', function (exports, require) {
                 base = base[0] + base[0] + base[1] + base[1] + base[2] + base[2];
             }
             if (base.length !== 6) {
-                throw('randcolor base != 6');
+                throw ('randcolor base != 6');
             }
-            base = [parseInt(base.slice(0, 2), 16), parseInt(base.slice(2,4), 16), parseInt(base.slice(4,6), 16)];
+            base = [parseInt(base.slice(0, 2), 16), parseInt(base.slice(2, 4), 16), parseInt(base.slice(4, 6), 16)];
         }
 
         color = _.map(base, function(c) {

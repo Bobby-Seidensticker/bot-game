@@ -1,4 +1,4 @@
-namespace.module('bot.zone', function (exports, require) {
+namespace.module('bot.zone', function(exports, require) {
 
     var TEAM_HERO = 0;
     var TEAM_MONSTER = 1;
@@ -48,40 +48,40 @@ namespace.module('bot.zone', function (exports, require) {
         },
 
         newZone: function(zoneNum) {
-            if (typeof(zoneNum) !== "number") {
+            if (typeof(zoneNum) !== 'number') {
                 zoneNum = 0;
             }
-            
+
             this.iuid = _.uniqueId('inst');
 
             var i, j, rooms, monsters, count, data;
 
-            var zoneCount = this.zoneOrder.length; 
+            var zoneCount = this.zoneOrder.length;
             var upgradeCount = Math.floor(zoneNum / zoneCount);
             var zoneI = zoneNum % zoneCount;
-            //var zoneNum = 
-            var nameStr = upgradeCount > 0 ? " " + (upgradeCount + 1) : "";
+            //var zoneNum =
+            var nameStr = upgradeCount > 0 ? ' ' + (upgradeCount + 1) : '';
 
-            
+
             this.name = this.zoneOrder[zoneI] + nameStr;
 
             //console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
             _.extend(this, this.allZones[this.zoneOrder[zoneI]]);
-            this.level = Math.max(1, zoneNum * gl.ZONE_LEVEL_SPACING);            
-            
-            
+            this.level = Math.max(1, zoneNum * gl.ZONE_LEVEL_SPACING);
+
+
             this.rooms = this.generator();
             var choices = [];
             var weights = [];
             _.each(this.choices, function(mon, i) {
                 var monref = namespace.bot.itemref.ref.monster[mon];
-                if(!monref.minLevel ||
-                   monref.minLevel <= this.level){
+                if (!monref.minLevel ||
+                   monref.minLevel <= this.level) {
                     choices.push(mon);
                     weights.push(this.weights[i]);
                 }
             }, this);
-            
+
             for (i = 0; i < this.rooms.length; i++) {
                 monsters = [];
                 if (i % 2 === 0) {  // if this is not a corridor
@@ -144,7 +144,7 @@ namespace.module('bot.zone', function (exports, require) {
 
                 // get a width + height, swap height and len ranges if we aren't going right, so the l/w ranges
                 //   stay the same wrt the player
-                // set the abs exit for the old room 
+                // set the abs exit for the old room
                 if (dir === 0) {
                     room.exit = new Point(prob.middle50(room.size.x), 0);
                 } else {
@@ -233,8 +233,8 @@ namespace.module('bot.zone', function (exports, require) {
             var msg;
             if (!this.hero.isAlive()) {
                 msg = {
-                    text: "You Died!",
-                    type: "death",
+                    text: 'You Died!',
+                    type: 'death',
                 };
             } else if (this.done()) {
                 log.error('Zone %s cleared', this.name);
@@ -245,17 +245,17 @@ namespace.module('bot.zone', function (exports, require) {
                     this.nextZone += 1;
                 }
                 gl.GameEvents.trigger('reportData');
-                
+
                 msg = {
-                    text: "Zone Cleared!",
-                    type: "clear"
+                    text: 'Zone Cleared!',
+                    type: 'clear'
                 };
             }
             if (msg) {
                 this.hero.moveStart = -1;
                 this.messages.addMessage(_.extend(msg, {
                     pos: this.hero.pos,
-                    color: "#FFF",
+                    color: '#FFF',
                     lifespan: 2000,
                     verticalOffset: 0,
                     time: gl.time,
@@ -270,16 +270,16 @@ namespace.module('bot.zone', function (exports, require) {
             if (this.heroPos === 29 && this.nextZone === this.unlockedZones) {
                 this.unlockedZones += 1;
                 this.messages.addMessage({
-                    text: "New Map Unlocked!",
-                    type: "newlevel",
+                    text: 'New Map Unlocked!',
+                    type: 'newlevel',
                     pos: this.hero.pos,
-                    color: "#FFF",
+                    color: '#FFF',
                     lifespan: 5000,
                     verticalOffset: 0,
                     time: gl.time,
                     expires: gl.time + 5000});
-                gl.DirtyQueue.mark('zone:unlocked');                
-            } 
+                gl.DirtyQueue.mark('zone:unlocked');
+            }
         },
 
         atExit: function() {

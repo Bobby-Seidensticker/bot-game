@@ -1,4 +1,4 @@
-namespace.module('bot.events', function (exports, require) {
+namespace.module('bot.events', function(exports, require) {
 
     var log = namespace.bot.log;
 
@@ -18,7 +18,7 @@ namespace.module('bot.events', function (exports, require) {
                 this.obj[split.slice(0, split.length - i).join(':')] = true;
             }
         }
-    }
+    };
 
     DirtyQueueClass.prototype.mapMark = function(from, to) {
         if (typeof(from) === 'string') {
@@ -31,7 +31,7 @@ namespace.module('bot.events', function (exports, require) {
             }
             map[f].push(to);
         });
-    }
+    };
 
     DirtyQueueClass.prototype.triggerAll = function(eventObject) {
         log.debug('Triggering All Events');
@@ -50,7 +50,7 @@ namespace.module('bot.events', function (exports, require) {
                 this.obj[key] = false;
             }
         }, this);
-    }
+    };
 
     gl.DirtyQueue = new DirtyQueueClass();
 

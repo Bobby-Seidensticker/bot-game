@@ -170,6 +170,7 @@ namespace.module('bot.entity', function (exports, require) {
             this.inv = inv;
             this.cardInv = cardInv;
             this.equipped = equipped;
+            this.version = gl.VERSION_NUMBER;
 
             EntitySpec.prototype.initialize.call(this);
             this.team = TEAM_HERO;
@@ -305,7 +306,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (pl > ml) {
                 return 1;
             }
-            var sb = 5 + Math.floor(pl / 16);
+            var sb = 3 + Math.floor(pl / 16);
             var diff = ml - pl;
             if (diff <= sb) {
                 return 1;

@@ -70,6 +70,18 @@ namespace.module('bot.zone', function (exports, require) {
             
             
             this.rooms = this.generator();
+            var choices = [];
+            var weights = [];
+            _.each(this.choices, function(mon, i) {
+                var monref = namespace.bot.itemref.ref.monster[mon];
+                if(!monref.minLevel ||
+                   monref.minLevel <= this.level){
+                    choices.push(mon);
+                    weights.push(this.weights[i]);
+                }
+            }, this);
+            console.log(choices, weights);
+            
             for (i = 0; i < this.rooms.length; i++) {
                 monsters = [];
                 if (i % 2 === 0) {  // if this is not a corridor
@@ -77,7 +89,7 @@ namespace.module('bot.zone', function (exports, require) {
                     //max room pop is i+1 (first room always only one monster)
                     count = Math.min((i / 2 + 1) * (this.quantity[0] + upgradeCount), count);
                     for (var j = 0; j < count; j++) {
-                        monsters.push(new MonsterBody(this.choices[prob.pick(this.weights)], this.level));
+                        monsters.push(new MonsterBody(choices[prob.pick(weights)], this.level));
                     }
                     if (i === this.rooms.length - 1) {
                         monsters.push(new MonsterBody(this.boss, this.level));

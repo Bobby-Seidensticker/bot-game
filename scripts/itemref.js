@@ -57,7 +57,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "long sword": {
                 "mods": [
-                    {def: 'speed more -0.5 perLevel', type: 'dmg'},                    
+                    {def: 'speed more -20', type: 'dmg'},
+                    {def: 'speed more -0.1 perLevel', type: 'dmg'},                  
                     {def: 'physDmg added 16', type: 'dmg'},
                     {def: 'physDmg more 0.6 perLevel', type: 'dmg'}
                 ],
@@ -321,6 +322,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "raider armor": {
                 "mods": [
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},
+                    {def: 'armor more -20', type: 'def'},                    
                 ],
                 "slot": "chest",
             },
@@ -387,7 +389,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "batsuit": {
                 "mods": [
                     {def: 'speed more -20', type: 'dmg'},
-                    {def: 'physDmg more 2 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 1 perLevel', type: 'dmg'},
                 ],
                 "slot": "chest",
             },
@@ -1360,7 +1362,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "projCount added 2", "type": "dmg"},
                     {"def": "angle more 20", "type": "dmg"},
-                    {"def": "speed more -1 perLevel", "type": "dmg"},
+                    {"def": "speed more -0.2 perLevel", "type": "dmg"},
                     {"def": "manaCost added 2", "type": "dmg"}
                 ],
                 "slot": "skill",
@@ -1481,7 +1483,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "berserking": {
                 "mods": [
                     {"def": "physDmg more 25", "type": "dmg"},
-                    {"def": "speed more -1 perLevel", "type": "dmg"},                     
+                    {"def": "speed more -0.3 perLevel", "type": "dmg"},                     
                     {"def": "maxHp more -50", "type": "def"},
                 ],
                 "slot": "head",
@@ -1552,14 +1554,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "vampyric touch": {
                 "mods": [
                     {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "hands",
             },
             "vampyric embrace": {
                 "mods": [
                     {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 1.5 perLevel", "type": "dmg"},
                 ],
                 "slot": "chest",
             },
@@ -1579,7 +1581,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "vest pockets": {
                 "mods": [
-                    {"def": "speed more -2 perLevel", "type": "dmg"},
+                    {"def": "speed more -15", "type": "dmg"},
+                    {"def": "speed more -0.2 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "chest",
             },
@@ -1649,7 +1652,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "hateful blade": {
                 "mods": [
                     {"def": "physDmg gainedas -3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 30", "type": "dmg"},                    
+                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
             },
@@ -1701,8 +1705,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "faster attacks": {
                 "mods":[
-                    {"def": "speed more -17", "type": "dmg"},
-                    {"def": "speed more -3 perLevel", "type": "dmg"}
+                    {"def": "speed more -25", "type": "dmg"},
+                    {"def": "speed more -0.3 perLevel", "type": "dmg"}
                 ],
                 "slot": "skill",
             },
@@ -1767,15 +1771,15 @@ namespace.module('bot.itemref', function (exports, require) {
             "practiced": {
                 "mods": [
                     {"def": "physDmg more 15", "type": "dmg"},
-                    {"def": "speed more -8", "type": "dmg"},
-                    {"def": "speed more -1 perLevel", "type": "dmg"}                    
+                    {"def": "speed more -20", "type": "dmg"},
+                    {"def": "speed more -0.1 perLevel", "type": "dmg"}                    
                 ],
                 "slot":"skill",
             },
             "honed": {
                 "mods": [
-                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
-                    {"def": "speed more -3 perLevel", "type": "dmg"},                   
+                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
+                    {"def": "speed more -0.2 perLevel", "type": "dmg"},                   
                 ],
                 "slot":"skill",
             },
@@ -2018,7 +2022,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "aoeRadius more -50", "type": "dmg"},
                     {"def": "speed more -10", "type": "dmg"},                                        
-                    {"def": "speed more -1 perLevel", "type": "dmg"},                    
+                    {"def": "speed more -0.1 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "skill"
             },
@@ -2102,8 +2106,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "minimum tolerances": {
                 "mods":[
-                    {"def": "accuracy more 4 perLevel", "type": "dmg"},
-                    {"def": "accuracy more 20", "type": "dmg"},                    
+                    {"def": "accuracy more 1 perLevel", "type": "dmg"},
+                    {"def": "accuracy more 30", "type": "dmg"},                    
                 ],
                 "slot": "weapon"
             },
@@ -2818,6 +2822,113 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["ethereal", 1],
                 ],
             },
+            "dahd djinn" : {
+                "items": [["weapon", "fairy wand"], ["armor", "scout leather"], ["armor", "elf boots"], ["armor", "leather gloves"], ["armor", "balsa helmet"]],
+                "skills": ["pressure wave"],
+                "sourceCards": [
+                    ["dexterous hands", 1],
+                    ["practiced", 1],
+                    ["clown shoes", 1],
+                    ["telescoping handle", 1],
+                    ["accurate", 1],
+                    ["steady hands", 1],
+                    ["increased radius", 1],
+                    ["flying", 1],
+                    ["ethereal", 1],
+                    ["shadow walker", 1],
+                    ["balanced", 1],
+                    ["stinging", 1],
+                    ["precise", 1],
+                    ["faster attacks", 1],
+                ],
+                "minLevel": 50,
+            },
+            "ser djinn" : {
+                "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "mage hat"]],
+                "skills": ["lightning ball"],
+                "sourceCards": [
+                    ["dexterous hands", 1],
+                    ["clown shoes", 1],
+                    ["telescoping handle", 1],
+                    ["accurate", 1],
+                    ["steady hands", 1],
+                    ["flying", 1],
+                    ["ethereal", 1],
+                    ["shadow walker", 1],
+                    ["charged", 1],
+                    ["conductive suit", 1],
+                    ["electrified", 1],
+                    ["shock ritual", 1],
+                    ["planet buster", 1],
+                    ["semi automatic", 1],
+                    ["faster attacks", 1]
+                ],
+                "minLevel": 50,
+            },
+            "kei djinn" : {
+                "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "mage hat"]],
+                "skills": ["fire ball"],
+                "sourceCards": [
+                    ["dexterous hands", 1],
+                    ["clown shoes", 1],
+                    ["telescoping handle", 1],
+                    ["accurate", 1],
+                    ["steady hands", 1],
+                    ["flying", 1],
+                    ["ethereal", 1],
+                    ["shadow walker", 1],
+                    ["ignited", 1],
+                    ["pyromania", 1],
+                    ["flame ritual", 1],
+                    ["planet buster", 1],
+                    ["semi automatic", 1],
+                    ["faster attacks", 1]
+                ],
+                "minLevel": 50,
+            },
+            "al-err djinn" : {
+                "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "plague doctor"]],
+                "skills": ["poison ball"],
+                "sourceCards": [
+                    ["dexterous hands", 1],
+                    ["clown shoes", 1],
+                    ["telescoping handle", 1],
+                    ["accurate", 1],
+                    ["steady hands", 1],
+                    ["flying", 1],
+                    ["ethereal", 1],
+                    ["shadow walker", 1],
+                    ["putrefied", 1],
+                    ["unwashed hands", 1],
+                    ["plague ritual", 1],
+                    ["indigenous toxins", 1],
+                    ["planet buster", 1],
+                    ["semi automatic", 1],
+                    ["faster attacks", 1],
+                ],
+                "minLevel": 50,
+            },
+            "frow djinn" : {
+                "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "mage hat"]],
+                "skills": ["ice ball"],
+                "sourceCards": [
+                    ["dexterous hands", 1],
+                    ["clown shoes", 1],
+                    ["telescoping handle", 1],
+                    ["accurate", 1],
+                    ["steady hands", 1],
+                    ["flying", 1],
+                    ["ethereal", 1],
+                    ["shadow walker", 1],
+                    ["frosted", 1],
+                    ["frost ritual", 1],
+                    ["blue ice", 1],
+                    ["planet buster", 1],
+                    ["semi automatic", 1],
+                    ["faster attacks", 1],
+                ],
+                "minLevel": 50,
+            },
         },
         "zoneOrder": {
             "order": ["spooky dungeon", "dark forest", "aggro crag", "icy tunnel", "hostile marsh", "clockwork ruins", "gothic castle"],
@@ -2832,35 +2943,35 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "dark forest": {
                 "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
-                "weights": [20, 15, 15, 5],
+                "weights": [20, 15, 15, 5, 1],
                 "boss": "elf king",
                 "roomCount": 20,
                 "quantity": [2, 2, 3],
             },
             "clockwork ruins": {
                 "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
-                "weights": [20, 10, 10, 10, 5, 5, 5, 0],
+                "weights": [20, 10, 10, 10, 5, 5, 5, 1],
                 "boss": "sir mechs-a-lot",
                 "roomCount": 20,
                 "quantity": [2,2,3],
             },
             "aggro crag": {
                 "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
-                "weights": [20, 10, 10, 10, 10, 0],
+                "weights": [20, 10, 10, 10, 10, 1],
                 "boss":"the inhuman torch",
                 "roomCount": 20,
                 "quantity": [2,2,3],
             },
             "hostile marsh": {
                 "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
-                "weights": [20, 10, 10, 10, 10, 10, 0, 10 ,10],
+                "weights": [20, 10, 10, 10, 10, 10, 1, 10 ,10],
                 "boss":"scalp collector",
                 "roomCount": 20,
                 "quantity": [4,2,4],
             },
             "icy tunnel": {
                 "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn", "shiver spirit"],
-                "weights": [20, 10, 10, 10 ,10, 10, 0, 5],
+                "weights": [20, 10, 10, 10 ,10, 10, 1, 5],
                 "boss": "walter wight",
                 "roomCount": 20,
                 "quantity": [2,3,4],
@@ -2872,117 +2983,13 @@ namespace.module('bot.itemref', function (exports, require) {
                 "roomCount": 20,
                 "quantity": [3,3,6],
             },
-            "spookier dungeon": {
-                "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],
-                "weights": [20, 10, 5, 5, 3],
-                "boss": "skeleton king",
+            "anthropomorphic savanah": {
+                "choices": ["buzzard", "hyena", "lion", "hippo", "honey badger", "cheetah", "bees"],
+                "weights": [1,1],
+                "boss": "bat",
                 "roomCount": 20,
-                "quantity": [5, 5, 20],
-                "level": 35
-            },
-            "darker forest": {
-                "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
-                "weights": [20, 15, 15, 5],
-                "boss": "elf king",
-                "roomCount": 20,
-                "quantity": [5, 5, 20],
-                "level": 40,
-            },
-            "clockworkier ruins": {
-                "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
-                "weights": [20, 10, 10, 10, 5, 5, 5, 0],
-                "boss": "sir mechs-a-lot",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 45,
-            },
-            "even-more-aggro crag": {
-                "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
-                "weights": [20, 10, 10, 10, 10, 0],
-                "boss":"flame dragon",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 50,
-            },
-            "even-more-hostile marsh": {
-                "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
-                "weights": [20, 10, 10, 10, 10, 10, 0, 10 ,10],
-                "boss":"scalp collector",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 55,
-            },
-            "really icy tunnel": {
-                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn", "shiver spirit"],
-                "weights": [20, 10, 10, 10 ,10, 10, 0, 5],
-                "boss": "walter wight",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 60,
-            },
-            "gothicker castle": {
-                "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
-                "weights": [20, 10, 10, 10, 10, 10, 10],
-                "boss": "shadow knight",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 65,
-            },
-            "spookiest dungeon": {
-                "choices": ["skeleton", "skeleton archer", "skeleton mage", "fire skeleton", "skeleton embermage"],
-                "weights": [20, 10, 5, 5, 3],
-                "boss": "skeleton king",
-                "roomCount": 20,
-                "quantity": [5, 5, 20],
-                "level": 70,
-            },
-            "darkest forest": {
-                "choices": ["wood nymph", "bat", "elf", "ent", "dahd djinn"],
-                "weights": [20, 15, 15, 5],
-                "boss": "elf king",
-                "roomCount": 20,
-                "quantity": [5, 5, 20],
-                "level": 75,
-            },
-            "clockworkiest ruins": {
-                "choices": ["gnome", "gnome electrician", "roflcopter", "harpy", "mechcinerator", "mechfridgerator", "mecha watt", "ser djinn"],
-                "weights": [20, 10, 10, 10, 5, 5, 5, 0],
-                "boss": "sir mechs-a-lot",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 80,
-            },
-            "overly aggro crag": {
-                "choices": ["goblin", "goblin priest", "goblin artillery", "fire skeleton", "fire golem", "kei djinn"],
-                "weights": [20, 10, 10, 10, 10, 0],
-                "boss":"flame dragon",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 85,
-            },
-            "excessively hostile marsh": {
-                "choices": ["zombie", "angry imp", "dart imp", "imp shaman", "marshwalker", "mad ape", "al-err djinn", "scalp collector", "toxic golem"],
-                "weights": [20, 10, 10, 10, 10, 10, 0, 10 ,10],
-                "boss":"scalp collector",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 90,
-            },
-            "iciest tunnel": {
-                "choices": ["frost skeleton", "ice golem", "frost mage", "frozen warrior", "yeti", "wight", "frow djinn", "shiver spirit"],
-                "weights": [20, 10, 10, 10 ,10, 10, 0, 5],
-                "boss": "walter wight",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 95,
-            },
-            "gothickest castle": {
-                "choices": ["shadow knight", "ghoul", "vampire", "living statue", "gargoyle", "minotaur", "wraith"],
-                "weights": [20, 10, 10, 10, 10, 10, 10],
-                "boss": "shadow knight",
-                "roomCount": 20,
-                "quantity": [5,5,20],
-                "level": 99,
+                "quantity": [20, 500, 5000],
+                "level": 99                
             },
             "hordecave": {
                 "choices": ["vampire", "shadow knight"],

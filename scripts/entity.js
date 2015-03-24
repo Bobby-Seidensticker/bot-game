@@ -60,6 +60,12 @@ namespace.module('bot.entity', function (exports, require) {
             }, this);
 
             //janky - can't gainedas across keys in all so, putting that stuff here.
+            if (this.team === TEAM_MONSTER) {
+                this.armor *= 1 + (this.level * 0.01);
+                this.dodge *= 1 + (this.level * 0.01);
+                this.eleResistAll *= Math.pow(0.995, this.level);
+            }
+
             all.dmg.accuracy.added += this.dexterity * 2;
             all.dmg.meleeDmg.more *= 1 + (this.strength * 0.001);
             all.dmg.rangeDmg.more *= 1 + (this.dexterity * 0.001);
@@ -170,6 +176,7 @@ namespace.module('bot.entity', function (exports, require) {
             this.inv = inv;
             this.cardInv = cardInv;
             this.equipped = equipped;
+            this.version = gl.VERSION_NUMBER;
 
             EntitySpec.prototype.initialize.call(this);
             this.team = TEAM_HERO;
@@ -269,7 +276,10 @@ namespace.module('bot.entity', function (exports, require) {
             if (Math.random() < 1) { // 0.03 * 10) {
                 if (this.droppableCards.length) {
                     var card = this.droppableCards[prob.pyRand(0, this.droppableCards.length)];
-                    card = [card[0], card[1] + Math.floor(this.level / 10)];
+                    //Changed so monsters over level 100 drop level reduced cards to slow card qp gain
+                    var clvl = this.level > 100 ? Math.floor(Math.sqrt(this.level) * 10) : Math.floor(this.level / 10);
+
+                    card = [card[0], card[1] + clvl];
                     cardDrops.push(
                         dropLib.dropFactory('card', card)
                     );
@@ -305,7 +315,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (pl > ml) {
                 return 1;
             }
-            var sb = 5 + Math.floor(pl / 16);
+            var sb = 3 + Math.floor(pl / 16);
             var diff = ml - pl;
             if (diff <= sb) {
                 return 1;

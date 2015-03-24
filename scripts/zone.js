@@ -80,7 +80,6 @@ namespace.module('bot.zone', function (exports, require) {
                     weights.push(this.weights[i]);
                 }
             }, this);
-            console.log(choices, weights);
             
             for (i = 0; i < this.rooms.length; i++) {
                 monsters = [];

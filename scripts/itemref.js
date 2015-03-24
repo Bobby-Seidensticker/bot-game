@@ -1361,7 +1361,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "projCount added 2", "type": "dmg"},
                     {"def": "angle more 20", "type": "dmg"},
-                    {"def": "speed more -1 perLevel", "type": "dmg"},
+                    {"def": "speed more -0.2 perLevel", "type": "dmg"},
                     {"def": "manaCost added 2", "type": "dmg"}
                 ],
                 "slot": "skill",
@@ -1580,7 +1580,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "vest pockets": {
                 "mods": [
-                    {"def": "speed more -2 perLevel", "type": "dmg"},
+                    {"def": "speed more -15", "type": "dmg"},
+                    {"def": "speed more -0.2 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "chest",
             },
@@ -1702,8 +1703,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "faster attacks": {
                 "mods":[
-                    {"def": "speed more -17", "type": "dmg"},
-                    {"def": "speed more -3 perLevel", "type": "dmg"}
+                    {"def": "speed more -25", "type": "dmg"},
+                    {"def": "speed more -0.3 perLevel", "type": "dmg"}
                 ],
                 "slot": "skill",
             },
@@ -2311,7 +2312,8 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["shadow walker", 1],
                     ["balanced", 1],
                     ["stinging", 1],
-                    ["precise", 1],                   
+                    ["precise", 1],
+                    ["faster attacks", 1],
                 ],
                 "minLevel": 50,
             },
@@ -2333,6 +2335,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["shock ritual", 1],
                     ["planet buster", 1],
                     ["semi automatic", 1],
+                    ["faster attacks", 1]
                 ],
             },
             "kei djinn" : {
@@ -2352,6 +2355,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["flame ritual", 1],
                     ["planet buster", 1],
                     ["semi automatic", 1],
+                    ["faster attacks", 1]
                 ],
                 "minLevel": 50,
             },
@@ -2373,6 +2377,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["indigenous toxins", 1],
                     ["planet buster", 1],
                     ["semi automatic", 1],
+                    ["faster attacks", 1],
                 ],
                 "minLevel": 50,
             },
@@ -2393,6 +2398,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["blue ice", 1],
                     ["planet buster", 1],
                     ["semi automatic", 1],
+                    ["faster attacks", 1],
                 ],
                 "minLevel": 50,
             },

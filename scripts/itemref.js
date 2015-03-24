@@ -57,7 +57,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "long sword": {
                 "mods": [
-                    {def: 'speed more -0.5 perLevel', type: 'dmg'},                    
+                    {def: 'speed more -20', type: 'dmg'},
+                    {def: 'speed more -0.1 perLevel', type: 'dmg'},                  
                     {def: 'physDmg added 16', type: 'dmg'},
                     {def: 'physDmg more 0.6 perLevel', type: 'dmg'}
                 ],
@@ -1481,7 +1482,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "berserking": {
                 "mods": [
                     {"def": "physDmg more 25", "type": "dmg"},
-                    {"def": "speed more -1 perLevel", "type": "dmg"},                     
+                    {"def": "speed more -0.3 perLevel", "type": "dmg"},                     
                     {"def": "maxHp more -50", "type": "def"},
                 ],
                 "slot": "head",
@@ -1552,14 +1553,14 @@ namespace.module('bot.itemref', function (exports, require) {
             "vampyric touch": {
                 "mods": [
                     {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "hands",
             },
             "vampyric embrace": {
                 "mods": [
                     {"def": "physDmg gainedas 3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 2 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 1.5 perLevel", "type": "dmg"},
                 ],
                 "slot": "chest",
             },
@@ -1767,15 +1768,15 @@ namespace.module('bot.itemref', function (exports, require) {
             "practiced": {
                 "mods": [
                     {"def": "physDmg more 15", "type": "dmg"},
-                    {"def": "speed more -8", "type": "dmg"},
-                    {"def": "speed more -1 perLevel", "type": "dmg"}                    
+                    {"def": "speed more -20", "type": "dmg"},
+                    {"def": "speed more -0.1 perLevel", "type": "dmg"}                    
                 ],
                 "slot":"skill",
             },
             "honed": {
                 "mods": [
-                    {"def": "physDmg more 3 perLevel", "type": "dmg"},
-                    {"def": "speed more -3 perLevel", "type": "dmg"},                   
+                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
+                    {"def": "speed more -0.2 perLevel", "type": "dmg"},                   
                 ],
                 "slot":"skill",
             },
@@ -2018,7 +2019,7 @@ namespace.module('bot.itemref', function (exports, require) {
                 "mods": [
                     {"def": "aoeRadius more -50", "type": "dmg"},
                     {"def": "speed more -10", "type": "dmg"},                                        
-                    {"def": "speed more -1 perLevel", "type": "dmg"},                    
+                    {"def": "speed more -0.1 perLevel", "type": "dmg"},                    
                 ],
                 "slot": "skill"
             },

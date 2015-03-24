@@ -348,7 +348,7 @@ namespace.module('bot.itemref', function (exports, require) {
             "velvet tunic": {
                 "mods": [
                     {def: 'manaRegen added 5', type: 'def'},
-                    {def: 'eleResistAll more -20 perLevel', type: 'def'}
+                    {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
                 ],
                 "slot": "chest",
             },

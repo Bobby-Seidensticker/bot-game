@@ -251,7 +251,7 @@ namespace.module('bot.bodies', function(exports, require) {
 
             if (this.spec.team === TEAM_HERO) {
                 log.debug('Team Hero taking %.2f damage', -totalDmg);
-                totalDmg *= 0.5 + (attack.attacker.spec.level * 0.03);
+                totalDmg *= 0.5 + (attack.attacker.spec.level * 0.015);
                 if (totalDmg > this.hp) {
                     log.warning('Hero (lvl %d) killed in %s(%d) by %s',
                                 this.spec.level, gl.game.zone.name, gl.game.zone.heroPos,

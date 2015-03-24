@@ -298,14 +298,14 @@ namespace.module('bot.entity', function (exports, require) {
         // TODO: memoize this
         xpOnKill: function(playerLevel) {
             var pen = this.xpPenalty(playerLevel, this.level);
-            return Math.ceil(pen * 20 * Math.pow(1.1, (this.level - 1)));
+            return Math.ceil(pen * 20 * Math.pow(1.18, (this.level - 1)));
         },
 
         xpPenalty: function(pl, ml) {
             if (pl > ml) {
                 return 1;
             }
-            var sb = 3 + Math.floor(pl / 16);
+            var sb = 5 + Math.floor(pl / 16);
             var diff = ml - pl;
             if (diff <= sb) {
                 return 1;

@@ -2307,6 +2307,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["sure footing", 1],
                     ["steady hands", 1],
                     ["pinpoint precision", 1],
+                    ["steam powered", 1]
                 ],
                 "flavor": "He knows you've been naughty"
             },
@@ -2819,7 +2820,7 @@ namespace.module('bot.itemref', function (exports, require) {
             },
         },
         "zoneOrder": {
-            "order": ["spooky dungeon", "dark forest", "clockwork ruins", "aggro crag", "hostile marsh", "icy tunnel", "gothic castle"],
+            "order": ["spooky dungeon", "dark forest", "aggro crag", "icy tunnel", "hostile marsh", "clockwork ruins", "gothic castle"],
         },
         "zone": {
             "spooky dungeon": {

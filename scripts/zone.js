@@ -17,10 +17,11 @@ namespace.module('bot.zone', function (exports, require) {
     var MonsterBody = namespace.bot.bodies.MonsterBody;
 
     var ZoneManager = gl.Model.extend({
-        initialize: function(hero) {
+        initialize: function(hero, settings) {
             this.allZones = itemref.ref.zone;
             this.zoneOrder = itemref.ref.zoneOrder.order;  // to be used later for rank increases
 
+            this.settings = settings;
             this.hero = new HeroBody(hero);
             this.attackManager = new namespace.bot.attacks.AttackManager();
 
@@ -237,10 +238,10 @@ namespace.module('bot.zone', function (exports, require) {
                 };
             } else if (this.done()) {
                 log.error('Zone %s cleared', this.name);
-                if(this.nextZone >= 25) {
+                if (this.nextZone >= 25) {
                     gl.GameEvents.trigger('beatgame');
                 }
-                if(gl.game.settings.autoAdvance) {
+                if (this.settings.autoAdvance) {
                     this.nextZone += 1;
                 }
                 gl.GameEvents.trigger('reportData');

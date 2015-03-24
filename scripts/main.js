@@ -49,13 +49,15 @@ namespace.module('bot.main', function (exports, require) {
             this.hero = new entity.newHeroSpec(this.inv, this.cardInv);
             this.cardInv.equipped = this.hero.equipped;
             this.cardInv.skillchain = this.hero.skillchain;
-            this.zone = new zone.ZoneManager(this.hero);
             this.settings = this.defaultSettings();
+            this.zone = new zone.ZoneManager(this.hero, this.settings);
             
             var loadSuccess = this.load();
             if (!loadSuccess) {
                 this.noobGear();
             }
+
+            this.zone.settings = this.settings;  // Hack, zone needs a ref to settings and loading erases it
             this.zone.newZone(this.zone.nextZone);
 
             this.lastTime = new Date().getTime();
@@ -165,7 +167,7 @@ namespace.module('bot.main', function (exports, require) {
             var uid = localStorage.getItem('uid');
             var version = this.hero.version;
             var tempdate = new Date();
-            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(version).child(uid).set(gl.game.zone.nextZone);
+            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(version).child(uid).set(this.zone.nextZone);
         },
         
         load: function() {
@@ -301,9 +303,8 @@ namespace.module('bot.main', function (exports, require) {
         },
 
         bestGear: function(itemType, type) {
-            var items = _.where(gl.game.inv.models, {itemType: itemType});
+            var items = _.where(this.inv.models, {itemType: itemType});
             items = _.where(items, {type: type});
-            //WARNING - used to be sort by classlevel, dont have an easy indicator of quality anymore, so just using level
             items = _.sortBy(items, function(item) { return item.level; });
             if (items.length > 0) {
                 return items.pop();
@@ -318,7 +319,7 @@ namespace.module('bot.main', function (exports, require) {
             this.hero.equipped.equip(this.bestGear('armor', 'hands'), 'hands');
             this.hero.equipped.equip(this.bestGear('armor', 'legs'), 'legs');
 
-            var skills = _.where(gl.game.inv.models, {itemType: 'skill'});
+            var skills = _.where(this.inv.models, {itemType: 'skill'});
             skills = _.sortBy(skills, function(skill) { return -skill.cooldownTime; });
             log.error('skill names: %s', _.pluck(skills, 'name').join(', '));
             log.error('skill cooldownTimes: %s', _.pluck(skills, 'cooldownTime').join(', '));

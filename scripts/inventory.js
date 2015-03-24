@@ -718,9 +718,6 @@ namespace.module('bot.inv', function (exports, require) {
             _.each(this.inv.models, function(m) {
                 m.hasNewCards = this.newCardSlots[m.slot];
             }, this);
-
-            log.error('update inv: %s, card: %s, state: %s', this.inv.hasNew, this.cardInv.hasNew,
-                      JSON.stringify(this.newCardSlots));
         }
     });
 

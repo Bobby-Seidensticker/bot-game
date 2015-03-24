@@ -118,9 +118,10 @@ namespace.module('bot.views', function (exports, require) {
 
         template: _.template($('#kv-table-template').html()),
 
-        initialize: function(options) {
+        initialize: function(options, zone) {
             // TODO add selective updating
             this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
+            this.zone = zone;
         },
 
         render: function() {
@@ -167,13 +168,13 @@ namespace.module('bot.views', function (exports, require) {
                 if (key === 'dodge') {
                     statname = 'Approx. Dodge Chance (this zone)';
                     var dodge = this.model.spec.dodge;
-                    var level = gl.game.zone.level;
+                    var level = this.zone.level;
                     var attAcc = (9 + level) * 2;
                     var chance = 1 -(3 * 0.5 * (attAcc/(attAcc + dodge)));
                     data.spec.push([statname, Math.min(0.99, chance.toFixed(2))]);
                 }
                 if (key === 'armor') {
-                    var fakeDmg = 10 * Math.pow(1.06, gl.game.zone.level);
+                    var fakeDmg = 10 * Math.pow(1.06, this.zone.level);
                     var redFactor = fakeDmg / (fakeDmg + this.model.spec.armor);
                     data.spec.push(['Est. Physical Damage Taken after Armor (this zone)', redFactor.toFixed(2)]);
                 }
@@ -193,7 +194,7 @@ namespace.module('bot.views', function (exports, require) {
 
             this.zone = game.zone;
             this.last = {};
-            this.heroView = new EntityView({model: this.zone.hero});
+            this.heroView = new EntityView({model: this.zone.hero}, this.zone);
             this.listenTo(gl.DirtyListener, 'zoneTick', this.render);
 
             this.tvm = new TabVisibilityManager('stats', this.$el, this.render.bind(this), 'footer:buttons:stats',
@@ -1286,6 +1287,7 @@ namespace.module('bot.views', function (exports, require) {
 
         initialize: function(options, game) {
             this.zone = game.zone;
+            this.settings = game.settings;
 
             this.tvm = new TabVisibilityManager('map', this.$el, this.render.bind(this), 'footer:buttons:map',
                                                 'footer:buttons:stats', 'footer:buttons:help', 'footer:buttons:config');
@@ -1308,8 +1310,7 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         toggleAutoAdvance: function() {
-            gl.game.settings['autoAdvance'] = this.$('#autoAdvance').prop('checked');
-            console.log(gl.game.settings);
+            this.settings['autoAdvance'] = this.$('#autoAdvance').prop('checked');
         },
         
         zoneClick: function(zoneName) {
@@ -1354,7 +1355,7 @@ namespace.module('bot.views', function (exports, require) {
 
 
             this.$holder.html(frag);
-            $('#autoAdvance').prop('checked', gl.game.settings.autoAdvance)            
+            $('#autoAdvance').prop('checked', this.settings.autoAdvance)            
             return this;
         }
     });
@@ -1374,7 +1375,9 @@ namespace.module('bot.views', function (exports, require) {
         initialize: function(options, game) {
             this.template = _.template($('#config-template').html());
             this.zone = game.zone;
-            
+            this.settings = game.settings;
+            this.heroSpec = game.hero;
+
             this.tvm = new TabVisibilityManager('config', this.$el, this.render.bind(this), 'footer:buttons:config',
                                                 'footer:buttons:map', 'footer:buttons:help', 'footer:buttons:stats');
 
@@ -1405,7 +1408,7 @@ namespace.module('bot.views', function (exports, require) {
                 return this;
             }
             this.$holder.html(this.template);
-            $('#enableBuildHotkeys').prop('checked', gl.game.settings.enableBuildHotkeys)
+            $('#enableBuildHotkeys').prop('checked', this.settings.enableBuildHotkeys)
             /*this.$('#namebutton').on('click', this.nameButton.bind(this));
               this.$('#devbutton').on('click', this.devButton.bind(this));
               this.$('#donateButton').on('click', this.donate.bind(this));*/
@@ -1445,8 +1448,8 @@ namespace.module('bot.views', function (exports, require) {
         },
 
         toggleEnableBuildHotkeys: function() {
-            gl.game.settings['enableBuildHotkeys'] = this.$('#enableBuildHotkeys').prop('checked');
-            console.log(gl.game.settings);
+            this.settings['enableBuildHotkeys'] = this.$('#enableBuildHotkeys').prop('checked');
+            console.log(this.settings);
         },
         
 
@@ -1457,13 +1460,13 @@ namespace.module('bot.views', function (exports, require) {
 
         nameButton: function() {
             var userInput = $('#charname').val();
-            gl.game.hero.name = userInput.length < 64 ? userInput : "SMARTASS";
+            this.heroSpec.name = userInput.length < 64 ? userInput : 'SMARTASS';
         },
         
         devButton: function() {
             var msg = $('#devmsg').val();
-            if(msg != "") {
-                gl.FB.child(gl.VERSION_NUMBER).child('feedback').push(localStorage.getItem('uid') + " - " + gl.game.hero.name + " says:" + msg);
+            if (msg && msg.length) {
+                gl.FB.child(gl.VERSION_NUMBER).child('feedback').push(localStorage.getItem('uid') + ' - ' + this.heroSpec.name + ' says: ' + msg);
             }
             $('#devmsg').val('');
         },

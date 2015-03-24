@@ -277,7 +277,7 @@ namespace.module('bot.entity', function(exports, require) {
                 if (this.droppableCards.length) {
                     var card = this.droppableCards[prob.pyRand(0, this.droppableCards.length)];
                     //Changed so monsters over level 100 drop level reduced cards to slow card qp gain
-                    var clvl = this.level > 100 ? Math.floor(Math.sqrt(this.level) * 10) : Math.floor(this.level / 10);
+                    var clvl = this.level > 100 ? Math.floor(Math.sqrt(this.level)) : Math.floor(this.level / 10);
 
                     card = [card[0], card[1] + clvl];
                     cardDrops.push(

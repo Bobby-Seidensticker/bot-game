@@ -63,7 +63,7 @@ namespace.module('bot.entity', function (exports, require) {
             if (this.team === TEAM_MONSTER) {
                 this.armor *= 1 + (this.level * 0.01);
                 this.dodge *= 1 + (this.level * 0.01);
-                this.eleResistAll *= Math.pow(0.99, this.level);
+                this.eleResistAll *= Math.pow(0.995, this.level);
             }
 
             all.dmg.accuracy.added += this.dexterity * 2;
@@ -276,7 +276,10 @@ namespace.module('bot.entity', function (exports, require) {
             if (Math.random() < 1) { // 0.03 * 10) {
                 if (this.droppableCards.length) {
                     var card = this.droppableCards[prob.pyRand(0, this.droppableCards.length)];
-                    card = [card[0], card[1] + Math.floor(this.level / 10)];
+                    //Changed so monsters over level 100 drop level reduced cards to slow card qp gain
+                    var clvl = this.level > 100 ? Math.floor(Math.sqrt(this.level) * 10) : Math.floor(this.level / 10);
+
+                    card = [card[0], card[1] + clvl];
                     cardDrops.push(
                         dropLib.dropFactory('card', card)
                     );

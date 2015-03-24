@@ -1652,7 +1652,8 @@ namespace.module('bot.itemref', function (exports, require) {
             "hateful blade": {
                 "mods": [
                     {"def": "physDmg gainedas -3 hpLeech", "type": "dmg"},
-                    {"def": "physDmg more 5 perLevel", "type": "dmg"},
+                    {"def": "physDmg more 30", "type": "dmg"},                    
+                    {"def": "physDmg more 1 perLevel", "type": "dmg"},
                 ],
                 "slot": "weapon",
             },
@@ -2105,8 +2106,8 @@ namespace.module('bot.itemref', function (exports, require) {
             },
             "minimum tolerances": {
                 "mods":[
-                    {"def": "accuracy more 4 perLevel", "type": "dmg"},
-                    {"def": "accuracy more 20", "type": "dmg"},                    
+                    {"def": "accuracy more 1 perLevel", "type": "dmg"},
+                    {"def": "accuracy more 30", "type": "dmg"},                    
                 ],
                 "slot": "weapon"
             },
@@ -2862,6 +2863,7 @@ namespace.module('bot.itemref', function (exports, require) {
                     ["semi automatic", 1],
                     ["faster attacks", 1]
                 ],
+                "minLevel": 50,
             },
             "kei djinn" : {
                 "items": [["weapon", "fairy wand"], ["armor", "embroidered silks"], ["armor", "mage boots"], ["armor", "mage gloves"], ["armor", "mage hat"]],

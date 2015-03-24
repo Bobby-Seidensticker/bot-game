@@ -60,6 +60,12 @@ namespace.module('bot.entity', function (exports, require) {
             }, this);
 
             //janky - can't gainedas across keys in all so, putting that stuff here.
+            if (this.team === TEAM_MONSTER) {
+                this.armor *= 1 + (this.level * 0.01);
+                this.dodge *= 1 + (this.level * 0.01);
+                this.eleResistAll *= Math.pow(0.99, this.level);
+            }
+
             all.dmg.accuracy.added += this.dexterity * 2;
             all.dmg.meleeDmg.more *= 1 + (this.strength * 0.001);
             all.dmg.rangeDmg.more *= 1 + (this.dexterity * 0.001);

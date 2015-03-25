@@ -443,7 +443,7 @@ namespace.module('bot.utils', function(exports, require) {
         var l, q, r;
         l = Math.floor(Math.log10(n));
         q = Math.floor(l / 3);
-        if (q > numberSuffixes.length) {
+        if (q >= numberSuffixes.length) {
             return n.toPrecision(2);
         }
         r = l % 3;

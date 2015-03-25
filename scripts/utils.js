@@ -430,6 +430,30 @@ namespace.module('bot.utils', function(exports, require) {
         return words.join(' ');
     }
 
+    var numberSuffixes = ['', 'k', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'De', 'UnD',
+                          'DuD', 'TrD', 'QaD', 'QiD', 'SeD', 'SpD', 'OcD', 'NoD', 'Vi', 'UnV'];
+
+    function prettifyNum(n) {
+        if (n === Infinity) {
+            return 'Infinity';
+        }
+        if (n < 1000) {
+            return Math.floor(n).toString();
+        }
+        var l, q, r;
+        l = Math.floor(Math.log10(n));
+        q = Math.floor(l / 3);
+        if (q > numberSuffixes.length) {
+            return n.toPrecision(2);
+        }
+        r = l % 3;
+        n /= Math.pow(1000, q);
+        if (r === 2) {
+            return Math.round(n).toString() + numberSuffixes[q];
+        }
+        return n.toFixed(2 - r) + numberSuffixes[q];
+    }
+
     var presentableSlotDict = {
         'weapon': 'Weapon',
         'head': 'Head',
@@ -482,7 +506,8 @@ namespace.module('bot.utils', function(exports, require) {
         computeStat: computeStat,
         firstCap: firstCap,
         spaceToUnderscore: spaceToUnderscore,
-        presentableSlot: presentableSlot
+        presentableSlot: presentableSlot,
+        prettifyNum: prettifyNum
     });
 
 });

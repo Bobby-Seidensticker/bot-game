@@ -1,7 +1,7 @@
 namespace.module('bot.views', function(exports, require) {
 
     var FOOTER_HEIGHT = 114;
-    var log, entity, VisView, vu, Point, PointFromEvent, presentableSlot;
+    var log, entity, VisView, vu, Point, PointFromEvent, utils, presentableSlot, prettifyNum;
 
     $(function() {
         log = namespace.bot.log;
@@ -10,7 +10,9 @@ namespace.module('bot.views', function(exports, require) {
         vu = namespace.bot.vectorutils;
         Point = vu.Point;
         PointFromEvent = vu.PointFromEvent;
-        presentableSlot = namespace.bot.utils.presentableSlot;
+        utils = namespace.bot.utils;
+        presentableSlot = utils.presentableSlot;
+        prettifyNum = utils.prettifyNum;
     });
 
     var GameView = Backbone.View.extend({
@@ -179,8 +181,8 @@ namespace.module('bot.views', function(exports, require) {
                     data.spec.push(['Est. Physical Damage Taken after Armor (this zone)', redFactor.toFixed(2)]);
                 }
             }
-            var version = this.model.spec.versionCreated.split('-').join('.')
-            data.spec.push(["Character Version", version]);
+            var version = this.model.spec.versionCreated.split('-').join('.');
+            data.spec.push(['Character Version', version]);
 
             this.$el.html(this.template({data: data, skilldata: skilldata}));
             return this;
@@ -983,37 +985,117 @@ namespace.module('bot.views', function(exports, require) {
         },
     });
 
+    var HFBW = 150;  // hero footer bar width
+
+    var StatBar = Backbone.View.extend({
+        tagName: 'div',
+        className: 'barHolder',
+        template: _.template($('#stat-bar-template').html()),
+
+        height: 20,
+        width: HFBW,
+        fontSize: 14,
+        fontColor: 'rgba(170, 170, 160, 1)',
+        bgColor: '#f00',
+
+        initialize: function(options) {
+            this.$el.html(this.template());
+            this.$bar = this.$('.bar');
+            this.$text = this.$('.text');
+
+            this.$el.css({
+                width: this.width,
+                height: this.height
+            });
+            this.$bar.css('background-color', this.bgColor);
+            this.$text.css({
+                color: this.fontColor,
+                'font-size': this.fontSize,
+                'line-height': this.height + 'px'
+            });
+
+            this.lastWidth = 0;
+        },
+
+        _render: function(cur, max) {
+            if (cur < 0) { cur = 0; }
+            this.$text.html(prettifyNum(cur) + '/' + prettifyNum(max));
+            var nw = Math.floor(this.width * cur / max);
+            if (nw !== this.lastWidth) {
+                this.lastWidth = nw;
+                this.$bar.css('width', nw);
+            }
+            return this;
+        },
+    });
+
+    var HpBar = StatBar.extend({
+        bgColor: '#B22222',
+        render: function() {
+            return this._render(this.model.hp, this.model.spec.maxHp);
+        },
+    });
+
+    var ManaBar = StatBar.extend({
+        bgColor: '#0000AB',
+        render: function() {
+            return this._render(this.model.mana, this.model.spec.maxMana);
+        },
+    });
+
+    var XpBar = StatBar.extend({
+        bgColor: '#B8860B',
+        render: function() {
+            return this._render(this.model.spec.xp, this.model.spec.getNextLevelXp());
+        },
+    });
+
+    var NameLevelView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'name-level',
+        render: function() {
+            this.$el.html('<div class="name"><div>' + this.model.name + '</div></div><div class="level">' + this.model.level + '</div>');
+            this.$('.name').css('width', HFBW - 5 - this.$('.level').width());
+            return this;
+        },
+    });
+
     var HeroFooterView = Backbone.View.extend({
         tagName: 'div',
         className: 'hero',
         template: _.template($('#hero-footer-template').html()),
 
         initialize: function() {
-            this.listenTo(gl.DirtyListener, 'hero:hp', this.hpChange);
-            this.listenTo(gl.DirtyListener, 'hero:mana', this.manaChange);
-            this.listenTo(gl.DirtyListener, 'hero:xp', this.xpChange);
+            this.nameLevel = new NameLevelView({model: this.model.spec});
+            this.hpBar = new HpBar({model: this.model});
+            this.manaBar = new ManaBar({model: this.model});
+            this.xpBar = new XpBar({model: this.model});
+
+            this.listenTo(gl.DirtyListener, 'rename', this.nameLevel.render.bind(this.nameLevel));
+            this.listenTo(gl.DirtyListener, 'hero:hp', this.hpBar.render.bind(this.hpBar));
+            this.listenTo(gl.DirtyListener, 'hero:mana', this.manaBar.render.bind(this.manaBar));
+            this.listenTo(gl.DirtyListener, 'hero:xp', this.xpBar.render.bind(this.xpBar));
+
             this.listenTo(gl.DirtyListener, 'hero:levelup', this.render);
             this.listenTo(gl.DirtyListener, 'revive', this.render);
             this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
-        },
 
-        hpChange: function() {
-            this.$hp.html(Math.ceil(this.model.hp));
-        },
-
-        manaChange: function() {
-            this.$mana.html(Math.ceil(this.model.mana));
-        },
-
-        xpChange: function() {
-            this.$xp.html(Math.floor(this.model.spec.xp));
+            this.renderedOnce = false;
         },
 
         render: function() {
-            this.$el.html(this.template(this.model));
-            this.$hp = this.$('.hp');
-            this.$mana = this.$('.mana');
-            this.$xp = this.$('.xp');
+            if (!this.renderedOnce) {
+                this.renderedOnce = true;
+                this.$el.append(this.nameLevel.render().el);
+                this.$el.append(this.hpBar.render().el);
+                this.$el.append(this.manaBar.render().el);
+                this.$el.append(this.xpBar.render().el);
+            } else {
+                this.nameLevel.render();
+                this.hpBar.render();
+                this.manaBar.render();
+                this.xpBar.render();
+            }
             return this;
         },
     });
@@ -1463,6 +1545,7 @@ namespace.module('bot.views', function(exports, require) {
         nameButton: function() {
             var userInput = $('#charname').val();
             this.heroSpec.name = userInput.length < 64 ? userInput : 'SMARTASS';
+            gl.DirtyQueue.mark('rename');
         },
 
         devButton: function() {
@@ -1510,8 +1593,6 @@ namespace.module('bot.views', function(exports, require) {
             return this;
         }
     });
-
-
 
     exports.extend({
         GameView: GameView,

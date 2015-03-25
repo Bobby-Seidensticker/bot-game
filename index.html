@@ -13,7 +13,7 @@
 <body>
   <script id="item-slot-template" type="text/template">
     <% if (slot !== undefined) { %>
-      <% if (typeof(slot) === 'number') { %>
+      <% if (typeof(slot) === 'number' || slot === 'skill') { %>
         <div class="slot-background" draggable="false"><%= slot + 1 %></div>
       <% } else { %>
         <img class="slot-background" draggable="false" src="assets/<%= slot %>_slot.png" />

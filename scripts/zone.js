@@ -51,6 +51,9 @@ namespace.module('bot.zone', function(exports, require) {
             if (typeof(zoneNum) !== 'number') {
                 zoneNum = 0;
             }
+            if (this.nextZone >= 14) {
+                gl.GameEvents.trigger('beatgame');
+            }
 
             this.iuid = _.uniqueId('inst');
 
@@ -238,9 +241,7 @@ namespace.module('bot.zone', function(exports, require) {
                 };
             } else if (this.done()) {
                 log.error('Zone %s cleared', this.name);
-                if (this.nextZone >= 14) {
-                    gl.GameEvents.trigger('beatgame');
-                }
+
                 if (this.settings.autoAdvance) {
                     this.nextZone += 1;
                 }
@@ -279,6 +280,7 @@ namespace.module('bot.zone', function(exports, require) {
                     time: gl.time,
                     expires: gl.time + 5000});
                 gl.DirtyQueue.mark('zone:unlocked');
+                log.error("New map unlocked - #%d", this.unlockedZones);
             }
         },
 

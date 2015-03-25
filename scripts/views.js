@@ -547,6 +547,8 @@ namespace.module('bot.views', function(exports, require) {
                 this.slot = slot;
                 this.equipper = equipper;
                 this.listenTo(this.dragHandler, 'drop', this.onDrop);
+            } else {
+                this.slot = undefined;
             }
             this.listenTo(this.dragHandler, 'dragstart', this.render);
 

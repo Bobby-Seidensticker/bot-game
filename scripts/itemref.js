@@ -634,6 +634,19 @@ namespace.module('bot.itemref', function(exports, require) {
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                 ]
             },
+            'pacifism': {
+                'prototype': ['basic melee'],
+                'types': ['melee'],
+                'specs': [{type: 'melee', quals: ['dmg more -100'], color: LIGHT_COLOR}],
+                'baseMods': [
+                    {def: 'speed added 100', type: 'dmg'},
+                    {def: 'cooldownTime added 200', type: 'dmg'},
+                    {def: 'projRadius more -100', type: 'dmg'},
+                    {def: 'physDmg added 1000000', type: 'dmg'},
+                    {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
+                ],
+                'flavor': 'Why isn\'t this working??',
+            },
             'super smash': {
                 'prototype': ['basic melee'],
                 'baseMods': [

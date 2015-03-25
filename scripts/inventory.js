@@ -79,6 +79,7 @@ namespace.module('bot.inv', function(exports, require) {
                 if (this.cards[slot]) {
                     this.actuallyUnequipCard(slot);
                 }
+                gl.EquipEvents.trigger('change');
                 return false;
             }
 

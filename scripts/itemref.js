@@ -2,9 +2,9 @@ namespace.module('bot.itemref', function(exports, require) {
     var log = namespace.bot.log;
     var prob = namespace.bot.prob;
 
-    var BASE_MELEE_RANGE = 40000;
-    var BASE_RANGE_RANGE = 500000;
-    var BASE_SPELL_RANGE = 400000;
+    var BASE_MELEE_RANGE = 400;
+    var BASE_RANGE_RANGE = 5000;
+    var BASE_SPELL_RANGE = 4000;
 
     var PHYS_COLOR = '#777';
     var FIRE_COLOR = 'rgba(255, 130, 0, 0.6)';
@@ -681,7 +681,6 @@ namespace.module('bot.itemref', function(exports, require) {
             'fire slash': {
                 'prototype': ['basic melee'],
                 'types': ['melee', 'fire'],
-                'anim': ['#f00'],
                 'specs': [{ type: 'melee', color: FIRE_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
@@ -812,7 +811,6 @@ namespace.module('bot.itemref', function(exports, require) {
             'ice slash': {
                 'prototype': ['basic melee'],
                 'types': ['melee', 'cold'],
-                'anim': ['#00f'],
                 'specs': [{ type: 'melee', color: COLD_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
@@ -827,7 +825,6 @@ namespace.module('bot.itemref', function(exports, require) {
             'lightning slash': {
                 'prototype': ['basic melee'],
                 'types': ['melee', 'lightning'],
-                'anim': ['#ff0'],
                 'specs': [{ type: 'melee', color: LIGHT_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
@@ -842,7 +839,6 @@ namespace.module('bot.itemref', function(exports, require) {
             'poison slash': {
                 'prototype': ['basic melee'],
                 'types': ['melee', 'poison'],
-                'anim': ['#0f0'],
                 'specs': [{ type: 'melee', color: POIS_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
@@ -870,7 +866,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic range'],
                 'skillType': 'range',
                 'types': ['proj', 'fire'],
-                'anim': ['#f00'],
                 'specs': [{ type: 'proj', color: FIRE_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
@@ -885,7 +880,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic range'],
                 'skillType': 'range',
                 'types': ['proj', 'cold'],
-                'anim': ['#00f'],
                 'specs': [{ type: 'proj', color: COLD_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
@@ -900,7 +894,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic range'],
                 'skillType': 'range',
                 'types': ['proj', 'lightning'],
-                'anim': ['#ff0'],
                 'specs': [{ type: 'proj', color: LIGHT_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
@@ -915,7 +908,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic range'],
                 'skillType': 'range',
                 'types': ['proj', 'poison'],
-                'anim': ['#0f0'],
                 'specs': [{ type: 'proj', color: POIS_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
@@ -944,7 +936,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic spell'],
                 'skillType': 'spell',
                 'types': ['proj', 'fire', 'spell'],
-                'anim': ['#f00'],
                 'specs': [{ type: 'cone', color: FIRE_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 7', type: 'dmg'},
@@ -974,7 +965,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic spell'],
                 'skillType': 'spell',
                 'types': ['proj', 'fire', 'spell'],
-                'anim': ['#f00'],
                 'specs': [{ type: 'proj', color: FIRE_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 9', type: 'dmg'},
@@ -990,7 +980,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic spell'],
                 'skillType': 'spell',
                 'types': ['proj', 'cold', 'spell'],
-                'anim': ['#00f'],
                 'specs': [{type: 'proj', color: COLD_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 9', type: 'dmg'},
@@ -1005,7 +994,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic spell'],
                 'skillType': 'spell',
                 'types': ['proj', 'lightning', 'spell'],
-                'anim': ['#ff0'],
                 'specs': [{type: 'proj', color: LIGHT_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 9', type: 'dmg'},
@@ -1020,7 +1008,6 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic spell'],
                 'skillType': 'spell',
                 'types': ['proj', 'poison', 'spell'],
-                'anim': ['#0f0'],
                 'specs': [{ type: 'proj', color: POIS_COLOR }],
                 'baseMods': [
                     {def: 'manaCost added 16', type: 'dmg'},
@@ -1200,7 +1187,7 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'proto-boss': {
                 'mods': [
-                    {'def': 'lineWidth added 1', 'type': 'vis'},
+                    {'def': 'lineWidth added 30', 'type': 'vis'},
                     {'def': 'width more 100', 'type': 'vis'},
                     {'def': 'height more 100', 'type': 'vis'},
                     {'def': 'physDmg more 100', 'type': 'dmg'},
@@ -1263,7 +1250,7 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'six pack': {
                 'mods': [
-                    {'def': 'lineWidth added 1', 'type': 'vis'},
+                    {'def': 'lineWidth added 30', 'type': 'vis'},
                     {'def': 'armor added 10 perLevel', 'type': 'def'}
                 ],
                 'slot': 'chest',
@@ -1459,7 +1446,7 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'riveted': {
                 'mods': [
-                    {'def': 'lineWidth added 1', 'type': 'vis'},
+                    {'def': 'lineWidth added 30', 'type': 'vis'},
                     {'def': 'armor more 5 perLevel', 'type': 'def'},
                 ],
                 'slot': 'chest',
@@ -1473,7 +1460,7 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'mecha heart': {
                 'mods': [
-                    {'def': 'lineWidth added 1', 'type': 'vis'},
+                    {'def': 'lineWidth added 30', 'type': 'vis'},
                     {'def': 'maxHp added 5 perLevel', 'type': 'def'},
                     {'def': 'hpRegen added 2 perLevel', 'type': 'def'},
                 ],
@@ -1556,7 +1543,7 @@ namespace.module('bot.itemref', function(exports, require) {
             'buff': {
                 'mods': [
                     {'def': 'width more 30', 'type': 'vis'},
-                    {'def': 'lineWidth added 3', 'type': 'vis'},
+                    {'def': 'lineWidth added 30', 'type': 'vis'},
                     {'def': 'strength added 5 perLevel', 'type': 'def'},
                     {'def': 'meleeDmg more 3 perLevel', 'type': 'dmg'},
                     {'def': 'rangeDmg more 3 perLevel', 'type': 'dmg'},

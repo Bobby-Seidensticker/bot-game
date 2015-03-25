@@ -119,7 +119,7 @@ namespace.module('bot.zone', function(exports, require) {
 
             var lrange = [10, 20];
             var hrange = [7, 10];
-            var scale = 100000;
+            var scale = 1000;
             var weights;
             var dir = 1;  // [up, right, down, left], just like margins/padding in css
             var width, height;

@@ -13,7 +13,7 @@ namespace.module('bot.vis', function(exports, require) {
 
     var log = namespace.bot.log;
     var vvs = {};  // vis vars
-    var SIZE = 1000 * 1000;
+    var SIZE = 1000 * 10;
 
     var vu = namespace.bot.vectorutils;
     var Point = vu.Point;
@@ -167,7 +167,7 @@ namespace.module('bot.vis', function(exports, require) {
                 height: this.size.y
             });
 
-            this.tiles = new BackgroundTiles('assets/floor.jpg', new Point(4000, 4000), new Point(256, 256), vvs.ratio * 400);
+            this.tiles = new BackgroundTiles('assets/floor.jpg', new Point(4000, 4000), new Point(256, 256), vvs.ratio * 4);
 
             this.ctx = this.el.getContext('2d');
             this.force();
@@ -313,7 +313,7 @@ namespace.module('bot.vis', function(exports, require) {
             ctx.fillStyle = msg.color;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
-            ctx.font = Math.floor(vvs.ratio * 30000) + 'px Source Code Pro';
+            ctx.font = Math.floor(vvs.ratio * 300) + 'px Source Code Pro';
             if (msg.type === 'dmg') {
                 var dmg = msg.dmg;
                 var base = transpose(dmg.getBase());
@@ -479,7 +479,7 @@ namespace.module('bot.vis', function(exports, require) {
         }
         text = text.toUpperCase();
 
-        var fontHeight = Math.floor(vvs.ratio * 30000);
+        var fontHeight = Math.floor(vvs.ratio * 300);
 
         ctx.fillStyle = '#111';
         ctx.textAlign = 'center';
@@ -587,7 +587,7 @@ namespace.module('bot.vis', function(exports, require) {
 
     function flatCircle(ctx, atk) {
         var outerRadius = atk.pos.sub(atk.start).len();
-        var innerRadius = outerRadius - 20000;
+        var innerRadius = outerRadius - 200;
         if (innerRadius < 0) {
             innerRadius = 0;
         }

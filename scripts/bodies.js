@@ -331,7 +331,7 @@ namespace.module('bot.bodies', function(exports, require) {
                     gl.MessageEvents.trigger(
                         'message',
                         // TODO: Fix the offset here
-                        newZoneMessage(message, 'drop', target.pos, color, 1000, target.spec.height / 2 + index * 30000)
+                        newZoneMessage(message, 'drop', target.pos, color, 1000, target.spec.height / 2 + index * 300)
                     );
                 }, this);
             }
@@ -367,9 +367,9 @@ namespace.module('bot.bodies', function(exports, require) {
                 this.potionCoolAt = gl.time + 10000;  // 10 second cooldown
                 var addAmount = 10 + this.spec.level * 20;
                 this.modifyHp(addAmount);
-                gl.MessageEvents.trigger('message', newZoneMessage('potion worked!', 'potion', this.pos, 'rgba(230, 230, 230, 0.7)', 1000));
+                gl.MessageEvents.trigger('message', newZoneMessage('potion worked!', 'potion', this.pos, 'rgba(230, 230, 230, 0.7)', 10));
             } else {
-                gl.MessageEvents.trigger('message', newZoneMessage('potion still cooling down!', 'potion', this.pos, 'rgba(230, 230, 230, 0.4)', 500));
+                gl.MessageEvents.trigger('message', newZoneMessage('potion still cooling down!', 'potion', this.pos, 'rgba(230, 230, 230, 0.4)', 5));
             }
         }
     });

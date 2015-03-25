@@ -127,11 +127,11 @@ namespace.module('bot.entity', function(exports, require) {
                 {def: 'dexterity gainedas 300 dodge', type: 'def'},
                 //{def: 'dexterity gainedas 200 accuracy', type: 'def'},
 
-                {def: 'moveSpeed added 300', type: 'def'},
+                {def: 'moveSpeed added 3', type: 'def'},
 
-                {def: 'height added 100000', type: 'vis'},
-                {def: 'width added 30000', type: 'vis'},
-                {def: 'lineWidth added 3000', type: 'vis'},
+                {def: 'height added 1000', type: 'vis'},
+                {def: 'width added 300', type: 'vis'},
+                {def: 'lineWidth added 30', type: 'vis'},
 
                 //TODO - add str/dex/wis attacktype bonuses here once impemented
                 //{def: 'strength gainedas 1 meleeDmg', type: 'dmg'},
@@ -155,11 +155,11 @@ namespace.module('bot.entity', function(exports, require) {
 
                 {def: 'angle added 15', type: 'dmg'},
                 {def: 'range gainedas 125 projRange', type: 'dmg'},
-                //{def: 'rate added 1000', type: 'dmg'},
-                {def: 'projSpeed added 1000', type: 'dmg'},
-                {def: 'aoeSpeed added 300', type: 'dmg'},
-                {def: 'projRadius added 5000', type: 'dmg'},
-                {def: 'aoeRadius added 300000', type: 'dmg'},
+                //{def: 'rate added 10', type: 'dmg'},
+                {def: 'projSpeed added 10', type: 'dmg'},
+                {def: 'aoeSpeed added 3', type: 'dmg'},
+                {def: 'projRadius added 50', type: 'dmg'},
+                {def: 'aoeRadius added 3000', type: 'dmg'},
             ];
             return _.map(mods, function(mod) { return utils.applyPerLevel(mod, this.level); }, this);
         },

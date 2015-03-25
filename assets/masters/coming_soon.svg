@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="12.832031"
+   inkscape:export-xdpi="12.832031"
+   inkscape:export-filename="C:\Users\Chris\Documents\GitHub\bot-game\assets\prismatic_toe_ring.png"
+   viewBox="0 0 512 512"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   width="100%"
+   height="100%"
+   sodipodi:docname="coming_soon.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1144"
+     inkscape:window-height="665"
+     id="namedview44"
+     showgrid="false"
+     inkscape:zoom="0.96950968"
+     inkscape:cx="251.86358"
+     inkscape:cy="241.53091"
+     inkscape:window-x="119"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <metadata
+     id="metadata48">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs46">
+    <linearGradient
+       id="linearGradient3926">
+      <stop
+         id="stop3928"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.49803922;"
+         offset="0.5"
+         id="stop3934" />
+      <stop
+         id="stop3930"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <filter
+       id="filter3108"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:label="Lightness-Contrast"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Increase or decrease lightness and contrast"
+       color-interpolation-filters="sRGB">
+      <feFlood
+         id="feFlood3110"
+         result="result1"
+         flood-opacity="1"
+         flood-color="rgb(0,0,0)" />
+      <feBlend
+         id="feBlend3112"
+         in2="SourceGraphic"
+         mode="normal"
+         result="result2" />
+      <feComposite
+         id="feComposite3114"
+         in2="SourceGraphic"
+         k2="1"
+         operator="arithmetic"
+         result="result3" />
+      <feComposite
+         id="feComposite3116"
+         in2="SourceGraphic"
+         operator="in" />
+    </filter>
+    <filter
+       id="filter7264"
+       inkscape:label="Fluorescence"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Oversaturate colors which can be fluorescent in real world"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix7266"
+         type="hueRotate"
+         values="0" />
+      <feColorMatrix
+         id="feColorMatrix7268"
+         type="saturate"
+         values="1" />
+      <feColorMatrix
+         id="feColorMatrix7270"
+         type="matrix"
+         values="2 -1 0 0 0 0 2 -1 0 0 -1 0 2 0 0 0 0 0 1 0 " />
+    </filter>
+    <filter
+       id="filter7746"
+       inkscape:label="Fluorescence"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Oversaturate colors which can be fluorescent in real world"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix7748"
+         type="hueRotate"
+         values="0" />
+      <feColorMatrix
+         id="feColorMatrix7750"
+         type="saturate"
+         values="1" />
+      <feColorMatrix
+         id="feColorMatrix7752"
+         type="matrix"
+         values="2 -1 0 0 0 0 2 -1 0 0 -1 0 2 0 0 0 0 0 1 0 " />
+    </filter>
+    <filter
+       id="filter11635"
+       inkscape:label="Fluorescence"
+       inkscape:menu="Color"
+       inkscape:menu-tooltip="Oversaturate colors which can be fluorescent in real world"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       color-interpolation-filters="sRGB">
+      <feColorMatrix
+         id="feColorMatrix11637"
+         type="hueRotate"
+         values="0" />
+      <feColorMatrix
+         id="feColorMatrix11639"
+         type="saturate"
+         values="1" />
+      <feColorMatrix
+         id="feColorMatrix11641"
+         type="matrix"
+         values="2 -1 0 0 0 0 2 -1 0 0 -1 0 2 0 0 0 0 0 1 0 " />
+    </filter>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath5731">
+      <g
+         transform="translate(-499.67984,900.72257)"
+         id="g5733">
+        <path
+           sodipodi:nodetypes="csssssssscsssssscssssssssssssccssscccccsccssss"
+           inkscape:connector-curvature="0"
+           d="m 713.46932,336.19879 c -46.66846,-6.86515 -63.32187,-12.04474 -82.43996,-25.64069 -7.77372,-5.52834 -15.03553,-11.14129 -18.39792,-14.22052 -2.11083,-1.93307 -4.58583,-3.93035 -5.5,-4.43838 -5.84335,-3.24737 -21.16212,-23.53521 -21.16212,-28.02664 0,-0.85231 -0.3375,-1.55317 -0.75,-1.55746 -1.39551,-0.0145 -2.90294,-4.63228 -2.14427,-6.56859 0.73071,-1.86494 0.75825,-1.86261 0.90293,0.0764 0.0866,1.16054 0.36564,1.46123 0.66483,0.71638 0.61512,-1.53141 -1.53978,-4.41705 -2.74312,-3.67334 -0.46366,0.28655 -0.5612,1.25542 -0.21676,2.15303 0.38711,1.0088 0.22353,1.38311 -0.42838,0.98021 -0.9969,-0.61612 -1.63974,-2.89421 -2.94209,-10.42628 -0.30907,-1.7875 -0.93079,-3.25 -1.38159,-3.25 -1.5083,0 -4.35392,-11.40362 -5.1155,-20.5 -2.10576,-25.15144 -2.16477,-28.9906 -0.46721,-30.39944 0.89164,-0.74 1.61427,-1.85285 1.60585,-2.473 -0.008,-0.62016 -0.43396,-0.46559 -0.94563,0.34348 -1.49011,2.3562 -2.47835,0.28852 -1.2015,-2.51387 0.63934,-1.4032 1.16244,-4.39299 1.16244,-6.64398 0,-2.44744 0.59517,-4.53902 1.48053,-5.20295 0.8685,-0.65128 1.70847,-3.51394 2.03192,-6.92492 0.51015,-5.37977 2.10581,-9.68532 3.58942,-9.68532 0.34143,0 0.40573,-1.125 0.14288,-2.5 -0.27897,-1.45935 -0.0131,-2.5 0.63867,-2.5 0.61412,0 1.11658,0.9 1.11658,2 0,3.05353 1.46373,2.38454 2.73495,-1.25 2.73263,-7.81276 3.55467,-15.64994 2.41455,-23.01981 -3.44237,-22.25201 -1.57023,-46.135821 4.6943,-59.887301 1.1285,-2.47721 2.92498,-6.71925 3.99217,-9.42675 17.66648,-102.76194 365.27374,-164.419499 334.81752,122.010491 -7.79547,25.33126 -32.70829,60.14015 -49.15349,68.67863 -2.2,1.14226 -5.31489,3.49838 -6.92197,5.23581 -1.60708,1.73744 -3.18208,3.15898 -3.5,3.15898 -0.31792,0 -0.58155,0.59299 -0.58585,1.31776 -5.42674,18.0491 -23.8421,29.8395 -3.61467,11.08169 3.23208,-3.01114 3.82133,-1.56587 0.72364,1.77485 -12.76274,5.49516 4.65115,6.24035 -4.60119,11.58349 -3.4638,1.90975 -9.12315,7.28573 -8.41511,7.99376 0.32807,0.32808 -4.35653,5.11365 -11.68088,11.93265 -23.17357,21.57468 -85.54296,35.99675 -128.40401,29.69169 z m -130.5,-96.63534 c 0,-0.94984 -4.04141,-3.53247 -4.62092,-2.95297 -0.23439,0.23439 -0.14242,1.16557 0.20437,2.06929 0.61898,1.61304 4.41655,2.37287 4.41655,0.88368 z"
+           style="fill:#ecd59b"
+           id="path5735" />
+      </g>
+    </clipPath>
+  </defs>
+  <rect
+     style="opacity:0.98999999;fill:#0c0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+     id="rect3171"
+     width="516.97894"
+     height="524.13165"
+     x="-0.23968305"
+     y="-5.1220188" />
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot3115"
+     style="font-size:90px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;text-anchor:middle;text-align:center"><flowRegion
+       id="flowRegion3117"><rect
+         id="rect3119"
+         width="409.48535"
+         height="398.1394"
+         x="52.603909"
+         y="61.256691"
+         style="font-size:90px;fill:#ffffff;text-anchor:middle;text-align:center" /></flowRegion><flowPara
+       id="flowPara3121">Art</flowPara><flowPara
+       id="flowPara3123">coming soon</flowPara></flowRoot></svg>

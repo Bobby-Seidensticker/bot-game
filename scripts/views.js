@@ -1009,7 +1009,10 @@ namespace.module('bot.views', function(exports, require) {
                 width: this.width,
                 height: this.height
             });
-            this.$bar.css('background-color', this.bgColor);
+            this.$bar.css({
+                'background-color': this.bgColor,
+                'width': 0
+            });
             this.$text.css({
                 color: this.fontColor,
                 'font-size': this.fontSize,

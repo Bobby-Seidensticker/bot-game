@@ -981,21 +981,105 @@ namespace.module('bot.views', function(exports, require) {
         },
     });
 
+
+    var StatBar = Backbone.View.extend({
+        tagName: 'div',
+        className: 'barHolder',
+        template: _.template($('#stat-bar-template').html()),
+
+        height: 22,
+        width: 120,
+        fontSize: 14,
+        fontColor: '#fff',
+        bgColor: '#f00',
+
+        initialize: function(options) {
+            this.$el.html(this.template());
+            this.$bar = this.$('.bar');
+            this.$text = this.$('.text');
+
+            this.$el.css({
+                width: this.width,
+                height: this.height
+            });
+            this.$bar.css('background-color', this.bgColor);
+            this.$text.css({
+                color: this.fontColor,
+                'font-size': this.fontSize,
+                'line-height': this.height + 'px'
+            });
+
+            this.lastWidth = 0;
+        },
+
+        _render: function(cur, max) {
+            if (cur < 0) { cur = 0; }
+            this.$text.html(Math.floor(cur) + '/' + Math.floor(max));
+            var nw = Math.floor(this.width * cur / max);
+            if (nw !== this.lastWidth) {
+                this.lastWidth = nw;
+                this.$bar.css('width', nw);
+            }
+            return this;
+        },
+    });
+
+    var HpBar = StatBar.extend({
+        bgColor: '#B22222',
+        render: function() {
+            return this._render(this.model.hp, this.model.spec.maxHp);
+        },
+    });
+
+    var ManaBar = StatBar.extend({
+        bgColor: '#0000AB',
+        render: function() {
+            return this._render(this.model.mana, this.model.spec.maxMana);
+        },
+    });
+
+    var XpBar = StatBar.extend({
+        bgColor: '#B8860B',
+        render: function() {
+            return this._render(this.model.spec.xp, this.model.spec.getNextLevelXp());
+        },
+    });
+
     var HeroFooterView = Backbone.View.extend({
         tagName: 'div',
         className: 'hero',
         template: _.template($('#hero-footer-template').html()),
 
         initialize: function() {
-            this.listenTo(gl.DirtyListener, 'hero:hp', this.hpChange);
-            this.listenTo(gl.DirtyListener, 'hero:mana', this.manaChange);
-            this.listenTo(gl.DirtyListener, 'hero:xp', this.xpChange);
+            this.hpBar = new HpBar({model: this.model});
+            this.manaBar = new ManaBar({model: this.model});
+            this.xpBar = new XpBar({model: this.model});
+
+            this.listenTo(gl.DirtyListener, 'hero:hp', this.hpBar.render.bind(this.hpBar));
+            this.listenTo(gl.DirtyListener, 'hero:mana', this.manaBar.render.bind(this.manaBar));
+            this.listenTo(gl.DirtyListener, 'hero:xp', this.xpBar.render.bind(this.xpBar));
             this.listenTo(gl.DirtyListener, 'hero:levelup', this.render);
             this.listenTo(gl.DirtyListener, 'revive', this.render);
             this.listenTo(gl.DirtyListener, 'computeAttrs', this.render);
+
+            this.renderedOnce = false;
         },
 
-        hpChange: function() {
+        render: function() {
+            if (!this.renderedOnce) {
+                this.renderedOnce = true;
+                this.$el.append(this.hpBar.render().el);
+                this.$el.append(this.manaBar.render().el);
+                this.$el.append(this.xpBar.render().el);
+            } else {
+                this.hpBar.render();
+                this.manaBar.render();
+                this.xpBar.render();
+            }
+            return this;
+        },
+
+        /*hpChange: function() {
             this.$hp.html(Math.ceil(this.model.hp));
         },
 
@@ -1013,7 +1097,7 @@ namespace.module('bot.views', function(exports, require) {
             this.$mana = this.$('.mana');
             this.$xp = this.$('.xp');
             return this;
-        },
+        },*/
     });
 
     var SkillFooterView = Backbone.View.extend({
@@ -1508,8 +1592,6 @@ namespace.module('bot.views', function(exports, require) {
             return this;
         }
     });
-
-
 
     exports.extend({
         GameView: GameView,

@@ -3132,7 +3132,6 @@ namespace.module('bot.itemref', function(exports, require) {
             'projSpeed': 'Projectile Speed',
             'projCount': 'Additional Projectiles'
         }
-
     };
 
     /*

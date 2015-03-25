@@ -14,7 +14,7 @@
    version="1.1"
    id="svg2"
    viewBox="0 0 512 512"
-   inkscape:export-filename="C:\Users\Chris\Documents\GitHub\bot-game\assets\mage_hat.png"
+   inkscape:export-filename="C:\Users\Chris\Documents\GitHub\bot-game\assets\mage_gloves.png"
    inkscape:export-xdpi="12.832031"
    inkscape:export-ydpi="12.832031">
   <sodipodi:namedview
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>

@@ -168,7 +168,7 @@ namespace.module('bot.main', function(exports, require) {
             var version = this.hero.versionCreated;
             var tempdate = new Date();
             log.warning('sending leaderboard report');
-            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(version).child(uid).set(this.zone.unlockedZones - 1);
+            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(version).child(uid).set(this.zone.unlockedZones);
         },
 
         load: function() {

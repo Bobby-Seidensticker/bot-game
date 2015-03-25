@@ -638,8 +638,7 @@ namespace.module('bot.itemref', function(exports, require) {
                 'prototype': ['basic melee'],
                 'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 800', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'physDmg more 10', type: 'dmg'},
                     {def: 'physDmg more 1 perLevel', type: 'dmg'},
@@ -673,8 +672,7 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'melee', color: FIRE_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 400', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'fireDmg more 2 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
@@ -694,8 +692,7 @@ namespace.module('bot.itemref', function(exports, require) {
                           }],
                 'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
                     {def: 'projRange added ' + BASE_SPELL_RANGE, type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
@@ -714,8 +711,8 @@ namespace.module('bot.itemref', function(exports, require) {
                             onRemove: []
                           }],
                 'baseMods': [
-                    {def: 'manaCost added 4', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'manaCost added 7', type: 'dmg'},
+                    {def: 'speed added 400', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
@@ -791,8 +788,7 @@ namespace.module('bot.itemref', function(exports, require) {
                           }],
                 'baseMods': [
                     {def: 'manaCost added 3', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'fireDmg more 1 perLevel', type: 'dmg'},
                     {def: 'fireDmg added 1 perLevel', type: 'dmg'},
@@ -807,8 +803,7 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'melee', color: COLD_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 400', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'coldDmg more 1 perLevel', type: 'dmg'},
                     {def: 'coldDmg added 1 perLevel', type: 'dmg'},
@@ -823,8 +818,7 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'melee', color: LIGHT_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 400', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'lightDmg more 1 perLevel', type: 'dmg'},
                     {def: 'lightDmg added 1 perLevel', type: 'dmg'},
@@ -839,8 +833,7 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'melee', color: POIS_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 5', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'speed added 400', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE * 1.5, type: 'dmg'},
                     {def: 'poisDmg more 1 perLevel', type: 'dmg'},
                     {def: 'poisDmg added 1 perLevel', type: 'dmg'},
@@ -868,8 +861,8 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'proj', color: FIRE_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'cooldownTime added 100', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'fireDmg more 3 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 fireDmg', type: 'dmg'}
@@ -883,8 +876,8 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'proj', color: COLD_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'cooldownTime added 100', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'coldDmg more 3 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 coldDmg', type: 'dmg'}
@@ -898,8 +891,8 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'proj', color: LIGHT_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'cooldownTime added 100', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'lightDmg more 3 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 lightDmg', type: 'dmg'}
@@ -913,8 +906,8 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'proj', color: POIS_COLOR}],
                 'baseMods': [
                     {def: 'manaCost added 6', type: 'dmg'},
-                    {def: 'cooldownTime added 600', type: 'dmg'},
-                    {def: 'speed added 200', type: 'dmg'},
+                    {def: 'cooldownTime added 100', type: 'dmg'},
+                    {def: 'speed added 300', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'poisDmg more 3 perLevel', type: 'dmg'},
                     {def: 'physDmg converted 50 poisDmg', type: 'dmg'}
@@ -929,9 +922,9 @@ namespace.module('bot.itemref', function(exports, require) {
                     {def: 'manaCost added 13', type: 'dmg'},
                     {def: 'speed added 1000', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
-                    {def: 'physDmg more 4 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 5 perLevel', type: 'dmg'},
                     {def: 'projSpeed more 200', type: 'dmg'},
-                    {def: 'cooldownTime added 2000', type: 'dmg'},
+                    {def: 'cooldownTime added 3000', type: 'dmg'},
                 ]
             },
             'incinerate': {
@@ -1031,8 +1024,8 @@ namespace.module('bot.itemref', function(exports, require) {
                 'types': ['cone', 'cold', 'spell'],
                 'specs': [{ type: 'cone', color: COLD_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 'baseMods': [
-                    {def: 'manaCost added 4', type: 'dmg'},
-                    {def: 'speed added 300', type: 'dmg'},
+                    {def: 'manaCost added 5', type: 'dmg'},
+                    {def: 'speed added 400', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE / 4, type: 'dmg'},
                     {def: 'coldDmg added 6', type: 'dmg'},
                     {def: 'coldDmg added 3 perLevel', type: 'dmg'},
@@ -1045,7 +1038,7 @@ namespace.module('bot.itemref', function(exports, require) {
                 'specs': [{ type: 'cone', color: PHYS_COLOR, quals: [], onHit: [], onKill: [], onRemove: [] }],
                 'baseMods': [
                     {def: 'manaCost added 10', type: 'dmg'},
-                    {def: 'cooldownTime added 500', type: 'dmg'},
+                    {def: 'cooldownTime added 300', type: 'dmg'},
                     {def: 'speed added 500', type: 'dmg'},
                     {def: 'range added ' + BASE_SPELL_RANGE / 3, type: 'dmg'},
                     {def: 'physDmg added 5 perLevel', type: 'dmg'},
@@ -1154,12 +1147,12 @@ namespace.module('bot.itemref', function(exports, require) {
                 'types': ['melee'],
                 'baseMods': [
                     {def: 'manaCost added 20', type: 'dmg'},
-                    {def: 'speed added 500', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'physDmg more 2 perLevel', type: 'dmg'},
                     {def: 'physDmg more 100', type: 'dmg'},
-                    {def: 'cooldownTime added 5000', type: 'dmg'},
+                    {def: 'cooldownTime added 3000', type: 'dmg'},
                 ]
             },
             'deadly volley': {
@@ -1168,14 +1161,14 @@ namespace.module('bot.itemref', function(exports, require) {
                 'types': ['proj'],
                 'specs': [{ type: 'proj', color: '#FFF', quals: [], onHit: [], onKill: [], onRemove: [] }],
                 'baseMods': [
-                    {def: 'speed added 500', type: 'dmg'},
+                    {def: 'speed added 200', type: 'dmg'},
                     {def: 'range added ' + BASE_RANGE_RANGE, type: 'dmg'},
                     {def: 'manaCost added 20', type: 'dmg'},
                     {def: 'physDmg added 1 perLevel', type: 'dmg'},
                     {def: 'projCount added 16', type: 'dmg'},
                     {def: 'physDmg more -50', type: 'dmg'},
                     {def: 'angle more -70', type: 'dmg'},
-                    {def: 'cooldownTime added 5000', type: 'dmg'}
+                    {def: 'cooldownTime added 3000', type: 'dmg'}
                 ]
             },
         },
@@ -1589,7 +1582,7 @@ namespace.module('bot.itemref', function(exports, require) {
             'precise': {
                 'mods': [
                     {'def': 'speed more 20', 'type': 'dmg'},
-                    {'def': 'physDmg more 5 perLevel', 'type': 'dmg'},
+                    {'def': 'physDmg more 3 perLevel', 'type': 'dmg'},
                 ],
                 'slot': 'skill',
             },
@@ -1902,7 +1895,7 @@ namespace.module('bot.itemref', function(exports, require) {
             'careful aim': {
                 'mods': [
                     {'def': 'physDmg more 50', 'type': 'dmg'},
-                    {'def': 'cooldownTime added 5000', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 3000', 'type': 'dmg'},
                     {'def': 'physDmg more 2 perLevel', 'type': 'dmg'},
                     {'def': 'accuracy more 100', 'type': 'dmg'},
                     {'def': 'manaCost more 100', 'type': 'dmg'},
@@ -2086,7 +2079,7 @@ namespace.module('bot.itemref', function(exports, require) {
                     {'def': 'projRadius more 200', 'type': 'dmg'},
                     {'def': 'spellDmg more 100', 'type': 'dmg'},
                     {'def': 'spellDmg more 5 perLevel', 'type': 'dmg'},
-                    {'def': 'cooldownTime added 5000', 'type': 'dmg'},
+                    {'def': 'cooldownTime added 3000', 'type': 'dmg'},
                     {'def': 'manaCost more 100', 'type': 'dmg'},
                 ],
                 'slot': 'skill'
@@ -2996,7 +2989,7 @@ namespace.module('bot.itemref', function(exports, require) {
                 'weights': [200, 100, 50, 80 , 70, 100, 1, 20],
                 'boss': 'walter wight',
                 'roomCount': 20,
-                'quantity': [2, 3, 4],
+                'quantity': [2, 2, 4],
             },
             'gothic castle': {
                 'choices': ['shadow knight', 'ghoul', 'vampire', 'living statue', 'gargoyle', 'minotaur', 'wraith'],

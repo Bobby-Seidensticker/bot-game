@@ -165,9 +165,10 @@ namespace.module('bot.main', function(exports, require) {
 
         beatGame: function() {
             var uid = localStorage.getItem('uid');
-            var version = this.hero.version;
+            var version = this.hero.versionCreated;
             var tempdate = new Date();
-            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(version).child(uid).set(this.zone.nextZone);
+            log.warning('sending leaderboard report');
+            gl.FB.child(gl.VERSION_NUMBER).child('winners').child(version).child(uid).set(this.zone.unlockedZones - 1);
         },
 
         load: function() {
@@ -214,7 +215,7 @@ namespace.module('bot.main', function(exports, require) {
             case '0-1-7':
             case '0-1-8':
             case '0-1-9':
-                this.hero.version = 'legacy';
+                this.hero.versionCreated = 'legacy';
                 break;
 
             default:

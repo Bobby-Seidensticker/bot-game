@@ -176,7 +176,7 @@ namespace.module('bot.entity', function(exports, require) {
             this.inv = inv;
             this.cardInv = cardInv;
             this.equipped = equipped;
-            this.version = gl.VERSION_NUMBER;
+            this.versionCreated = gl.VERSION_NUMBER;
 
             EntitySpec.prototype.initialize.call(this);
             this.team = TEAM_HERO;
@@ -192,7 +192,8 @@ namespace.module('bot.entity', function(exports, require) {
             return {
                 name: this.name,
                 level: this.level,
-                xp: this.xp
+                xp: this.xp,
+                versionCreated: this.versionCreated
             };
         },
 

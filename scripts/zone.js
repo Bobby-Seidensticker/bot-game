@@ -85,7 +85,7 @@ namespace.module('bot.zone', function(exports, require) {
             for (i = 0; i < this.rooms.length; i++) {
                 monsters = [];
                 if (i % 2 === 0) {  // if this is not a corridor
-                    count = this.quantity[0] + prob.pProb(this.quantity[1] + upgradeCount, this.quantity[2] + upgradeCount * 2);
+                    count = this.quantity[0] + prob.pProb(this.quantity[1], this.quantity[2] + upgradeCount);
                     //max room pop is i+1 (first room always only one monster)
                     count = Math.min((i / 2 + 1) * (this.quantity[0] + upgradeCount), count);
                     for (var j = 0; j < count; j++) {
@@ -238,7 +238,7 @@ namespace.module('bot.zone', function(exports, require) {
                 };
             } else if (this.done()) {
                 log.error('Zone %s cleared', this.name);
-                if (this.nextZone >= 25) {
+                if (this.nextZone >= 14) {
                     gl.GameEvents.trigger('beatgame');
                 }
                 if (this.settings.autoAdvance) {

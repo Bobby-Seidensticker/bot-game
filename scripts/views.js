@@ -179,6 +179,7 @@ namespace.module('bot.views', function(exports, require) {
                     data.spec.push(['Est. Physical Damage Taken after Armor (this zone)', redFactor.toFixed(2)]);
                 }
             }
+            data.spec.push(["Character Version", "v " + this.model.spec.version]);
 
             this.$el.html(this.template({data: data, skilldata: skilldata}));
             return this;

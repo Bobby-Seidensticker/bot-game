@@ -2,3 +2,5 @@
 \.DS_Store
 styles/main.css
 index.html
+scripts/combined.js
+scripts/combined.min.js

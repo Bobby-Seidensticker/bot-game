@@ -23,7 +23,7 @@ namespace.module('bot.main', function(exports, require) {
         log.info('onReady');
 
         var gameModel = new GameModel();
-        gl.game = gameModel;
+        //gl.game = gameModel;
 
         var gameView = new views.GameView({}, gameModel);
 

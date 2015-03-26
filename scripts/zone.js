@@ -47,6 +47,41 @@ namespace.module('bot.zone', function(exports, require) {
             this.newZone(this.nextZone);  // this is redundent
         },
 
+        getZoneFromNum: function(zoneNum) {
+            var offset, upgradeCount, zoneI;
+            if (zoneNum < 6) {
+                offset = 0;
+                upgradeCount = 0;
+            } else if (zoneNum < 13) {
+                offset = 6;
+                upgradeCount = 1;
+            } else {
+                offset = 13;
+                upgradeCount = 2 + Math.floor((zoneNum - offset) / 8);
+            }
+            var zoneCount = this.zoneOrder.length;
+            var zoneI = (zoneNum - offset) % zoneCount;
+            var name = this.zoneOrder[zoneI];
+
+            if (name == "gothic castle") {
+                upgradeCount -= 1;
+            } else if (name == "decaying temple") {
+                upgradeCount -= 2;
+            }
+
+
+
+            
+            var nameStr = name + (upgradeCount > 0 ? ' ' + (upgradeCount + 1) : '');
+            return {
+                nameStr: nameStr,
+                upgradeCount: upgradeCount,
+                zoneI: zoneI,
+                name: name
+            };
+            
+        },
+
         newZone: function(zoneNum) {
             if (typeof(zoneNum) !== 'number') {
                 zoneNum = 0;
@@ -59,17 +94,20 @@ namespace.module('bot.zone', function(exports, require) {
 
             var i, j, rooms, monsters, count, data;
 
+
+            var currentZone = this.getZoneFromNum(zoneNum);
             var zoneCount = this.zoneOrder.length;
-            var upgradeCount = Math.floor(zoneNum / zoneCount);
-            var zoneI = zoneNum % zoneCount;
-            //var zoneNum =
-            var nameStr = upgradeCount > 0 ? ' ' + (upgradeCount + 1) : '';
+            var zoneI = currentZone.zoneI;
+            var upgradeCount = currentZone.upgradeCount;
 
+            this.name = currentZone.name;
+            
+            this.nameStr = currentZone.nameStr;
 
-            this.name = this.zoneOrder[zoneI] + nameStr;
+           
 
             //console.log(zoneCount, upgradeCount, zoneI, this.name, this.level);
-            _.extend(this, this.allZones[this.zoneOrder[zoneI]]);
+            _.extend(this, this.allZones[this.name]);
             this.level = Math.max(1, zoneNum * gl.ZONE_LEVEL_SPACING);
 
 
@@ -88,7 +126,7 @@ namespace.module('bot.zone', function(exports, require) {
             for (i = 0; i < this.rooms.length; i++) {
                 monsters = [];
                 if (i % 2 === 0) {  // if this is not a corridor
-                    count = this.quantity[0] + prob.pProb(this.quantity[1], this.quantity[2] + upgradeCount);
+                    count = this.quantity[0] + prob.pProb(this.quantity[1] + (upgradeCount/2), this.quantity[2] + upgradeCount);
                     //max room pop is i+1 (first room always only one monster)
                     count = Math.min((i / 2 + 1) * (this.quantity[0] + upgradeCount), count);
                     for (var j = 0; j < count; j++) {

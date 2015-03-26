@@ -89,6 +89,32 @@ namespace.module('bot.itemref', function(exports, require) {
                 ],
                 'weaponType': 'melee',
             },
+            "tanto": {
+                'mods': [
+                    {def: 'range more -60', type: 'dmg'},                    
+                    {def: 'speed more -30', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 0.75 perLevel', type: 'dmg'},
+                ],
+                'weaponType': 'melee',
+            },
+            "katana": {
+                'mods': [
+                    {def: 'speed more -30', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 0.7 perLevel', type: 'dmg'},
+                ],
+                'weaponType': 'melee',
+            },
+            "wakizashi": {
+                'mods': [
+                    {def: 'range more -90', type: 'dmg'},
+                    {def: 'accuracy more 100', type: 'dmg'},
+                    {def: 'physDmg added 1 perLevel', type: 'dmg'},
+                    {def: 'physDmg more 0.8 perLevel', type: 'dmg'},
+                ],
+                'weaponType': 'melee',
+            },
             ////////////////////
             ///// RANGED ///////
             ////////////////////
@@ -120,6 +146,15 @@ namespace.module('bot.itemref', function(exports, require) {
                     {def: 'range more 20', type: 'dmg'},
                     {def: 'physDmg added 20', type: 'dmg'},
                     {def: 'physDmg more 0.75 perLevel', type: 'dmg'}
+                ],
+                'weaponType': 'range',
+            },
+            'shuriken': {
+                'mods': [
+                    {def: 'projCount added 2', type: 'dmg'},
+                    {def: 'range more -40', type: 'dmg'},                    
+                    {def: 'physDmg added 15', type: 'dmg'},
+                    {def: 'physDmg more 0.7 perLevel', type: 'dmg'}
                 ],
                 'weaponType': 'range',
             },
@@ -241,6 +276,13 @@ namespace.module('bot.itemref', function(exports, require) {
                 'mods': [
                     {def: 'manaRegen added 10', type: 'def'},
                     {def: 'eleResistAll more -0.5 perLevel', type: 'def'}
+                ],
+                'slot': 'head',
+            },
+            'kabuto': {
+                'mods': [
+                    {def: 'armor more 0.5 perlevel', type: 'def'},
+                    {def: 'eleResistAll more -0.3 perLevel', type: 'def'}
                 ],
                 'slot': 'head',
             },
@@ -639,8 +681,8 @@ namespace.module('bot.itemref', function(exports, require) {
                 'types': ['melee'],
                 'specs': [{type: 'melee', quals: ['dmg more -100'], color: LIGHT_COLOR}],
                 'baseMods': [
-                    {def: 'speed added 100', type: 'dmg'},
-                    {def: 'cooldownTime added 200', type: 'dmg'},
+                    {def: 'speed added 1000', type: 'dmg'},
+                    //{def: 'cooldownTime added 200', type: 'dmg'},
                     {def: 'projRadius more -100', type: 'dmg'},
                     {def: 'physDmg added 1000000', type: 'dmg'},
                     {def: 'range added ' + BASE_MELEE_RANGE, type: 'dmg'},
@@ -1215,7 +1257,11 @@ namespace.module('bot.itemref', function(exports, require) {
             'proto-buddha': {
                 'mods': [
                     {'def': 'maxHp more 3 perLevel', 'type': 'def'},
-                    {'def': 'maxHp more 400', 'type': 'def'},
+                    {'def': 'maxHp more 80', 'type': 'def'},
+                    {'def': 'accuracy more 1000 perLevel', 'type': 'dmg'},
+                    {'def': 'lineWidth added 300', 'type': 'vis'},
+                    {'def': 'height more -30', 'type': 'vis'},
+                    {'def': 'width more 50', 'type': 'vis'},                    
                 ],
             },
             'sharpened': {
@@ -1313,8 +1359,8 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'nimble': {
                 'mods': [
-                    {'def': 'dodge added 5 perLevel', 'type': 'def'},
-                    {'def': 'dodge added 20', 'type': 'def'}
+                    {'def': 'dexterity added 5 perLevel', 'type': 'def'},
+                    {'def': 'dexterity added 20', 'type': 'def'}
                 ],
                 'slot': 'chest',
             },
@@ -2180,7 +2226,55 @@ namespace.module('bot.itemref', function(exports, require) {
                 ],
                 'slot': 'hands',
             },
-
+            'bushido': {
+                'mods': [
+                    {'def': 'meleeDmg more 0.2 perLevel', 'type': 'dmg'},
+                    {'def': 'armor more 0.2 perLevel', 'type': 'def'},
+                    {'def': 'dodge more 0.2 perLevel', 'type': 'def'},
+                    {'def': 'eleResistAll more -0.1 perLevel', 'type': 'def'},                    
+                ],
+                'slot': 'head',
+            },
+            'jovial': {
+                'mods': [
+                    {'def': 'lineWidth added 60', 'type': 'vis'},
+                    {'def': 'maxHp more 30', 'type': 'def'},
+                    {'def': 'maxHp more 0.5 perLevel', 'type': 'def'},
+                    {'def': 'moveSpeed more -30', 'type': 'def'},                    
+                ],
+                'slot': 'head',
+            },
+            'impenetrable': {
+                'mods': [
+                    {'def': 'dodge more -50', 'type': 'def'},
+                    {'def': 'armor more 50', 'type': 'def'},
+                    {'def': 'armor more 1 perLevel', 'type': 'def'},                    
+                ],
+                'slot': 'chest',
+            },
+            'meditation': {
+                'mods': [
+                    {'def': 'eleResistAll more -10', 'type': 'def'},
+                    {'def': 'eleResistAll more -0.1 perLevel', 'type': 'def'},
+                    {'def': 'maxHp gainedas 2 hpRegen', 'type': 'def'},                    
+                ],
+                'slot': 'head',
+            },
+            'more balls': {
+                'mods': [
+                    {'def': 'projCount added 2', 'type': 'dmg'},
+                    {'def': 'projRadius more 50', 'type': 'dmg'},                    
+                    {'def': 'projRadius more 10 perLevel', 'type': 'dmg'},
+                ],
+                'slot': 'legs',
+            },
+            'ninja stance': {
+                'mods': [
+                    {'def': 'dexterity gainedas 100 moveSpeed', 'type': 'def'},
+                    {'def': 'dexterity more 1 perLevel', 'type': 'def'},
+                ],
+                'slot': 'legs',
+            },
         },
         'monster': {
             'skeleton' : {
@@ -2955,6 +3049,9 @@ namespace.module('bot.itemref', function(exports, require) {
                 'skills': ['pacifism'],
                 'sourceCards': [
                     ['proto-buddha', 1],
+                    ['big', 1],
+                    ['buff', 1],
+                    ['riveted', 1],
                     ['jovial', 1],
                     ['impenetrable', 1],
                     ['meditation', 1],
@@ -3037,9 +3134,48 @@ namespace.module('bot.itemref', function(exports, require) {
                     ['bushido', 1],                    
                 ],
             },
+            'fallen samurai' : {
+                'items': [['weapon', 'wakizashi'], ['armor', 'kabuto'], ['armor', 'fancy gauntlets'], ['armor', 'leatherscale armor'], ['armor', 'buckaneer boots']],
+                'skills': ['lethal strike', 'super smash'],
+                'sourceCards': [
+                    ['semi automatic', 1],
+                    ['hateful blade', 1],
+                    ['sharpened', 1],
+                    ['ethereal', 1],
+                    ['good circulation', 1],
+                    ['prismatic toe ring', 1],
+                    ['basket hilt', 1],
+                    ['sure footing', 1],
+                    ['steady hands', 1],
+                    ['balanced', 1],
+                    ['accurate', 1],
+                    ['pinpoint precision', 1],
+                    ['stinging', 1],
+                    ['clawed', 1],
+                    ['precise', 1],
+                    ['honed', 1],
+                    ['bushido', 1],
+                ],
+            },
+            'tanuki' : {
+                'items': [['weapon', 'shuriken'], ['armor', 'balsa helmet'], ['armor', 'leatherscale armor'], ['armor', 'leather boots'], ['armor', 'handmail']],
+                'skills': ['headshot', 'speed shot', 'basic range'],
+                'sourceCards': [
+                    ['berserking', 1],
+                    ['small stature', 1],
+                    ['simple minded', 1],
+                    ['more projectiles', 1],
+                    ['more balls', 1],
+                    ['ninja stance', 1],
+                    ['precise', 1],
+                    ['practiced', 1],
+                    ['sharpened', 1],
+                    ['stinging', 1],
+                ],
+            },
         },
         'zoneOrder': {
-            'order': ['spooky dungeon', 'dark forest', 'aggro crag', 'icy tunnel', 'hostile marsh', 'clockwork ruins', 'gothic castle'],
+            'order': ['spooky dungeon', 'dark forest', 'aggro crag', 'icy tunnel', 'hostile marsh', 'clockwork ruins', 'gothic castle', 'decaying temple'],
         },
         'zone': {
             'spooky dungeon': {
@@ -3099,11 +3235,11 @@ namespace.module('bot.itemref', function(exports, require) {
                 'quantity': [20, 500, 5000],
             },
             'decaying temple': {
-                'choices': ['buddha', 'monk', 'ninja', 'samurai', 'toy dragon'],
-                'weights': [300, 200, 100, 100, 100],
-                'boss': 'ninja',
+                'choices': ['buddha', 'ninja', 'ninja assassin', 'samurai', 'fallen samurai', 'tanuki'],
+                'weights': [1, 1, 1, 1, 1, 1],
+                'boss': 'bat',
                 'roomCount': 20,
-                'quantity': [3, 4, 3],
+                'quantity': [3, 3, 6],
             },
             'forgotten tomb': {
                 'choices': ['mummy', 'scarab', 'pharaoh', 'anubis', 'snake'],

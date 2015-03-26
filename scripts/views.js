@@ -1427,15 +1427,17 @@ namespace.module('bot.views', function(exports, require) {
 
             var len = this.zone.unlockedZones + 1;
             for (var i = 0; i < len; i++) {
+                var currentZone = this.zone.getZoneFromNum(i);
+                
                 var zoneCount = this.zone.zoneOrder.length;
-                var upgradeCount = Math.floor(i / zoneCount);
-                var zoneI = i % zoneCount;
+                var upgradeCount = currentZone.upgradeCount;
+                var zoneI = currentZone.zoneI;
                 var level = Math.max(1, i * gl.ZONE_LEVEL_SPACING);
 
-                var name = this.zone.zoneOrder[zoneI];
+                var name = currentZone.name;
                 var zoneRef = this.zone.allZones[name];
-                var nameStr = upgradeCount >= 1 ? ' ' + (upgradeCount + 1) : '';
-                data = _.extend({name: name + nameStr, level: level, running: i === this.zone.nextZone, zoneNum: i}, zoneRef);
+                var nameStr = currentZone.nameStr;
+                data = _.extend({name: nameStr, level: level, running: i === this.zone.nextZone, zoneNum: i}, zoneRef);
                 sub = new ZoneMapTab({model: data});
                 this.listenTo(sub, 'click', this.zoneClick);
                 this.subs.push(sub);

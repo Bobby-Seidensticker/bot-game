@@ -1452,6 +1452,7 @@ namespace.module('bot.views', function(exports, require) {
     var ConfigTab = Backbone.View.extend({
         tagName: 'div',
         className: 'config',
+        template: _.template($('#config-template').html()),
 
         events: {
             'click #wipebutton': 'wipe',
@@ -1462,10 +1463,9 @@ namespace.module('bot.views', function(exports, require) {
         },
 
         initialize: function(options, game) {
-            this.template = _.template($('#config-template').html());
             this.zone = game.zone;
             this.settings = game.settings;
-            this.heroSpec = game.hero;
+            this.hero = game.hero;
 
             this.tvm = new TabVisibilityManager('config', this.$el, this.render.bind(this), 'footer:buttons:config',
                                                 'footer:buttons:map', 'footer:buttons:help', 'footer:buttons:stats');
@@ -1496,7 +1496,7 @@ namespace.module('bot.views', function(exports, require) {
             if (!this.tvm.visible) {
                 return this;
             }
-            this.$holder.html(this.template);
+            this.$holder.html(this.template(this));
             $('#enableBuildHotkeys').prop('checked', this.settings.enableBuildHotkeys);
             /*this.$('#namebutton').on('click', this.nameButton.bind(this));
               this.$('#devbutton').on('click', this.devButton.bind(this));
@@ -1549,14 +1549,14 @@ namespace.module('bot.views', function(exports, require) {
 
         nameButton: function() {
             var userInput = $('#charname').val();
-            this.heroSpec.name = userInput.length < 64 ? userInput : 'SMARTASS';
+            this.hero.name = userInput.length < 64 ? userInput : 'SMARTASS';
             gl.DirtyQueue.mark('rename');
         },
 
         devButton: function() {
             var msg = $('#devmsg').val();
             if (msg && msg.length) {
-                gl.FB.child(gl.VERSION_NUMBER).child('feedback').push(localStorage.getItem('uid') + ' - ' + this.heroSpec.name + ' says: ' + msg);
+                gl.FB.child(gl.VERSION_NUMBER).child('feedback').push(localStorage.getItem('uid') + ' - ' + this.hero.name + ' says: ' + msg);
             }
             $('#devmsg').val('');
         },

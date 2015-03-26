@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from subprocess import check_output, call, CalledProcessError
 import re
 

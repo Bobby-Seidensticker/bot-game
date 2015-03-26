@@ -1482,7 +1482,6 @@ namespace.module('bot.views', function(exports, require) {
             });
         },
 
-
         resize: function() {
             this.$el.css({
                 height: window.innerHeight - FOOTER_HEIGHT
@@ -1498,9 +1497,6 @@ namespace.module('bot.views', function(exports, require) {
             }
             this.$holder.html(this.template(this));
             $('#enableBuildHotkeys').prop('checked', this.settings.enableBuildHotkeys);
-            /*this.$('#namebutton').on('click', this.nameButton.bind(this));
-              this.$('#devbutton').on('click', this.devButton.bind(this));
-              this.$('#donateButton').on('click', this.donate.bind(this));*/
             return this;
         },
 

@@ -281,7 +281,7 @@ namespace.module('bot.itemref', function(exports, require) {
             },
             'kabuto': {
                 'mods': [
-                    {def: 'armor more 0.5 perlevel', type: 'def'},
+                    {def: 'armor more 0.5 perLevel', type: 'def'},
                     {def: 'eleResistAll more -0.3 perLevel', type: 'def'}
                 ],
                 'slot': 'head',
